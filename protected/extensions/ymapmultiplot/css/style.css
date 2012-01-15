@@ -1,0 +1,27 @@
+.bx-yandex-search-layout {
+	position: relative;
+	padding-bottom: 80px;
+}
+
+.bx-yandex-search-form {
+	padding-bottom: 16px;
+}
+
+.bx-yandex-search-form p {
+	margin-bottom: 0.34em;
+}
+
+.bx-yandex-search-form .textInput {
+	background: #fff;
+	border-width: 1px;
+	font: normal 1em "Trebuchet MS", sans-serif;
+	margin-right: 8px;
+}
+
+.bx-yandex-view-layout {
+	position: relative;
+	z-index: 2;
+}
+
+.groupPlacemark div { overflow: hidden; }
+.groupPlacemark span { position: absolute; margin-top: 30%; font-weight: bold; text-align: center; width: 100%; }

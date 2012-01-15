@@ -1,0 +1,81 @@
+2011/12/01 14:00:53 [error] [php] Undefined variable: APPLICATION (/Users/servak/html/rosyama/protected/views/layouts/main.php:4)
+Stack trace:
+#0 /Users/servak/html/yii-last/framework/web/widgets/CContentDecorator.php(78): SiteController->renderFile()
+#1 /Users/servak/html/yii-last/framework/web/widgets/CContentDecorator.php(56): CContentDecorator->decorate()
+#2 /Users/servak/html/yii-last/framework/web/widgets/COutputProcessor.php(45): CContentDecorator->processOutput()
+#3 /Users/servak/html/yii-last/framework/web/CBaseController.php(199): CContentDecorator->run()
+#4 /Users/servak/html/yii-last/framework/web/CBaseController.php(294): SiteController->endWidget()
+#5 /Users/servak/html/rosyama/protected/views/layouts/column1.php(7): SiteController->endContent()
+#6 /Users/servak/html/yii-last/framework/web/CBaseController.php(119): require()
+#7 /Users/servak/html/yii-last/framework/web/CBaseController.php(88): SiteController->renderInternal()
+#8 /Users/servak/html/yii-last/framework/web/CController.php(781): SiteController->renderFile()
+#9 /Users/servak/html/rosyama/protected/controllers/SiteController.php(32): SiteController->render()
+#10 /Users/servak/html/yii-last/framework/web/actions/CInlineAction.php(50): SiteController->actionIndex()
+#11 /Users/servak/html/yii-last/framework/web/CController.php(300): CInlineAction->runWithParams()
+#12 /Users/servak/html/yii-last/framework/web/CController.php(278): SiteController->runAction()
+#13 /Users/servak/html/yii-last/framework/web/CController.php(257): SiteController->runActionWithFilters()
+#14 /Users/servak/html/yii-last/framework/web/CWebApplication.php(277): SiteController->run()
+#15 /Users/servak/html/yii-last/framework/web/CWebApplication.php(136): CWebApplication->runController()
+#16 /Users/servak/html/yii-last/framework/base/CApplication.php(158): CWebApplication->processRequest()
+#17 /Users/servak/html/rosyama/index.php(13): CWebApplication->run()
+REQUEST_URI=/index.php?r=site/index
+in /Users/servak/html/rosyama/protected/views/layouts/main.php (4)
+in /Users/servak/html/rosyama/protected/views/layouts/column1.php (7)
+in /Users/servak/html/rosyama/protected/controllers/SiteController.php (32)
+2011/12/01 14:35:13 [error] [php] Undefined variable: APPLICATION (/Users/servak/html/rosyama/protected/views/layouts/main.php:105)
+Stack trace:
+#0 /Users/servak/html/yii-last/framework/web/widgets/CContentDecorator.php(78): SiteController->renderFile()
+#1 /Users/servak/html/yii-last/framework/web/widgets/CContentDecorator.php(56): CContentDecorator->decorate()
+#2 /Users/servak/html/yii-last/framework/web/widgets/COutputProcessor.php(45): CContentDecorator->processOutput()
+#3 /Users/servak/html/yii-last/framework/web/CBaseController.php(199): CContentDecorator->run()
+#4 /Users/servak/html/yii-last/framework/web/CBaseController.php(294): SiteController->endWidget()
+#5 /Users/servak/html/rosyama/protected/views/layouts/column1.php(7): SiteController->endContent()
+#6 /Users/servak/html/yii-last/framework/web/CBaseController.php(119): require()
+#7 /Users/servak/html/yii-last/framework/web/CBaseController.php(88): SiteController->renderInternal()
+#8 /Users/servak/html/yii-last/framework/web/CController.php(781): SiteController->renderFile()
+#9 /Users/servak/html/rosyama/protected/controllers/SiteController.php(32): SiteController->render()
+#10 /Users/servak/html/yii-last/framework/web/actions/CInlineAction.php(50): SiteController->actionIndex()
+#11 /Users/servak/html/yii-last/framework/web/CController.php(300): CInlineAction->runWithParams()
+#12 /Users/servak/html/yii-last/framework/web/CController.php(278): SiteController->runAction()
+#13 /Users/servak/html/yii-last/framework/web/CController.php(257): SiteController->runActionWithFilters()
+#14 /Users/servak/html/yii-last/framework/web/CWebApplication.php(277): SiteController->run()
+#15 /Users/servak/html/yii-last/framework/web/CWebApplication.php(136): CWebApplication->runController()
+#16 /Users/servak/html/yii-last/framework/base/CApplication.php(158): CWebApplication->processRequest()
+#17 /Users/servak/html/rosyama/index.php(13): CWebApplication->run()
+REQUEST_URI=/index.php?r=site/index
+in /Users/servak/html/rosyama/protected/views/layouts/main.php (105)
+in /Users/servak/html/rosyama/protected/views/layouts/column1.php (7)
+in /Users/servak/html/rosyama/protected/controllers/SiteController.php (32)
+2011/12/01 14:52:37 [error] [php] require(/Users/servak/html/rosyama/bitrix/footer.php) [<a href='function.require'>function.require</a>]: failed to open stream: No such file or directory (/Users/servak/html/rosyama/protected/views/site/pages/about.php:49)
+Stack trace:
+#0 /Users/servak/html/yii-last/framework/web/CBaseController.php(88): SiteController->renderInternal()
+#1 /Users/servak/html/yii-last/framework/web/CController.php(866): SiteController->renderFile()
+#2 /Users/servak/html/yii-last/framework/web/CController.php(779): SiteController->renderPartial()
+#3 /Users/servak/html/yii-last/framework/web/actions/CViewAction.php(138): SiteController->render()
+#4 /Users/servak/html/yii-last/framework/web/actions/CAction.php(72): CViewAction->run()
+#5 /Users/servak/html/yii-last/framework/web/CController.php(300): CViewAction->runWithParams()
+#6 /Users/servak/html/yii-last/framework/web/CController.php(278): SiteController->runAction()
+#7 /Users/servak/html/yii-last/framework/web/CController.php(257): SiteController->runActionWithFilters()
+#8 /Users/servak/html/yii-last/framework/web/CWebApplication.php(277): SiteController->run()
+#9 /Users/servak/html/yii-last/framework/web/CWebApplication.php(136): CWebApplication->runController()
+#10 /Users/servak/html/yii-last/framework/base/CApplication.php(158): CWebApplication->processRequest()
+#11 /Users/servak/html/rosyama/index.php(13): CWebApplication->run()
+REQUEST_URI=/index.php?r=site/page&view=about
+in /Users/servak/html/rosyama/protected/views/site/pages/about.php (49)
+in /Users/servak/html/rosyama/protected/views/site/pages/about.php (49)
+in /Users/servak/html/rosyama/index.php (13)
+2011/12/13 00:23:48 [error] [system.db.CDbCommand] Не удалось выполнить CDbCommand::execute(): SQLSTATE[42S01]: Base table or view already exists: 1050 Table 'yii_usergroups_group' already exists. Выполнявшийся SQL-запрос: CREATE TABLE yii_usergroups_group
+				(
+				id BIGINT(20) AUTO_INCREMENT,
+				groupname VARCHAR(120) NOT NULL UNIQUE,
+				level INT(6),
+				home VARCHAR(120) DEFAULT NULL,
+				PRIMARY KEY (id)
+				) ENGINE=InnoDB;.
+in /Users/servak/html/RosYama.2/protected/modules/userGroups/controllers/InstallController.php (129)
+in /Users/servak/html/RosYama.2/protected/modules/userGroups/controllers/InstallController.php (40)
+in /Users/servak/html/RosYama.2/index.php (13)
+2011/12/13 00:56:22 [error] [system.db.CDbCommand] Не удалось выполнить CDbCommand::fetchAll(): SQLSTATE[42S02]: Base table or view not found: 1146 Table 'rosyama.holes' doesn't exist. Выполнявшийся SQL-запрос: SHOW COLUMNS FROM `holes`.
+in /Users/servak/html/RosYama.2/index.php (14)
+2011/12/13 00:56:59 [error] [system.db.CDbCommand] Не удалось выполнить CDbCommand::fetchAll(): SQLSTATE[42S02]: Base table or view not found: 1146 Table 'rosyama.holes' doesn't exist. Выполнявшийся SQL-запрос: SHOW COLUMNS FROM `holes`.
+in /Users/servak/html/RosYama.2/index.php (14)

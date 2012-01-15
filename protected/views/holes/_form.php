@@ -1,0 +1,141 @@
+<div class="form">
+<?php $form=$this->beginWidget('CActiveForm', array(
+	'id'=>'holes-form',
+	'enableAjaxValidation'=>false,
+	'htmlOptions'=>Array ('enctype'=>'multipart/form-data'),
+)); ?>
+<?php echo $form->errorSummary($model); ?>
+
+	<? /*<input type="hidden" name="ID" value="<?= $F['ID']['VALUE'] ?>">
+	 if($F['FIX_ID']): ?>
+		<input type="hidden" name="FIX_ID" value="<?= $F['FIX_ID']['VALUE'] ?>">
+	<? elseif($F['GIBDD_REPLY_ID']): ?>
+		<input type="hidden" name="GIBDD_REPLY_ID" value="<?= $F['GIBDD_REPLY_ID']['VALUE'] ?>">
+	<? endif;*/ ?>
+
+	<!-- левая колоночка -->
+	<div class="lCol">
+		<!-- тип дефекта -->
+		<div class="f">
+			<?php echo $form->labelEx($model,'TYPE_ID'); ?>
+			<?php echo $form->dropDownList($model, 'TYPE_ID', CHtml::listData( HoleTypes::model()->findAll(Array('condition'=>'published=1', 'order'=>'ordering')), 'id','name')); ?>
+			<?php echo $form->error($model,'TYPE_ID'); ?>
+		</div>
+		
+		<!-- адрес -->
+		<div class="f">
+			<?php echo $form->labelEx($model,'ADDRESS'); ?>
+			<?php echo $form->textField($model,'ADDRESS',array('class'=>'textInput')); ?>
+			<?php echo $form->error($model,'ADDRESS'); ?>
+		</div>
+		
+		<!-- фотки -->
+		<div class="f">
+			<?php echo $form->labelEx($newimage,'files'); ?>
+			<span class="comment">Размер каждого загружаемого файла не должен превышать 2 Мб. Суммарный размер файлов не должен превышать 8 Мб.</span>			
+			<?php $this->widget('CMultiFileUpload',array('accept'=>'gif|jpg|png', 'model'=>$newimage, 'attribute'=>'files', 'htmlOptions'=>array('class'=>'mf'), 'denied'=>Yii::t('mf','Невозможно загрузить этот файл'),'duplicate'=>Yii::t('mf','Файл уже существует'),'remove'=>Yii::t('mf','удалить'),'selected'=>Yii::t('mf','Файлы: $file'),)); ?>						
+		</div>
+		
+		<!-- камент -->
+		<div class="f">
+			<?php echo $form->labelEx($model,'COMMENT1'); ?>
+			<?php echo $form->textArea($model,'COMMENT1'); ?>
+			<?php echo $form->error($model,'COMMENT1'); ?>
+		</div>
+		<?php echo $form->hiddenField($model,'LATITUDE'); ?>
+		<?php echo $form->hiddenField($model,'LONGITUDE'); ?>
+		<?php echo $form->hiddenField($model,'STR_SUBJECTRF'); ?>
+		<?php echo $form->hiddenField($model,'ADR_CITY'); ?>
+	</div>
+	<!-- /левая колоночка -->
+	
+	<!-- правая колоночка -->
+	<div class="rCol"> 
+	<div class="f">
+	<p class="tip">
+Поставьте метку на карте двойным щелчком мыши
+<span class="required">*</span>
+</p>
+		<div class="bx-yandex-search-layout" style="padding-bottom: 0px;">
+			<div class="bx-yandex-search-form" style="padding-bottom: 0px;">				
+					<p>Введите адрес места для быстрого поиска</p>
+					<input type="text" id="address_inp" name="address" class="textInput" value="" style="width: 300px;" />
+					<input type="submit" value="Искать" onclick="jsYandexSearch_MAP_DzDvWLBsil.searchByAddress($('#address_inp').val()); return false;" />
+					<a style="display:none;" id="clear_result_link" href="#" onclick="clearSerchResults('MAP_DzDvWLBsil', JCBXYandexSearch_arSerachresults); document.getElementById('address_inp').value=''; return false;">Очистить</a>				
+			</div>		
+			<div class="bx-yandex-search-results" id="results_MAP_DzDvWLBsil"></div>
+		</div>	
+			<span id="recognized_address_str" title="Субъект РФ и населённый пункт"></span>
+			<span id="other_address_str"></span>				
+		
+		
+		<div class="bx-yandex-view-layout">
+			<div class="bx-yandex-view-map">
+		<?php if ($model->isNewRecord) $maptype='addhole'; else $maptype='updatehole'; ?>
+		<?php Yii::app()->clientScript->registerScript('initmap',<<<EOD
+		if (window.attachEvent) // IE
+			window.attachEvent("onload", function(){init_MAP_DzDvWLBsil(null,'{$maptype}')});
+		else if (window.addEventListener) // Gecko / W3C
+			window.addEventListener('load', function(){init_MAP_DzDvWLBsil(null,'{$maptype}')}, false);
+		else
+			window.onload = function(){init_MAP_DzDvWLBsil(null,'{$maptype}')};
+EOD
+,CClientScript::POS_HEAD);
+?>
+
+		<input id="MAPLAT" name="MAPLAT" type="hidden" value="" />
+		<input id="MAPZOOM" name="MAPZOOM" type="hidden" value="" />
+		<input id="Exclude_id" type="hidden" value="<?php echo $model->ID; ?>" />
+		<?php
+							$this->widget('application.extensions.ymapmultiplot.YMapMultiplot', array(
+									'key'=>$this->mapkey,
+								   'id' => 'BX_YMAP_MAP_DzDvWLBsil',//id of the <div> container created
+								   'label' => 'Тест', //Title for bubble. Used if you are plotting multiple locations of same business
+								   'address' =>  Array(), //Array of AR objects
+								   'width'=>'100%',
+								   'height'=>'400px',						   
+								   //'notshow'=>true
+							  ));
+							?>
+			</div>
+		</div>
+		<img src="/images/map_shadow.jpg" class="mapShadow" alt="" />
+
+	</div>
+		<?
+		if(!$model->isNewRecord && $model->pictures && $model->STATE!='fixed' && !$model->GIBDD_REPLY_RECEIVED)
+		{
+			?>
+			<div id="overshadow"><span class="command" onclick="document.getElementById('picts').style.display=document.getElementById('picts').style.display=='block'?'none':'block';">Можно удалить загруженные фотографии</span><div class="picts" id="picts"><?
+			foreach($model->pictures['medium']['fresh'] as $picture)
+			{
+				$picture_id = explode('/', $picture);
+				$picture_id = explode('.', $picture_id[sizeof($picture_id) - 1]);
+				$picture_id = $picture_id[0];
+				echo '<br>'.$form->checkBox($model,"deletepict[$picture_id]",Array('class'=>'filter_checkbox')).' ';
+				echo $form->labelEx($model,"deletepict[$picture_id]",Array('label'=>'Удалить фотографию?')).'<br><img src="'.$picture.'"><br><br>';
+			}
+			echo '</div></div>';
+		} ?>
+		
+		<?php if($model->COMMENT2) : ?>
+		<!-- камент -->
+		<div class="f">
+			<?php echo $form->labelEx($model,'COMMENT2'); ?>
+			<?php echo $form->textArea($model,'COMMENT2',array('rows'=>6, 'cols'=>50)); ?>
+			<?php echo $form->error($model,'COMMENT2'); ?>
+		</div>
+		<? endif;  ?>
+	</div>
+	<!-- /правая колоночка -->
+	<div class="addSubmit">
+		<div class="container">
+			<p>После нажатия на кнопку «Отправить» вы можете создать обращение о дефекте в виде pdf-документа, которое можно распечатать и отправить в ближайшее отделение ГИБДД</p>
+			<div class="btn" onclick="$(this).parents('form').submit();">
+				<a class="addFact"><i class="text">Отправить</i><i class="arrow"></i></a>
+			</div>
+		</div>
+	</div>
+<?php $this->endWidget(); ?>
+
+</div><!-- form -->

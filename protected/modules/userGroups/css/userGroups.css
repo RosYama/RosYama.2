@@ -1,0 +1,202 @@
+@CHARSET "UTF-8";
+/**
+ * @author Nicola Puddu
+ * @package userGroups
+ */
+
+/**
+ * GENERAL
+ */
+#userGroups-container hr {
+	margin-top:5px;
+	clear:both;
+}
+
+/**
+ * INSTALL
+ */
+#userGroups-container div.code {
+	background:#ADADAD;
+	border:2px solid #000;
+	margin:0px 0px 20px 20px;
+	overflow:auto;
+	width:820px;
+	font-size:0.95em;
+}
+#userGroups-container code {
+	white-space:pre;
+}
+#userGroups-container code .highlight {
+	background:#C3C3C3;
+}
+
+#userGroups-container div.info {
+	background:#4D9AC6;
+	color:#FFFFFF;
+	font-size:1.5em;
+	margin: 0 0 20px 0px;
+	padding: 20px;
+	width: auto;
+	text-shadow: 3px 3px 3px #000000;
+}
+
+#userGroups-container div.info p {
+	margin-bottom:10px;
+}
+#userGroups-container div.info a {
+	color:#fff;
+	text-decoration:none;
+}
+
+/**
+ * MENU
+ */
+.userGroupsMenu-container {
+	border:2px solid #4D9AC6;
+	display:table;
+	border-radius:10px 10px / 10px 10px;
+	-moz-border-radius:10px 10px / 10px 10px;
+	margin:0px auto 20px;
+}
+.userGroupsMenu {
+	margin:0px;
+	padding:0px;
+	display:table-row;
+	overflow:hidden;
+}
+.userGroupsMenu li:first-child {
+	border-radius:5px 0px 0px 5px / 5px 0px 0px 5px;
+	-moz-border-radius:5px 0px 0px 5px / 5px 0px 0px 5px;
+}
+.userGroupsMenu li.last {
+	border-radius:0px 5px 5px 0px / 0px 5px 5px 0px;
+	-moz-border-radius:0px 5px 5px 0px / 0px 5px 5px 0px;
+}
+.userGroupsMenu li {
+	padding:4px 8px;
+	display: table-cell;
+	width:120px;
+	text-align:center;
+}
+
+.userGroupsMenu a {
+	font-family:Helvetica;
+	color:#000;
+	text-decoration:none;
+}
+
+.userGroupsMenu li:hover, .userGroupsMenu li.active {
+	background:#4D9AC6;
+}
+.userGroupsMenu li:hover a, .userGroupsMenu li.active a {
+	color:#fff;
+	text-decoration:underline;
+}
+
+/**
+ * ADMIN
+ */
+#userGroups-container .info-button {
+	float:left;
+	margin-top:2px;
+}
+
+#userGroups-container .lapse {
+	width:40px;
+	text-align:right;
+}
+
+#userGroups-container .inline.buttons {
+	float:left;
+	margin-right:10px;
+	padding-bottom:6px;
+}
+#userGroups-container .left-floated {
+	float:left;
+	padding-left:13px;
+	padding-bottom:6px;
+}
+#userGroups-container .right-floated {
+	float:right;
+	padding-right:20px;
+	padding-bottom:6px;
+}
+
+#userGroups-container .hidden-panel {
+	display:none;
+}
+
+#userGroups-container h1.closed {
+	background:url(img/arrows.png) no-repeat -11px -17px;
+	padding-left:32px;
+}
+
+#userGroups-container h1.opened {
+	background:url(img/arrows.png) no-repeat -11px -150px;
+	padding-left:32px;
+}
+
+/**
+ * FORM
+ */
+#userGroups-container label.inline {
+	margin:0px 10px 0px 15px;
+}
+
+#userGroups-container .checkbox label, #userGroups-container label.inline {
+	display:inline;
+}
+
+#userGroups-container .form.center {
+	width:170px;
+	margin:auto;
+}
+#userGroups-container .row {
+	margin:5px auto;
+}
+
+#userGroups-container .form.center .buttons {
+	text-align:center;
+}
+
+#group-detail, #user-detail {
+	padding-top:5px;
+}
+
+#userGroups-container #refreshCaptcha {
+	display:block;
+	margin-left:15px;
+}
+
+/**
+ * DOCUMENTATION
+ */
+
+#documentation-accordion .ui-accordion-header {
+	font-size: 1.1em;
+	font-weight: bold;
+	background:#4D9AC6;
+}
+
+#documentation-accordion .ui-state-default a {
+	color:#fff;
+	text-shadow: 3px 2px 4px #000;
+}
+
+#documentation-accordion .ui-state-active a {
+	color:#212121;
+	text-shadow: 3px 2px 4px #eee;
+}
+
+
+
+#documentation-accordion .ui-state-default .ui-icon {
+	background-image: url("img/ui-icons_222222_256x240.png");
+}
+
+#documentation-accordion .doc-images {
+	max-width: 800px;
+	border-style: solid;
+	border-width: 1px 2px 2px 1px;
+	margin: 10px 24px;
+}
