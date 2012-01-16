@@ -184,7 +184,7 @@ class HolesController extends Controller
 		
 		$model=$this->loadChangeModel($id);
 		$model->scenario='gibdd_reply';
-		if($model->STATE!='inprogress' && $model->STATE!='achtung')	
+		if($model->STATE!='inprogress' && $model->STATE!='achtung' && !$model->request_gibdd)	
 			throw new CHttpException(403,'Доступ запрещен.');
 
 		// Uncomment the following line if AJAX validation is needed
@@ -202,7 +202,7 @@ class HolesController extends Controller
 
 		$this->render('gibddreply',array(
 			'model'=>$model,
-			'newimage'=>new PictureFiles,
+			'answer'=>new HoleAnswers,
 		));
 	}	
 

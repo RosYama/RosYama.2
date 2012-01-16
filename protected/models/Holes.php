@@ -411,7 +411,7 @@ class Holes extends CActiveRecord
 					if(!$this->DATE_SENT)
 					{
 						$this->STATE = 'fresh';
-						$this->request_gibdd=Array();
+						$this->request_gibdd->delete();
 					}
 				}
 			if ($this->update()) return true;
@@ -427,7 +427,7 @@ class Holes extends CActiveRecord
 				}
 				$this->DATE_STATUS = time();
 				$this->STATE       = 'fresh';
-			if ($this->update()) return true;
+			if ($this->update() && $this->request_gibdd->delete()) return true;
 			else return false;
 	}		
 	

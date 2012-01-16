@@ -7,6 +7,7 @@
  * @property integer $id
  * @property integer $request_id
  * @property integer $date
+ * @property string $comment
  */
 class HoleAnswers extends CActiveRecord
 {
@@ -37,9 +38,11 @@ class HoleAnswers extends CActiveRecord
 		return array(
 			array('request_id, date', 'required'),
 			array('request_id, date', 'numerical', 'integerOnly'=>true),
+			array('comment', 'length'),
+			array('files', 'required', 'message' => 'Необходимо загрузить ответ ГИБДД'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, request_id, date', 'safe', 'on'=>'search'),
+			array('id, request_id, date, comment', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -51,6 +54,7 @@ class HoleAnswers extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
+			'files'=>array(self::HAS_MANY, 'HoleAnswerFiles', 'answer_id'),
 		);
 	}
 
@@ -63,6 +67,8 @@ class HoleAnswers extends CActiveRecord
 			'id' => 'ID',
 			'request_id' => 'Request',
 			'date' => 'Date',
+			'comment' => 'Комментарии (по желанию)',
+			'files'=>'Необходимо добавить отсканированный ответ из ГИБДД'
 		);
 	}
 
@@ -80,6 +86,7 @@ class HoleAnswers extends CActiveRecord
 		$criteria->compare('id',$this->id);
 		$criteria->compare('request_id',$this->request_id);
 		$criteria->compare('date',$this->date);
+		$criteria->compare('comment',$this->comment,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

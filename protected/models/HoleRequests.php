@@ -55,8 +55,10 @@ class HoleRequests extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
+			'answer'=>array(self::HAS_ONE, 'HoleAnswers', 'request_id'),
 		);
 	}
+	
 
 	/**
 	 * @return array customized attribute labels (name=>label)
