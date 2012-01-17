@@ -31,9 +31,9 @@
 		
 		<!-- фотки -->
 		<div class="f">
-			<?php echo $form->labelEx($newimage,'files'); ?>
+			<?php echo $form->labelEx($model,'upploadedPictures'); ?>
 			<span class="comment">Размер каждого загружаемого файла не должен превышать 2 Мб. Суммарный размер файлов не должен превышать 8 Мб.</span>			
-			<?php $this->widget('CMultiFileUpload',array('accept'=>'gif|jpg|png', 'model'=>$newimage, 'attribute'=>'files', 'htmlOptions'=>array('class'=>'mf'), 'denied'=>Yii::t('mf','Невозможно загрузить этот файл'),'duplicate'=>Yii::t('mf','Файл уже существует'),'remove'=>Yii::t('mf','удалить'),'selected'=>Yii::t('mf','Файлы: $file'),)); ?>						
+			<?php $this->widget('CMultiFileUpload',array('accept'=>'gif|jpg|png', 'model'=>$model, 'attribute'=>'upploadedPictures', 'htmlOptions'=>array('class'=>'mf'), 'denied'=>Yii::t('mf','Невозможно загрузить этот файл'),'duplicate'=>Yii::t('mf','Файл уже существует'),'remove'=>Yii::t('mf','удалить'),'selected'=>Yii::t('mf','Файлы: $file'),)); ?>						
 		</div>
 		
 		<!-- камент -->

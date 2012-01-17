@@ -12,7 +12,7 @@ class html1234 extends pdf1234
 	// получение HTML
 	public function gethtml($temp, $params, $image = null){
 		$this->params = pdf1234::regexp($params);
-		if(method_exists(__CLASS__,'text_'.$temp))
+		if(is_object($temp) || method_exists(__CLASS__,'text_'.$temp))
 		{
 			$this->temp = $temp;
 		}
@@ -36,7 +36,8 @@ class html1234 extends pdf1234
 	// собственно шаблон
 	protected function template()
 	{
-		$arResult = call_user_func(array(__CLASS__, 'text_'.$this->temp));
+		if (!is_object($this->temp)) $arResult = call_user_func(array(__CLASS__, 'text_'.$this->temp));
+		else $arResult=$this->getTypeTemplate();
 		$header = $this->header();
 		$footer = $this->footer();
 		$name   = $this->name();

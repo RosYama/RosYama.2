@@ -12,7 +12,8 @@ class HoleRequestForm extends CFormModel
 	public $html;
 	public $pdf;
 	public $gibdd;
-	public $gibdd_reply;	
+	public $gibdd_reply;
+	public $application_data;
 
 
 	public function rules()
@@ -23,7 +24,7 @@ class HoleRequestForm extends CFormModel
 			// rememberMe needs to be a boolean
 			array('html, pdf', 'boolean'),
 			// password needs to be authenticated
-			array('to, from, postaddress, address, comment, signature', 'length'),
+			array('form_type, to, from, postaddress, address, comment, signature, application_data, gibdd, gibdd_reply', 'length'),
 		);
 	}
 

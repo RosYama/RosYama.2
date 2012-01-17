@@ -721,8 +721,13 @@ function init_MAP_DzDvWLBsil(context, type)
 	if (type=="addhole" || type=="updatehole") {
 	map.disableDblClickZoom();
 	YMaps.Events.observe(map, map.Events.DblClick, setCoordValue);
+	if ($('#Holes_LONGITUDE').val()!='' && $('#Holes_LATITUDE').val()!='')
+		map.setCenter(new YMaps.GeoPoint($('#Holes_LONGITUDE').val(), $('#Holes_LATITUDE').val()));
 	}
-	if (type=="updatehole") setCoordValue(map);
+	if (type=="updatehole") {	
+	setCoordValue(map);
+	}
+	
 }
       
 
@@ -832,7 +837,7 @@ function setCoordValue(map, ev)
 		$('#Holes_LONGITUDE').val(obj.getCoordPoint().getX());
 		geocodeOnSetCoordValue();
 	});
-	map.addOverlay(coordpoint);
+	map.addOverlay(coordpoint);	
 	geocodeOnSetCoordValue();
 }
 
@@ -842,19 +847,21 @@ function geocodeOnSetCoordValue()
 	YMaps.Events.observe(geocoder, geocoder.Events.Load, function () {
 		if(this.length())
 		{
+			
 			var geo_text = this.get(0).text.split(',');
 			var subjectrf;
 			var city;
 			var otherstr;
+			subjectrf = geo_text[1];
 			do
 			{
 				// сразу отрежем название страны
 				geo_text[0] = '';
 				document.getElementById('Holes_ADDRESS').value = geo_text.join(',').substr(2);
-				// города - субъекты РФ
+				// города - субъекты РФ				
 				if(geo_text[1] == ' Москва' || geo_text[1] == ' Санкт-Петербург')
 				{
-					subjectrf   = city = geo_text[1];
+					city = geo_text[1];
 					geo_text[1] = '';
 					// города-спутники
 					if
@@ -877,11 +884,10 @@ function geocodeOnSetCoordValue()
 				// неизвестно что
 				if(!geo_text[2])
 				{
-					subjectrf = city = '';
+					city = '';
 					otherstr = geo_text.join(',');
 					break;
-				}
-				subjectrf = geo_text[1];
+				}				
 				geo_text[1] = '';
 				// район или город
 				if(geo_text[2].indexOf('район') != -1)
@@ -897,7 +903,7 @@ function geocodeOnSetCoordValue()
 					// точка попала фиг знает куда
 					else
 					{
-						subjectrf = city = '';
+						city = '';
 						otherstr = geo_text.join(',');
 						break;
 					}
@@ -914,7 +920,7 @@ function geocodeOnSetCoordValue()
 		}
 		else
 		{
-			subjectrf = city = otherstr = '';
+			city = otherstr = '';
 		}
 		while(otherstr.indexOf(',,') != -1)
 		{
@@ -923,7 +929,7 @@ function geocodeOnSetCoordValue()
 		while(otherstr[0] == ' ' || otherstr[0] == ',')
 		{
 			otherstr = otherstr.substring(1);
-		}  
+		}  		
 		document.getElementById('Holes_STR_SUBJECTRF').value = subjectrf;
 		document.getElementById('Holes_ADR_CITY').value = city;
 		document.getElementById('recognized_address_str').innerHTML = subjectrf + (city.length && city != subjectrf ? ', ' + city : '') + (otherstr.length ? ', ' : '');

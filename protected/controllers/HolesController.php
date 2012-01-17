@@ -31,7 +31,7 @@ class HolesController extends Controller
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('add','update', 'personal','personalDelete','request','sent','notsent','gibddreply'),
+				'actions'=>array('add','update', 'personal','personalDelete','request','sent','notsent','gibddreply', 'fix', 'defix', 'prosecutorsent', 'prosecutornotsent'),
 				'users'=>array('@'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -107,7 +107,8 @@ class HolesController extends Controller
 	{
 		$cs=Yii::app()->getClientScript();
         $cs->registerCssFile('/css/hole_view.css'); 
-        
+        $jsFile = CHtml::asset($this->viewPath.DIRECTORY_SEPARATOR.'view_script.js');
+        $cs->registerScriptFile($jsFile);
         
 		$this->render('view',array(
 			'hole'=>$this->loadModel($id),
@@ -134,12 +135,21 @@ class HolesController extends Controller
 			$model->attributes=$_POST['Holes'];
 			$model->USER_ID=Yii::app()->user->id;	
 			$model->DATE_CREATED=time();
-			$subj=RfSubjects::model()->find('name="'.trim($model->STR_SUBJECTRF).'"');
-			if($subj) $model->ADR_SUBJECTRF=$subj->id;
+			$subj=RfSubjects::model()->SearchID(trim($model->STR_SUBJECTRF));
+			if($subj) $model->ADR_SUBJECTRF=$subj;
 			else $model->ADR_SUBJECTRF=0;
 			$model->ADR_CITY=trim($model->ADR_CITY);			
 			if($model->save() && $model->savePictures())
 				$this->redirect(array('view','id'=>$model->ID));
+		}
+		else {
+		//выставляем центр на карте по координатам IP юзера
+		$request=new CHttpRequest;
+		$geoIp = new EGeoIP();
+		$geoIp->locate($request->userHostAddress); 	
+		//echo ($request->userHostAddress);
+		if ($geoIp->longitude) $model->LATITUDE=$geoIp->longitude;
+		if ($geoIp->latitude) $model->LONGITUDE=$geoIp->latitude;
 		}
 
 		$this->render('add',array(
@@ -169,6 +179,10 @@ class HolesController extends Controller
 		if(isset($_POST['Holes']))
 		{
 			$model->attributes=$_POST['Holes'];
+			if ($model->STR_SUBJECTRF){
+				$subj=RfSubjects::model()->SearchID(trim($model->STR_SUBJECTRF));
+				if($subj) $model->ADR_SUBJECTRF=$subj;
+			}
 			if($model->save() && $model->savePictures())
 				$this->redirect(array('view','id'=>$model->ID));
 		}
@@ -187,23 +201,66 @@ class HolesController extends Controller
 		if($model->STATE!='inprogress' && $model->STATE!='achtung' && !$model->request_gibdd)	
 			throw new CHttpException(403,'Доступ запрещен.');
 
+		$answer=new HoleAnswers;
+		$answer->request_id=$model->request_gibdd->id;
+		
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 		$cs=Yii::app()->getClientScript();
         $cs->registerCssFile('/css/add_form.css');
         $cs->registerScriptFile('http://api-maps.yandex.ru/1.1/index.xml?key='.$this->mapkey);
 
-		if(isset($_POST['Holes']))
+		if(isset($_POST['HoleAnswers']))
 		{
-			$model->COMMENT2=$_POST['Holes']['COMMENT2'];
-			if($model->save())
-				$this->redirect(array('view','id'=>$model->ID));
+			$answer->attributes=$_POST['HoleAnswers'];	
+			$answer->date=time();
+			if($answer->save()){
+				$model->STATE='gibddre';
+				$model->GIBDD_REPLY_RECEIVED=1;
+				$model->DATE_STATUS=time();
+				if ($model->update())
+					$this->redirect(array('view','id'=>$model->ID));
+				}
 		}
 
 		$this->render('gibddreply',array(
 			'model'=>$model,
-			'answer'=>new HoleAnswers,
+			'answer'=>$answer,
 		));
+	}
+	
+	public function actionFix($id)
+	{
+		$this->layout='//layouts/header_user';
+		
+		$model=$this->loadChangeModel($id);
+		$model->scenario='fix';
+		
+		$cs=Yii::app()->getClientScript();
+        $cs->registerCssFile('/css/add_form.css');
+        $cs->registerScriptFile('http://api-maps.yandex.ru/1.1/index.xml?key='.$this->mapkey);
+
+		if(isset($_POST['Holes']))
+		{
+			$model->STATE='fixed';
+			$model->COMMENT2=$_POST['Holes']['COMMENT2'];
+			$model->DATE_STATUS=time();
+				if ($model->save() && $model->savePictures())
+					$this->redirect(array('view','id'=>$model->ID));
+		}
+
+		$this->render('fix_form',array(
+			'model'=>$model,	
+			'newimage'=>new PictureFiles
+		));
+	}	
+	
+	public function actionDefix($id)
+	{
+		$model=$this->loadChangeModel($id);
+		$model->updateSetinprogress();
+			if(!isset($_GET['ajax']))
+				$this->redirect(array('view','id'=>$model->ID));
 	}	
 
 	//удаление ямы админом или модером
@@ -274,8 +331,11 @@ class HolesController extends Controller
 			{
 				$request->attributes=$_POST['HoleRequestForm'];
 				$_images = array();
-				$date3 = isset($_POST['application_data'])   ? strtotime($_POST['application_data']) : time();
-				$date2 = $request->form_type == 'prosecutor' ? $model->DATE_SENT        : time();
+				$date3 = $request->application_data   ? strtotime($request->application_data) : time();
+				if ($request->form_type == 'prosecutor')
+					$date3 = strtotime($request->application_data);
+					
+				$date2 = $request->form_type == 'prosecutor' && $model->request_gibdd ? $model->request_gibdd->date_sent  : time();
 				$_data = array
 				(
 					'chief'       => $request->to,
@@ -307,7 +367,7 @@ class HolesController extends Controller
 					$HT = new html1234();
 					$HT->gethtml
 					(
-						$request->form_type ? $request->form_type : $model->type->alias,
+						$request->form_type ? $request->form_type : $model->type,
 						$_data,
 						$_images
 					);
@@ -323,7 +383,7 @@ class HolesController extends Controller
 					$PDF = new pdf1234();
 					$PDF->getpdf
 					(
-						$request->form_type ? $request->form_type : $model->type->alias,
+						$request->form_type ? $request->form_type : $model->type,
 						$_data,
 						$_images
 					);
@@ -379,6 +439,22 @@ class HolesController extends Controller
 			if(!isset($_GET['ajax']))
 				$this->redirect(array('view','id'=>$model->ID));
 	}
+	
+	public function actionProsecutorsent($id)
+	{
+		$model=$this->loadChangeModel($id);
+		$model->updateToprosecutor();
+			if(!isset($_GET['ajax']))
+				$this->redirect(array('view','id'=>$model->ID));
+	}
+	
+	public function actionProsecutornotsent($id)
+	{
+		$model=$this->loadChangeModel($id);
+		$model->updateRevokep();
+			if(!isset($_GET['ajax']))
+				$this->redirect(array('view','id'=>$model->ID));
+	}		
 	
 	public function actionNotsent($id)
 	{

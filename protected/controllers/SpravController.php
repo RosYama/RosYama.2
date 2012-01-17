@@ -223,7 +223,7 @@ class SpravController extends Controller
 					$subjects[1]=preg_replace('/\(.*\)/i', '', $subjects[1]);
 					$subjectmodel = RfSubjects::model()->find("name_full LIKE '%".trim($subjects[1])."%'");
 					if ($subjectmodel) $subject=$subjectmodel->id;
-					else $subject=0;
+					else $subject=$subject=RfSubjects::model()->SearchID($subjects[1]);
 					}
 					else {
 						$itemname=$subjects[0];

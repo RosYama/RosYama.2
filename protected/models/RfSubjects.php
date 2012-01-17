@@ -74,6 +74,52 @@ class RfSubjects extends CActiveRecord
 	 * Retrieves a list of models based on the current search/filter conditions.
 	 * @return CActiveDataProvider the data provider that can return the models based on the search/filter conditions.
 	 */
+	 
+	// нечувствительный к регистру поиск по массиву
+	protected function gs_array_search($needle, $haystack)
+	{
+		foreach($haystack as $k => $v)
+		{		
+			if(mb_strtoupper($v,'UTF-8') == mb_strtoupper($needle,'UTF-8'))
+			{
+				return $k;
+				
+			}
+		}
+		return false;
+	}	 
+	
+	public function SearchID($subject_name)
+	{
+		$subject_name = trim($subject_name, " \n\t");
+		$_RF_SUBJECTS=CHtml::listData($this->findAll(), 'id','name');
+		$result = $this->gs_array_search($subject_name, $_RF_SUBJECTS);
+		if(!$result)
+		{
+			$subject_name = explode(' ', $subject_name);
+			foreach($subject_name as $s)
+			{
+				$ls = mb_strtolower($s,'UTF-8');				
+				if
+				(
+					$ls == 'республика'
+					|| $ls == 'край'
+					|| $ls == 'область'
+					|| $ls == 'округ'
+				)
+				{
+					continue;
+				}
+				$result = $this->gs_array_search($s, $_RF_SUBJECTS);
+				if($result)
+				{
+					break;
+				}
+			}
+		}
+		return $result;
+	}
+	
 	public function search()
 	{
 		// Warning: Please modify the following code to remove attributes that

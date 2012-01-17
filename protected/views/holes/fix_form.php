@@ -4,7 +4,7 @@
 	'enableAjaxValidation'=>false,
 	'htmlOptions'=>Array ('enctype'=>'multipart/form-data'),
 )); ?>
-<?php echo $form->errorSummary($answer); ?>
+<?php echo $form->errorSummary($model); ?>
 
 	<? /*<input type="hidden" name="ID" value="<?= $F['ID']['VALUE'] ?>">
 	 if($F['FIX_ID']): ?>
@@ -27,9 +27,9 @@
 		
 		<!-- фотки -->
 		<div class="f">
-			<?php echo $form->labelEx($answer,'uppload_files'); ?>
+			<?php echo $form->labelEx($model,'upploadedPictures'); ?>
 			<span class="comment">Размер каждого загружаемого файла не должен превышать 2 Мб. Суммарный размер файлов не должен превышать 8 Мб.</span>			
-			<?php $this->widget('CMultiFileUpload',array('accept'=>'gif|jpg|png|pdf|txt', 'model'=>$answer, 'attribute'=>'uppload_files', 'htmlOptions'=>array('class'=>'mf'), 'denied'=>Yii::t('mf','Невозможно загрузить этот файл'),'duplicate'=>Yii::t('mf','Файл уже существует'),'remove'=>Yii::t('mf','удалить'),'selected'=>Yii::t('mf','Файлы: $file'),)); ?>						
+			<?php $this->widget('CMultiFileUpload',array('accept'=>'gif|jpg|png|pdf|txt', 'model'=>$model, 'attribute'=>'upploadedPictures', 'htmlOptions'=>array('class'=>'mf'), 'denied'=>Yii::t('mf','Невозможно загрузить этот файл'),'duplicate'=>Yii::t('mf','Файл уже существует'),'remove'=>Yii::t('mf','удалить'),'selected'=>Yii::t('mf','Файлы: $file'),)); ?>						
 		</div>
 		
 		<!-- камент -->
@@ -62,9 +62,9 @@ EOD
 		
 		<!-- камент -->
 		<div class="f">
-			<?php echo $form->labelEx($answer,'comment'); ?>
-			<?php echo $form->textArea($answer,'comment',array('rows'=>6, 'cols'=>50)); ?>
-			<?php echo $form->error($answer,'comment'); ?>
+			<?php echo $form->labelEx($model,'COMMENT2'); ?>
+			<?php echo $form->textArea($model,'COMMENT2',array('rows'=>6, 'cols'=>50)); ?>
+			<?php echo $form->error($model,'COMMENT2'); ?>
 		</div>
 
 	</div>

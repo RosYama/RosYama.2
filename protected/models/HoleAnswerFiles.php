@@ -39,7 +39,7 @@ class HoleAnswerFiles extends CActiveRecord
 			array('answer_id, file_name, file_type', 'required'),
 			array('answer_id', 'numerical', 'integerOnly'=>true),
 			array('file_name', 'length', 'max'=>511),
-			array('file_type', 'length', 'max'=>4),
+			array('file_type', 'length', 'max'=>63),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
 			array('id, answer_id, file_name, file_type', 'safe', 'on'=>'search'),

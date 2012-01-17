@@ -15,6 +15,7 @@ class HoleAnswers extends CActiveRecord
 	 * Returns the static model of the specified AR class.
 	 * @return HoleAnswers the static model class
 	 */
+
 	public static function model($className=__CLASS__)
 	{
 		return parent::model($className);
@@ -39,7 +40,9 @@ class HoleAnswers extends CActiveRecord
 			array('request_id, date', 'required'),
 			array('request_id, date', 'numerical', 'integerOnly'=>true),
 			array('comment', 'length'),
-			array('files', 'required', 'message' => 'Необходимо загрузить ответ ГИБДД'),
+			array('uppload_files', 'safe'),
+			array('uppload_files', 'required', 'on'=>'insert', 'message' => 'Необходимо загрузить ответ ГИБДД'),
+			array('uppload_files', 'file', 'types'=>'jpg, png, gif, txt, pdf','maxFiles'=>10),			
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
 			array('id, request_id, date, comment', 'safe', 'on'=>'search'),
@@ -55,6 +58,9 @@ class HoleAnswers extends CActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'files'=>array(self::HAS_MANY, 'HoleAnswerFiles', 'answer_id'),
+			'files_img'=>array(self::HAS_MANY, 'HoleAnswerFiles', 'answer_id', 'condition'=>'file_type="image"'),
+			'files_other'=>array(self::HAS_MANY, 'HoleAnswerFiles', 'answer_id', 'condition'=>'file_type!="image"'),
+			'request'=>array(self::BELONGS_TO, 'HoleRequests', 'request_id'),
 		);
 	}
 
@@ -68,9 +74,55 @@ class HoleAnswers extends CActiveRecord
 			'request_id' => 'Request',
 			'date' => 'Date',
 			'comment' => 'Комментарии (по желанию)',
-			'files'=>'Необходимо добавить отсканированный ответ из ГИБДД'
+			'uppload_files'=>'Необходимо добавить отсканированный ответ из ГИБДД'
 		);
 	}
+	
+	public function getFilesFolder(){
+		return '/upload/st1234/answers/'.$this->request->hole->ID.'/'.$this->request->type;
+	}	
+	
+	public function getuppload_files(){
+		return CUploadedFile::getInstancesByName('HoleAnswers[uppload_files]');
+	}
+	
+	public function afterSave()
+	{			
+		$files=$this->uppload_files;
+		if($files){
+		$dir=$_SERVER['DOCUMENT_ROOT'].$this->filesFolder;
+		if (!is_dir($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/answers/'))
+			mkdir($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/answers/');
+		if (!is_dir($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/answers/'.$this->request->hole->ID))
+			mkdir($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/answers/'.$this->request->hole->ID);
+		if (!is_dir($dir))
+			mkdir($dir);
+		if (!is_dir($dir.'/thumbs'))
+			mkdir($dir.'/thumbs');	
+			
+			foreach ($files as $file){
+			if(!$file->hasError){
+				$model=new HoleAnswerFiles;
+				$model->answer_id=$this->id;
+				$model->file_name=rand().'.'.$file->extensionName;
+				$filetypeArr=explode('/', $file->type);
+				if ($filetypeArr[0]=='image') $filetype='image';
+				else $filetype=$file->type;
+				$model->file_type=$filetype;
+				if ($model->save()){
+					$file->saveAs($dir.'/'.$model->file_name);
+					if ($model->file_type=='image'){						
+						$image = Yii::app()->image->load($dir.'/'.$model->file_name);
+						$image->resize(600, 450)->rotate(0)->quality(90)->sharpen(20);
+						//$image->crop($imgmax['width'], $imgmax['height']);
+						$savename=$dir.'/thumbs/'.$model->file_name;
+						$image->save($savename);
+						}
+					}
+				}
+			}
+		}
+	}	
 
 	/**
 	 * Retrieves a list of models based on the current search/filter conditions.

@@ -91,9 +91,9 @@ class Holes extends CActiveRecord
 			array('USER_ID, STATE, DATE_CREATED, DATE_SENT, DATE_STATUS, ADR_SUBJECTRF, DATE_SENT_PROSECUTOR', 'length', 'max'=>10),
 			array('ADR_CITY', 'length', 'max'=>50),
 			array('STR_SUBJECTRF', 'length'),
-			array('COMMENT1, COMMENT2, COMMENT_GIBDD_REPLY, deletepict, replуfiles, request_gibdd', 'safe'),			
-			array('UpploadedPictures', 'required', 'on' => 'insert', 'message' => 'Необходимо загрузить фотографии'),
-			array('replуfiles', 'required', 'on' => 'gibdd_reply', 'message' => 'Необходимо загрузить ответ ГИБДД'),
+			array('COMMENT1, COMMENT2, COMMENT_GIBDD_REPLY, deletepict, upploadedPictures, request_gibdd', 'safe'),	
+			array('upploadedPictures', 'file', 'types'=>'jpg, png, gif','maxFiles'=>10, 'allowEmpty'=>true, 'on' => 'update'),
+			array('upploadedPictures', 'required', 'on' => 'insert', 'message' => 'Необходимо загрузить фотографии'),			
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
 			array('ID, USER_ID, LATITUDE, LONGITUDE, ADDRESS, STATE, DATE_CREATED, DATE_SENT, DATE_STATUS, COMMENT1, COMMENT2, TYPE_ID, ADR_SUBJECTRF, ADR_CITY, COMMENT_GIBDD_REPLY, GIBDD_REPLY_RECEIVED, PREMODERATED, DATE_SENT_PROSECUTOR', 'safe', 'on'=>'search'),
@@ -110,7 +110,7 @@ class Holes extends CActiveRecord
 		return array(
 			'subject'=>array(self::BELONGS_TO, 'RfSubjects', 'ADR_SUBJECTRF'),
 			'request_gibdd'=>array(self::HAS_ONE, 'HoleRequests', 'hole_id', 'condition'=>'request_gibdd.type="gibdd"'),
-			'request_prosecutor'=>array(self::HAS_ONE, 'HoleRequests', 'hole_id', 'condition'=>'request_gibdd.prosecutor="prosecutor"'),
+			'request_prosecutor'=>array(self::HAS_ONE, 'HoleRequests', 'hole_id', 'condition'=>'request_prosecutor.type="prosecutor"'),
 			'type'=>array(self::BELONGS_TO, 'HoleTypes', 'TYPE_ID'),
 			'user'=>array(self::BELONGS_TO, 'UserGroupsUser', 'USER_ID'),		
 		);
@@ -135,7 +135,7 @@ class Holes extends CActiveRecord
 	$arr['inprogress'] = 'В ГАИ';
 	$arr['fixed']      = 'Отремонтировано';
 	$arr['achtung']    = 'В ГАИ';
-	$arr['gibddre']    = 'В ГАИ';
+	$arr['gibddre']    = 'Получен ответ';
 	$arr['prosecutor'] = 'Заявление в прокуратуре';
 	return $arr;
 	}	
@@ -232,13 +232,15 @@ class Holes extends CActiveRecord
 	}
 	
 	public function getUpploadedPictures(){
-		return CUploadedFile::getInstancesByName('PictureFiles');
+		return CUploadedFile::getInstancesByName('Holes[upploadedPictures]');
 	}
 	
 	public function savePictures(){
 						//echo count($this->deletepict);						
 						$imagess=$this->UpploadedPictures;
 						$id=$this->ID;
+						$prefix='';
+						if ($this->scenario=='fix') $prefix='f';
 						if (!is_dir($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/original/'.$id)){
 							if(!mkdir($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/original/'.$id))
 							{
@@ -298,18 +300,18 @@ class Holes extends CActiveRecord
 									$new_y    = floor($_image_info[1] / $aspect);
 									$newimage = imagecreatetruecolor($new_x, $new_y);
 									imagecopyresampled($newimage, $image, 0, 0, 0, 0, $new_x, $new_y, $_image_info[0], $_image_info[1]);
-									imagejpeg($newimage, $_SERVER['DOCUMENT_ROOT'].'/upload/st1234/original/'.$id.'/'.$file_counter.'.jpg');
+									imagejpeg($newimage, $_SERVER['DOCUMENT_ROOT'].'/upload/st1234/original/'.$id.'/'.$prefix.$file_counter.'.jpg');
 								}
 								else
 								{
-									imagejpeg($image, $_SERVER['DOCUMENT_ROOT'].'/upload/st1234/original/'.$id.'/'.$file_counter.'.jpg');
+									imagejpeg($image, $_SERVER['DOCUMENT_ROOT'].'/upload/st1234/original/'.$id.'/'.$prefix.$file_counter.'.jpg');
 								}
 								$aspect   = max($_image_info[0] / $_params['medium_sizex'], $_image_info[1] / $_params['medium_sizey']);
 								$new_x    = floor($_image_info[0] / $aspect);
 								$new_y    = floor($_image_info[1] / $aspect);
 								$newimage = imagecreatetruecolor($new_x, $new_y);
 								imagecopyresampled($newimage, $image, 0, 0, 0, 0, $new_x, $new_y, $_image_info[0], $_image_info[1]);
-								imagejpeg($newimage, $_SERVER['DOCUMENT_ROOT'].'/upload/st1234/medium/'.$id.'/'.$file_counter.'.jpg');
+								imagejpeg($newimage, $_SERVER['DOCUMENT_ROOT'].'/upload/st1234/medium/'.$id.'/'.$prefix.$file_counter.'.jpg');
 								imagedestroy($newimage);
 								$aspect   = min($_image_info[0] / $_params['small_sizex'], $_image_info[1] / $_params['small_sizey']);
 								$newimage = imagecreatetruecolor($_params['small_sizex'], $_params['small_sizey']);
@@ -326,7 +328,7 @@ class Holes extends CActiveRecord
 									ceil($aspect * $_params['small_sizex']),
 									ceil($aspect * $_params['small_sizey'])
 								);
-								imagejpeg($newimage, $_SERVER['DOCUMENT_ROOT'].'/upload/st1234/small/'.$id.'/'.$file_counter.'.jpg');
+								imagejpeg($newimage, $_SERVER['DOCUMENT_ROOT'].'/upload/st1234/small/'.$id.'/'.$prefix.$file_counter.'.jpg');
 								imagedestroy($newimage);
 								imagedestroy($image);
 								$file_counter++;
@@ -364,11 +366,38 @@ class Holes extends CActiveRecord
 			}
 		}
 		return $operator($file_name);
+	}	
+	
+	
+	public function updateToprosecutor(){
+	
+	$this->DATE_STATUS= time();
+	$this->DATE_SENT_PROSECUTOR = time();
+	$this->STATE='prosecutor';
+					if (!$this->request_prosecutor){
+						$request=new HoleRequests;
+						$request->attributes=Array(
+							'hole_id'=>$this->ID,
+							'user_id'=>Yii::app()->user->id,
+							'gibdd_id'=>$this->subject ? $this->subject->prosecutor->id : 0,
+							'date_sent'=>time(),
+							'type'=>'prosecutor'
+							);
+						$request->save();	
+					}
+
+	$this->update();
 	}
 	
-	public function getReplуfiles(){
-		return CUploadedFile::getInstancesByName('Holes[replуfiles]');
+	public function updateRevokep(){
+	
+	$this->DATE_STATUS= time();
+	$this->DATE_SENT_PROSECUTOR = 0;
+	$this->STATE='achtung';
+	if ($this->request_prosecutor) $this->request_prosecutor->delete();	
+	$this->update();
 	}	
+
 	
 	public function updateSetinprogress()
 	{
@@ -411,7 +440,7 @@ class Holes extends CActiveRecord
 					if(!$this->DATE_SENT)
 					{
 						$this->STATE = 'fresh';
-						$this->request_gibdd->delete();
+						if ($this->request_gibdd) $this->request_gibdd->delete();
 					}
 				}
 			if ($this->update()) return true;
@@ -474,7 +503,7 @@ class Holes extends CActiveRecord
 			'DATE_SENT' => 'Date Sent',
 			'DATE_STATUS' => 'Date Status',
 			'COMMENT1' => 'Комментарии',
-			'COMMENT2' => 'Комментарии (по желанию)',
+			'COMMENT2' => 'Комментарии',
 			'TYPE_ID' => 'Тип дефекта',
 			'ADR_SUBJECTRF' => 'Adr Subjectrf',
 			'ADR_CITY' => 'Adr City',
@@ -484,7 +513,8 @@ class Holes extends CActiveRecord
 			'NOT_PREMODERATED' => 'только непроверенные',
 			'DATE_SENT_PROSECUTOR' => 'Date Sent Prosecutor',
 			'deletepict'=>'Удалить фотографию?',
-			'replуfiles'=>'Необходимо добавить отсканированный ответ из ГИБДД'
+			'replуfiles'=>'Необходимо добавить отсканированный ответ из ГИБДД',
+			'upploadedPictures'=>$this->scenario=='fix' ? 'Желательно добавить фотографии исправленного дефекта' : 'Нужно загрузить фотографии'
 		);
 	}
 
@@ -530,6 +560,9 @@ class Holes extends CActiveRecord
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
+			'pagination'=>array(
+				        'pageSize'=>12,
+				    ),
 		));
 	}
 }

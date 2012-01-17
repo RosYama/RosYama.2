@@ -108,7 +108,7 @@ return array(
 		 'widgetFactory'=>array(
 			'enableSkin'=>true,
             'widgets'=>array(
-                'CGridView'=>array(
+                /*'CGridView'=>array(
                     'cssFile'=>'/css/gridview/styles.css',
                 ),
                 'CTabView'=>array(
@@ -116,7 +116,7 @@ return array(
                 ),
                 'CDetailView'=>array(
                     'cssFile'=>'/css/CDetailView/styles.css',
-                ),
+                ),*/
                 'CJuiDatePicker'=>array(
                     'language'=>'ru',
                 ),
