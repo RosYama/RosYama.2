@@ -63,7 +63,7 @@ class HoleTypesController extends Controller
 			$model->attributes=$_POST['HoleTypes'];
 			$model->ordering=$model->LastOrder+1;
 			if($model->save())
-				$this->redirect(array('view','id'=>$model->id));
+				$this->redirect(array('index'));
 		}
 
 		$this->render('create',array(
@@ -87,7 +87,7 @@ class HoleTypesController extends Controller
 		{
 			$model->attributes=$_POST['HoleTypes'];
 			if($model->save())
-				$this->redirect(array('view','id'=>$model->id));
+				$this->redirect(array('index'));
 		}
 
 		$this->render('update',array(
@@ -100,6 +100,7 @@ class HoleTypesController extends Controller
 	 * If deletion is successful, the browser will be redirected to the 'index' page.
 	 * @param integer $id the ID of the model to be deleted
 	 */
+	/* 
 	public function actionDelete($id)
 	{
 		if(Yii::app()->request->isPostRequest)
@@ -113,7 +114,7 @@ class HoleTypesController extends Controller
 		}
 		else
 			throw new CHttpException(400,'Invalid request. Please do not repeat this request again.');
-	}
+	}*/
 
 	/**
 	 * Lists all models.
@@ -161,10 +162,6 @@ class HoleTypesController extends Controller
 		                {
 		                       $modelbefore=HoleTypes::model()->findByPk($_GET['beforeid']);
 		                       $modelafter=HoleTypes::model()->findByPk($_GET['afterid']);
-		                       //Это если есть второй параметр сортировки
-		                       /*if ($modelbefore->catid == $model->catid) $model->ordering=$modelbefore->ordering;
-		                       elseif($modelafter->catid == $model->catid) $model->ordering=$modelafter->ordering;*/
-		                       //Если все только ордеринг то:
 		                       if ($modelbefore) $model->ordering=$modelbefore->ordering-1;
 		                       else $model->ordering=$modelafter->ordering;
 

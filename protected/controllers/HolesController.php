@@ -31,7 +31,7 @@ class HolesController extends Controller
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('add','update', 'personal','personalDelete','request','sent','notsent','gibddreply', 'fix', 'defix', 'prosecutorsent', 'prosecutornotsent'),
+				'actions'=>array('add','update', 'personal','personalDelete','request','sent','notsent','gibddreply', 'fix', 'defix', 'prosecutorsent', 'prosecutornotsent','delanswerfile'),
 				'users'=>array('@'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -202,6 +202,9 @@ class HolesController extends Controller
 			throw new CHttpException(403,'Доступ запрещен.');
 
 		$answer=new HoleAnswers;
+		if (isset($_GET['answer']) && $_GET['answer'])
+			$answer=HoleAnswers::model()->findByPk((int)$_GET['answer']);
+			
 		$answer->request_id=$model->request_gibdd->id;
 		
 		// Uncomment the following line if AJAX validation is needed
@@ -401,8 +404,8 @@ class HolesController extends Controller
 		$model=new Holes('search');
 		$model->unsetAttributes();  // clear any default values
 		//$model->PREMODERATED;
-		if(isset($_POST['Holes']))
-			$model->attributes=$_POST['Holes'];
+		if(isset($_POST['Holes']) || isset($_GET['Holes']))
+			$model->attributes=isset($_POST['Holes']) ? $_POST['Holes'] : $_GET['Holes'];
 			if ($model->ADR_CITY=="Город") $model->ADR_CITY='';
 		$dataProvider=$model->search();	
 		$this->render('index',array(
@@ -462,6 +465,24 @@ class HolesController extends Controller
 		$model->updateRevoke();
 			if(!isset($_GET['ajax']))
 				$this->redirect(array('view','id'=>$model->ID));
+	}	
+	
+	//удаление файла ответа гибдд
+	public function actionDelanswerfile($id)
+	{
+			$file=HoleAnswerFiles::model()->findByPk((int)$id);
+			
+			if (!$file)
+				throw new CHttpException(404,'The requested page does not exist.');
+				
+			if ($file->answer->request->user_id!=Yii::app()->user->id && !Yii::app()->user->isModer && $file->answer->request->hole->STATE !='gibddre')
+				throw new CHttpException(403,'Доступ запрещен.');
+				
+			$file->delete();			
+			
+			if(!isset($_GET['ajax']))
+				$this->redirect(array('view','id'=>$file->answer->request->hole->ID));
+		
 	}	
 	
 	public function actionPersonal()

@@ -53,6 +53,15 @@ class GibddHeads extends CActiveRecord
 			array('id, name, subject_id, post, post_dative, fio, fio_dative, gibdd_name, contacts, address, tel_degurn, tel_dover, url', 'safe', 'on'=>'search'),
 		);
 	}
+	
+	public function getLink()
+	{
+		if ($this->url) {
+			$parseurl=parse_url($this->url);
+			if (isset($parseurl['host'])) return CHtml::link($parseurl['host'], $this->url, Array('target'=>"_BLANK"));			
+			}
+		else return '';	
+	}
 
 	/**
 	 * @return array relational rules.

@@ -123,6 +123,17 @@ class HoleAnswers extends CActiveRecord
 			}
 		}
 	}	
+	
+	public function beforeDelete(){
+		foreach ($this->files as $file) $file->delete();
+		return true;
+	}
+	
+	public function afterDelete(){
+		if (!count ($this->findAll('request_id='.$this->request_id)))
+			$this->request->delete();			
+		return true;	
+	}	
 
 	/**
 	 * Retrieves a list of models based on the current search/filter conditions.

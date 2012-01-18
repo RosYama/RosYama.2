@@ -435,16 +435,31 @@ $this->widget('application.extensions.fancybox.EFancyBox', array(
 					<?php echo $answer->comment ?>
 				</div>
 				<? endif; ?>
-				<h2><?= Yii::t('holes_view', 'HOLE_GIBDDREPLY') ?> от <?php echo date('d.m.Y',$answer->date);?></h2>
-				<? foreach($answer->files_other as $file): ?>
-					<?php echo CHtml::link($file->file_name, $answer->filesFolder.'/'.$file->file_name); ?><br />
-				<? endforeach; ?>
+				<h2><?= Yii::t('holes_view', 'HOLE_GIBDDREPLY') ?> от <?php echo date('d.m.Y',$answer->date);?>
+				<?php if ($hole->request_gibdd->user_id==Yii::app()->user->id && $hole->STATE =='gibddre') : ?>
+						<?php echo CHtml::link('Редактировать', Array('gibddreply','id'=>$hole->ID,'answer'=>$answer->id), Array('class'=>'declarationBtn')); ?><br />
+				<?php endif; ?>	
+				</h2>				
 				<?php if ($answer->files_other) : ?>
+				<? foreach($answer->files_other as $file): ?>
+				<p>
+					<?php echo CHtml::link($file->file_name, $answer->filesFolder.'/'.$file->file_name, Array('class'=>'declarationBtn')); ?>
+					<?php if ($hole->request_gibdd->user_id==Yii::app()->user->id && $hole->STATE =='gibddre') : ?>
+						<?php echo CHtml::link('Удалить файл', Array('delanswerfile','id'=>$file->id), Array('class'=>'declarationBtn')); ?><br />
+					<?php endif; ?>					
+				</p>	
+				<? endforeach; ?>				
 				<br />
 				<?php endif; ?>
+				
 				<? foreach($answer->files_img as $img): ?>
+				<p>
+					<?php if ($hole->request_gibdd->user_id==Yii::app()->user->id && $hole->STATE =='gibddre') : ?>
+						<?php echo CHtml::link('Удалить это изображение', Array('delanswerfile','id'=>$img->id), Array('class'=>'declarationBtn')); ?></br>
+					<?php endif; ?>
 					<?php echo CHtml::link(CHtml::image($answer->filesFolder.'/thumbs/'.$img->file_name), $answer->filesFolder.'/'.$img->file_name, 
 						Array('class'=>'holes_pict','rel'=>'answer_'.$answer->id, 'title'=>'Ответ ГИБДД от '.date('d.m.Y',$answer->date))); ?>
+				</p>		
 				<? endforeach; ?>
 			
 			</div>

@@ -442,7 +442,15 @@ class UserController extends Controller
 		{
 			$model->attributes=$_POST['UserGroupsUser'];
 			// validate user input and redirect to the previous page if valid
-			if($model->validate() && $model->login()) {
+			if($model->validate() && $model->login()) {				
+				if (Yii::app()->user->userModel->holes_fresh_cnt) 
+					Yii::app()->user->setFlash('user', 
+						Yii::t('user','PREVED',Array(
+							'{count}'=>Yii::app()->user->userModel->holes_fresh_cnt,
+							'{user}'=>Yii::app()->user->userModel->name ? Yii::app()->user->userModel->name : Yii::app()->user->userModel->username
+							)
+						)
+					);
 				$this->redirect(Yii::app()->user->returnUrl);
 			}
 		}

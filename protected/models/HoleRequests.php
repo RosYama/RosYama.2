@@ -76,6 +76,26 @@ class HoleRequests extends CActiveRecord
 			'type' => 'Type',
 		);
 	}
+	
+	public function beforeDelete(){
+		foreach ($this->answers as $answer) $answer->delete();
+		return true;
+	}
+	
+	public function afterDelete(){
+		if (!count ($this->findAll('hole_id='.$this->hole_id.' AND type="'.$this->type.'"'))){
+			if ($this->type=='gibdd') {
+				$this->hole->STATE='inprogress';				
+				$this->hole->update();
+			}
+			if ($this->type=='prosecutor') {
+				$this->hole->STATE='achtung';
+				$this->hole->DATE_SENT_PROSECUTOR=null;
+				$this->hole->update();
+			}			
+		}	
+		return true;	
+	}		
 
 	/**
 	 * Retrieves a list of models based on the current search/filter conditions.

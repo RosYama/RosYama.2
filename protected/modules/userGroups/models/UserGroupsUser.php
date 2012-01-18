@@ -298,6 +298,7 @@ class UserGroupsUser extends CActiveRecord
 			'holes' => array(self::HAS_MANY, 'Holes', 'USER_ID'),
 			'holes_cnt' => array(self::STAT, 'Holes', 'USER_ID'),
 			'holes_fixed_cnt' => array(self::STAT, 'Holes', 'USER_ID', 'condition'=>'STATE="fixed"'),
+			'holes_fresh_cnt' => array(self::STAT, 'Holes', 'USER_ID', 'condition'=>'STATE="fresh"'),
 			);
 		// extract profile models list
 		$modulesData = Yii::app()->getModules();

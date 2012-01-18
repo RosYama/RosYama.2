@@ -54,6 +54,7 @@ class HoleAnswerFiles extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
+		'answer'=>array(self::BELONGS_TO, 'HoleAnswers', 'answer_id'),		
 		);
 	}
 
@@ -68,6 +69,20 @@ class HoleAnswerFiles extends CActiveRecord
 			'file_name' => 'File Name',
 			'file_type' => 'File Type',
 		);
+	}
+	
+	public function beforeDelete(){
+		if ($this->file_type=='image')
+			unlink($_SERVER['DOCUMENT_ROOT'].$this->answer->filesFolder.'/thumbs/'.$this->file_name);
+			
+		unlink($_SERVER['DOCUMENT_ROOT'].$this->answer->filesFolder.'/'.$this->file_name);
+		return true;
+	}
+	
+	public function afterDelete(){
+		if (!count ($this->findAll('answer_id='.$this->answer_id)))
+			$this->answer->delete();
+		return true;	
 	}
 
 	/**

@@ -34,15 +34,14 @@ class Holes extends CActiveRecord
 		return parent::model($className);
 	}
 	
-	public $WAIT_DAYS; 
-	
-	public $PAST_DAYS;
-	
-	public $NOT_PREMODERATED;
-	
-	public $STR_SUBJECTRF;
-	
+	public $WAIT_DAYS; 	
+	public $PAST_DAYS;	
+	public $NOT_PREMODERATED;	
+	public $STR_SUBJECTRF;	
 	public $deletepict=Array();
+	public $counts;
+	public $state_to_filter;
+	public $time;
 
 	/**
 	 * @return string the associated database table name
@@ -53,16 +52,6 @@ class Holes extends CActiveRecord
 	}
 	
 	public $ADR_CITY='Город';
-	
-	public function getMessages(){
-		return array(
-			'GREENSIGHT_ERROR_NOID'=>'Элемент не найден',
-			'GREENSIGHT_ERROR_UNSUPPORTED_IMAGE_TYPE'=>'Неподдерживаемый формат изображения',
-			'GREENSIGHT_ERROR_DATABASE'=>'Ошибка базы данных :(',
-			'GREENSIGHT_ERROR_CANNOT_CREATE_DIR'=>'Ошибка при загрузке файла',
-			'GREENSIGHT_ERROR_RAPIDFIRE'=>'Дефекты нельзя добавлять слишком часто',
-		);
-	}
 	
 	public function getParams(){
 		return array(
@@ -109,6 +98,7 @@ class Holes extends CActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'subject'=>array(self::BELONGS_TO, 'RfSubjects', 'ADR_SUBJECTRF'),
+			'requests'=>array(self::HAS_MANY, 'HoleRequests', 'hole_id'),
 			'request_gibdd'=>array(self::HAS_ONE, 'HoleRequests', 'hole_id', 'condition'=>'request_gibdd.type="gibdd"'),
 			'request_prosecutor'=>array(self::HAS_ONE, 'HoleRequests', 'hole_id', 'condition'=>'request_prosecutor.type="prosecutor"'),
 			'type'=>array(self::BELONGS_TO, 'HoleTypes', 'TYPE_ID'),
@@ -153,22 +143,7 @@ class Holes extends CActiveRecord
 	}	
 	
 	public function getStateName()	
-	{
-		if(($this->STATE == 'inprogress' || $this->STATE == 'achtung') && $this->DATE_SENT && !$this->STATE != 'gibddre')
-		{
-			$this->WAIT_DAYS = 38 - ceil((time() - $this->DATE_SENT) / 86400);	
-			if ($this->WAIT_DAYS<0) { 
-			$this->PAST_DAYS=abs($this->WAIT_DAYS);
-			$this->WAIT_DAYS=0;
-			}
-		}
-		
-		
-		
-		if ($this->WAIT_DAYS < 0 && $this->STATE == 'inprogress') {
-			$this->STATE = 'achtung';
-			$this->update();
-			}
+	{	
 		return $this->AllstatesShort[$this->STATE];
 	}
 	
@@ -244,20 +219,20 @@ class Holes extends CActiveRecord
 						if (!is_dir($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/original/'.$id)){
 							if(!mkdir($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/original/'.$id))
 							{
-								$this->addError('pictures', $this->messages['GREENSIGHT_ERROR_CANNOT_CREATE_DIR']);
+								$this->addError('upploadedPictures', Yii::t('errors', 'GREENSIGHT_ERROR_CANNOT_CREATE_DIR'));
 								return false;
 							}
 							if(!mkdir($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/medium/'.$id))
 							{
 								unlink($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/original/'.$id);
-								$this->addError('pictures',$this->messages['GREENSIGHT_ERROR_CANNOT_CREATE_DIR']);
+								$this->addError('upploadedPictures',Yii::t('errors', 'GREENSIGHT_ERROR_CANNOT_CREATE_DIR'));
 								return false;
 							}
 							if(!mkdir($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/small/'.$id))
 							{
 								unlink($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/original/'.$id);
 								unlink($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/medium/'.$id);
-								$this->addError('pictures',$this->messages['GREENSIGHT_ERROR_CANNOT_CREATE_DIR']);
+								$this->addError('upploadedPictures',Yii::t('errors', 'GREENSIGHT_ERROR_CANNOT_CREATE_DIR'));
 								return false;
 							}
 						}						
@@ -290,7 +265,7 @@ class Holes extends CActiveRecord
 								$image = $this->imagecreatefromfile($_file->getTempName(), &$_image_info);
 								if(!$image)
 								{
-									$this->addError('pictures',$this->messages['GREENSIGHT_ERROR_UNSUPPORTED_IMAGE_TYPE']);
+									$this->addError('pictures',Yii::t('errors', 'GREENSIGHT_ERROR_UNSUPPORTED_IMAGE_TYPE'));
 									return false;
 								}
 								$aspect = max($_image_info[0] / $_params['big_sizex'], $_image_info[1] / $_params['big_sizey']);
@@ -460,6 +435,27 @@ class Holes extends CActiveRecord
 			else return false;
 	}		
 	
+	
+	public function afterFind(){
+	
+		//вычисляем количество дней с момента отправки
+		if(($this->STATE == 'inprogress' || $this->STATE == 'achtung') && $this->DATE_SENT && !$this->STATE != 'gibddre')
+		{
+			$this->WAIT_DAYS = 38 - ceil((time() - $this->DATE_SENT) / 86400);	
+		}
+			
+		//отмечаем яму если просроченна
+		if ($this->WAIT_DAYS < 0 && $this->STATE == 'inprogress') {
+			$this->STATE = 'achtung';
+			$this->update();
+		}
+		
+		if ($this->WAIT_DAYS<0) { 
+			$this->PAST_DAYS=abs($this->WAIT_DAYS);
+			$this->WAIT_DAYS=0;
+		}		
+	}
+	
 	public function BeforeDelete(){
 				//сначала удаляем все картинки
 				$k = $this->ID;			
@@ -478,7 +474,10 @@ class Holes extends CActiveRecord
 				rmdir($pictdir.'original/'.$k);
 				rmdir($pictdir.'medium/'.$k);
 				rmdir($pictdir.'small/'.$k);
-
+				
+				//Потом удаляем все запросы вместе со всем содержимым
+				foreach ($this->requests as $request) $request->delete();
+	
 				return true;
 	}	
 	
@@ -563,6 +562,9 @@ class Holes extends CActiveRecord
 			'pagination'=>array(
 				        'pageSize'=>12,
 				    ),
+			'sort'=>array(
+			    'defaultOrder'=>'t.DATE_CREATED DESC',
+				)
 		));
 	}
 }

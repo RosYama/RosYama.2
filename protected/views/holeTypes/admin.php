@@ -81,6 +81,7 @@ sortablegrid();
 			),
 		array(
 			'class'=>'CButtonColumn',
+			'template'=>'{update}',
 			'header'=>CHtml::dropDownList(
                 'pageSize', $pageSize,
                 array(5=>5,20=>20,50=>50,100=>100),

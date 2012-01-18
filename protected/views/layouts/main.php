@@ -38,9 +38,10 @@
 			'items'=>array(
 				array('label'=>'О проекте', 'url'=>array('/site/page', 'view'=>'about')),
 				array('label'=>'Карта', 'url'=>array('/holes/map')),
-				array('label'=>'Нормативы', 'url'=>array('/site/contact')),
-				array('label'=>'Статистика', 'url'=>array('/site/login'), 'visible'=>Yii::app()->user->isGuest),
-				array('label'=>'FAQ', 'url'=>array('/site/contact')),
+				array('label'=>'Нормативы', 'url'=>array('/site/page', 'view'=>'regulations')),
+				array('label'=>'Статистика', 'url'=>array('/statics/index')),
+				array('label'=>'FAQ', 'url'=>array('/site/page', 'view'=>'faq')),
+				array('label'=>'Справочники', 'url'=>array('/sprav/index')),
 				//array('label'=>'Logout ('.Yii::app()->user->name.')', 'url'=>array('/site/logout'), 'visible'=>!Yii::app()->user->isGuest)
 			),
 			'htmlOptions'=>array('class'=>'menu'),
@@ -154,16 +155,12 @@
 	  })();
 	
 	</script>
-	<? if (!Yii::app()->user->isGuest && Yii::app()->user->flashes):?>
+	<? if (!Yii::app()->user->isGuest && $flash=Yii::app()->user->getFlash('user')):?>
 		<div id="addDiv">
 			<div id="fon">
 			</div>
 			<div id="popupdiv">
-			<?php foreach (Yii::app()->user->flashes as $flash) : ?>
-				<?php print_r($flash); ?>
-				<h1>Добрый день, <?php echo Yii::app()->user->name; ?></h1>
-				<p>Вы добавили на сайт <?= $fresh;?> ям, по которым не было подано заявление в ГИБДД. Обращаем внимание, что публикация здесь не влечет за собой автоматического исправления дефекта на дороге.</p>
-			<?php endforeach; ?>				
+			<?php echo ($flash); ?>			
 				 <span class="filterBtn close">
 					<i class="text">Продолжить</i>
 				 </span>

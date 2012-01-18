@@ -23,6 +23,15 @@
 		
 	</div>
 	<?php if (Yii::app()->user->isAdmin) {
+	echo '<br/>';
+	$this->widget('zii.widgets.CMenu', array(
+				'items'=>Array(
+						array('label'=>'Пользователи', 'url'=>array('/userGroups/')),
+						array('label'=>'Типы ям', 'url'=>array('/holeTypes/index')),						
+					),
+				'htmlOptions'=>array('class'=>'operations'),
+			));
+			echo '<br/>';
 			$this->beginWidget('zii.widgets.CPortlet', array(
 				'title'=>'Действия',
 			));

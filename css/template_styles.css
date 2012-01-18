@@ -917,5 +917,26 @@ div.bx-auth div.bx-auth-secure-unlock {background-image:url(/images/sec-unlocked
 .head #head_user_info { 
 padding-top: 10px;
  }
+ 
+.faq-item
+{
+	margin-bottom:26px;
+}
+.faq-item th,td
+{
+	padding:2px 9px 2px 5px;
+}
+
+.faq-item .question, .faq-item th
+{
+	
+	font-weight:bold;
+	font-size:120%;
+	line-height:115%;
+}
+.stats
+{
+	margin-bottom:30px;
+}
 
 
