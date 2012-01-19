@@ -2,7 +2,6 @@
 $this->pageTitle=Yii::app()->name . ' - '.$model->name_full.' - Справочник ГИБДД ';
 $this->title=CHtml::link('Справочник ГИБДД', Array('index')).' > '.$model->name_full;
 ?>
-<div class="mainCols">
 <?php if ($model->gibdd) : ?>
 <div class="news-detail">
 				<h2><?php echo $model->gibdd->gibdd_name; ?></h2>
@@ -30,4 +29,3 @@ $this->title=CHtml::link('Справочник ГИБДД', Array('index')).' > 
 		 				
 		</div>
 <?php endif; ?>			
-</div>

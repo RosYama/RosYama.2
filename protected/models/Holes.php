@@ -99,8 +99,10 @@ class Holes extends CActiveRecord
 		return array(
 			'subject'=>array(self::BELONGS_TO, 'RfSubjects', 'ADR_SUBJECTRF'),
 			'requests'=>array(self::HAS_MANY, 'HoleRequests', 'hole_id'),
-			'request_gibdd'=>array(self::HAS_ONE, 'HoleRequests', 'hole_id', 'condition'=>'request_gibdd.type="gibdd"'),
-			'request_prosecutor'=>array(self::HAS_ONE, 'HoleRequests', 'hole_id', 'condition'=>'request_prosecutor.type="prosecutor"'),
+			'request_gibdd'=>array(self::HAS_ONE, 'HoleRequests', 'hole_id', 'condition'=>'request_gibdd.type="gibdd" AND user_id='.Yii::app()->user->id),
+			'request_prosecutor'=>array(self::HAS_ONE, 'HoleRequests', 'hole_id', 'condition'=>'request_prosecutor.type="prosecutor" AND user_id='.Yii::app()->user->id),
+			'requests_gibdd'=>array(self::HAS_MANY, 'HoleRequests', 'hole_id', 'condition'=>'requests_gibdd.type="gibdd"','order'=>'date_sent DESC'),
+			'requests_prosecutor'=>array(self::HAS_MANY, 'HoleRequests', 'hole_id', 'condition'=>'requests_prosecutor.type="prosecutor"','order'=>'date_sent DESC'),
 			'type'=>array(self::BELONGS_TO, 'HoleTypes', 'TYPE_ID'),
 			'user'=>array(self::BELONGS_TO, 'UserGroupsUser', 'USER_ID'),		
 		);
@@ -346,32 +348,44 @@ class Holes extends CActiveRecord
 	
 	public function updateToprosecutor(){
 	
+	if ($this->STATE!='achtung') return false;
 	$this->DATE_STATUS= time();
 	$this->DATE_SENT_PROSECUTOR = time();
 	$this->STATE='prosecutor';
-					if (!$this->request_prosecutor){
-						$request=new HoleRequests;
-						$request->attributes=Array(
-							'hole_id'=>$this->ID,
-							'user_id'=>Yii::app()->user->id,
-							'gibdd_id'=>$this->subject ? $this->subject->prosecutor->id : 0,
-							'date_sent'=>time(),
-							'type'=>'prosecutor'
-							);
-						$request->save();	
-					}
-
 	$this->update();
 	}
 	
 	public function updateRevokep(){
 	
-	$this->DATE_STATUS= time();
-	$this->DATE_SENT_PROSECUTOR = 0;
-	$this->STATE='achtung';
-	if ($this->request_prosecutor) $this->request_prosecutor->delete();	
-	$this->update();
+	if ($this->request_prosecutor) {
+		$this->request_prosecutor->delete();	
+		if (!count(HoleRequests::model()->findAll('hole_id='.$this->ID.' AND type="prosecutor"'))) {
+						$this->DATE_STATUS= time();
+						$this->DATE_SENT_PROSECUTOR = null;
+						$this->STATE='achtung';
+						$this->update();
+					}
+		}
+	else return false;	
+
 	}	
+	
+	public function makeRequest($type){
+		$attr='request_'.$type;
+		if (!$this->$attr){
+			$request=new HoleRequests;
+			$request->attributes=Array(
+							'hole_id'=>$this->ID,
+							'user_id'=>Yii::app()->user->id,
+							'gibdd_id'=>$this->subject ? $this->subject->gibdd->id : 0,
+							'date_sent'=>time(),
+							'type'=>$type,
+							);
+			if ($request->save())	
+			if ($type=='gibdd') $this->updateSetinprogress();
+			elseif ($type=='prosecutor') $this->updateToprosecutor();
+		}		
+	}
 
 	
 	public function updateSetinprogress()
@@ -384,19 +398,10 @@ class Holes extends CActiveRecord
 				$this->DATE_STATUS=time();
 				if($this->STATE == 'fresh')  
 				{
-					$this->DATE_SENT = time(); 
-					$this->STATE='inprogress';
-					if (!$this->request_gibdd){
-						$request=new HoleRequests;
-						$request->attributes=Array(
-							'hole_id'=>$this->ID,
-							'user_id'=>Yii::app()->user->id,
-							'gibdd_id'=>$this->subject ? $this->subject->gibdd->id : 0,
-							'date_sent'=>time(),
-							'type'=>'gibdd'
-							);
-						$request->save();	
-							}
+					if (!$this->DATE_SENT) {
+						$this->DATE_SENT = time(); 						
+					}
+					$this->STATE='inprogress';										
 				}
 				else
 				{
@@ -425,13 +430,18 @@ class Holes extends CActiveRecord
 	
 	public function updateRevoke()
 	{
-			if($this->STATE != 'inprogress')
+			if(!$this->request_gibdd || $this->request_gibdd->answer)
 				{
 					return false;	
 				}
 				$this->DATE_STATUS = time();
-				$this->STATE       = 'fresh';
-			if ($this->update() && $this->request_gibdd->delete()) return true;
+				$this->request_gibdd->delete();
+				if (!count(HoleRequests::model()->findAll('hole_id='.$this->ID.' AND type="gibdd"'))) {
+					$this->DATE_SENT = null;
+					$this->DATE_STATUS = time();
+					$this->STATE = 'fresh';
+					}
+			if ($this->update()) return true;
 			else return false;
 	}		
 	

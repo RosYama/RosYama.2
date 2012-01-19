@@ -58,6 +58,7 @@ class HoleRequests extends CActiveRecord
 			'answer'=>array(self::HAS_ONE, 'HoleAnswers', 'request_id','order'=>'date DESC'),
 			'answers'=>array(self::HAS_MANY, 'HoleAnswers', 'request_id','order'=>'date DESC'),
 			'hole'=>array(self::BELONGS_TO, 'Holes', 'hole_id'),
+			'user'=>array(self::BELONGS_TO, 'UserGroupsUser', 'user_id'),
 		);
 	}
 	

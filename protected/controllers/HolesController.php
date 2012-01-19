@@ -196,7 +196,7 @@ class HolesController extends Controller
 	{
 		$this->layout='//layouts/header_user';
 		
-		$model=$this->loadChangeModel($id);
+		$model=$this->loadModel($id);
 		$model->scenario='gibdd_reply';
 		if($model->STATE!='inprogress' && $model->STATE!='achtung' && !$model->request_gibdd)	
 			throw new CHttpException(403,'Доступ запрещен.');
@@ -218,9 +218,10 @@ class HolesController extends Controller
 			$answer->attributes=$_POST['HoleAnswers'];	
 			$answer->date=time();
 			if($answer->save()){
-				$model->STATE='gibddre';
+				if ($model->STATE=="inprogress")
+					$model->STATE='gibddre';
 				$model->GIBDD_REPLY_RECEIVED=1;
-				$model->DATE_STATUS=time();
+				if (!$model->DATE_STATUS) $model->DATE_STATUS=time();
 				if ($model->update())
 					$this->redirect(array('view','id'=>$model->ID));
 				}
@@ -236,7 +237,10 @@ class HolesController extends Controller
 	{
 		$this->layout='//layouts/header_user';
 		
-		$model=$this->loadChangeModel($id);
+		$model=$this->loadModel($id);
+		if (!$model->request_gibdd || !$model->request_gibdd->answers)
+			throw new CHttpException(403,'Доступ запрещен.');			
+			
 		$model->scenario='fix';
 		
 		$cs=Yii::app()->getClientScript();
@@ -328,7 +332,7 @@ class HolesController extends Controller
 	//генерация запросов в ГИБДД
 	public function actionRequest($id)
 	{
-			$model=$this->loadChangeModel($id);				
+			$model=$this->loadModel($id);				
 			$request=new HoleRequestForm;
 			if(isset($_POST['HoleRequestForm']))
 			{
@@ -437,23 +441,23 @@ class HolesController extends Controller
 	
 	public function actionSent($id)
 	{
-		$model=$this->loadChangeModel($id);
-		$model->updateSetinprogress();
+		$model=$this->loadModel($id);
+		$model->makeRequest('gibdd');
 			if(!isset($_GET['ajax']))
 				$this->redirect(array('view','id'=>$model->ID));
 	}
 	
 	public function actionProsecutorsent($id)
 	{
-		$model=$this->loadChangeModel($id);
-		$model->updateToprosecutor();
+		$model=$this->loadModel($id);
+		$model->makeRequest('prosecutor');
 			if(!isset($_GET['ajax']))
 				$this->redirect(array('view','id'=>$model->ID));
 	}
 	
 	public function actionProsecutornotsent($id)
 	{
-		$model=$this->loadChangeModel($id);
+		$model=$this->loadModel($id);
 		$model->updateRevokep();
 			if(!isset($_GET['ajax']))
 				$this->redirect(array('view','id'=>$model->ID));
@@ -461,7 +465,7 @@ class HolesController extends Controller
 	
 	public function actionNotsent($id)
 	{
-		$model=$this->loadChangeModel($id);
+		$model=$this->loadModel($id);
 		$model->updateRevoke();
 			if(!isset($_GET['ajax']))
 				$this->redirect(array('view','id'=>$model->ID));

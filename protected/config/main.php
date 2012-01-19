@@ -61,6 +61,7 @@ return array(
 				  '<id:\d+>'=>'holes/view',
 				  'map'=>'holes/map',
 				  'page/<view:\w+>/' => 'site/page',
+				  'userGroups'=>'userGroups',
 				   '<controller:\w+>'=>'<controller>/index',
 				  '<controller:\w+>/<id:\d+>'=>'<controller>/view',
 				  '<controller:\w+>/<action:\w+>/<id:\d+>'=>'<controller>/<action>',
@@ -132,7 +133,7 @@ return array(
 
 		'log'=>array(
 			'class'=>'CLogRouter',
-			/*'routes'=>array(
+			'routes'=>array(
                                 'web'=>array(
                                         'class'=>'CWebLogRoute',
                                         'levels'=>'trace, info, error, warning',
@@ -154,8 +155,8 @@ return array(
 					'class'=>'CWebLogRoute',
 				),
 
-			),*/
-			'enabled'=>YII_DEBUG,  // enable caching in non-debug mode
+			),
+			'enabled'=>YII_DEBUG,  // enable caching in non-debug mode  
 		),
 	),
 

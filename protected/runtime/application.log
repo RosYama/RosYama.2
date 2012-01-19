@@ -79,3 +79,11 @@ in /Users/servak/html/RosYama.2/index.php (13)
 in /Users/servak/html/RosYama.2/index.php (14)
 2011/12/13 00:56:59 [error] [system.db.CDbCommand] Не удалось выполнить CDbCommand::fetchAll(): SQLSTATE[42S02]: Base table or view not found: 1146 Table 'rosyama.holes' doesn't exist. Выполнявшийся SQL-запрос: SHOW COLUMNS FROM `holes`.
 in /Users/servak/html/RosYama.2/index.php (14)
+2012/01/19 01:23:41 [error] [system.db.CDbCommand] Не удалось выполнить CDbCommand::fetchAll(): SQLSTATE[42S22]: Column not found: 1054 Unknown column 't.USER_ID' in 'where clause'. Выполнявшийся SQL-запрос: SELECT `creator_request_gibdd`.`id` AS `t1_c0`, `creator_request_gibdd`.`hole_id` AS `t1_c1`, `creator_request_gibdd`.`user_id` AS `t1_c2`, `creator_request_gibdd`.`gibdd_id` AS `t1_c3`, `creator_request_gibdd`.`date_sent` AS `t1_c4`, `creator_request_gibdd`.`type` AS `t1_c5` FROM `yii_hole_requests` `creator_request_gibdd`  WHERE (creator_request_gibdd.type="gibdd" AND creator_request_gibdd.user_id=t.USER_ID) AND (`creator_request_gibdd`.`hole_id`=:ypl0). Bound with :ypl0='36'.
+in /Users/servak/html/RosYama.2/protected/models/Holes.php (453)
+in /Users/servak/html/RosYama.2/protected/controllers/HolesController.php (615)
+in /Users/servak/html/RosYama.2/protected/controllers/HolesController.php (114)
+2012/01/19 01:32:46 [error] [system.db.CDbCommand] Не удалось выполнить CDbCommand::fetchAll(): SQLSTATE[HY093]: Invalid parameter number: number of bound variables does not match number of tokens. Выполнявшийся SQL-запрос: SELECT `creator_request_gibdd`.`id` AS `t1_c0`, `creator_request_gibdd`.`hole_id` AS `t1_c1`, `creator_request_gibdd`.`user_id` AS `t1_c2`, `creator_request_gibdd`.`gibdd_id` AS `t1_c3`, `creator_request_gibdd`.`date_sent` AS `t1_c4`, `creator_request_gibdd`.`type` AS `t1_c5` FROM `yii_hole_requests` `creator_request_gibdd`  WHERE (creator_request_gibdd.type="gibdd" AND creator_request_gibdd.user_id=:ypl20) AND (`creator_request_gibdd`.`hole_id`=:ypl0). Bound with :ypl0='36'.
+in /Users/servak/html/RosYama.2/protected/models/Holes.php (453)
+in /Users/servak/html/RosYama.2/protected/controllers/HolesController.php (615)
+in /Users/servak/html/RosYama.2/protected/controllers/HolesController.php (114)

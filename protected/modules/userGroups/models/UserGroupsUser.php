@@ -551,6 +551,17 @@ class UserGroupsUser extends CActiveRecord
 		return $salt;
 	}
 	
+	public function getFullname()
+	{
+		$str='';
+		if ($this->name || $this->last_name) {
+			if ($this->name) $str=$this->name;
+			if ($this->last_name) $str.=' '.$this->last_name;
+			}
+		else $str=$this->username;
+		return $str;
+	}	
+	
 	
 	
 }
