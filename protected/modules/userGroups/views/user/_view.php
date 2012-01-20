@@ -25,7 +25,8 @@
 <?php
 // render the profile extensions
 foreach ($profiles as $p) {
-	$this->renderPartial('//'.str_replace(array('{','}'), NULL, $p['model']->tableName()).'/'.$p['view'], array('model' => $p['model']));
+echo '//'.str_replace(array('{','}'), NULL, $p['model']->tableName()).'/'.$p['view'];
+	$this->renderPartial('//profile/'.$p['view'], array('model' => $p['model']));
 } 
 ?>
 

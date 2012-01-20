@@ -1,6 +1,6 @@
 <?php
 
-class HoleTypesController extends Controller
+class HoleAnswerResultsController extends Controller
 {
 	/**
 	 * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
@@ -53,14 +53,14 @@ class HoleTypesController extends Controller
 	 */
 	public function actionCreate()
 	{
-		$model=new HoleTypes;
+		$model=new HoleAnswerResults;
 
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
-		if(isset($_POST['HoleTypes']))
+		if(isset($_POST['HoleAnswerResults']))
 		{
-			$model->attributes=$_POST['HoleTypes'];
+			$model->attributes=$_POST['HoleAnswerResults'];
 			$model->ordering=$model->LastOrder+1;
 			if($model->save())
 				$this->redirect(array('index'));
@@ -83,9 +83,9 @@ class HoleTypesController extends Controller
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
-		if(isset($_POST['HoleTypes']))
+		if(isset($_POST['HoleAnswerResults']))
 		{
-			$model->attributes=$_POST['HoleTypes'];
+			$model->attributes=$_POST['HoleAnswerResults'];
 			if($model->save())
 				$this->redirect(array('index'));
 		}
@@ -100,7 +100,6 @@ class HoleTypesController extends Controller
 	 * If deletion is successful, the browser will be redirected to the 'index' page.
 	 * @param integer $id the ID of the model to be deleted
 	 */
-	/* 
 	public function actionDelete($id)
 	{
 		if(Yii::app()->request->isPostRequest)
@@ -110,18 +109,19 @@ class HoleTypesController extends Controller
 
 			// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
 			if(!isset($_GET['ajax']) && !isset($_POST['submit_mult']))
-				$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+				$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('index'));
 		}
 		else
 			throw new CHttpException(400,'Invalid request. Please do not repeat this request again.');
-	}*/
+	}
+
 
 	/**
-	 * Lists all models.
+	 * Manages all models.
 	 */
 	public function actionIndex()
 	{
-		$model=new HoleTypes('search');
+		$model=new HoleAnswerResults('search');
 		$model->unsetAttributes();  // clear any default values
 
 		if (isset($_GET['pageSize'])) {
@@ -129,17 +129,13 @@ class HoleTypesController extends Controller
 		unset($_GET['pageSize']);  // would interfere with pager and repetitive page size change
 		}
 
-		if(isset($_GET['HoleTypes']))
-			$model->attributes=$_GET['HoleTypes'];
+		if(isset($_GET['HoleAnswerResults']))
+			$model->attributes=$_GET['HoleAnswerResults'];
 
-		$this->render('admin',array(
+		$this->render('index',array(
 			'model'=>$model,
 		));
 	}
-
-	/**
-	 * Manages all models.
-	 */
 
 
 	public function actionOrder($id)
@@ -160,8 +156,8 @@ class HoleTypesController extends Controller
 
 		                 elseif($_GET['dir']=='movebefore')
 		                {
-		                       $modelbefore=HoleTypes::model()->findByPk($_GET['beforeid']);
-		                       $modelafter=HoleTypes::model()->findByPk($_GET['afterid']);
+		                       $modelbefore=HoleAnswerResults::model()->findByPk($_GET['beforeid']);
+		                       $modelafter=HoleAnswerResults::model()->findByPk($_GET['afterid']);		                       
 		                       if ($modelbefore) $model->ordering=$modelbefore->ordering-1;
 		                       else $model->ordering=$modelafter->ordering;
 
@@ -169,7 +165,7 @@ class HoleTypesController extends Controller
 		                }
 
 		                // we don't need to update the current record with a new sort order value
-		                $vehicles=HoleTypes::model()->findAll(array('condition'=>'id !='.$model->id, 'order'=>'ordering'));
+		                $vehicles=HoleAnswerResults::model()->findAll(array('condition'=>'id !='.$model->id, 'order'=>'ordering'));
 
 		                if($model->ordering != 0 && $model->ordering <= count($vehicles)+1)
 		                {
@@ -210,7 +206,7 @@ class HoleTypesController extends Controller
 
 		if ($_POST['submit_mult']=='Опубликовать'){
 			foreach ( $_POST['itemsSelected'] as $id){
-				$model=HoleTypes::model()->findbyPk($id);
+				$model=HoleAnswerResults::model()->findbyPk($id);
 				$model->published=1;
 				$model->update();
 			}
@@ -218,7 +214,7 @@ class HoleTypesController extends Controller
 
 		if ($_POST['submit_mult']=='Снять с публикации'){
 			foreach ( $_POST['itemsSelected'] as $id){
-				$model=HoleTypes::model()->findbyPk($id);
+				$model=HoleAnswerResults::model()->findbyPk($id);
 				$model->published=0;
 				$model->update();
 			}
@@ -226,7 +222,7 @@ class HoleTypesController extends Controller
 
 		$this->redirect($_SERVER['HTTP_REFERER']);
 	}
-
+	
 	public function actionPublish($id)
 	{
 		$model=$this->loadModel($id);
@@ -244,7 +240,7 @@ class HoleTypesController extends Controller
 	 */
 	public function loadModel($id)
 	{
-		$model=HoleTypes::model()->findByPk((int)$id);
+		$model=HoleAnswerResults::model()->findByPk((int)$id);
 		if($model===null)
 			throw new CHttpException(404,'The requested page does not exist.');
 		return $model;
@@ -256,7 +252,7 @@ class HoleTypesController extends Controller
 	 */
 	protected function performAjaxValidation($model)
 	{
-		if(isset($_POST['ajax']) && $_POST['ajax']==='hole-types-form')
+		if(isset($_POST['ajax']) && $_POST['ajax']==='hole-answer-results-form')
 		{
 			echo CActiveForm::validate($model);
 			Yii::app()->end();

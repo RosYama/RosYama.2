@@ -215,7 +215,8 @@ class HolesController extends Controller
 
 		if(isset($_POST['HoleAnswers']))
 		{
-			$answer->attributes=$_POST['HoleAnswers'];	
+			$answer->attributes=$_POST['HoleAnswers'];
+			//if (isset($_POST['HoleAnswers']['results'])) $answer->results=$_POST['HoleAnswers']['results'];
 			$answer->date=time();
 			if($answer->save()){
 				if ($model->STATE=="inprogress")

@@ -55,5 +55,10 @@ span.required { color: red; }
 	font-size: 1.85em;
 }
 
+span.chekboxResult { background: #a3a3a8 url(/images/label_grey_bg.gif) repeat-x top;}
+
+.lCol .chekboxes input { width: 20px;float:left;}
+.lCol .chekboxes label {}
+
 div#overshadow { position: relative; z-index: 2; }
 span.comment { font-size: 75%; color: #666; }

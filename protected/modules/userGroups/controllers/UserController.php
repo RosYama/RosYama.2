@@ -314,13 +314,13 @@ class UserController extends Controller
 			if ($model->validate()) {
 				if ($model->save()) {
 					Yii::app()->user->setFlash('user', Yii::t('userGroupsModule.general','Data Updated Successfully'));
-					$this->redirect(Yii::app()->baseUrl . '/userGroups?_isAjax=1&u='.$model->username);
+					$this->redirect(Array('update','id'=>$model->id));
 				} else
 					Yii::app()->user->setFlash('user', Yii::t('userGroupsModule.general','An Error Occurred. Please try later.'));
 			}
 		}
 
-		$this->renderPartial('update',array('miscModel'=>$miscModel,'passModel'=>$passModel, 'profiles' => $profile_models), false, true);
+		$this->renderPartial('application.views.profile.update',array('miscModel'=>$miscModel,'passModel'=>$passModel, 'profiles' => $profile_models), false, true);
 	}
 
 	/**

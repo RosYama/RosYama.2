@@ -37,10 +37,10 @@ class HoleAnswers extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('request_id, date', 'required'),
+			array('request_id, date, results', 'required'),
 			array('request_id, date', 'numerical', 'integerOnly'=>true),
 			array('comment', 'length'),
-			array('uppload_files', 'safe'),
+			array('uppload_files, results', 'safe'),
 			array('uppload_files', 'required', 'on'=>'insert', 'message' => 'Необходимо загрузить ответ ГИБДД'),
 			array('uppload_files', 'file', 'types'=>'jpg, png, gif, txt, pdf','maxFiles'=>10),			
 			// The following rule is used by search().
@@ -61,8 +61,15 @@ class HoleAnswers extends CActiveRecord
 			'files_img'=>array(self::HAS_MANY, 'HoleAnswerFiles', 'answer_id', 'condition'=>'file_type="image"'),
 			'files_other'=>array(self::HAS_MANY, 'HoleAnswerFiles', 'answer_id', 'condition'=>'file_type!="image"'),
 			'request'=>array(self::BELONGS_TO, 'HoleRequests', 'request_id'),
+			'results'=>array(self::MANY_MANY, 'HoleAnswerResults',
+               '{{hole_answer_results_xref}}(answer_id, result_id)'),
 		);
 	}
+	
+	public function behaviors(){
+          return array( 'CAdvancedArBehavior' => array(
+            'class' => 'application.extensions.CAdvancedArBehavior'));
+    }
 
 	/**
 	 * @return array customized attribute labels (name=>label)
@@ -74,7 +81,8 @@ class HoleAnswers extends CActiveRecord
 			'request_id' => 'Request',
 			'date' => 'Date',
 			'comment' => 'Комментарии (по желанию)',
-			'uppload_files'=>'Необходимо добавить отсканированный ответ из ГИБДД'
+			'uppload_files'=>'Необходимо добавить отсканированный ответ из ГИБДД',
+			'results'=>'Фактический результат запроса'
 		);
 	}
 	
@@ -88,6 +96,7 @@ class HoleAnswers extends CActiveRecord
 	
 	public function afterSave()
 	{			
+		parent::afterSave();
 		$files=$this->uppload_files;
 		if($files){
 		$dir=$_SERVER['DOCUMENT_ROOT'].$this->filesFolder;
@@ -125,13 +134,21 @@ class HoleAnswers extends CActiveRecord
 	}	
 	
 	public function beforeDelete(){
+		parent::beforeDelete();
+		$this->results=Array();
+		$this->update();
 		foreach ($this->files as $file) $file->delete();
 		return true;
 	}
 	
+	
 	public function afterDelete(){
-		if (!count ($this->findAll('request_id='.$this->request_id)))
-			$this->request->delete();			
+		parent::afterDelete();
+		$requests=CHtml::listData( $this->request->hole->requests_gibdd, 'id', 'id' );
+		if (!count ($this->findAll('request_id IN ('.implode(',',$requests).')'))){						
+			$this->request->hole->STATE='inprogress';				
+			$this->request->hole->update();
+			}
 		return true;	
 	}	
 

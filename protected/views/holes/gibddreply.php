@@ -25,6 +25,12 @@
 			<?php echo $model->ADDRESS; ?>			
 		</div>
 		
+		<!-- камент -->
+		<div class="f">
+			<?php echo $model->COMMENT1; ?>
+		</div>
+
+		
 		<!-- фотки -->
 		<div class="f">
 			<?php echo $form->labelEx($answer,'uppload_files'); ?>
@@ -32,10 +38,13 @@
 			<?php $this->widget('CMultiFileUpload',array('accept'=>'gif|jpg|png|pdf|txt', 'model'=>$answer, 'attribute'=>'uppload_files', 'htmlOptions'=>array('class'=>'mf'), 'denied'=>Yii::t('mf','Невозможно загрузить этот файл'),'duplicate'=>Yii::t('mf','Файл уже существует'),'remove'=>Yii::t('mf','удалить'),'selected'=>Yii::t('mf','Файлы: $file'),)); ?>						
 		</div>
 		
-		<!-- камент -->
-		<div class="f">
-			<?php echo $model->COMMENT1; ?>
+		<!-- анкета -->
+		<div class="f chekboxes">
+			<?php echo $form->labelEx($answer,'results'); ?>
+			<?php echo $form->checkBoxList($answer,'results',CHtml::listData( HoleAnswerResults::model()->findAll(Array('order'=>'ordering','condition'=>'published=1')), 'id', 'name' ),Array('template'=>'{input}{label}')); ?>
+			<?php echo $form->error($answer,'results'); ?>
 		</div>
+		
 	</div>
 	<!-- /левая колоночка -->
 	
@@ -57,8 +66,8 @@ EOD
 			</div>
 		</div>
 		<img src="/images/map_shadow.jpg" class="mapShadow" alt="" />
-
 	</div>		
+		
 		
 		<!-- камент -->
 		<div class="f">

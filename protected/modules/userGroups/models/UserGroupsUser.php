@@ -134,7 +134,7 @@ class UserGroupsUser extends CActiveRecord
 		// rules
 		$rules = array(
 			array('group_id', 'length', 'max'=>20),
-			array('username, password, home, last_name, name', 'length', 'max'=>120),
+			array('username, password, home, last_name,second_name, name', 'length', 'max'=>120),
 			array('email', 'email'),
 			array('rememberMe', 'safe'),
 			// rules for registration
@@ -320,6 +320,7 @@ class UserGroupsUser extends CActiveRecord
 			'id' => 'ID',
 			'group_id' => Yii::t('userGroupsModule.general','Group'),
 			'name' => 'Имя',
+			'second_name'=>'Отчество',
 			'last_name' => 'Фамилия',
 			'username' => 'Логин',
 			'password' => 'Пароль',
@@ -545,8 +546,12 @@ class UserGroupsUser extends CActiveRecord
 		// create the salt
 		$salt = $this->username . $timestamp;
 		// add the additional salt if it's provided
-		if (Yii::app()->controller->module->salt)
+		if (isset(Yii::app()->controller->module->salt))
 			$salt .= Yii::app()->controller->module->salt;
+		else {
+			$modulesData = Yii::app()->getModules();
+			$salt .= isset($modulesData['userGroups']['salt'])?$modulesData['userGroups']['salt']:'111';
+		}	
 
 		return $salt;
 	}

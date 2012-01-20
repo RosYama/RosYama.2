@@ -20,6 +20,7 @@ return array(
 		'application.models.*',
 		'application.components.*',
 		'application.classes.*',
+		'application.modules.userGroups.*',
 		'application.modules.userGroups.models.*',
         'application.modules.userGroups.components.*',
 		'application.extensions.nestedset.*',
@@ -40,6 +41,7 @@ return array(
 			'userGroups'=>array(
 				'accessCode'=>'12345',
 				'salt'=>'111',				
+				'profile'=>Array('Profile')
 			)
     ),
 	// application components
@@ -62,6 +64,8 @@ return array(
 				  'map'=>'holes/map',
 				  'page/<view:\w+>/' => 'site/page',
 				  'userGroups'=>'userGroups',
+				  'gii'=>'gii',
+				  'profile'=>'profile',
 				   '<controller:\w+>'=>'<controller>/index',
 				  '<controller:\w+>/<id:\d+>'=>'<controller>/view',
 				  '<controller:\w+>/<action:\w+>/<id:\d+>'=>'<controller>/<action>',
@@ -156,7 +160,7 @@ return array(
 				),
 
 			),
-			'enabled'=>YII_DEBUG,  // enable caching in non-debug mode  
+			'enabled'=>isset($_GET['testing'])?true:false,  // enable caching in non-debug mode  
 		),
 	),
 

@@ -45,10 +45,11 @@
 
 	<?php
 	// load other profiles
+	/*
 	foreach ($profiles as $p) {
 		$view = $p->profileViews();
 		$this->renderPartial('//'.str_replace(array('{','}'), NULL, $p->TableName()).'/'.$view[UserGroupsUser::EDIT], array('model' => $p, 'user_id' => $passModel->id));
-	}
+	}*/
 	?>
 
 	<h2><?php echo Yii::t('userGroupsModule.general', 'Security'); ?></h2>

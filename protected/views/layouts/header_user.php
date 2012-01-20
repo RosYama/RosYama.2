@@ -7,11 +7,12 @@
 						<div class="rCol">
 							<div id="head_user_info">
 	<div class="photo">
-			</div>
+		<?php if(Yii::app()->user->userModel->relProfile->avatar) echo CHtml::image(Yii::app()->user->userModel->relProfile->avatar_folder.'/'.Yii::app()->user->userModel->relProfile->avatar); ?>
+	</div>
 	<div class="info">
 		<div class="buttons">
-		<?php echo CHtml::link('Добавить дефект', array('add'), array('class'=>'profileBtn')); ?>
-		<?php echo CHtml::link('Изменить личные данные', array('/personal/profile'), array('class'=>'profileBtn')); ?>
+		<?php echo CHtml::link('Добавить дефект', array('/holes/add'), array('class'=>'profileBtn')); ?>
+		<?php echo CHtml::link('Изменить личные данные', array('/profile/index'), array('class'=>'profileBtn')); ?>
 		</div>
 		<h1><?php echo Yii::app()->user->fullName; ?></h1>
 		<div class="www">
@@ -27,7 +28,8 @@
 	$this->widget('zii.widgets.CMenu', array(
 				'items'=>Array(
 						array('label'=>'Пользователи', 'url'=>array('/userGroups/')),
-						array('label'=>'Типы ям', 'url'=>array('/holeTypes/index')),						
+						array('label'=>'Типы ям', 'url'=>array('/holeTypes/index')),
+						array('label'=>'Результаты запроса в ГИБДД (анкета)', 'url'=>array('/holeAnswerResults/index')),
 					),
 				'htmlOptions'=>array('class'=>'operations'),
 			));
