@@ -1,6 +1,6 @@
 <?php
 return array (
-  'template' => 'with_ordering',
+  'template' => 'default',
   'tablePrefix' => 'yii_',
   'modelPath' => 'application.models',
   'baseClass' => 'CActiveRecord',

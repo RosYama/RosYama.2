@@ -181,9 +181,11 @@ class SpravController extends Controller
 		// 4) занести всё в базу
 		foreach($_regions as &$r)
 		{			
-			$model=GibddHeads::model()->find('subject_id='.(int)$r['subject_id']);
+			$model=GibddHeads::model()->find('subject_id='.(int)$r['subject_id'].' AND is_regional=1');
 			if (!$model) $model=new GibddHeads;		
 			$model->attributes=$r;
+			$model->is_regional=1;
+			$model->moderated=1;
 			$model->save();
 		}
 		

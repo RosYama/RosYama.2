@@ -45,12 +45,14 @@ class GibddHeads extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('name, subject_id, post, post_dative, fio, fio_dative, gibdd_name, contacts, address, tel_degurn, tel_dover, url', 'required'),
-			array('subject_id', 'numerical', 'integerOnly'=>true),
+			array('name, subject_id, post, post_dative, fio, fio_dative, gibdd_name, address, tel_degurn, tel_dover, url', 'required'),
+			array('subject_id, is_regional, moderated', 'numerical', 'integerOnly'=>true),
 			array('post, post_dative, fio, fio_dative, gibdd_name, tel_degurn, tel_dover, url', 'length', 'max'=>255),
+			array('contacts', 'length'),
+			array('lat, lng', 'numerical'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, name, subject_id, post, post_dative, fio, fio_dative, gibdd_name, contacts, address, tel_degurn, tel_dover, url', 'safe', 'on'=>'search'),
+			array('id, name, subject_id, post, post_dative, fio, fio_dative, gibdd_name, contacts, address, tel_degurn, tel_dover, url, lat, lng, is_regional, moderated', 'safe', 'on'=>'search'),
 		);
 	}
 	

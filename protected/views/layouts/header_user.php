@@ -5,15 +5,24 @@
 <div class="lCol"><a href="/" class="logo" title="На главную"><img src="/images/logo.png"  alt="РосЯма" /></a>
 </div>
 						<div class="rCol">
+					
 							<div id="head_user_info">
+<div class="buttons">
+		<?php $this->widget('zii.widgets.CMenu', array(
+				'items'=>Array(
+						array('label'=>'Добавить дефект', 'url'=>array('/holes/add'), 'linkOptions'=>array('class'=>'profileBtn')),
+						array('label'=>'Мои ямы', 'url'=>array('/holes/personal'), 'linkOptions'=>array('class'=>'profileBtn')),
+						array('label'=>'Мой участок', 'url'=>array('/holes/myarea'), 'linkOptions'=>array('class'=>'profileBtn')),
+						array('label'=>'Изменить личные данные', 'url'=>array('/profile/index'), 'linkOptions'=>array('class'=>'profileBtn')),
+						
+					),
+				'htmlOptions'=>array('class'=>'usermenu'),
+			));?>
+		</div>							
 	<div class="photo">
-		<?php if(Yii::app()->user->userModel->relProfile->avatar) echo CHtml::image(Yii::app()->user->userModel->relProfile->avatar_folder.'/'.Yii::app()->user->userModel->relProfile->avatar); ?>
+		<?php if(Yii::app()->user->userModel->relProfile && Yii::app()->user->userModel->relProfile->avatar) echo CHtml::image(Yii::app()->user->userModel->relProfile->avatar_folder.'/'.Yii::app()->user->userModel->relProfile->avatar); ?>
 	</div>
-	<div class="info">
-		<div class="buttons">
-		<?php echo CHtml::link('Добавить дефект', array('/holes/add'), array('class'=>'profileBtn')); ?>
-		<?php echo CHtml::link('Изменить личные данные', array('/profile/index'), array('class'=>'profileBtn')); ?>
-		</div>
+	<div class="info">		
 		<h1><?php echo Yii::app()->user->fullName; ?></h1>
 		<div class="www">
 			<a target="_blank" href="http://"></a>
@@ -32,17 +41,18 @@
 						array('label'=>'Результаты запроса в ГИБДД (анкета)', 'url'=>array('/holeAnswerResults/index')),
 					),
 				'htmlOptions'=>array('class'=>'operations'),
-			));
-			echo '<br/>';
-			$this->beginWidget('zii.widgets.CPortlet', array(
-				'title'=>'Действия',
+			));			
+		}
+	if ($this->menu) {
+			echo '<br/><br/>';
+			$this->beginWidget('zii.widgets.CPortlet', array(				
 			));
 			$this->widget('zii.widgets.CMenu', array(
 				'items'=>$this->menu,
 				'htmlOptions'=>array('class'=>'operations'),
 			));
 			$this->endWidget();
-		}
+		}		
 		?>
 </div>		
 						</div>

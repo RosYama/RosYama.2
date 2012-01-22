@@ -64,7 +64,7 @@ class ProfileController extends Controller
 				$ajax_validation[] = $external_profile;
 			}
 		}
-
+		if (!$miscModel->relProfile) $miscModel->relProfile=new Profile;
 		// perform ajax validation
 		$this->performAjaxValidation($ajax_validation);
 		//print_r($profile_models);
@@ -104,9 +104,30 @@ class ProfileController extends Controller
 				} else
 					Yii::app()->user->setFlash('user', Yii::t('userGroupsModule.general','An Error Occurred. Please try later.'));
 			}
-		}
-
+		}		
 		$this->render('update',array('miscModel'=>$miscModel,'passModel'=>$passModel, 'profiles' => $profile_models), false, true);
+	}
+	
+	public function actionMyarea()
+	{
+		$cs=Yii::app()->getClientScript();
+        $cs->registerCssFile('/css/add_form.css');
+        $cs->registerScriptFile('http://api-maps.yandex.ru/1.1/index.xml?key='.$this->mapkey);
+        $model=$this->loadModel(Yii::app()->user->id);	
+        
+        	if(isset($_POST['UserHoleArea']))
+			{
+				foreach ($_POST['UserHoleArea'] as $point)
+				{
+				$pointmodel=$point['id'] ? UserHoleArea::model()->findByPk((int)$point['id']) : new UserHoleArea;				
+				$pointmodel->attributes=$point;
+				$pointmodel->ug_id=$model->id;
+				$pointmodel->save();
+				}
+					$this->redirect(array('/holes/myarea'));
+			}
+        
+      	$this->render('myarea',array('model'=>$model));
 	}
 	 
 	 

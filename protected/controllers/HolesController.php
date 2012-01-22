@@ -31,7 +31,7 @@ class HolesController extends Controller
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('add','update', 'personal','personalDelete','request','sent','notsent','gibddreply', 'fix', 'defix', 'prosecutorsent', 'prosecutornotsent','delanswerfile'),
+				'actions'=>array('add','update', 'personal','personalDelete','request','sent','notsent','gibddreply', 'fix', 'defix', 'prosecutorsent', 'prosecutornotsent','delanswerfile','myarea'),
 				'users'=>array('@'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -107,7 +107,7 @@ class HolesController extends Controller
 	{
 		$cs=Yii::app()->getClientScript();
         $cs->registerCssFile('/css/hole_view.css'); 
-        $jsFile = CHtml::asset($this->viewPath.DIRECTORY_SEPARATOR.'view_script.js');
+        $jsFile = CHtml::asset($this->viewPath.DIRECTORY_SEPARATOR.'js'.DIRECTORY_SEPARATOR.'view_script.js');
         $cs->registerScriptFile($jsFile);
         
 		$this->render('view',array(
@@ -514,7 +514,45 @@ class HolesController extends Controller
 			'all_holes_count'=>$all_holes_count,
 			'user'=>$user
 		));
-	}	
+	}
+	
+	public function actionMyarea()
+	{
+		$user=Yii::app()->user;
+		$area=$user->userModel->hole_area;
+		if (!$area)	$this->redirect(array('/profile/myarea'));
+		
+		$this->layout='//layouts/header_user';
+	
+		$model=new Holes('search');
+		$model->unsetAttributes();  // clear any default values
+		
+		
+		$cs=Yii::app()->getClientScript();
+        $cs->registerCssFile('/css/holes_list.css');
+        $jsFile = CHtml::asset($this->viewPath.DIRECTORY_SEPARATOR.'js'.DIRECTORY_SEPARATOR.'area_script.js');
+        $cs->registerScriptFile($jsFile);
+		
+		$holes=Array();
+		$all_holes_count=0;		
+		foreach ($model->AllstatesMany as $state_alias=>$state_name) {
+			$holes[$state_alias]=Holes::model()->findAll(Array('condition'=>
+			'LATITUDE >= '.$area[0]->lat
+			.' AND LATITUDE <= '.$area[2]->lat
+			.' AND LONGITUDE >= '.$area[0]->lng
+			.' AND LONGITUDE <= '.$area[2]->lng
+			.' AND STATE="'.$state_alias.'"', 'order'=>'DATE_CREATED DESC'));		
+			$all_holes_count+=count($holes[$state_alias]);
+		}
+			
+		$this->render('myarea',array(
+			'model'=>$model,
+			'holes'=>$holes,
+			'all_holes_count'=>$all_holes_count,
+			'user'=>$user,
+			'area'=>$area
+		));
+	}		
 	
 	public function actionMap()
 	{

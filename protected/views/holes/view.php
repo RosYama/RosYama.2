@@ -164,7 +164,7 @@ $this->widget('application.extensions.fancybox.EFancyBox', array(
 									$model->to=$hole->subject ? $hole->subject->name_full_genitive : '';
 									$model->from=CHtml::encode(Yii::app()->user->userModel->last_name.' '.Yii::app()->user->userModel->name.' '.Yii::app()->user->userModel->second_name);
 									$model->address=CHtml::encode($hole->ADDRESS);
-									$model->signature=CHtml::encode(Yii::app()->user->userModel->last_name.' '.substr(Yii::app()->user->userModel->name, 0, 1).(Yii::app()->user->userModel->name ? '.' : '').' '.substr(Yii::app()->user->userModel->second_name, 0, 1).(Yii::app()->user->userModel->second_name ? '.' : ''));
+									$model->signature=CHtml::encode(Yii::app()->user->userModel->last_name.' '.substr(Yii::app()->user->userModel->name, 0, 2).(Yii::app()->user->userModel->name ? '.' : '').' '.substr(Yii::app()->user->userModel->second_name, 0, 2).(Yii::app()->user->userModel->second_name ? '.' : ''));
 									$model->gibdd=$hole->subject && $hole->subject->gibdd ? $hole->subject->gibdd->gibdd_name : '';
 									$model->application_data=$hole->request_gibdd ? date('d.m.Y',$hole->request_gibdd->date_sent) : '';
 									?>											
@@ -273,7 +273,7 @@ $this->widget('application.extensions.fancybox.EFancyBox', array(
 									$model->to=$hole->subject ? $hole->subject->name_full_genitive : '';
 									$model->from=CHtml::encode(Yii::app()->user->userModel->last_name.' '.Yii::app()->user->userModel->name.' '.Yii::app()->user->userModel->second_name);
 									$model->address=CHtml::encode($hole->ADDRESS);
-									$model->signature=CHtml::encode(Yii::app()->user->userModel->last_name.' '.substr(Yii::app()->user->userModel->name, 0, 1).(Yii::app()->user->userModel->name ? '.' : '').' '.substr(Yii::app()->user->userModel->second_name, 0, 1).(Yii::app()->user->userModel->second_name ? '.' : ''));
+									$model->signature=CHtml::encode(Yii::app()->user->userModel->last_name.' '.substr(Yii::app()->user->userModel->name, 0, 2).(Yii::app()->user->userModel->name ? '.' : '').' '.substr(Yii::app()->user->userModel->second_name, 0, 2).(Yii::app()->user->userModel->second_name ? '.' : ''));
 									$model->gibdd=$hole->subject && $hole->subject->gibdd ? $hole->subject->gibdd->gibdd_name : '';
 									$model->application_data=$hole->request_gibdd ? date('d.m.Y',$hole->request_gibdd->date_sent) : '';
 									?>					
@@ -382,7 +382,7 @@ $this->widget('application.extensions.fancybox.EFancyBox', array(
 										$model->to=$hole->subject ? $hole->subject->name_full_genitive : '';
 										$model->from=CHtml::encode(Yii::app()->user->userModel->last_name.' '.Yii::app()->user->userModel->name.' '.Yii::app()->user->userModel->second_name);
 										$model->address=CHtml::encode($hole->ADDRESS);
-										$model->signature=CHtml::encode(Yii::app()->user->userModel->last_name.' '.substr(Yii::app()->user->userModel->name, 0, 1).(Yii::app()->user->userModel->name ? '.' : '').' '.substr(Yii::app()->user->userModel->second_name, 0, 1).(Yii::app()->user->userModel->second_name ? '.' : ''));
+										$model->signature=CHtml::encode(Yii::app()->user->userModel->last_name.' '.substr(Yii::app()->user->userModel->name, 0, 2).(Yii::app()->user->userModel->name ? '.' : '').' '.substr(Yii::app()->user->userModel->second_name, 0, 2).(Yii::app()->user->userModel->second_name ? '.' : ''));
 										$model->gibdd=$hole->subject && $hole->subject->gibdd ? $hole->subject->gibdd->gibdd_name : '';
 										$model->application_data=$hole->request_gibdd ? date('d.m.Y',$hole->request_gibdd->date_sent) : '';
 										?>					
@@ -464,7 +464,7 @@ $this->widget('application.extensions.fancybox.EFancyBox', array(
 					$model->to=$hole->subject ? $hole->subject->gibdd->post_dative.' '.$hole->subject->gibdd->fio_dative : '';
 					$model->from=CHtml::encode(Yii::app()->user->userModel->last_name.' '.Yii::app()->user->userModel->name.' '.Yii::app()->user->userModel->second_name);
 					$model->address=CHtml::encode($hole->ADDRESS);
-					$model->signature=CHtml::encode(Yii::app()->user->userModel->last_name.' '.substr(Yii::app()->user->userModel->name, 0, 1).(Yii::app()->user->userModel->name ? '.' : '').' '.substr(Yii::app()->user->userModel->second_name, 0, 1).(Yii::app()->user->userModel->second_name ? '.' : ''));
+					$model->signature=CHtml::encode(Yii::app()->user->userModel->last_name.' '.substr(Yii::app()->user->userModel->name, 0, 2).(Yii::app()->user->userModel->name ? '.' : '').' '.substr(Yii::app()->user->userModel->second_name, 0, 2).(Yii::app()->user->userModel->second_name ? '.' : ''));
 					?>					
 						<h2><?= Yii::t('holes_view', 'HOLE_REQUEST_FORM') ?></h2>
 						<table>

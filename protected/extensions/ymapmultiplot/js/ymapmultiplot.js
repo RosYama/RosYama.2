@@ -763,7 +763,7 @@ function GetPlacemarks(map)
 		var mapBounds = map.getBounds();
 		var exclude_id='';
 		if ($('#Exclude_id').val()) exclude_id='&exclude_id='+$('#Exclude_id').val();
-		var addr='http://yama.pixelsmedia.ru/holes/ajaxMap/?bottom='+mapBounds.getBottom()+'&left='+mapBounds.getLeft()+'&top='+mapBounds.getTop()+'&'+jQuery('#map-form').serialize()+'&right='+mapBounds.getRight()+exclude_id+'&jsoncallback=?';
+		var addr='/holes/ajaxMap/?bottom='+mapBounds.getBottom()+'&left='+mapBounds.getLeft()+'&top='+mapBounds.getTop()+'&'+jQuery('#map-form').serialize()+'&right='+mapBounds.getRight()+exclude_id+'&jsoncallback=?';
 		//alert(addr);
 		jQuery.getJSON(addr, function(data) {
 			bAjaxInProgress = false;				

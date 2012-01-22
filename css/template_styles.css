@@ -258,6 +258,8 @@ body {
 	text-transform: uppercase;
 }
 
+ul.usermenu li {float:left;}
+ul.usermenu li.active .profileBtn{background: #f88100;}
 
 	.filterBtn {
 		background: #e47100 url(/images/filter_btn_bg.gif) repeat-x bottom;
@@ -297,6 +299,8 @@ body {
 			background: url(/images/filter_arrow.gif) no-repeat center center;
 			width: 27px;
 		}
+
+
 
 .steps {
 	list-style-type: none;
