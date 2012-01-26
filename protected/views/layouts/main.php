@@ -55,9 +55,9 @@
 		$(document).ready(function(){
 			var startSearchWidth=$('.search').width();
 			var startSearchInputWidth=$('.search .textInput').width();
-			var time=300;
+			var time=200;
 			
-							var searchWidth=430;
+							var searchWidth=230;
 				var	searchInputWidth=searchWidth-30;
 				
 										searchInputWidth-=47;

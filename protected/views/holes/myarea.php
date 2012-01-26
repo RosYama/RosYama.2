@@ -4,7 +4,6 @@
 
 <div class="lCol">
 
-<script src="http://api-maps.yandex.ru/1.1/index.xml?key=<?php echo $this->mapkey; ?>" type="text/javascript"></script>
 		<div id="ymapcontainer_big"><div align="right"><span class="close" onclick="toggleMap();">&times;</span></div><div id="ymapcontainer_big_map"></div></div>
 		<div id="ymapcontainer" class="ymapcontainer"></div>
 		<?php Yii::app()->clientScript->registerScript('initmap',<<<EOD
@@ -62,14 +61,18 @@ EOD
 			map.enableScrollZoom();
 			map.setCenter(new YMaps.GeoPoint(37.64, 55.76), 14);	
 			GetPlacemarks(map);
-			startpoints=[<?php foreach ($area as $i=>$point) {
-				echo 'new YMaps.GeoPoint('.$point->lng.','.$point->lat.')';
-				if ($i<count($area)-1) echo ',';
-			} ?>];
-			var polygon = new YMaps.Polygon(startpoints);
-				
-				
-
+			startpoints=new Array;
+			<?php foreach ($area as $ind=>$shape) : ?>
+			startpoints[<?php echo $ind; ?>]=[
+				<?php foreach ($shape->points as $i=>$point) {
+					echo 'new YMaps.GeoPoint('.$point->lng.','.$point->lat.')';
+					if ($i<count($area)-1) echo ',';
+				} ?>
+			];
+			<?php endforeach; ?>
+			bounds = new Array();
+			for (i=0;i<startpoints.length;i++){
+				var polygon = new YMaps.Polygon(startpoints[i]);
 				var style = new YMaps.Style("default#greenPoint");
 				style.polygonStyle = new YMaps.PolygonStyle();
 				style.polygonStyle.fill = false;
@@ -80,8 +83,9 @@ EOD
 				polygon.setStyle(style);                           
 
 				map.addOverlay(polygon);
-				bounds = new YMaps.GeoCollectionBounds(startpoints);
-				map.setBounds (bounds);	
+				bounds.push(startpoints[i]);
+			}	
+				map.setBounds (new YMaps.GeoCollectionBounds(bounds));	
 				
 		</script>
 

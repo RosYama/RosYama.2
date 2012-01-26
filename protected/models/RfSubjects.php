@@ -52,7 +52,8 @@ class RfSubjects extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-		'gibdd'=>array(self::HAS_ONE, 'GibddHeads', 'subject_id'),
+		'gibdd'=>array(self::HAS_ONE, 'GibddHeads', 'subject_id', 'condition'=>'is_regional=1'),
+		'gibdd_local'=>array(self::HAS_MANY, 'GibddHeads', 'subject_id', 'condition'=>'is_regional=0 AND moderated=1'),
 		'prosecutor'=>array(self::HAS_ONE, 'Prosecutors', 'subject_id'),
 		);
 	}

@@ -30,11 +30,11 @@ $this->widget('application.extensions.fancybox.EFancyBox', array(
 						<? else : ?>
 							<?= CHtml::encode(Y::dateFromTime($hole->DATE_SENT))?> был отправлен первый запрос в ГИБДД <br/><a href="#" onclick="$('#requests_gibdd_history').toggle('slow'); return false;">история запросов</a>
 							<div id="requests_gibdd_history" style="display:none;">
-							<p>
+							<ul>
 							<?php foreach ($hole->requests_gibdd as $request) : ?>
-								<?php echo date('d.m.Y',$request->date_sent);?>(<?php echo $request->user->Fullname;?>)
+								<li><?php echo date('d.m.Y',$request->date_sent);?> <?php echo CHtml::link($request->user->Fullname, array('/profile/view', 'id'=>$request->user->id),array('class'=>""));?></li>
 							<?php endforeach; ?>
-							</p>
+							</ul>							
 							</div>
 						<? endif; ?>	
 					<? endif; ?>
@@ -535,7 +535,6 @@ $this->widget('application.extensions.fancybox.EFancyBox', array(
 </div>
 <div class="mainCols" id="col">
 	<div class="lCol">
-		<script src="http://api-maps.yandex.ru/1.1/index.xml?key=<?php echo $this->mapkey; ?>" type="text/javascript"></script>
 		<div id="ymapcontainer_big"><div align="right"><span class="close" onclick="document.getElementById('ymapcontainer_big').style.display='none';$('#col').css('marginBottom',0)">&times;</span></div><div id="ymapcontainer_big_map"></div></div>
 		<?if($hole['LATITUDE'] && $hole['LONGITUDE']):?><div id="ymapcontainer" class="ymapcontainer"></div><?endif;?>
 		<script type="text/javascript">

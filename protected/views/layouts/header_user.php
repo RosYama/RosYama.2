@@ -13,7 +13,7 @@
 						array('label'=>'Добавить дефект', 'url'=>array('/holes/add'), 'linkOptions'=>array('class'=>'profileBtn')),
 						array('label'=>'Мои ямы', 'url'=>array('/holes/personal'), 'linkOptions'=>array('class'=>'profileBtn')),
 						array('label'=>'Мой участок', 'url'=>array('/holes/myarea'), 'linkOptions'=>array('class'=>'profileBtn')),
-						array('label'=>'Изменить личные данные', 'url'=>array('/profile/index'), 'linkOptions'=>array('class'=>'profileBtn')),
+						array('label'=>'Изменить личные данные', 'url'=>array('/profile/update'), 'linkOptions'=>array('class'=>'profileBtn')),
 						
 					),
 				'htmlOptions'=>array('class'=>'usermenu'),

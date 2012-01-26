@@ -20,6 +20,8 @@
  */
 class GibddHeads extends CActiveRecord
 {
+	public $post='Начальник';
+	public $str_subject;
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @return GibddHeads the static model class
@@ -45,11 +47,12 @@ class GibddHeads extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('name, subject_id, post, post_dative, fio, fio_dative, gibdd_name, address, tel_degurn, tel_dover, url', 'required'),
+			array('name, subject_id, post, post_dative, fio, fio_dative, gibdd_name, address, tel_degurn, tel_dover', 'required'),
 			array('subject_id, is_regional, moderated', 'numerical', 'integerOnly'=>true),
 			array('post, post_dative, fio, fio_dative, gibdd_name, tel_degurn, tel_dover, url', 'length', 'max'=>255),
-			array('contacts', 'length'),
+			array('contacts, str_subject', 'length'),
 			array('lat, lng', 'numerical'),
+			array('url', 'url','allowEmpty'=>true),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
 			array('id, name, subject_id, post, post_dative, fio, fio_dative, gibdd_name, contacts, address, tel_degurn, tel_dover, url, lat, lng, is_regional, moderated', 'safe', 'on'=>'search'),
@@ -83,18 +86,20 @@ class GibddHeads extends CActiveRecord
 	{
 		return array(
 			'id' => 'ID',
-			'name' => 'Name',
+			'name' => 'Название сокращенно',
 			'subject_id' => 'Subject',
-			'post' => 'Post',
-			'post_dative' => 'Post Dative',
-			'fio' => 'Fio',
-			'fio_dative' => 'Fio Dative',
-			'gibdd_name' => 'Gibdd Name',
+			'post' => 'Должность начальника',
+			'post_dative' => 'Пост и название подразделения в дательном падеже',
+			'fio' => 'ФИО начальника',
+			'fio_dative' => 'ФИО начальника в дательном падеже',
+			'gibdd_name' => 'Название подразделения',
 			'contacts' => 'Contacts',
-			'address' => 'Address',
-			'tel_degurn' => 'Tel Degurn',
-			'tel_dover' => 'Tel Dover',
-			'url' => 'Url',
+			'address' => 'Адрес',
+			'tel_degurn' => 'Тел. дежурной части',
+			'tel_dover' => 'Тел. доверия',
+			'url' => 'Сайт',
+			'lat' => 'Широта',
+			'lng' => 'Долгота',
 		);
 	}
 

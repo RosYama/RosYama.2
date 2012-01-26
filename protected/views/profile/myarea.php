@@ -8,14 +8,11 @@
 
 	<!-- левая колоночка -->
 	<div class="lCol">
-		<?php for ($i=0;$i<4;$i++) : 
-		if (isset($model->hole_area[$i])) $areamodel=$model->hole_area[$i];
-		else $areamodel=new UserHoleArea; ?>
-			<?php echo $form->hiddenField($areamodel,"[$i]id"); ?>
-			<?php echo $form->hiddenField($areamodel,"[$i]lat"); ?>
-			<?php echo $form->hiddenField($areamodel,"[$i]lng"); ?>
-			<?php echo $form->hiddenField($areamodel,"[$i]point_num",Array('value'=>$i)); ?>
-		<?php endfor; ?>
+		<div id="point_fields">
+		<?php foreach ($model->hole_area as $i=>$shape) : ?>
+			<?php $this->renderPartial('_area_point_fields',array('shape'=>$shape, 'i'=>$i, 'form'=>$form)); ?>
+		<?php endforeach; ?>
+		</div>
 	</div>
 	<!-- /левая колоночка -->
 	
@@ -27,122 +24,181 @@
 	<?php endif; ?>
 		<div class="bx-yandex-view-layout">
 			<div class="bx-yandex-view-map">
+			<a href="#" id="add_shape">Добавить прямоугольник</a>
 			<div id="ymapcontainer" class="ymapcontainer"></div>
-			<?php Yii::app()->clientScript->registerScript('initmap',<<<EOD
-				var map = new YMaps.Map(YMaps.jQuery("#ymapcontainer")[0]);
-				map.enableScrollZoom();
-				var startpoints=new Array;
-				if (YMaps.location) {
-					center = new YMaps.GeoPoint(YMaps.location.longitude, YMaps.location.latitude);
+			<?php Yii::app()->clientScript->registerScript('add_shape','
+			var idopl=0;
+			jQuery("body").delegate("#add_shape","click",function(){
+				idopl=0;
+         		var inp=$(".shape_id");
+				inp.each(function() {
+					idopl++;
+					});
+				jQuery.ajax({"type":"POST","beforeSend":function(){
+				 }, "data":"i="+idopl,"success":function(html){
+					$("#point_fields").append(html);
+					addPolygon(idopl);
+				  },"url":"'.CController::createUrl("myareaAddshape").'","cache":false});				  
+			return false;});',
+			CClientScript::POS_END);
+			?>
+			
+			<?php 
+			Yii::app()->clientScript->registerScript('initmap',<<<EOD
+        
+        
+        function addPolygon(ind){
+        			var startpoints=new Array;
+					if ($('#UserAreaShapePoints_'+ind+'_0_lat').val()){
+						for (i=0;i<4;i++){
+						startpoints[i]=new YMaps.GeoPoint($('#UserAreaShapePoints_'+ind+'_'+i+'_lng').val(),$('#UserAreaShapePoints_'+ind+'_'+i+'_lat').val());
+						} 
+	
+						if (startpoints) {
+							bounds = new YMaps.GeoCollectionBounds(startpoints);
+							map.setBounds (bounds);			
+						}	
+
+					}						
+					if (startpoints.length==0 && index > 0) {
+							startpoints=[new YMaps.GeoPoint(map.getCenter().getX()-0.05,map.getCenter().getY()-0.05),
+									  new YMaps.GeoPoint(map.getCenter().getX()-0.05,map.getCenter().getY()+0.05),
+									  new YMaps.GeoPoint(map.getCenter().getX()+0.05,map.getCenter().getY()+0.05),
+									  new YMaps.GeoPoint(map.getCenter().getX()+0.05,map.getCenter().getY()-0.05)];		
+						}
+					else if (startpoints.length==0 && index == 0){
+						if (YMaps.location) {
+							center = new YMaps.GeoPoint(YMaps.location.longitude, YMaps.location.latitude);
+							
+							startpoints=[		 new YMaps.GeoPoint(YMaps.location.longitude-0.05,YMaps.location.latitude-0.05),
+											  new YMaps.GeoPoint(YMaps.location.longitude-0.05,YMaps.location.latitude+0.05),
+											  new YMaps.GeoPoint(YMaps.location.longitude+0.05,YMaps.location.latitude+0.05),
+											  new YMaps.GeoPoint(YMaps.location.longitude+0.05,YMaps.location.latitude-0.05)];
+						
+							if (YMaps.location.zoom) {
+								zoom = YMaps.location.zoom;
+							}				
+							
+						}else {
+							center = new YMaps.GeoPoint(37.64, 55.76);
+							
+							startpoints=[	  new YMaps.GeoPoint(37.7,55.7),
+											  new YMaps.GeoPoint(37.7,55.8),
+											  new YMaps.GeoPoint(37.8,55.8),
+											  new YMaps.GeoPoint(37.8,55.7)]
+						}
+						
+						// Установка для карты ее центра и масштаба
+						map.setCenter(center, zoom);
+					}
 					
-					startpoints=[		 new YMaps.GeoPoint(YMaps.location.longitude-0.05,YMaps.location.latitude-0.05),
-									  new YMaps.GeoPoint(YMaps.location.longitude-0.05,YMaps.location.latitude+0.05),
-									  new YMaps.GeoPoint(YMaps.location.longitude+0.05,YMaps.location.latitude+0.05),
-									  new YMaps.GeoPoint(YMaps.location.longitude+0.05,YMaps.location.latitude-0.05)];
-				
-					if (YMaps.location.zoom) {
-						zoom = YMaps.location.zoom;
-					}				
+					var style = new YMaps.Style("default#greenPoint");
+					style.polygonStyle = new YMaps.PolygonStyle();
+					style.polygonStyle.fill = true;
+					style.polygonStyle.outline = true;
+					style.polygonStyle.strokeWidth = 10;
+					style.polygonStyle.strokeColor = "ffff0088"; 
+					style.polygonStyle.fillColor = "ff000055";
+					    
+					polygons[ind] = new YMaps.Polygon(startpoints, {
+										style: style,
+										hasHint: 0,
+										hasBalloon: 0										
+									});
 					
-				}else {
-					center = new YMaps.GeoPoint(37.64, 55.76);
+					map.addOverlay(polygons[ind]);
 					
-					startpoints=[	  new YMaps.GeoPoint(37.7,55.7),
-									  new YMaps.GeoPoint(37.7,55.8),
-									  new YMaps.GeoPoint(37.8,55.8),
-									  new YMaps.GeoPoint(37.8,55.7)]
+					polygons[ind].setEditingOptions({
+						drawing: false,
+						maxPoints: 4,
+						dragging:true,
+						onClick: function (polygon, pointIndex, coordPath) {
+						return false;
+						},
+						onDblClick: function (polygon, pointIndex, coordPath) {						
+						return false;
+						},
+						menuManager: function (index, menuItems) {
+							return false;
+						},
+						onPointDragging: function (points, index) {                
+						if (index==1) {
+							var point1 = points[2].setY(points[1].getY()),
+								point2 = points[0].setX(points[1].getX());
+							polygons[ind].splicePoints(2, 1, map.converter.mapPixelsToCoordinates(point1));
+							polygons[ind].splicePoints(0, 1, map.converter.mapPixelsToCoordinates(point2));
+						} 
+						if (index==2) {
+							var point1 = points[1].setY(points[2].getY()),
+								point2 = points[3].setX(points[2].getX());
+							polygons[ind].splicePoints(1, 1, map.converter.mapPixelsToCoordinates(point1));
+							polygons[ind].splicePoints(3, 1, map.converter.mapPixelsToCoordinates(point2));
+						}
+						if (index==3) {
+							var point1 = points[0].setY(points[3].getY()),
+								point2 = points[2].setX(points[3].getX());
+							polygons[ind].splicePoints(0, 1, map.converter.mapPixelsToCoordinates(point1));
+							polygons[ind].splicePoints(2, 1, map.converter.mapPixelsToCoordinates(point2));
+						}
+						if (index==0) {
+							var point1 = points[3].setY(points[0].getY()),
+								point2 = points[1].setX(points[0].getX());
+							polygons[ind].splicePoints(3, 1, map.converter.mapPixelsToCoordinates(point1));
+							polygons[ind].splicePoints(1, 1, map.converter.mapPixelsToCoordinates(point2));
+						}						
+						return points[index];						
+						}
+					});
+					
+				    polygons[ind].startEditing();
+				    
+				    YMaps.Events.observe
+						(
+							polygons[ind],
+							polygons[ind].Events.DblClick,
+							function (obj)
+							{
+								//alert(obj);
+							}
+						)
+					
 				}
 				
-				// Установка для карты ее центра и масштаба
-				map.setCenter(center, zoom);
+				var map = new YMaps.Map(YMaps.jQuery("#ymapcontainer")[0]);
+				map.enableScrollZoom();
+				map.disableDblClickZoom();
+				var polygons=new Array;
 				
-				//map.setCenter(new YMaps.GeoPoint({},{}), 14);
+				center = new YMaps.GeoPoint(37.64, 55.76);
+				map.setCenter(center, 14);
 				//var placemark = new YMaps.Placemark(new YMaps.GeoPoint({},{}), { hideIcon: false, hasBalloon: false });
 				//map.addOverlay(placemark);				
 				
+				var index=0;				
+				$(".shape_id").each(function() {
+					addPolygon(index);
+					index++;
+					});
 				
-				if ($('#UserHoleArea_0_lat').val()){
-					for (i=0;i<4;i++){
-					startpoints[i]=new YMaps.GeoPoint($('#UserHoleArea_'+i+'_lng').val(),$('#UserHoleArea_'+i+'_lat').val());
-					} 
-
-					if (startpoints) {
-						bounds = new YMaps.GeoCollectionBounds(startpoints);
-						map.setBounds (bounds);			
-					}	
-
-				}		
-				
-						
-				var polygon = new YMaps.Polygon(startpoints);
-				
-				
-
-				var style = new YMaps.Style("default#greenPoint");
-				style.polygonStyle = new YMaps.PolygonStyle();
-				style.polygonStyle.fill = true;
-				style.polygonStyle.outline = true;
-				style.polygonStyle.strokeWidth = 10;
-				style.polygonStyle.strokeColor = "ffff0088"; 
-				style.polygonStyle.fillColor = "ff000055";
-				polygon.setStyle(style);                                
-
-				map.addOverlay(polygon);
-					
-
-				
-				// Включение режима редактирования
-			polygon.setEditingOptions({
-				drawing: false,
-				maxPoints: 4,
-				dragging:true,
-				onClick: function (polygon, pointIndex, coordPath) {
-                return false;
-            	},
-            	onDblClick: function (polygon, pointIndex, coordPath) {
-                return false;
-            	},
-            	menuManager: function (index, menuItems) {
-					return false;
-				},
-				onPointDragging: function (points, index) {                
-                if (index==1) {
-                    var point1 = points[2].setY(points[1].getY()),
-                        point2 = points[0].setX(points[1].getX());
-                    polygon.splicePoints(2, 1, map.converter.mapPixelsToCoordinates(point1));
-                    polygon.splicePoints(0, 1, map.converter.mapPixelsToCoordinates(point2));
-                } 
-                if (index==2) {
-                    var point1 = points[1].setY(points[2].getY()),
-                        point2 = points[3].setX(points[2].getX());
-                    polygon.splicePoints(1, 1, map.converter.mapPixelsToCoordinates(point1));
-                    polygon.splicePoints(3, 1, map.converter.mapPixelsToCoordinates(point2));
-                }
-                if (index==3) {
-                    var point1 = points[0].setY(points[3].getY()),
-                        point2 = points[2].setX(points[3].getX());
-                    polygon.splicePoints(0, 1, map.converter.mapPixelsToCoordinates(point1));
-                    polygon.splicePoints(2, 1, map.converter.mapPixelsToCoordinates(point2));
-                }
-                if (index==0) {
-                    var point1 = points[3].setY(points[0].getY()),
-                        point2 = points[1].setX(points[0].getX());
-                    polygon.splicePoints(3, 1, map.converter.mapPixelsToCoordinates(point1));
-                    polygon.splicePoints(1, 1, map.converter.mapPixelsToCoordinates(point2));
-                }
-                //$('#tempo').html(points[1].getY());
-                return points[index];
-                
-            	}
-			});	
-            polygon.startEditing();	
+			bounds = new Array;
+			
+			 for (ind=0;ind<polygons.length;ind++){
+			 var points=polygons[ind].getPoints();
+					for (i=0;i<points.length;i++){
+						bounds.push(points[i]);
+					}
+            }
             
-            function savepolygon(){            
-            var points=polygon.getPoints();
-            	for (i=0;i<points.length;i++){
-            	$('#UserHoleArea_'+i+'_lat').val(points[i].getY());
-            	$('#UserHoleArea_'+i+'_lng').val(points[i].getX());
-            	}            
+            map.setBounds (new YMaps.GeoCollectionBounds(bounds));		
+			
+            function savepolygon(){   
+            for (ind=0;ind<polygons.length;ind++){
+				var points=polygons[ind].getPoints();
+					for (i=0;i<points.length;i++){
+					$('#UserAreaShapePoints_'+ind+'_'+i+'_lat').val(points[i].getY());
+					$('#UserAreaShapePoints_'+ind+'_'+i+'_lng').val(points[i].getX());
+					}          
+            }	
             
             }
 				

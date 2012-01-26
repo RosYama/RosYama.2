@@ -107,6 +107,7 @@ class HolesController extends Controller
 	{
 		$cs=Yii::app()->getClientScript();
         $cs->registerCssFile('/css/hole_view.css'); 
+        $cs->registerScriptFile('http://api-maps.yandex.ru/1.1/index.xml?key='.$this->mapkey);
         $jsFile = CHtml::asset($this->viewPath.DIRECTORY_SEPARATOR.'js'.DIRECTORY_SEPARATOR.'view_script.js');
         $cs->registerScriptFile($jsFile);
         
@@ -138,7 +139,11 @@ class HolesController extends Controller
 			$subj=RfSubjects::model()->SearchID(trim($model->STR_SUBJECTRF));
 			if($subj) $model->ADR_SUBJECTRF=$subj;
 			else $model->ADR_SUBJECTRF=0;
-			$model->ADR_CITY=trim($model->ADR_CITY);			
+			$model->ADR_CITY=trim($model->ADR_CITY);
+			
+			if (Yii::app()->user->level > 50) $model->PREMODERATED=1;
+			else $model->PREMODERATED=0;
+			
 			if($model->save() && $model->savePictures())
 				$this->redirect(array('view','id'=>$model->ID));
 		}
@@ -530,18 +535,23 @@ class HolesController extends Controller
 		
 		$cs=Yii::app()->getClientScript();
         $cs->registerCssFile('/css/holes_list.css');
+        $cs->registerScriptFile('http://api-maps.yandex.ru/1.1/index.xml?key='.$this->mapkey);
         $jsFile = CHtml::asset($this->viewPath.DIRECTORY_SEPARATOR.'js'.DIRECTORY_SEPARATOR.'area_script.js');
-        $cs->registerScriptFile($jsFile);
+        $cs->registerScriptFile($jsFile);        
 		
 		$holes=Array();
 		$all_holes_count=0;		
 		foreach ($model->AllstatesMany as $state_alias=>$state_name) {
-			$holes[$state_alias]=Holes::model()->findAll(Array('condition'=>
-			'LATITUDE >= '.$area[0]->lat
-			.' AND LATITUDE <= '.$area[2]->lat
-			.' AND LONGITUDE >= '.$area[0]->lng
-			.' AND LONGITUDE <= '.$area[2]->lng
-			.' AND STATE="'.$state_alias.'"', 'order'=>'DATE_CREATED DESC'));		
+			$criteria=new CDbCriteria;
+			foreach ($area as $shape){
+			$criteria->addCondition('LATITUDE >= '.$shape->points[0]->lat
+			.' AND LATITUDE <= '.$shape->points[2]->lat
+			.' AND LONGITUDE >= '.$shape->points[0]->lng
+			.' AND LONGITUDE <= '.$shape->points[2]->lng);
+			}
+			$criteria->addCondition('STATE="'.$state_alias.'"');
+			$criteria->order='DATE_CREATED DESC';
+			$holes[$state_alias]=Holes::model()->findAll($criteria);		
 			$all_holes_count+=count($holes[$state_alias]);
 		}
 			

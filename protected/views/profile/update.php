@@ -21,7 +21,7 @@
 		'id'=>'user-groups-misc-form',
 		'enableAjaxValidation'=>true,
 		'enableClientValidation'=>true,
-		'action'=>'/profile/',
+		'action'=>'/profile/update/',
 		'htmlOptions'=>Array ('enctype'=>'multipart/form-data'),
 	)); ?>
 	<p class="note">Поля отмеченные <span class="required">*</span> являются обязательными.</p>

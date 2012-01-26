@@ -676,14 +676,36 @@ function init_MAP_DzDvWLBsil(context, type)
 	var map = window.GLOBAL_arMapObjects['MAP_DzDvWLBsil'];
 	
 	map.bx_context = context;
-	map.setCenter(new context.YMaps.GeoPoint(37.61763381958, 55.75578689575), 10, context.YMaps.MapType.MAP);
+	var zoom=10;
+	if (YMaps.location) {
+					center = new YMaps.GeoPoint(YMaps.location.longitude, YMaps.location.latitude);						
+					if (YMaps.location.zoom) {
+						zoom = YMaps.location.zoom;
+					}				
+					
+				}else {
+					center = new YMaps.GeoPoint(37.61763381958, 55.75578689575);					
+				}
+	// Установка для карты ее центра и масштаба
+	map.setCenter(center, zoom, context.YMaps.MapType.MAP);			
+	
 	
 	context.YMaps.Events.observe(map, map.Events.Update, function() { onMapUpdate(map); } );
 	context.YMaps.Events.observe(map, map.Events.MoveEnd, function() { onMapUpdate(map); } );
 	
+	jQuery('#map-form input').live('change',function() {
+			PlaceMarks=new Array();
+			GetPlacemarks(map);
+		});
+		
+	jQuery('#reset_button').live('click',function() {
+			jQuery('#map-form input').attr('checked', false);
+			PlaceMarks=new Array();
+			GetPlacemarks(map);
+		});	
+	
 	jQuery('#map-form').live('submit',function() {
 			PlaceMarks=new Array();
-			//map.removeAllOverlays();
 			GetPlacemarks(map);
 			return false;
 		});
@@ -721,8 +743,6 @@ function init_MAP_DzDvWLBsil(context, type)
 	if (type=="addhole" || type=="updatehole") {
 	map.disableDblClickZoom();
 	YMaps.Events.observe(map, map.Events.DblClick, setCoordValue);
-	if ($('#Holes_LONGITUDE').val()!='' && $('#Holes_LATITUDE').val()!='')
-		map.setCenter(new YMaps.GeoPoint($('#Holes_LONGITUDE').val(), $('#Holes_LATITUDE').val()));
 	}
 	if (type=="updatehole") {	
 	setCoordValue(map);

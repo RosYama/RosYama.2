@@ -34,7 +34,7 @@ class ProfileController extends Controller
 	 * when an action is not explicitly requested by users.
 	 */
 
-	public function actionIndex()
+	public function actionUpdate()
 	{
 		$id=Yii::app()->user->id;
 		$miscModel=$this->loadModel($id, 'changeMisc');
@@ -115,42 +115,45 @@ class ProfileController extends Controller
         $cs->registerScriptFile('http://api-maps.yandex.ru/1.1/index.xml?key='.$this->mapkey);
         $model=$this->loadModel(Yii::app()->user->id);	
         
-        	if(isset($_POST['UserHoleArea']))
+        	if(isset($_POST['UserAreaShapes']))
 			{
-				foreach ($_POST['UserHoleArea'] as $point)
-				{
-				$pointmodel=$point['id'] ? UserHoleArea::model()->findByPk((int)$point['id']) : new UserHoleArea;				
-				$pointmodel->attributes=$point;
-				$pointmodel->ug_id=$model->id;
-				$pointmodel->save();
-				}
-					$this->redirect(array('/holes/myarea'));
-			}
-        
+				foreach ($_POST['UserAreaShapes'] as $i=>$shape)
+					{
+						$shapemodel=$shape['id'] ? UserAreaShapes::model()->findByPk((int)$shape['id']) : new UserAreaShapes;
+						if ($shapemodel){
+							$shapemodel->ug_id=$model->id;
+							if ($shapemodel->isNewRecord) $shapemodel->save();
+							$ii=0;
+							foreach ($_POST['UserAreaShapePoints'][$i] as $point)
+							{
+								if ($ii>=$shapemodel->countPoints) break;
+								$pointmodel=$point['id'] ? UserAreaShapePoints::model()->findByPk((int)$point['id']) : new UserAreaShapePoints;				
+								$pointmodel->attributes=$point;
+								$pointmodel->shape_id=$shapemodel->id;
+								$pointmodel->save();
+								$ii++;
+							}
+							if (!$shapemodel->points) $shapemodel->delete();
+						}
+					}	
+				$this->redirect(array('/holes/myarea'));
+			}        
       	$this->render('myarea',array('model'=>$model));
 	}
-	 
-	 
-	public function actionLoad()
-	{
-		$model= Profile::model()->findByAttributes(array('ug_id' => Yii::app()->user->id));
-        if(isset($_POST['Profile']))
-        {
-			$this->performAjaxValidation($model);
-
-            $model->attributes=$_POST['Profile'];
-            $model->avatar=CUploadedFile::getInstance($model,'avatar');
-            if($model->save())
-            {
-               $model->avatar->saveAs('avatars/'.Yii::app()->user->name.'.jpg');
-
-
-            } else
-				Yii::app()->user->setFlash('user', 'you can just upload images.');
-
-			$this->redirect(array('/userGroups'));
-        }
+	
+	public function actionMyareaAddshape()
+	{		
+      	if (isset($_POST['i'])) $this->renderPartial('_area_point_fields',array('shape'=>new UserAreaShapes, 'i'=>$_POST['i'], 'form'=>new CActiveForm));
 	}
+	
+	
+	public function actionView($id)
+	{
+		$this->layout='main';
+		$model= $this->loadModel($id);
+		$this->render('view',array('model'=>$model));
+	}		 
+	 
 	
 	public function loadModel($id, $scenario = false)
 	{

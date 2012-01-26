@@ -27,9 +27,13 @@ class SpravController extends Controller
 	{
 		return array(
 			array('allow',
-				'actions'=>array('index','view','fill_gibdd_reference', 'fill_prosecutor_reference'),
+				'actions'=>array('index','view','fill_gibdd_reference', 'fill_prosecutor_reference','local'),
 				'users'=>array('*'),
 			),		
+			array('allow', // allow authenticated user to perform 'create' and 'update' actions
+				'actions'=>array('add','update','delete'),
+				'users'=>array('@'),
+			),
 			array('deny',  // deny all users
 				'users'=>array('*'),
 			),
@@ -256,7 +260,21 @@ class SpravController extends Controller
 		$this->render('view',array(
 			'model'=>$this->loadModel($id),
 		));
-	}	
+	}
+	
+	public function actionLocal($id)
+	{
+	
+		$cs=Yii::app()->getClientScript();
+        $cs->registerCssFile('/css/hole_view.css'); 
+        $cs->registerScriptFile('http://api-maps.yandex.ru/1.1/index.xml?key='.$this->mapkey);
+       	$jsFile = CHtml::asset($this->viewPath.DIRECTORY_SEPARATOR.'js'.DIRECTORY_SEPARATOR.'view_script.js');
+        $cs->registerScriptFile($jsFile); 
+		
+		$this->render('view_local',array(
+			'model'=>$this->loadGibddModel($id),
+		));
+	}
 
 	/**
 	 * Lists all models.
@@ -269,6 +287,71 @@ class SpravController extends Controller
 		));
 	}
 	
+	public function actionAdd()
+	{
+		$model=new GibddHeads;
+
+		// Uncomment the following line if AJAX validation is needed
+		// $this->performAjaxValidation($model);
+		
+		$cs=Yii::app()->getClientScript();
+        $cs->registerCssFile('/css/add_form.css');
+        $cs->registerScriptFile('http://api-maps.yandex.ru/1.1/index.xml?key='.$this->mapkey);
+        $jsFile = CHtml::asset($this->viewPath.DIRECTORY_SEPARATOR.'js'.DIRECTORY_SEPARATOR.'ymap.js');
+        $cs->registerScriptFile($jsFile);     
+
+		if(isset($_POST['GibddHeads']))
+		{
+			$model->attributes=$_POST['GibddHeads'];
+			$model->author_id=Yii::app()->user->id;	
+			$model->created=time();
+			$subj=RfSubjects::model()->SearchID(trim($model->str_subject));
+			if($subj) $model->subject_id=$subj;
+			else $model->subject_id=0;
+			if (Yii::app()->user->level > 50) $model->moderated=1;
+			else $model->moderated=0;
+			if($model->save())
+				$this->redirect(array('local','id'=>$model->id));
+		}		
+
+		$this->render('add',array(
+			'model'=>$model,			
+		));
+	}	
+	
+	public function actionUpdate($id)
+	{
+	
+		$model=$this->loadGibddModel($id);
+		
+		if (Yii::app()->user->id!=$model->author_id && Yii::app()->user->level <= 50)
+			throw new CHttpException(403,'Доступ запрещен.');
+		
+		
+		$cs=Yii::app()->getClientScript();
+        $cs->registerCssFile('/css/add_form.css');
+        $cs->registerScriptFile('http://api-maps.yandex.ru/1.1/index.xml?key='.$this->mapkey);
+        $jsFile = CHtml::asset($this->viewPath.DIRECTORY_SEPARATOR.'js'.DIRECTORY_SEPARATOR.'ymap.js');
+        $cs->registerScriptFile($jsFile);     
+
+		if(isset($_POST['GibddHeads']))
+		{
+			$model->attributes=$_POST['GibddHeads'];
+			$model->modified=time();
+			if ($model->str_subject){
+				$subj=RfSubjects::model()->SearchID(trim($model->str_subject));
+				if($subj) $model->subject_id=$subj;
+				else $model->subject_id=0;
+			}
+			if($model->save())
+				$this->redirect(array('local','id'=>$model->id));
+		}		
+
+		$this->render('update',array(
+			'model'=>$model,			
+		));
+	}
+	
 
 	/**
 	 * Returns the data model based on the primary key given in the GET variable.
@@ -278,6 +361,14 @@ class SpravController extends Controller
 	public function loadModel($id)
 	{
 		$model=RfSubjects::model()->findByPk($id);
+		if($model===null)
+			throw new CHttpException(404,'The requested page does not exist.');
+		return $model;
+	}
+	
+	public function loadGibddModel($id)
+	{
+		$model=GibddHeads::model()->findByPk($id);
 		if($model===null)
 			throw new CHttpException(404,'The requested page does not exist.');
 		return $model;

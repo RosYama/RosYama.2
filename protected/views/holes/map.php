@@ -10,14 +10,7 @@
 
 function GetCheckNull()
 {
-	for(var i=0;i<4;i++)
-	{
-		document.getElementById("chn" + i).checked = 0;
-	}
-	for(var i=0;i<6;i++)
-	{
-		document.getElementById("ch" + i).checked = 0;
-	}
+
 }
 -->
 </script>
@@ -36,31 +29,16 @@ function GetCheckNull()
 </div>
 <div class="filterCol filterType">
 <p class="title">Показать тип дефектов</p>
-<?php /* echo $form->checkBoxList($model, 'type', CHtml::listData(HoleTypes::model()->findAll(Array('condition'=>'t.published=1', 'order'=>'t.ordering')), 'id', 'name'),
-	Array(
-	'template'=>'<div class="col1"><span>{input}</span><ins class="badroad">{label}</ins></div>',
-	)
-); */ ?>
 <?php foreach ($types as $i=>$type) : ?>
 <label class="col2"><span><input id="ch0" name="Holes[type][]" type="checkbox" value="<?php echo $type->id; ?>"   /></span><ins class="<?php echo $type->alias; ?>"><?php echo $type->name; ?></ins></label>
-<?php /*
-<label class="col2"><span><input id="ch1" name="TYPE[10]" type="checkbox"  value="hatch"   /></span><ins class="hatch">Люк</ins></label>
-<!--<label class="col3"><span><input id="ch2" name="TYPE[1]" type="checkbox"  value="nomarking" /></span><ins class="nomarking">Нет разметки</ins></label>-->
-<!--<label class="col4"><span><input id="ch3" name="TYPE[2]" type="checkbox"  value="light"  /></span><ins class="light">Светофор</ins></label> -->
-<label class="col1"><span><input id="ch2" name="TYPE[3]" type="checkbox"  value="holeonroad"  /></span><ins class="holeonroad">Яма на дороге</ins></label>
-<!--<label class="col2"><span><input id="ch5" name="TYPE[4]" type="checkbox"  value="crossing"  /></span><ins class="crossing">Ж.&nbsp;д. переезд</ins></label> -->
-<label class="col3"><span><input id="ch3" name="TYPE[5]" type="checkbox"  value="rails"  /></span><ins class="rails">Рельсы</ins></label>
-<label class="col4"><span><input id="ch4" name="TYPE[6]" type="checkbox"  value="policeman"  /></span><ins class="policeman">Полицейский</ins></label>
-<label class="col1"><span><input id="ch5" name="TYPE[7]" type="checkbox"  value="holeinyard"  /></span><ins class="holeinyard">Яма во дворе</ins></label>
-<!--<label class="col2"><span><input id="ch9" name="TYPE[8]" type="checkbox"  value="fence"  /></span><ins class="fence">Ограждение</ins></label>-->
-<?php */ endforeach; ?>
+<?php endforeach; ?>
 <input id="MAPLAT" name="MAPLAT" type="hidden" value="" />
 <input id="MAPZOOM" name="MAPZOOM" type="hidden" value="" />
 
 
 
 </div>
-<div class="submit"><input type="submit" name="button" id="button" value="Показать" /><input name="reset" value="Сбросить" onclick="GetCheckNull()" type="button" /></div>
+<div class="submit"><input type="submit" name="button" id="button" value="Показать" /><input type="reset" name="reset" id="reset_button" value="Сбросить" type="button" /></div>
 <?php $this->endWidget(); ?>			</div>
 		</div>
 	</div>
@@ -84,13 +62,12 @@ function GetCheckNull()
 <div class="bx-yandex-view-layout">
 	<div class="bx-yandex-view-map">
 <script type="text/javascript">
+history.navigationMode = 'compatible';
+$(document).ready( function(){
+                                init_MAP_DzDvWLBsil();
+                             }
+                 );
 
-if (window.attachEvent) // IE
-	window.attachEvent("onload", function(){init_MAP_DzDvWLBsil()});
-else if (window.addEventListener) // Gecko / W3C
-	window.addEventListener('load', function(){init_MAP_DzDvWLBsil()}, false);
-else
-	window.onload = function(){init_MAP_DzDvWLBsil()};
 
 </script>
 <?php
