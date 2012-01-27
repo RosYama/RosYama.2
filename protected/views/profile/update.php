@@ -86,7 +86,21 @@
 		</td>
 		<td><?php echo $form->labelEx($miscModel->relProfile,'site'); ?>
 		<?php echo $form->textField($miscModel->relProfile,'site',array('maxlength'=>50,'class'=>'textInput')); ?>
-		<?php echo $form->error($miscModel->relProfile,'site'); ?></td>			
+		<?php echo $form->error($miscModel->relProfile,'site'); ?></td>	
+	</tr>
+	<tr>
+		<td colspan="2">
+		<?php echo $form->labelEx($miscModel->relProfile,'aboutme'); ?>
+		<?php echo $form->textArea($miscModel->relProfile,'aboutme',array('rows'=>10,'cols'=>10,'class'=>'textInput')); ?>
+		<?php echo $form->error($miscModel->relProfile,'aboutme'); ?>
+		</td>
+		<td>
+		<div class="f chekboxes">
+		<?php echo $form->labelEx($miscModel,'params'); ?><br/>
+		<?php echo $form->checkBoxList($miscModel,'params',$miscModel->paramsFields,Array('template'=>'{input}{label}')); ?>
+		</div>
+		</td>
+		</tr>
 	</tbody>
 </table>	
 <div class="row buttons">

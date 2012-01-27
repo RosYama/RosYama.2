@@ -60,7 +60,7 @@
 			}
 			
 			.holes_list .service i {
-				background: url(images/fog.png) repeat-y;
+				background: url(/images/fog.png) repeat-y;
 				display: block;
 				height: 100%;
 				position: absolute;

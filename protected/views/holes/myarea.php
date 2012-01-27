@@ -29,17 +29,22 @@
 									)
 								}
 			
-			}
+			}			
 			
-			function GetPlacemarks(map)
+				
+EOD
+,CClientScript::POS_HEAD);
+?>
+		<script type="text/javascript">	
+		
+		function GetPlacemarks(map)
 			{
 			var bAjaxInProgress=false;			
 				if(!bAjaxInProgress)
 				{
 					bAjaxInProgress = true;
-					var exclude_id='';
-					if ($('#Exclude_id').val()) exclude_id='&exclude_id='+$('#Exclude_id').val();
-					var addr='/holes/ajaxMap/?bottom={$area[0]->lat}&left={$area[0]->lng}&top={$area[2]->lat}&right={$area[2]->lng}&jsoncallback=?';
+					<?php foreach ($area as $ind=>$shape) : ?>
+					var addr='/holes/ajaxMap/?bottom=<?php echo $shape->points[0]->lat; ?>&left=<?php echo $shape->points[0]->lng ;?>&top=<?php echo $shape->points[2]->lat; ?>&right=<?php echo $shape->points[2]->lng; ?>&jsoncallback=?';
 					//alert(addr);
 					jQuery.getJSON(addr, function(data) {
 						bAjaxInProgress = false;				
@@ -47,15 +52,12 @@
 							SetMarker(map, data.markers[i].id, data.markers[i].type, data.markers[i].lat, data.markers[i].lng, data.markers[i].state);  
 						}
 					});
+					<?php endforeach; ?>
 					
 				}
 				
 			}		
-				
-EOD
-,CClientScript::POS_HEAD);
-?>
-		<script type="text/javascript">			
+		
 			var map = new YMaps.Map(YMaps.jQuery("#ymapcontainer")[0]);
 			YMaps.Events.observe(map, map.Events.Click, function () { toggleMap(); } );
 			map.enableScrollZoom();
@@ -66,13 +68,14 @@ EOD
 			startpoints[<?php echo $ind; ?>]=[
 				<?php foreach ($shape->points as $i=>$point) {
 					echo 'new YMaps.GeoPoint('.$point->lng.','.$point->lat.')';
-					if ($i<count($area)-1) echo ',';
+					if ($i<count($shape->points)-1) echo ',';
 				} ?>
 			];
 			<?php endforeach; ?>
 			bounds = new Array();
+			var polygons = new Array();
 			for (i=0;i<startpoints.length;i++){
-				var polygon = new YMaps.Polygon(startpoints[i]);
+				polygons[i] = new YMaps.Polygon(startpoints[i]);
 				var style = new YMaps.Style("default#greenPoint");
 				style.polygonStyle = new YMaps.PolygonStyle();
 				style.polygonStyle.fill = false;
@@ -80,10 +83,11 @@ EOD
 				style.polygonStyle.strokeWidth = 4;
 				style.polygonStyle.strokeColor = "ff000055"; 
 				style.polygonStyle.fillColor = "ff000055";
-				polygon.setStyle(style);                           
+				polygons[i].setStyle(style);                           
 
-				map.addOverlay(polygon);
-				bounds.push(startpoints[i]);
+				map.addOverlay(polygons[i]);
+				for (ii=0;ii<startpoints[i].length;ii++) bounds.push(startpoints[i][ii]);
+				
 			}	
 				map.setBounds (new YMaps.GeoCollectionBounds(bounds));	
 				

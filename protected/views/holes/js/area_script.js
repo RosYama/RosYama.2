@@ -28,15 +28,21 @@ function makeMapBig()
 		YMaps.Events.observe(map2, map2.Events.Click, function () { toggleMap(); } );
 		map2.enableScrollZoom();
 		map2.setCenter(new YMaps.GeoPoint(37.64, 55.76), 14);
-		var bounds2=bounds;
-		map2.setBounds (bounds2);
 	}
 	var PlaceMarks2=PlaceMarks;
 		for (id in PlaceMarks2){
 			map2.addOverlay(PlaceMarks2[id]);
 		} 
-		var polygon2=polygon;		
-		map2.addOverlay(polygon2);			
+
+		var bounds2 = new Array;		
+		for (ind in polygons){
+			map2.addOverlay(polygons[ind]);
+			 var points=polygons[ind].getPoints();
+					for (i=0;i<points.length;i++){
+						bounds2.push(points[i]);
+					}
+		} 	
+		map2.setBounds (new YMaps.GeoCollectionBounds(bounds2));
 }
 
 function makeMapSmall()
@@ -45,8 +51,10 @@ function makeMapSmall()
 	a.style.display = 'none';
 	for (id in PlaceMarks){
 			map.addOverlay(PlaceMarks[id]);
-		} 
-	map.addOverlay(polygon);
+		}
+	for (i in polygons){
+			map.addOverlay(polygons[i]);
+		} 	
 }
 
 function selectAll(obj) {

@@ -40,8 +40,7 @@ class ProfileController extends Controller
 		$miscModel=$this->loadModel($id, 'changeMisc');
 		$passModel= clone $miscModel;
 		$passModel->setScenario('changePassword');
-		$passModel->password = NULL;
-
+		$passModel->password = NULL;		
 		// pass the models inside the array for ajax validation
 		$ajax_validation = array($miscModel, $passModel);
 
@@ -94,10 +93,13 @@ class ProfileController extends Controller
 				$model = $miscModel;
 
 			$model->attributes = $_POST['UserGroupsUser'];
-
+			
+			$model->paramsVals=$model->params;
+			
 			if ($model->validate()) {
 				if ($model->save()) {
 					Yii::app()->user->setFlash('user', Yii::t('userGroupsModule.general','Data Updated Successfully'));
+					$this->refresh();
 					//$this->renderPartial('update',array('miscModel'=>$miscModel,'passModel'=>$passModel, 'profiles' => $profile_models), false, true);
 					//$this->redirect(Array('/holes/personal'));
 					//$this->redirect(Yii::app()->baseUrl . '/userGroups?_isAjax=1&u='.$model->username);
@@ -117,11 +119,22 @@ class ProfileController extends Controller
         
         	if(isset($_POST['UserAreaShapes']))
 			{
+				$ids=Array();
+				foreach ($_POST['UserAreaShapes'] as $i=>$shape)
+					{
+						if ($shape['id']) $ids[]=$shape['id'];	
+					}
+				if ($ids){
+				$delshapes=UserAreaShapes::model()->findAll('id NOT IN ('.implode(',',$ids).') AND ug_id='.$model->id);				
+				foreach ($delshapes as $shape) $shape->delete();
+				}
+				
 				foreach ($_POST['UserAreaShapes'] as $i=>$shape)
 					{
 						$shapemodel=$shape['id'] ? UserAreaShapes::model()->findByPk((int)$shape['id']) : new UserAreaShapes;
 						if ($shapemodel){
 							$shapemodel->ug_id=$model->id;
+							$shapemodel->ordering=$shape['ordering'];
 							if ($shapemodel->isNewRecord) $shapemodel->save();
 							$ii=0;
 							foreach ($_POST['UserAreaShapePoints'][$i] as $point)
@@ -151,7 +164,25 @@ class ProfileController extends Controller
 	{
 		$this->layout='main';
 		$model= $this->loadModel($id);
-		$this->render('view',array('model'=>$model));
+		$contactModel=new ContactForm;
+		if(isset($_POST['ContactForm']) && $model->getParam('showContactForm'))
+		{
+			$contactModel->attributes=$_POST['ContactForm'];
+			if($contactModel->validate())
+			{
+				$headers="From: {Yii::app()->user->email}\r\nReply-To: {Yii::app()->user->email}";
+				$headers = "MIME-Version: 1.0\r\nFrom: {Yii::app()->user->email}\r\nReply-To: {Yii::app()->user->email}\r\nContent-Type: text/html; charset=utf-8";
+				$mailbody=$this->renderPartial('application.views.ugmail.user2user', Array(
+						'fromuser'=> Yii::app()->user->userModel,
+						'touser'=>$model,
+						'model'=>$contactModel,
+						),true);
+				mail($model->email,'РосЯма: личное сообщение - '.$contactModel->subject,$mailbody,$headers);
+				Yii::app()->user->setFlash('contact','Сообщение успешно отправлено');
+				$this->refresh();
+			}
+		}
+		$this->render('view',array('model'=>$model,'contactModel'=>$contactModel));
 	}		 
 	 
 	

@@ -44,6 +44,7 @@ class Profile extends CActiveRecord
 			array('ug_id', 'length', 'max'=>20),
 			array('birthday', 'length', 'max'=>120),
 			array('site, avatar', 'length', 'max'=>255),
+			array('aboutme', 'length'),
 			array('site', 'url','allowEmpty'=>true),
 			array('image', 'file', 'types'=>'jpeg, jpg, gif, png', 'allowEmpty' => true),
 			// The following rule is used by search().
@@ -113,6 +114,7 @@ class Profile extends CActiveRecord
 			'site' => 'Веб-сайт',
 			'avatar' => 'Фотография',
 			'image' => 'Фотография',
+			'aboutme'=>'Обо мне',
 		);
 	}
 

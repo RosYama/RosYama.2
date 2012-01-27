@@ -35,8 +35,8 @@ class UserAreaShapes extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('ug_id', 'required'),
-			array('ug_id', 'numerical', 'integerOnly'=>true),
+			array('ug_id, ordering', 'required'),
+			array('ug_id, ordering', 'numerical', 'integerOnly'=>true),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
 			array('id, ug_id', 'safe', 'on'=>'search'),
@@ -64,6 +64,12 @@ class UserAreaShapes extends CActiveRecord
 			'id' => 'ID',
 			'ug_id' => 'Ug',
 		);
+	}
+	
+	public function beforeDelete(){
+		parent::beforeDelete();
+		foreach ($this->points as $point) $point->delete();
+		return true;
 	}
 
 	/**

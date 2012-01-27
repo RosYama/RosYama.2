@@ -547,7 +547,7 @@ class HolesController extends Controller
 			$criteria->addCondition('LATITUDE >= '.$shape->points[0]->lat
 			.' AND LATITUDE <= '.$shape->points[2]->lat
 			.' AND LONGITUDE >= '.$shape->points[0]->lng
-			.' AND LONGITUDE <= '.$shape->points[2]->lng);
+			.' AND LONGITUDE <= '.$shape->points[2]->lng, 'OR');
 			}
 			$criteria->addCondition('STATE="'.$state_alias.'"');
 			$criteria->order='DATE_CREATED DESC';

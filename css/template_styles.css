@@ -575,7 +575,7 @@ div.submit input {font: normal 1em "Trebuchet MS", Arial, sans-serif; margin-rig
 			}
 			
 			.autochmo a {
-				background: url("images/chmo.gif") no-repeat scroll left center transparent;
+				background: url("/images/chmo.gif") no-repeat scroll left center transparent;
 				left: -20px;
 				padding-left: 20px;
 				position: relative;

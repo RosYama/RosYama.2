@@ -15,7 +15,7 @@ $this->widget('application.extensions.fancybox.EFancyBox', array(
 			<div class="rCol">
 	<div class="h">
 		<div class="info">
-			<p><span class="date"><?php echo CHtml::encode(Y::dateFromTime($hole->DATE_CREATED)); ?></span><?= CHtml::encode(strlen($hole->user->name.$hole->user->last_name) ? $hole->user->name.' '.$hole->user->last_name : $hole->user->username) ?></p>
+			<p><span class="date"><?php echo CHtml::encode(Y::dateFromTime($hole->DATE_CREATED)); ?></span><?php echo CHtml::link(CHtml::encode($hole->user->getParam('showFullname') ? $hole->user->Fullname : $hole->user->username), array('/profile/view', 'id'=>$hole->user->id),array('class'=>""));?></p>
 			<p class="type type_<?= $hole->type->alias ?>"><?= $hole->type->name; ?></p>
 			<p class="address"><?= CHtml::encode($hole->ADDRESS) ?></p>
 			<p class="status">
@@ -32,7 +32,7 @@ $this->widget('application.extensions.fancybox.EFancyBox', array(
 							<div id="requests_gibdd_history" style="display:none;">
 							<ul>
 							<?php foreach ($hole->requests_gibdd as $request) : ?>
-								<li><?php echo date('d.m.Y',$request->date_sent);?> <?php echo CHtml::link($request->user->Fullname, array('/profile/view', 'id'=>$request->user->id),array('class'=>""));?></li>
+								<li><?php echo date('d.m.Y',$request->date_sent);?> <?php echo CHtml::link(CHtml::encode($request->user->getParam('showFullname') ? $request->user->Fullname : $request->user->username), array('/profile/view', 'id'=>$request->user->id),array('class'=>""));?></li>
 							<?php endforeach; ?>
 							</ul>							
 							</div>

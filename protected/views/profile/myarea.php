@@ -10,7 +10,7 @@
 	<div class="lCol">
 		<div id="point_fields">
 		<?php foreach ($model->hole_area as $i=>$shape) : ?>
-			<?php $this->renderPartial('_area_point_fields',array('shape'=>$shape, 'i'=>$i, 'form'=>$form)); ?>
+			<?php $this->renderPartial('_area_point_fields',array('shape'=>$shape, 'i'=>$shape->ordering, 'form'=>$form)); ?>
 		<?php endforeach; ?>
 		</div>
 	</div>
@@ -24,20 +24,26 @@
 	<?php endif; ?>
 		<div class="bx-yandex-view-layout">
 			<div class="bx-yandex-view-map">
-			<a href="#" id="add_shape">Добавить прямоугольник</a>
+			<p><a href="#" id="add_shape">Добавить прямоугольник</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Для удаления прямоугольника кликните по нему 2 раза</p>
 			<div id="ymapcontainer" class="ymapcontainer"></div>
 			<?php Yii::app()->clientScript->registerScript('add_shape','
+			function reorder(){
 			var idopl=0;
-			jQuery("body").delegate("#add_shape","click",function(){
-				idopl=0;
-         		var inp=$(".shape_id");
+         		var inp=$(".shape_ordering");
 				inp.each(function() {
-					idopl++;
+					//$(this).val(idopl);
+					//polygons[idopl].id=idopl;
+					idopl=parseInt($(this).val());					
 					});
+			return idopl+1;
+			}	
+			
+			jQuery("body").delegate("#add_shape","click",function(){
+				ind=reorder();
 				jQuery.ajax({"type":"POST","beforeSend":function(){
-				 }, "data":"i="+idopl,"success":function(html){
+				 }, "data":"i="+ind,"success":function(html){
 					$("#point_fields").append(html);
-					addPolygon(idopl);
+					addPolygon(ind);
 				  },"url":"'.CController::createUrl("myareaAddshape").'","cache":false});				  
 			return false;});',
 			CClientScript::POS_END);
@@ -60,13 +66,13 @@
 						}	
 
 					}						
-					if (startpoints.length==0 && index > 0) {
+					if (startpoints.length==0 && ind > 1) {
 							startpoints=[new YMaps.GeoPoint(map.getCenter().getX()-0.05,map.getCenter().getY()-0.05),
 									  new YMaps.GeoPoint(map.getCenter().getX()-0.05,map.getCenter().getY()+0.05),
 									  new YMaps.GeoPoint(map.getCenter().getX()+0.05,map.getCenter().getY()+0.05),
 									  new YMaps.GeoPoint(map.getCenter().getX()+0.05,map.getCenter().getY()-0.05)];		
 						}
-					else if (startpoints.length==0 && index == 0){
+					else if (startpoints.length==0 && ind <= 1){
 						if (YMaps.location) {
 							center = new YMaps.GeoPoint(YMaps.location.longitude, YMaps.location.latitude);
 							
@@ -103,8 +109,9 @@
 					polygons[ind] = new YMaps.Polygon(startpoints, {
 										style: style,
 										hasHint: 0,
-										hasBalloon: 0										
+										hasBalloon: 0,										
 									});
+					polygons[ind].id=ind;				
 					
 					map.addOverlay(polygons[ind]);
 					
@@ -158,12 +165,16 @@
 							polygons[ind].Events.DblClick,
 							function (obj)
 							{
-								//alert(obj);
+								//alert(obj.id);
+								map.removeOverlay(obj);
+								$(".shape_"+obj.id).remove();
+								
 							}
 						)
 					
 				}
 				
+			
 				var map = new YMaps.Map(YMaps.jQuery("#ymapcontainer")[0]);
 				map.enableScrollZoom();
 				map.disableDblClickZoom();
@@ -175,14 +186,15 @@
 				//map.addOverlay(placemark);				
 				
 				var index=0;				
-				$(".shape_id").each(function() {
-					addPolygon(index);
-					index++;
+				$(".shape_ordering").each(function() {
+					addPolygon(parseInt($(this).val()));
 					});
-				
+			
+			if (polygons.length==0) $('#add_shape').click();
+			
 			bounds = new Array;
 			
-			 for (ind=0;ind<polygons.length;ind++){
+			 for (ind in polygons){
 			 var points=polygons[ind].getPoints();
 					for (i=0;i<points.length;i++){
 						bounds.push(points[i]);
@@ -192,7 +204,7 @@
             map.setBounds (new YMaps.GeoCollectionBounds(bounds));		
 			
             function savepolygon(){   
-            for (ind=0;ind<polygons.length;ind++){
+            for (ind in polygons){
 				var points=polygons[ind].getPoints();
 					for (i=0;i<points.length;i++){
 					$('#UserAreaShapePoints_'+ind+'_'+i+'_lat').val(points[i].getY());

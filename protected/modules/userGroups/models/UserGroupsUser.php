@@ -136,7 +136,7 @@ class UserGroupsUser extends CActiveRecord
 			array('group_id', 'length', 'max'=>20),
 			array('username, password, home, last_name,second_name, name', 'length', 'max'=>120),
 			array('email', 'email'),
-			array('rememberMe', 'safe'),
+			array('rememberMe, params', 'safe'),
 			// rules for registration
 			array('captcha', 'required', 'on' => 'registration'),
 			array('captcha', 'captcha', 'on' => 'registration'),
@@ -336,7 +336,33 @@ class UserGroupsUser extends CActiveRecord
 			'readable_home' => Yii::t('userGroupsModule.general', 'Home'),
 			'captcha' => 'Введите слово на картинке',
 			'rememberMe' => 'Запомнить меня на этом компьютере',
+			'params'=>'Другим пользователям :'
 		);
+	}
+	
+	public function getParamsFields()
+	{
+		return array(
+			'showFullname' => 'Показывать имя и фамилию',
+			'showAboutme' => 'Показывать информацию "обо мне"',
+			'showContactForm' => 'Разрешать пользователям отправлять сообщения на e-mail',
+		);
+	}
+	
+	public function setParamsVals($array)
+	{
+		$this->params=serialize($array);
+	}
+
+	public function getParamsVals()
+	{
+		return unserialize($this->params);
+	}
+	
+	public function getParam($str)
+	{
+		foreach ($this->params as $param) if ($str==$param) return true;
+		return false;
 	}
 
 	/**
@@ -482,7 +508,7 @@ class UserGroupsUser extends CActiveRecord
 
 		// copy the group home
 		$this->group_home = $this->relUserGroupsGroup->home;
-
+		$this->params=$this->paramsVals;
 		// get the user readable home
 		$home_array = UserGroupsAccess::homeList();
 		if ($this->home)
