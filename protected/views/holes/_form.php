@@ -103,17 +103,14 @@ EOD
 
 	</div>
 		<?
-		if(!$model->isNewRecord && $model->pictures && $model->STATE!='fixed' && !$model->GIBDD_REPLY_RECEIVED)
+		if(!$model->isNewRecord && $model->pictures_fresh && $model->STATE!='fixed' && !$model->GIBDD_REPLY_RECEIVED)
 		{
 			?>
 			<div id="overshadow"><span class="command" onclick="document.getElementById('picts').style.display=document.getElementById('picts').style.display=='block'?'none':'block';">Можно удалить загруженные фотографии</span><div class="picts" id="picts"><?
-			foreach($model->pictures['medium']['fresh'] as $picture)
-			{
-				$picture_id = explode('/', $picture);
-				$picture_id = explode('.', $picture_id[sizeof($picture_id) - 1]);
-				$picture_id = $picture_id[0];
-				echo '<br>'.$form->checkBox($model,"deletepict[$picture_id]",Array('class'=>'filter_checkbox')).' ';
-				echo $form->labelEx($model,"deletepict[$picture_id]",Array('label'=>'Удалить фотографию?')).'<br><img src="'.$picture.'"><br><br>';
+			foreach($model->pictures_fresh as $i=>$picture)
+			{				
+				echo '<br>'.$form->checkBox($model,"deletepict[$i]",Array('class'=>'filter_checkbox','value'=>$picture->id)).' ';
+				echo $form->labelEx($model,"deletepict[$i]",Array('label'=>'Удалить фотографию?')).'<br><img src="'.$picture->medium.'"><br><br>';
 			}
 			echo '</div></div>';
 		} ?>

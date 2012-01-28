@@ -356,11 +356,12 @@ class UserGroupsUser extends CActiveRecord
 
 	public function getParamsVals()
 	{
-		return unserialize($this->params);
+		if ($this->params) return unserialize($this->params);
 	}
 	
 	public function getParam($str)
 	{
+		if (!$this->params) return true;
 		foreach ($this->params as $param) if ($str==$param) return true;
 		return false;
 	}

@@ -31,7 +31,7 @@ class SpravController extends Controller
 				'users'=>array('*'),
 			),		
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('add','update','delete'),
+				'actions'=>array('add','update','delete', 'moderate'),
 				'users'=>array('@'),
 			),
 			array('deny',  // deny all users
@@ -350,6 +350,30 @@ class SpravController extends Controller
 		$this->render('update',array(
 			'model'=>$model,			
 		));
+	}
+	
+	public function actionModerate($id)
+	{	
+		$model=$this->loadGibddModel($id);
+		if (!Yii::app()->user->isModer && $model->author_id!=Yii::app()->user->id)
+				throw new CHttpException(403,'Доступ запрещен.');	
+		$model->moderated=1;
+		$model->update();
+		if(!isset($_GET['ajax']))
+			$this->redirect($_SERVER['HTTP_REFERER']);
+	}
+	
+	public function actionDelete($id)
+	{
+		$model=$this->loadGibddModel($id);
+		
+		if (!Yii::app()->user->isModer && $model->author_id!=Yii::app()->user->id)
+				throw new CHttpException(403,'Доступ запрещен.');	
+			
+		$model->delete();
+
+		if(!isset($_GET['ajax']))
+				$this->redirect($_SERVER['HTTP_REFERER']);
 	}
 	
 

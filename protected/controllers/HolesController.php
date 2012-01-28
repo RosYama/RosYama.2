@@ -31,7 +31,7 @@ class HolesController extends Controller
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('add','update', 'personal','personalDelete','request','sent','notsent','gibddreply', 'fix', 'defix', 'prosecutorsent', 'prosecutornotsent','delanswerfile','myarea'),
+				'actions'=>array('add','update', 'personal','personalDelete','request','requestForm','sent','notsent','gibddreply', 'fix', 'defix', 'prosecutorsent', 'prosecutornotsent','delanswerfile','myarea'),
 				'users'=>array('@'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -244,8 +244,11 @@ class HolesController extends Controller
 		$this->layout='//layouts/header_user';
 		
 		$model=$this->loadModel($id);
-		if (!$model->request_gibdd || !$model->request_gibdd->answers)
-			throw new CHttpException(403,'Доступ запрещен.');			
+		if (!$model->isUserHole && Yii::app()->user->level < 50)
+			if ($model->STATE=='fixed' || !$model->request_gibdd || !$model->request_gibdd->answers)
+				throw new CHttpException(403,'Доступ запрещен.');			
+		elseif ($model->STATE=='fixed')
+				throw new CHttpException(403,'Доступ запрещен.');		
 			
 		$model->scenario='fix';
 		
@@ -325,14 +328,25 @@ class HolesController extends Controller
 	//удаление ямы пользователем
 	public function actionPersonalDelete($id)
 	{
-
 			$model=$this->loadChangeModel($id);				
 			$model->delete();			
 			
 			// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
 			if(!isset($_POST['ajax']))
-				$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('personal'));
-		
+				$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('personal'));		
+	}	
+	
+	//форма ГИБДД
+	public function actionRequestForm($type, $hole)
+	{
+		if (isset($_POST['id']) && $_POST['id']){
+			$id=(int)$_POST['id'];
+			$gibdd=GibddHeads::model()->findByPk($id);
+			$holemodel=Holes::model()->findByPk((int)$hole);
+			if ($type=='gibdd') 
+				$this->renderPartial('_form_gibdd',Array('hole'=>$holemodel, 'gibdd'=>$gibdd));
+		}
+		//else echo "Выбирите отдел ГИБДД";
 	}	
 
 	//генерация запросов в ГИБДД
@@ -372,9 +386,9 @@ class HolesController extends Controller
 			
 				if($request->html)
 				{
-					foreach($model->pictures['original']['fresh'] as $src)
+					foreach($model->pictures_fresh as $picture)
 					{
-						$_images[] = $src;
+						$_images[] = $picture->original;
 					}
 					header('Content-Type: text/html; charset=utf8', true);
 					$HT = new html1234();
@@ -388,9 +402,9 @@ class HolesController extends Controller
 				else
 				{
 					header_remove('Content-Type');	
-					foreach($model->pictures['original']['fresh'] as $src)
+					foreach($model->pictures_fresh as $picture)
 					{
-						$_images[] = $_SERVER['DOCUMENT_ROOT'].$src;
+						$_images[] = $_SERVER['DOCUMENT_ROOT'].$picture->original;
 					}
 					header('Content-Type: application/pdf; charset=utf-8', true);
 					$PDF = new pdf1234();

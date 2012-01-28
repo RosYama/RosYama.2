@@ -151,73 +151,8 @@ $this->widget('application.extensions.fancybox.EFancyBox', array(
 							<div class="rc" style="width:145px;padding: 24px 0 24px 15px;">
 								<p>Если вас не устраивает ответ ГИБДД, то можно</p>
 								<p><a href="#" onclick="var c=document.getElementById('prosecutor_form2');if(c){c.style.display=c.style.display=='block'?'none':'block';}return false;">подать Заявление в Прокуратуру</a></p>
-								<div class="pdf_form" id="prosecutor_form2"<?= isset($_GET['show_prosecutor_form2']) ? ' style="display: block;"' : '' ?>>
-									<a href="#" onclick="var c=document.getElementById('prosecutor_form2');if(c){c.style.display=c.style.display=='block'?'none':'block';}return false;" class="close">&times;</a>
-									<?php $form=$this->beginWidget('CActiveForm', array(
-										'id'=>'request-form',
-										'enableAjaxValidation'=>false,
-										'action'=>Yii::app()->createUrl("holes/request", array("id"=>$hole->ID)),
-										'htmlOptions'=>Array ('onsubmit'=>"document.getElementById('prosecutor_form2').style.display='none';"),
-									)); 
-									$model=new HoleRequestForm;
-									$model->form_type='prosecutor2';
-									$model->to=$hole->subject ? $hole->subject->name_full_genitive : '';
-									$model->from=CHtml::encode(Yii::app()->user->userModel->last_name.' '.Yii::app()->user->userModel->name.' '.Yii::app()->user->userModel->second_name);
-									$model->address=CHtml::encode($hole->ADDRESS);
-									$model->signature=CHtml::encode(Yii::app()->user->userModel->last_name.' '.substr(Yii::app()->user->userModel->name, 0, 2).(Yii::app()->user->userModel->name ? '.' : '').' '.substr(Yii::app()->user->userModel->second_name, 0, 2).(Yii::app()->user->userModel->second_name ? '.' : ''));
-									$model->gibdd=$hole->subject && $hole->subject->gibdd ? $hole->subject->gibdd->gibdd_name : '';
-									$model->application_data=$hole->request_gibdd ? date('d.m.Y',$hole->request_gibdd->date_sent) : '';
-									?>											
-									
-										<?php echo $form->hiddenField($model,'form_type'); ?>
-										<?=  Yii::t('holes_view', 'HOLE_PROSECUTOR_FORM2_PREFACE') ?>
-										<table>
-											<tr>
-												<th><?=  Yii::t('holes_view', 'HOLE_PROSECUTOR_FORM_TO') ?></th>
-												<td><?php echo $form->textArea($model,'to',array('rows'=>3, 'cols'=>40)); ?></td>
-											</tr>
-											<tr>
-												<th><?=  Yii::t('holes_view', 'HOLE_PROSECUTOR_FORM_FROM') ?></th>
-												<td><?php echo $form->textArea($model,'from',array('rows'=>3, 'cols'=>40)); ?></td>
-											</tr>
-											<tr>
-												<th><?= Yii::t('holes_view', 'HOLE_PROSECUTOR_FORM_POSTADDRESS') ?><span class="comment"><?= Yii::t('holes_view', 'HOLE_PROSECUTOR_FORM_POSTADDRESS_COMMENT') ?></span></th>
-												<td><?php echo $form->textArea($model,'postaddress',array('rows'=>3, 'cols'=>40)); ?></td>
-											</tr>
-											<tr>
-												<th><?= Yii::t('holes_view', 'HOLE_PRESECUTOR_FORM_ADDRESS') ?></th>
-												<td><?php echo $form->textArea($model,'address',array('rows'=>3, 'cols'=>40)); ?>
-												<?php /*<textarea rows="3" cols="40" id="prosecutor_form_address" name="address"><?= CHtml::encode($hole['ESS']) ?></textarea> */ ?></td>
-											</tr>
-											<tr>
-												<th><?= Yii::t('holes_view', 'HOLE_PRESECUTOR_FORM_GIBDD') ?><span class="comment"><?= Yii::t('holes_view', 'HOLE_PRESECUTOR_FORM_GIBDD_COMMENT') ?></span></th>
-												<td><?php echo $form->textArea($model,'gibdd',array('rows'=>3, 'cols'=>40)); ?><?//= $arResult['PROSECUTOR_GIBDD'] ?></td>
-											</tr>
-											<tr>
-												<th><?= Yii::t('holes_view', 'HOLE_PRESECUTOR_FORM_GIBDD_REPLY') ?><span class="comment"><?= Yii::t('holes_view', 'HOLE_PRESECUTOR_FORM_GIBDD_COMMENT2') ?></span></th>
-												<td><?php echo $form->textArea($model,'gibdd_reply',array('rows'=>3, 'cols'=>40)); ?></td>
-											</tr>
-											<tr>
-												<th><?= Yii::t('holes_view', 'HOLE_PROSECUTOR_FORM_APPLICATION_DATA') ?></th>
-												<td><?php echo $form->textField($model,'application_data',array('class'=>'textInput')); ?></td>
-											</tr>
-											<tr>
-												<th><?php echo $form->labelEx($model,'signature'); ?><span class="comment"><?= Yii::t('holes_view', 'HOLE_REQUEST_FORM_SIGNATURE_COMMENT') ?></span></th>
-												<td><?php echo $form->textField($model,'signature',array('class'=>'textInput')); ?></td>
-											</tr>
-											<tr>
-												<th></th>
-												<td>
-													<?php echo CHtml::submitButton(Yii::t('holes_view', 'HOLE_REQUEST_FORM_SUBMIT'), Array('class'=>'submit', 'name'=>'HoleRequestForm[pdf]')); ?>
-													<?php echo CHtml::submitButton(Yii::t('holes_view', 'HOLE_REQUEST_FORM_SUBMIT2'), Array('class'=>'submit', 'name'=>'HoleRequestForm[html]')); ?>
-												</td>
-											</tr>
-										</table>
-										<?php if ($hole->subject && $hole->subject->prosecutor) : ?>
-										<strong><?php echo CHtml::encode($hole->subject->prosecutor->name) ?></strong>
-										<p><?php echo CHtml::encode(strip_tags($hole->subject->prosecutor->preview_text)) ?></p>
-										<?php endif; ?>
-									<?php $this->endWidget(); ?>
+								<div class="pdf_form" id="prosecutor_form2"<?= isset($_GET['show_prosecutor_form2']) ? ' style="display: block;"' : '' ?>>								
+								<?php $this->renderPartial('_form_prosecutor',Array('hole'=>$hole)); ?>	
 								</div>
 							</div>
 						<? else : ?>							
@@ -261,68 +196,7 @@ $this->widget('application.extensions.fancybox.EFancyBox', array(
 							<p><?php echo CHtml::link('Жалоба в прокуратуру подана', array('prosecutorsent', 'id'=>$hole->ID),array('class'=>"declarationBtn")); ?></p>
 						</div>
 						<div class="pdf_form" id="prosecutor_form"<?= isset($_GET['show_prosecutor_form']) ? ' style="display: block;"' : '' ?>>
-							<a href="#" onclick="var c=document.getElementById('prosecutor_form');if(c){c.style.display=c.style.display=='block'?'none':'block';}return false;" class="close">&times;</a>
-							<?php $form=$this->beginWidget('CActiveForm', array(
-										'id'=>'request-form',
-										'enableAjaxValidation'=>false,
-										'action'=>Yii::app()->createUrl("holes/request", array("id"=>$hole->ID)),
-										'htmlOptions'=>Array ('onsubmit'=>"document.getElementById('prosecutor_form2').style.display='none';"),
-									)); 
-									$model=new HoleRequestForm;
-									$model->form_type='prosecutor';
-									$model->to=$hole->subject ? $hole->subject->name_full_genitive : '';
-									$model->from=CHtml::encode(Yii::app()->user->userModel->last_name.' '.Yii::app()->user->userModel->name.' '.Yii::app()->user->userModel->second_name);
-									$model->address=CHtml::encode($hole->ADDRESS);
-									$model->signature=CHtml::encode(Yii::app()->user->userModel->last_name.' '.substr(Yii::app()->user->userModel->name, 0, 2).(Yii::app()->user->userModel->name ? '.' : '').' '.substr(Yii::app()->user->userModel->second_name, 0, 2).(Yii::app()->user->userModel->second_name ? '.' : ''));
-									$model->gibdd=$hole->subject && $hole->subject->gibdd ? $hole->subject->gibdd->gibdd_name : '';
-									$model->application_data=$hole->request_gibdd ? date('d.m.Y',$hole->request_gibdd->date_sent) : '';
-									?>					
-									<?php echo $form->hiddenField($model,'form_type'); ?>							
-								<?= Yii::t('holes_view', 'HOLE_PROSECUTOR_FORM_PREFACE') ?>
-								<table>
-									<tr>
-										<th><?=  Yii::t('holes_view', 'HOLE_PROSECUTOR_FORM_TO') ?></th>
-										<td><?php echo $form->textArea($model,'to',array('rows'=>3, 'cols'=>40)); ?></td>
-									</tr>
-									<tr>
-										<th><?=  Yii::t('holes_view', 'HOLE_PROSECUTOR_FORM_FROM') ?></th>
-										<td><?php echo $form->textArea($model,'from',array('rows'=>3, 'cols'=>40)); ?></td>
-									</tr>
-									<tr>
-											<th><?= Yii::t('holes_view', 'HOLE_PROSECUTOR_FORM_POSTADDRESS') ?><span class="comment"><?= Yii::t('holes_view', 'HOLE_PROSECUTOR_FORM_POSTADDRESS_COMMENT') ?></span></th>
-											<td><?php echo $form->textArea($model,'postaddress',array('rows'=>3, 'cols'=>40)); ?></td>
-									</tr>
-									<tr>
-											<th><?= Yii::t('holes_view', 'HOLE_PRESECUTOR_FORM_ADDRESS') ?></th>
-											<td><?php echo $form->textArea($model,'address',array('rows'=>3, 'cols'=>40)); ?>
-												<?php /*<textarea rows="3" cols="40" id="prosecutor_form_address" name="address"><?= CHtml::encode($hole['ESS']) ?></textarea> */ ?></td>
-									</tr>
-									<tr>
-										<th><?= Yii::t('holes_view', 'HOLE_PRESECUTOR_FORM_GIBDD') ?><span class="comment"><?= Yii::t('holes_view', 'HOLE_PRESECUTOR_FORM_GIBDD_COMMENT') ?></span></th>
-										<td><?php echo $form->textArea($model,'gibdd',array('rows'=>3, 'cols'=>40)); ?><?//= $arResult['PROSECUTOR_GIBDD'] ?></td>
-									</tr>
-									<tr>
-										<th><?= Yii::t('holes_view', 'HOLE_PROSECUTOR_FORM_APPLICATION_DATA') ?><span class="comment"><?= Yii::t('holes_view', 'HOLE_PROSECUTOR_FORM_APPLICATION_DATA_COMMENT') ?></span></th>
-										<td><?php echo $form->textField($model,'application_data',array('class'=>'textInput')); ?></td>
-									</tr>
-									<tr>
-										<th><?php echo $form->labelEx($model,'signature'); ?><span class="comment"><?= Yii::t('holes_view', 'HOLE_REQUEST_FORM_SIGNATURE_COMMENT') ?></span></th>
-										<td><?php echo $form->textField($model,'signature',array('class'=>'textInput')); ?></td>
-									</tr>								
-									<tr>
-									<th></th>
-										<td>
-											<?php echo CHtml::submitButton(Yii::t('holes_view', 'HOLE_REQUEST_FORM_SUBMIT'), Array('class'=>'submit', 'name'=>'HoleRequestForm[pdf]')); ?>
-											<?php echo CHtml::submitButton(Yii::t('holes_view', 'HOLE_REQUEST_FORM_SUBMIT2'), Array('class'=>'submit', 'name'=>'HoleRequestForm[html]')); ?>
-										</td>
-									</tr>
-								</table>
-								<?php if ($hole->subject && $hole->subject->prosecutor) : ?>
-								<strong><?php echo CHtml::encode($hole->subject->prosecutor->name) ?></strong>
-								<p><?php echo CHtml::encode(strip_tags($hole->subject->prosecutor->preview_text)) ?></p>
-								<?php endif; ?>
-								<?php $this->endWidget(); ?>
-							</form>
+						<?php $this->renderPartial('_form_prosecutor_achtung',Array('hole'=>$hole)); ?>						
 						</div>
 						<? else : ?>						
 							<div class="cc">
@@ -370,69 +244,8 @@ $this->widget('application.extensions.fancybox.EFancyBox', array(
 								<p><?php echo CHtml::link('Жалоба в прокуратуру подана', array('prosecutorsent', 'id'=>$hole->ID),array('class'=>"declarationBtn")); ?></p>
 							</div>
 							<div class="pdf_form" id="prosecutor_form"<?= isset($_GET['show_prosecutor_form']) ? ' style="display: block;"' : '' ?>>
-								<a href="#" onclick="var c=document.getElementById('prosecutor_form');if(c){c.style.display=c.style.display=='block'?'none':'block';}return false;" class="close">&times;</a>
-								<?php $form=$this->beginWidget('CActiveForm', array(
-											'id'=>'request-form',
-											'enableAjaxValidation'=>false,
-											'action'=>Yii::app()->createUrl("holes/request", array("id"=>$hole->ID)),
-											'htmlOptions'=>Array ('onsubmit'=>"document.getElementById('prosecutor_form2').style.display='none';"),
-										)); 
-										$model=new HoleRequestForm;
-										$model->form_type='prosecutor';
-										$model->to=$hole->subject ? $hole->subject->name_full_genitive : '';
-										$model->from=CHtml::encode(Yii::app()->user->userModel->last_name.' '.Yii::app()->user->userModel->name.' '.Yii::app()->user->userModel->second_name);
-										$model->address=CHtml::encode($hole->ADDRESS);
-										$model->signature=CHtml::encode(Yii::app()->user->userModel->last_name.' '.substr(Yii::app()->user->userModel->name, 0, 2).(Yii::app()->user->userModel->name ? '.' : '').' '.substr(Yii::app()->user->userModel->second_name, 0, 2).(Yii::app()->user->userModel->second_name ? '.' : ''));
-										$model->gibdd=$hole->subject && $hole->subject->gibdd ? $hole->subject->gibdd->gibdd_name : '';
-										$model->application_data=$hole->request_gibdd ? date('d.m.Y',$hole->request_gibdd->date_sent) : '';
-										?>					
-										<?php echo $form->hiddenField($model,'form_type'); ?>							
-									<?= Yii::t('holes_view', 'HOLE_PROSECUTOR_FORM_PREFACE') ?>
-									<table>
-										<tr>
-											<th><?=  Yii::t('holes_view', 'HOLE_PROSECUTOR_FORM_TO') ?></th>
-											<td><?php echo $form->textArea($model,'to',array('rows'=>3, 'cols'=>40)); ?></td>
-										</tr>
-										<tr>
-											<th><?=  Yii::t('holes_view', 'HOLE_PROSECUTOR_FORM_FROM') ?></th>
-											<td><?php echo $form->textArea($model,'from',array('rows'=>3, 'cols'=>40)); ?></td>
-										</tr>
-										<tr>
-												<th><?= Yii::t('holes_view', 'HOLE_PROSECUTOR_FORM_POSTADDRESS') ?><span class="comment"><?= Yii::t('holes_view', 'HOLE_PROSECUTOR_FORM_POSTADDRESS_COMMENT') ?></span></th>
-												<td><?php echo $form->textArea($model,'postaddress',array('rows'=>3, 'cols'=>40)); ?></td>
-										</tr>
-										<tr>
-												<th><?= Yii::t('holes_view', 'HOLE_PRESECUTOR_FORM_ADDRESS') ?></th>
-												<td><?php echo $form->textArea($model,'address',array('rows'=>3, 'cols'=>40)); ?>
-													<?php /*<textarea rows="3" cols="40" id="prosecutor_form_address" name="address"><?= CHtml::encode($hole['ESS']) ?></textarea> */ ?></td>
-										</tr>
-										<tr>
-											<th><?= Yii::t('holes_view', 'HOLE_PRESECUTOR_FORM_GIBDD') ?><span class="comment"><?= Yii::t('holes_view', 'HOLE_PRESECUTOR_FORM_GIBDD_COMMENT') ?></span></th>
-											<td><?php echo $form->textArea($model,'gibdd',array('rows'=>3, 'cols'=>40)); ?><?//= $arResult['PROSECUTOR_GIBDD'] ?></td>
-										</tr>
-										<tr>
-											<th><?= Yii::t('holes_view', 'HOLE_PROSECUTOR_FORM_APPLICATION_DATA') ?><span class="comment"><?= Yii::t('holes_view', 'HOLE_PROSECUTOR_FORM_APPLICATION_DATA_COMMENT') ?></span></th>
-											<td><?php echo $form->textField($model,'application_data',array('class'=>'textInput')); ?></td>
-										</tr>
-										<tr>
-											<th><?php echo $form->labelEx($model,'signature'); ?><span class="comment"><?= Yii::t('holes_view', 'HOLE_REQUEST_FORM_SIGNATURE_COMMENT') ?></span></th>
-											<td><?php echo $form->textField($model,'signature',array('class'=>'textInput')); ?></td>
-										</tr>								
-										<tr>
-										<th></th>
-											<td>
-												<?php echo CHtml::submitButton(Yii::t('holes_view', 'HOLE_REQUEST_FORM_SUBMIT'), Array('class'=>'submit', 'name'=>'HoleRequestForm[pdf]')); ?>
-												<?php echo CHtml::submitButton(Yii::t('holes_view', 'HOLE_REQUEST_FORM_SUBMIT2'), Array('class'=>'submit', 'name'=>'HoleRequestForm[html]')); ?>
-											</td>
-										</tr>
-									</table>
-									<?php if ($hole->subject && $hole->subject->prosecutor) : ?>
-									<strong><?php echo CHtml::encode($hole->subject->prosecutor->name) ?></strong>
-									<p><?php echo CHtml::encode(strip_tags($hole->subject->prosecutor->preview_text)) ?></p>
-									<?php endif; ?>
-									<?php $this->endWidget(); ?>
-								</form>
-							</div>							
+							<?php $this->renderPartial('_form_prosecutor_achtung',Array('hole'=>$hole)); ?>													
+							</div>
 						<?php endif; ?>
 						<?
 						break;
@@ -440,7 +253,7 @@ $this->widget('application.extensions.fancybox.EFancyBox', array(
 					case 'fixed':
 					default:
 					{
-						if(!sizeof($hole['pictures']['original']['fixed']))
+						if(!$hole->pictures_fixed)
 						{
 							?>
 							<?php echo CHtml::link(Yii::t('holes_view', 'HOLE_CART_ADMIN_TEXT_13'), array('defix', 'id'=>$hole->ID),array('class'=>"declarationBtn")); ?>
@@ -449,61 +262,27 @@ $this->widget('application.extensions.fancybox.EFancyBox', array(
 						break;
 					}
 				}
-				?>
+				?>				
 				<div class="pdf_form" id="pdf_form"<?= isset($_GET['show_pdf_form']) ? ' style="display: block;"' : '' ?>>
-					<a href="#" onclick="var c=document.getElementById('pdf_form');if(c){c.style.display=c.style.display=='block'?'none':'block';}return false;" class="close">&times;</a>
-					Не исключена вероятность того, что на <a href="http://www.gosuslugi.ru/ru/chorg/index.php?ssid_4=4120&stab_4=4&rid=228&tid=2" target="_blank">сайте госуслуг</a> окажется немного полезной информации.
-					
-					<?php $form=$this->beginWidget('CActiveForm', array(
-						'id'=>'request-form',
-						'enableAjaxValidation'=>false,
-						'action'=>Yii::app()->createUrl("holes/request", array("id"=>$hole->ID)),
-						'htmlOptions'=>Array ('onsubmit'=>"document.getElementById('pdf_form').style.display='none';"),
-					)); 
-					$model=new HoleRequestForm;
-					$model->to=$hole->subject ? $hole->subject->gibdd->post_dative.' '.$hole->subject->gibdd->fio_dative : '';
-					$model->from=CHtml::encode(Yii::app()->user->userModel->last_name.' '.Yii::app()->user->userModel->name.' '.Yii::app()->user->userModel->second_name);
-					$model->address=CHtml::encode($hole->ADDRESS);
-					$model->signature=CHtml::encode(Yii::app()->user->userModel->last_name.' '.substr(Yii::app()->user->userModel->name, 0, 2).(Yii::app()->user->userModel->name ? '.' : '').' '.substr(Yii::app()->user->userModel->second_name, 0, 2).(Yii::app()->user->userModel->second_name ? '.' : ''));
-					?>					
-						<h2><?= Yii::t('holes_view', 'HOLE_REQUEST_FORM') ?></h2>
-						<table>
-							<tr>
-								<th><?php echo $form->labelEx($model,'to'); ?><span class="comment"><?= Yii::t('holes_view', 'HOLE_REQUEST_FORM_TO_COMMENT') ?></span></th>
-								<td><?php echo $form->textArea($model,'to',array('rows'=>3, 'cols'=>40)); ?></td>
-							</tr>
-							<tr>
-								<th><?php echo $form->labelEx($model,'from'); ?><span class="comment"><?= Yii::t('holes_view', 'HOLE_REQUEST_FORM_FROM_COMMENT') ?></span></th>
-								<td><?php echo $form->textArea($model,'from',array('rows'=>3, 'cols'=>40)); ?></td>
-							</tr>
-							<tr>
-								<th><?php echo $form->labelEx($model,'postaddress'); ?><span class="comment"><?= Yii::t('holes_view', 'HOLE_REQUEST_FORM_POSTADDRESS_COMMENT') ?></span></th>
-								<td><?php echo $form->textArea($model,'postaddress',array('rows'=>3, 'cols'=>40)); ?></td>
-							</tr>
-							<tr>
-								<th><?php echo $form->labelEx($model,'address'); ?><span class="comment"><?= Yii::t('holes_view', 'HOLE_REQUEST_FORM_ADDRESS_COMMENT') ?></span></th>
-								<td><?php echo $form->textArea($model,'address',array('rows'=>3, 'cols'=>40)); ?></td>
-							</tr>
-							<? if($hole->type->alias == 'light'): ?>
-								<tr>
-									<th><?php echo $form->labelEx($model,'comment'); ?><span class="comment"><?= Yii::t('holes_view', 'HOLE_REQUEST_FORM_COMMENT_COMMENT') ?></span></th>
-									<td><?php echo $form->textArea($model,'comment',array('rows'=>3, 'cols'=>40)); ?></td>
-								</tr>
-							<? endif; ?>
-							<tr>
-								<th><?php echo $form->labelEx($model,'signature'); ?><span class="comment"><?= Yii::t('holes_view', 'HOLE_REQUEST_FORM_SIGNATURE_COMMENT') ?></span></th>
-								<td><?php echo $form->textField($model,'signature',array('class'=>'textInput')); ?></td>
-							</tr>
-							<tr>
-								<th></th>
-								<td>
-									<?php echo CHtml::submitButton(Yii::t('holes_view', 'HOLE_REQUEST_FORM_SUBMIT'), Array('class'=>'submit', 'name'=>'HoleRequestForm[pdf]')); ?>
-									<?php echo CHtml::submitButton(Yii::t('holes_view', 'HOLE_REQUEST_FORM_SUBMIT2'), Array('class'=>'submit', 'name'=>'HoleRequestForm[html]')); ?>
-								</td>
-							</tr>
-						</table>
-					<?php $this->endWidget(); ?>
-					<?= Yii::t('holes_view', 'ST1234_INSTRUCTION') ?>
+				<a href="#" onclick="var c=document.getElementById('pdf_form');if(c){c.style.display=c.style.display=='block'?'none':'block';}return false;" class="close">&times;</a>
+				<?php echo CHtml::dropDownList('gibdd_id','',CHtml::listData($hole->territorialGibdd, 'id', 'gibdd_name' ),
+									array(
+									'prompt'=>'Выберете отдел ГИБДД',
+									'ajax' => array(
+									'type'=>'POST', //request type
+									'url'=>$this->createUrl('requestForm', Array('type'=>'gibdd','hole'=>$hole->ID)), //url to call.
+									'update'=>'#gibdd_form', //selector to update
+									'data'=>'js:"id="+$(this).val()',
+									'beforeSend'=>'js:function(){
+														$("#gibdd_form").empty().addClass("loading");
+													 }',
+									'complete'=>'js:function(){
+														$("#gibdd_form").removeClass("loading");
+													 }',				 
+									))); ?>
+				<div id="gibdd_form"></div>
+				<?php //$this->renderPartial('_form_gibdd',Array('hole'=>$hole)); 
+				?>
 				</div>
 			<? endif; ?>
 			</div>
@@ -561,7 +340,7 @@ $this->widget('application.extensions.fancybox.EFancyBox', array(
 			<p><b>Ссылка на эту страницу:</b></p>
 			<input onfocus="selectAll(this)" type="text" value='<a href="<?=Yii::app()->request->hostInfo?>/<?=Yii::app()->request->pathInfo?>">РосЯма :: <?= CHtml::encode($hole->ADDRESS) ?></a>'/>
 			<p><b>BBcode для форума:</b></p>
-			<textarea onfocus="selectAll(this)" rows="3">[url=<?=Yii::app()->request->hostInfo?>/<?=Yii::app()->request->pathInfo?>][img]<?=Yii::app()->request->hostInfo.'/'.$hole['pictures']['medium']['fresh'][0]?>[/img][/url][url=<?=Yii::app()->request->hostInfo?>/<?=Yii::app()->request->pathInfo?>] 
+			<textarea onfocus="selectAll(this)" rows="3">[url=<?=Yii::app()->request->hostInfo?>/<?=Yii::app()->request->pathInfo?>][img]<?=Yii::app()->request->hostInfo.'/'.$hole->pictures_fresh[0]->medium?>[/img][/url][url=<?=Yii::app()->request->hostInfo?>/<?=Yii::app()->request->pathInfo?>] 
 			РосЯма :: <?=CHtml::encode($hole['ADDRESS'])?>[/url]</textarea>
 			
 			
@@ -570,11 +349,11 @@ $this->widget('application.extensions.fancybox.EFancyBox', array(
 <div class="rCol">
 	<div class="b">
 		<div class="before">
-			<? if(sizeof($hole['pictures']['medium']['fixed'])): ?>
+			<? if($hole->pictures_fixed): ?>
 				<h2><?= Yii::t('holes_view', 'HOLE_ITWAS') ?></h2>
 			<? endif; ?>
-			<? foreach($hole['pictures']['medium']['fresh'] as $i=>$src): ?>
-				<?php echo CHtml::link(CHtml::image($src), $hole['pictures']['original']['fresh'][$i], 
+			<? foreach($hole->pictures_fresh as $i=>$picture): ?>
+				<?php echo CHtml::link(CHtml::image($picture->medium), $picture->original, 
 					Array('class'=>'holes_pict','rel'=>'hole', 'title'=>CHtml::encode($hole->ADDRESS))); ?>
 			<? endforeach; ?>
 		</div>
@@ -620,10 +399,10 @@ $this->widget('application.extensions.fancybox.EFancyBox', array(
 		<?php endforeach; ?>
 		<?php if($hole['STATE'] == 'fixed'): ?>
 			<div class="after">
-				<? if(sizeof($hole['pictures']['medium']['fixed'])): ?>
+				<? if($hole->pictures_fixed): ?>
 					<h2><?= Yii::t('holes_view', 'HOLE_ITBECAME') ?></h2>
-					<? foreach($hole['pictures']['medium']['fixed'] as $i=>$src): ?>
-						<?php echo CHtml::link(CHtml::image($src), $hole['pictures']['original']['fixed'][$i], 
+					<? foreach($hole->pictures_fixed as $i=>$picture): ?>
+						<?php echo CHtml::link(CHtml::image($picture->medium), $picture->original, 
 					Array('class'=>'holes_pict','rel'=>'hole_fixed', 'title'=>CHtml::encode($hole->ADDRESS).' - исправлено')); ?>
 					<? endforeach; ?>
 				<? endif; ?>

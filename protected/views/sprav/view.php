@@ -1,4 +1,4 @@
-<?
+<? 
 $this->pageTitle=Yii::app()->name . ' - '.$model->name_full.' - Справочник ГИБДД ';
 $this->title=CHtml::link('Справочник ГИБДД', Array('index')).' > '.$model->name_full;
 ?>

@@ -946,3 +946,9 @@ font.notetext {
 color: rgb(0, 128, 0);
  }
 
+.loading{
+	width: 100%;
+	height: 40px;
+	background: transparent url(/images/ajaxload.gif) center center no-repeat;
+	} 
+

@@ -99,6 +99,9 @@ class Holes extends CActiveRecord
 		return array(
 			'subject'=>array(self::BELONGS_TO, 'RfSubjects', 'ADR_SUBJECTRF'),
 			'requests'=>array(self::HAS_MANY, 'HoleRequests', 'hole_id'),
+			'pictures'=>array(self::HAS_MANY, 'HolePictures', 'hole_id', 'order'=>'pictures.type, pictures.ordering'),
+			'pictures_fresh'=>array(self::HAS_MANY, 'HolePictures', 'hole_id', 'condition'=>'pictures_fresh.type="fresh"','order'=>'pictures_fresh.ordering'),
+			'pictures_fixed'=>array(self::HAS_MANY, 'HolePictures', 'hole_id', 'condition'=>'pictures_fixed.type="fixed"','order'=>'pictures_fixed.ordering'),
 			'request_gibdd'=>array(self::HAS_ONE, 'HoleRequests', 'hole_id', 'condition'=>'request_gibdd.type="gibdd" AND user_id='.Yii::app()->user->id),
 			'request_prosecutor'=>array(self::HAS_ONE, 'HoleRequests', 'hole_id', 'condition'=>'request_prosecutor.type="prosecutor" AND user_id='.Yii::app()->user->id),
 			'requests_gibdd'=>array(self::HAS_MANY, 'HoleRequests', 'hole_id', 'condition'=>'requests_gibdd.type="gibdd"','order'=>'date_sent DESC'),
@@ -149,75 +152,47 @@ class Holes extends CActiveRecord
 		return $this->AllstatesShort[$this->STATE];
 	}
 	
-	public function getPictures(){
-	
-		// картинки
-		if(!isset($_GET['nopicts']))
-		{
-		$v=Array();	
-		$v['original']['fixed']=Array();
-		$v['medium']['fixed']=Array();
-		$v['small']['fixed']=Array();
-		$v['original']['gibddreply']=Array();
-		$v['medium']['gibddreply']=Array();
-		$v['small']['gibddreply']=Array();
-		$v['original']['fresh']=Array();
-		$v['medium']['fresh']=Array();
-		$v['small']['fresh']=Array();
+	const EARTH_RADIUS_KM = 6373;
+	public function getTerritorialGibdd()	
+	{	
+		$longitude=$this->LONGITUDE;
+		$latitude=$this->LATITUDE;		
+		$numerator = 'POW(COS(RADIANS(lat)) * SIN(ABS(RADIANS('.$longitude.')-RADIANS(lng))),2)';		
+		$numerator .= ' + POW(
+		COS(RADIANS('.$latitude.')) * SIN(RADIANS(lat)) - SIN(RADIANS('.$latitude.'))
+		* COS(RADIANS(lat))*COS(ABS(RADIANS('.$longitude.')-RADIANS(lng)))
+		,2)';
+		$numerator = 'SQRT('.$numerator.')';		
+		$denominator = 'SIN(RADIANS(lat))*SIN(RADIANS('.$latitude.')) +
+		COS(RADIANS(lat))*COS(RADIANS('.$latitude.'))*
+		COS(ABS(RADIANS('.$longitude.')-RADIANS(lng)))';		
+		$condition = 'ATAN('.$numerator.'/('.$denominator.')) * '.self::EARTH_RADIUS_KM;
 		
-			$k = $this->ID;
-			
-				$dir = opendir($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/original/'.$k);
-				while($f = readdir($dir))
-				{
-					if($f != '.' && $f != '..')
-					{
-						if($f[0] == 'f')
-						{
-							$v['original']['fixed'][] = '/upload/st1234/original/'.$k.'/'.$f;
-							$v['medium']['fixed'][]   = '/upload/st1234/medium/'.$k.'/'.$f;
-							$v['small']['fixed'][]    = '/upload/st1234/small/'.$k.'/'.$f;
-						}
-						elseif(substr($f, 0, 2) == 'gr')
-						{
-							$v['original']['gibddreply'][] = '/upload/st1234/original/'.$k.'/'.$f;
-							$v['medium']['gibddreply'][]   = '/upload/st1234/medium/'.$k.'/'.$f;
-							$v['small']['gibddreply'][]    = '/upload/st1234/small/'.$k.'/'.$f;
-						}
-						else
-						{
-							$v['original']['fresh'][] = '/upload/st1234/original/'.$k.'/'.$f;
-							$v['medium']['fresh'][]   = '/upload/st1234/medium/'.$k.'/'.$f;
-							$v['small']['fresh'][]    = '/upload/st1234/small/'.$k.'/'.$f;
-						}
-					}
-				}
-				if ($f) closedir($f);
-				sort($v['small']['fresh']);
-				sort($v['medium']['fresh']);
-				sort($v['original']['fresh']);
-				sort($v['small']['gibddreply']);
-				sort($v['medium']['gibddreply']);
-				sort($v['original']['gibddreply']);
-				sort($v['small']['fixed']);
-				sort($v['medium']['fixed']);
-				sort($v['original']['fixed']);
-			}
-		
-		return $v;	
-	
+		$criteria=new CDbCriteria;
+		$criteria->select=Array('*', $condition.' as distance');				
+		$criteria->condition='lat > 0 AND lng > 0';	
+		$criteria->addCondition('moderated = 1 OR author_id='.Yii::app()->user->id);
+		$criteria->order='ABS(distance) ASC';		
+		$criteria->having='ABS(distance) < 100';
+		$criteria->limit=5;
+		$gibdds=GibddHeads::model()->findAll($criteria);
+		if ($this->subject) $gibdds[]=$this->subject->gibdd;
+		return $gibdds;
 	}
+		
 	
 	public function getUpploadedPictures(){
 		return CUploadedFile::getInstancesByName('Holes[upploadedPictures]');
 	}
 	
-	public function savePictures(){
-						//echo count($this->deletepict);						
+	public function savePictures(){						
+						foreach ($this->deletepict as $pictid) {
+						$pictmodel=HolePictures::model()->findByPk((int)$pictid);  
+						if ($pictmodel)$pictmodel->delete();
+						}
 						$imagess=$this->UpploadedPictures;
 						$id=$this->ID;
-						$prefix='';
-						if ($this->scenario=='fix') $prefix='f';
+						$prefix='';						
 						if (!is_dir($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/original/'.$id)){
 							if(!mkdir($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/original/'.$id))
 							{
@@ -242,28 +217,11 @@ class Holes extends CActiveRecord
 						$file_counter = 0;
 						$k = $this->ID;			
 						$pictdir=$_SERVER['DOCUMENT_ROOT'].'/upload/st1234/';
-						$dir = scandir($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/original/'.$k);
-						foreach ($dir as $f)
-						{
-							if($f != '.' && $f != '..')
-							{							
-							$pictid=(int)$f;
-							if (isset($this->deletepict[$pictid]) && $this->deletepict[$pictid]==1){
-								unlink($pictdir.'original/'.$k.'/'.$f);
-								unlink($pictdir.'medium/'.$k.'/'.$f);
-								unlink($pictdir.'small/'.$k.'/'.$f);	
-								}
-							}
-						}						
-						if ($f) {
-						if (isset($pictid)) $file_counter=$pictid;
-						//closedir($f);
-						$file_counter++;
-						}
 						
 				        foreach ($imagess as $_file){
 							if(!$_file->hasError)
 							{	
+								$imgname=rand().'.jpg';
 								$image = $this->imagecreatefromfile($_file->getTempName(), &$_image_info);
 								if(!$image)
 								{
@@ -277,18 +235,18 @@ class Holes extends CActiveRecord
 									$new_y    = floor($_image_info[1] / $aspect);
 									$newimage = imagecreatetruecolor($new_x, $new_y);
 									imagecopyresampled($newimage, $image, 0, 0, 0, 0, $new_x, $new_y, $_image_info[0], $_image_info[1]);
-									imagejpeg($newimage, $_SERVER['DOCUMENT_ROOT'].'/upload/st1234/original/'.$id.'/'.$prefix.$file_counter.'.jpg');
+									imagejpeg($newimage, $_SERVER['DOCUMENT_ROOT'].'/upload/st1234/original/'.$id.'/'.$imgname);
 								}
 								else
 								{
-									imagejpeg($image, $_SERVER['DOCUMENT_ROOT'].'/upload/st1234/original/'.$id.'/'.$prefix.$file_counter.'.jpg');
+									imagejpeg($image, $_SERVER['DOCUMENT_ROOT'].'/upload/st1234/original/'.$id.'/'.$imgname);
 								}
 								$aspect   = max($_image_info[0] / $_params['medium_sizex'], $_image_info[1] / $_params['medium_sizey']);
 								$new_x    = floor($_image_info[0] / $aspect);
 								$new_y    = floor($_image_info[1] / $aspect);
 								$newimage = imagecreatetruecolor($new_x, $new_y);
 								imagecopyresampled($newimage, $image, 0, 0, 0, 0, $new_x, $new_y, $_image_info[0], $_image_info[1]);
-								imagejpeg($newimage, $_SERVER['DOCUMENT_ROOT'].'/upload/st1234/medium/'.$id.'/'.$prefix.$file_counter.'.jpg');
+								imagejpeg($newimage, $_SERVER['DOCUMENT_ROOT'].'/upload/st1234/medium/'.$id.'/'.$imgname);
 								imagedestroy($newimage);
 								$aspect   = min($_image_info[0] / $_params['small_sizex'], $_image_info[1] / $_params['small_sizey']);
 								$newimage = imagecreatetruecolor($_params['small_sizex'], $_params['small_sizey']);
@@ -305,10 +263,16 @@ class Holes extends CActiveRecord
 									ceil($aspect * $_params['small_sizex']),
 									ceil($aspect * $_params['small_sizey'])
 								);
-								imagejpeg($newimage, $_SERVER['DOCUMENT_ROOT'].'/upload/st1234/small/'.$id.'/'.$prefix.$file_counter.'.jpg');
+								imagejpeg($newimage, $_SERVER['DOCUMENT_ROOT'].'/upload/st1234/small/'.$id.'/'.$imgname);
 								imagedestroy($newimage);
 								imagedestroy($image);
-								$file_counter++;
+								
+								$imgmodel=new HolePictures;
+								$imgmodel->type=$this->scenario=='fix'?'fixed':'fresh'; 
+								$imgmodel->filename=$imgname;
+								$imgmodel->hole_id=$this->ID;
+								$imgmodel->ordering=$imgmodel->lastOrder+1;
+								$imgmodel->save();
 								}
 						}
 			return true;			
@@ -468,22 +432,7 @@ class Holes extends CActiveRecord
 	
 	public function BeforeDelete(){
 				//сначала удаляем все картинки
-				$k = $this->ID;			
-				$pictdir=$_SERVER['DOCUMENT_ROOT'].'/upload/st1234/';
-				$dir = opendir($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/original/'.$k);
-				while($f = readdir($dir))
-				{
-					if($f != '.' && $f != '..')
-					{
-					unlink($pictdir.'original/'.$k.'/'.$f);
-					unlink($pictdir.'medium/'.$k.'/'.$f);
-					unlink($pictdir.'small/'.$k.'/'.$f);					
-					}
-				}
-				if ($f) closedir($f);		
-				rmdir($pictdir.'original/'.$k);
-				rmdir($pictdir.'medium/'.$k);
-				rmdir($pictdir.'small/'.$k);
+				foreach ($this->pictures as $picture) $picture->delete();			
 				
 				//Потом удаляем все запросы вместе со всем содержимым
 				foreach ($this->requests as $request) $request->delete();
@@ -546,7 +495,7 @@ class Holes extends CActiveRecord
 		// should not be searched.
 
 		$criteria=new CDbCriteria;
-
+		$criteria->with=Array('pictures_fresh','pictures_fixed');
 		$criteria->compare('ID',$this->ID,true);
 		$criteria->compare('USER_ID',$this->USER_ID,true);
 		$criteria->compare('LATITUDE',$this->LATITUDE);

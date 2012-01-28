@@ -13,7 +13,11 @@
 	  		
 	 				Сайт:&nbsp;<?php echo $data->link; ?><br />
 
-<?php if (!Yii::app()->user->isGuest && (Yii::app()->user->id==$data->author_id || Yii::app()->user->level > 50) && $data->is_regional==0) : ?>
+<?php if (!Yii::app()->user->isGuest && (Yii::app()->user->id==$data->author_id || Yii::app()->user->isModer) && $data->is_regional==0) : ?>
 <br/>
 <?php echo CHtml::link('редактировать', array('update','id'=>$data->id)); ?>
+	<?php echo CHtml::link('удалить', array('delete','id'=>$data->id)); ?>
+	<?php if (!$data->moderated && Yii::app()->user->isModer) : ?>
+		<?php echo CHtml::link('модерировать', array('moderate','id'=>$data->id)); ?>
+	<?php endif; ?>	  
 <?php endif; ?>	  

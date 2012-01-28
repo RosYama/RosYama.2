@@ -52,8 +52,9 @@ class RfSubjects extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-		'gibdd'=>array(self::HAS_ONE, 'GibddHeads', 'subject_id', 'condition'=>'is_regional=1'),
-		'gibdd_local'=>array(self::HAS_MANY, 'GibddHeads', 'subject_id', 'condition'=>'is_regional=0 AND moderated=1'),
+		'gibdd'=>array(self::HAS_ONE, 'GibddHeads', 'subject_id', 'condition'=>'is_regional=1'),//Yii::app()->user->isModer ? '':''
+		'gibdd_local'=>array(self::HAS_MANY, 'GibddHeads', 'subject_id', 'condition'=>Yii::app()->user->isModer ? 'is_regional=0':'is_regional=0 AND (moderated=1 OR user_id='.Yii::app()->user->id.')'),
+		'gibdd_local_not_moderated' => array(self::STAT, 'GibddHeads', 'subject_id', 'condition'=>'moderated=0'),
 		'prosecutor'=>array(self::HAS_ONE, 'Prosecutors', 'subject_id'),
 		);
 	}
