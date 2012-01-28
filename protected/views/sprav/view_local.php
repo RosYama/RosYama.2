@@ -1,6 +1,7 @@
 <?
 $this->pageTitle=Yii::app()->name . ' - Справочник ГИБДД';
 $this->title=$model->gibdd_name;
+$this->title=CHtml::link($model->subject->name_full, Array('view','id'=>$model->subject->id)).' > '.$model->gibdd_name;
 ?>	
 	<!-- левая колоночка -->
 	<div class="lCol">
@@ -24,26 +25,7 @@ $this->title=$model->gibdd_name;
 	<!-- правая колоночка -->
 	<div class="rCol"> 
 <div class="news-detail">
-
-				<h2><?php echo $model->gibdd_name; ?></h2>
-				
-						<div style="clear:both"></div>
-		 				ФИО:&nbsp;<?php echo $model->fio; ?><br />
-	  		
-	 				Должность:&nbsp;<?php echo $model->post; ?><br />
-	  		
-	 				Адрес:&nbsp;<?php echo $model->address; ?><br />
-	  		
-	 				Телефон дежурной части:&nbsp;<?php echo $model->tel_degurn; ?><br />
-	  		
-	 				Телефон доверия:&nbsp;<?php echo $model->tel_dover; ?><br />
-	  		
-	 				Сайт:&nbsp;<?php echo $model->link; ?><br />
-
-<?php if (!Yii::app()->user->isGuest && (Yii::app()->user->id==$model->author_id || Yii::app()->user->level > 50)) : ?>
-<br/>
-<?php echo CHtml::link('редактировать', array('update','id'=>$model->id)); ?>
-<?php endif; ?>	  		
+<?php $this->renderPartial('_view_gibdd', array('data'=>$model)); ?>					
 	  		
 		</div>
 

@@ -24,5 +24,6 @@ $this->title=CHtml::link('Справочник ГИБДД', Array('index')).' > 
 <div class="news-detail">
 				<?php $this->renderPartial('_view_gibdd', array('data'=>$data)); ?>		 				
 		</div>
+<br/><br/>		
 <?php endforeach; ?>				
 <?php endif; ?>		

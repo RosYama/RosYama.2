@@ -406,12 +406,14 @@ class WebUserGroups extends CWebUser
 	
 	public function getIsAdmin()
 	{
+		if ($this->isGuest) return false;
 		if ($this->GroupName=='root' || $this->GroupName=='admin') return true;
 		else return false;
 	}	
 
 	public function getIsModer()
 	{
+		if ($this->isGuest) return false;
 		if ($this->GroupName=='root' || $this->GroupName=='admin'|| $this->GroupName=='moder') return true;
 		else return false;
 	}

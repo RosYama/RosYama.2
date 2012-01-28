@@ -311,6 +311,28 @@ class UserGroupsUser extends CActiveRecord
 
 		return $relations;
 	}
+	
+	public function getAreaNeighbors()
+	{
+		if (!$this->hole_area) return Array();
+		$condition='shape_id IN ('.implode(',',CHtml::listData($this->hole_area,'id','id')).')';
+		//print_r(CHtml::listData($this->hole_area,'id','id'));
+		$left=UserAreaShapePoints::model()->find(Array('condition'=>$condition, 'order'=>'lat ASC'))->lat;
+		$right=UserAreaShapePoints::model()->find(Array('condition'=>$condition, 'order'=>'lat DESC'))->lat;
+		$top=UserAreaShapePoints::model()->find(Array('condition'=>$condition, 'order'=>'lng DESC'))->lng;
+		$bottom=UserAreaShapePoints::model()->find(Array('condition'=>$condition, 'order'=>'lng ASC'))->lng;
+		
+		$criteria=new CDbCriteria;
+		$criteria->with='hole_area';
+		$criteria->condition='points.lat >= '.($left-0.1);
+		$criteria->addCondition('points.lat <= '.($right+0.1), 'OR');
+		$criteria->addCondition('points.lng <= '.($top+0.1), 'OR');
+		$criteria->addCondition('points.lat >= '.($bottom-0.1), 'OR');
+		$criteria->together=true;
+		return $this->findAll($criteria);
+		
+		//echo $point->lat.'=>'.$point->lng.'<br/>'; 
+	}	
 
 	/**
 	 * @return array customized attribute labels (name=>label)
@@ -346,25 +368,18 @@ class UserGroupsUser extends CActiveRecord
 			'showFullname' => 'Показывать имя и фамилию',
 			'showAboutme' => 'Показывать информацию "обо мне"',
 			'showContactForm' => 'Разрешать пользователям отправлять сообщения на e-mail',
+			'showMyarea'=>'Показывать границы моего участка',
 		);
 	}
 	
-	public function setParamsVals($array)
-	{
-		$this->params=serialize($array);
-	}
-
-	public function getParamsVals()
-	{
-		if ($this->params) return unserialize($this->params);
-	}
 	
 	public function getParam($str)
 	{
 		if (!$this->params) return true;
 		foreach ($this->params as $param) if ($str==$param) return true;
 		return false;
-	}
+	}	
+	
 
 	/**
 	 * Retrieves a list of models based on the current search/filter conditions.
@@ -410,6 +425,7 @@ class UserGroupsUser extends CActiveRecord
 	protected function beforeSave()
 	{
 		if (parent::beforeSave()) {
+		$this->params=serialize($this->params);
 			// set the new user creation_date
 			if ($this->isNewRecord)
 				$this->creation_date = date('Y-m-d H:i:s');
@@ -509,7 +525,7 @@ class UserGroupsUser extends CActiveRecord
 
 		// copy the group home
 		$this->group_home = $this->relUserGroupsGroup->home;
-		$this->params=$this->paramsVals;
+		$this->params=unserialize($this->params);
 		// get the user readable home
 		$home_array = UserGroupsAccess::homeList();
 		if ($this->home)

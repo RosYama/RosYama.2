@@ -92,9 +92,8 @@ class ProfileController extends Controller
 			else if ($_POST['formID'] === 'user-groups-misc-form')
 				$model = $miscModel;
 
-			$model->attributes = $_POST['UserGroupsUser'];
+			$model->attributes = $_POST['UserGroupsUser'];			
 			
-			$model->paramsVals=$model->params;
 			
 			if ($model->validate()) {
 				if ($model->save()) {

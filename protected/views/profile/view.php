@@ -23,7 +23,13 @@
 	</div>
 <div class="mainCols">
 	<div class="lCol">
+	<?php if($model->hole_area && $model->getParam('showMyarea')) : ?>
+	<h2>Зона наблюдения</h2>
+	<?php $this->widget('application.widgets.userAreaMap.userAreaMapWidget',Array('data'=>Array('area'=>$model->hole_area))); ?>
+	<?php endif; ?>
+	
 	<?php if($model->relProfile && $model->relProfile->aboutme && $model->getParam('showAboutme')) : ?>
+	
 	<h2>Обо мне</h2>
 	<p><?php echo nl2br($model->relProfile->aboutme); ?></p>
 	<?php endif; ?>

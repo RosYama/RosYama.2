@@ -549,9 +549,7 @@ class HolesController extends Controller
 		
 		$cs=Yii::app()->getClientScript();
         $cs->registerCssFile('/css/holes_list.css');
-        $cs->registerScriptFile('http://api-maps.yandex.ru/1.1/index.xml?key='.$this->mapkey);
-        $jsFile = CHtml::asset($this->viewPath.DIRECTORY_SEPARATOR.'js'.DIRECTORY_SEPARATOR.'area_script.js');
-        $cs->registerScriptFile($jsFile);        
+              
 		
 		$holes=Array();
 		$all_holes_count=0;		
