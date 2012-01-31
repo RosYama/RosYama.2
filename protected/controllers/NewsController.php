@@ -6,7 +6,7 @@ class NewsController extends Controller
 	 * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
 	 * using two-column layout. See 'protected/views/layouts/column2.php'.
 	 */
-	public $layout='//layouts/column2';
+	public $layout='//layouts/header_default_without_add';
 
 	/**
 	 * @return array action filters
@@ -127,9 +127,10 @@ class NewsController extends Controller
 	 */
 	public function actionIndex()
 	{
-		$dataProvider=new CActiveDataProvider('News');
+		$model=new News('search');
+		$model->unsetAttributes();
 		$this->render('index',array(
-			'dataProvider'=>$dataProvider,
+			'dataProvider'=>$model->search(),
 		));
 	}
 

@@ -40,6 +40,9 @@ class MigrationController extends Controller
 	public function actionConvertPictures()
 	{
 		$model=Holes::model()->findAll();
+		
+		
+
 		foreach ($model as $hole){
 			foreach($hole->picturenames['medium']['fresh'] as $i=>$src){
 				$picture=new HolePictures;

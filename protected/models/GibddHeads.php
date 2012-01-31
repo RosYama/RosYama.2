@@ -47,7 +47,7 @@ class GibddHeads extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('name, subject_id, post, post_dative, fio, fio_dative, gibdd_name, address, tel_degurn, tel_dover', 'required'),
+			array('name, subject_id, post, post_dative, fio, fio_dative, gibdd_name, address', 'required'),
 			array('subject_id, is_regional, moderated', 'numerical', 'integerOnly'=>true),
 			array('post, post_dative, fio, fio_dative, gibdd_name, tel_degurn, tel_dover, url', 'length', 'max'=>255),
 			array('contacts, str_subject', 'length'),
@@ -77,7 +77,19 @@ class GibddHeads extends CActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 		'subject'=>array(self::BELONGS_TO, 'RfSubjects', 'subject_id'),
+		'holes'=>array(self::HAS_MANY, 'Holes', 'gibdd_id'),
 		);
+	}
+	
+	public function BeforeDelete(){
+				
+		if ($this->subject->gibdd->id == $this->id) return false;		
+		foreach ($this->holes as $hole){
+			$hole->gibdd_id=$this->subject->gibdd->id;
+			$hole->update;
+		}
+			
+		return true;
 	}
 
 	/**

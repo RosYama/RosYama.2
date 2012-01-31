@@ -57,9 +57,9 @@ class WebUserGroups extends CWebUser
 	public function login($identity,$duration=0)
 	{
 	    $id=$identity->getId();
-	    $states=$identity->getPersistentStates();
+	    $states=$identity->getPersistentStates();	    
 	    if($this->beforeLogin($id,$states,false))
-	    {
+	    {	    	
 	        $this->UGChangeIdentity($id,$identity->getName(), $identity->getGroup(), $identity->getGroupName(), $identity->getLevel(),
 	        	$identity->getAccessRules(), $identity->getHome(), $identity->getRecovery(), $identity->getProfile(), $states);
 

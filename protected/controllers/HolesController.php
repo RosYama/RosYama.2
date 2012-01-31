@@ -31,7 +31,7 @@ class HolesController extends Controller
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('add','update', 'personal','personalDelete','request','requestForm','sent','notsent','gibddreply', 'fix', 'defix', 'prosecutorsent', 'prosecutornotsent','delanswerfile','myarea'),
+				'actions'=>array('add','update', 'personal','personalDelete','request','requestForm','sent','notsent','gibddreply', 'fix', 'defix', 'prosecutorsent', 'prosecutornotsent','delanswerfile','myarea', 'territorialGibdd'),
 				'users'=>array('@'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -160,6 +160,28 @@ class HolesController extends Controller
 		$this->render('add',array(
 			'model'=>$model,			
 		));
+	}
+	
+	
+	//Список ГИБДД возле ямы
+	public function actionTerritorialGibdd()
+	{
+		if(isset($_POST['Holes']))
+		{
+			$model=new Holes;
+			$model->attributes=$_POST['Holes'];
+			$subj=RfSubjects::model()->SearchID(trim($model->STR_SUBJECTRF));
+			if($subj) $model->ADR_SUBJECTRF=$subj;
+			else $model->ADR_SUBJECTRF=0;
+			
+			$data=CHtml::listData($model->territorialGibdd,'id','gibdd_name');
+		    foreach($data as $value=>$name)
+		    {
+		        echo CHtml::tag('option',
+		                   array('value'=>$value),CHtml::encode($name),true);
+		    }
+			
+		}
 	}
 
 	/**

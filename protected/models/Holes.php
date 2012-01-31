@@ -42,6 +42,8 @@ class Holes extends CActiveRecord
 	public $counts;
 	public $state_to_filter;
 	public $time;
+	public $limit;
+	public $offset=0;
 
 	/**
 	 * @return string the associated database table name
@@ -74,7 +76,7 @@ class Holes extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('USER_ID, LATITUDE, LONGITUDE, ADDRESS, DATE_CREATED, TYPE_ID', 'required'),
+			array('USER_ID, LATITUDE, LONGITUDE, ADDRESS, DATE_CREATED, TYPE_ID, gibdd_id', 'required'),
 			array('GIBDD_REPLY_RECEIVED, PREMODERATED, TYPE_ID, NOT_PREMODERATED', 'numerical', 'integerOnly'=>true),
 			array('LATITUDE, LONGITUDE', 'numerical'),
 			array('USER_ID, STATE, DATE_CREATED, DATE_SENT, DATE_STATUS, ADR_SUBJECTRF, DATE_SENT_PROSECUTOR', 'length', 'max'=>10),
@@ -108,6 +110,7 @@ class Holes extends CActiveRecord
 			'requests_prosecutor'=>array(self::HAS_MANY, 'HoleRequests', 'hole_id', 'condition'=>'requests_prosecutor.type="prosecutor"','order'=>'date_sent DESC'),
 			'type'=>array(self::BELONGS_TO, 'HoleTypes', 'TYPE_ID'),
 			'user'=>array(self::BELONGS_TO, 'UserGroupsUser', 'USER_ID'),		
+			'gibdd'=>array(self::BELONGS_TO, 'GibddHeads', 'gibdd_id'),
 		);
 	}
 
@@ -155,6 +158,7 @@ class Holes extends CActiveRecord
 	const EARTH_RADIUS_KM = 6373;
 	public function getTerritorialGibdd()	
 	{	
+		if (!$this->subject) return Array();
 		$longitude=$this->LONGITUDE;
 		$latitude=$this->LATITUDE;		
 		$numerator = 'POW(COS(RADIANS(lat)) * SIN(ABS(RADIANS('.$longitude.')-RADIANS(lng))),2)';		
@@ -172,8 +176,9 @@ class Holes extends CActiveRecord
 		$criteria->select=Array('*', $condition.' as distance');				
 		$criteria->condition='lat > 0 AND lng > 0';	
 		$criteria->addCondition('moderated = 1 OR author_id='.Yii::app()->user->id);
+		if ($this->subject) $criteria->addCondition('subject_id='.$this->subject->id);
 		$criteria->order='ABS(distance) ASC';		
-		$criteria->having='ABS(distance) < 100';
+		$criteria->having='ABS(distance) < 1000';
 		$criteria->limit=5;
 		$gibdds=GibddHeads::model()->findAll($criteria);
 		if ($this->subject) $gibdds[]=$this->subject->gibdd;
@@ -341,7 +346,8 @@ class Holes extends CActiveRecord
 			$request->attributes=Array(
 							'hole_id'=>$this->ID,
 							'user_id'=>Yii::app()->user->id,
-							'gibdd_id'=>$this->subject ? $this->subject->gibdd->id : 0,
+							//'gibdd_id'=>$this->subject ? $this->subject->gibdd->id : 0,
+							'gibdd_id'=>$this->gibdd_id,
 							'date_sent'=>time(),
 							'type'=>$type,
 							);
@@ -456,6 +462,7 @@ class Holes extends CActiveRecord
 			'LATITUDE' => 'Latitude',
 			'LONGITUDE' => 'Longitude',
 			'ADDRESS' => 'Адрес дефекта',
+			'gibdd_id'=>'Отдел ГИБДД',
 			'STATE' => 'State',
 			'DATE_CREATED' => 'Date Created',
 			'DATE_SENT' => 'Date Sent',
@@ -495,7 +502,7 @@ class Holes extends CActiveRecord
 		// should not be searched.
 
 		$criteria=new CDbCriteria;
-		$criteria->with=Array('pictures_fresh','pictures_fixed');
+		//$criteria->with=Array('pictures_fresh','pictures_fixed');
 		$criteria->compare('ID',$this->ID,true);
 		$criteria->compare('USER_ID',$this->USER_ID,true);
 		$criteria->compare('LATITUDE',$this->LATITUDE);
@@ -515,11 +522,12 @@ class Holes extends CActiveRecord
 		if ($this->NOT_PREMODERATED) $criteria->compare('PREMODERATED',0);
 		if (!Yii::app()->user->isModer) $criteria->compare('PREMODERATED',1);
 		$criteria->compare('DATE_SENT_PROSECUTOR',$this->DATE_SENT_PROSECUTOR,true);
-
+		//$criteria->together=true;
+	
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
 			'pagination'=>array(
-				        'pageSize'=>12,
+				        'pageSize'=>$this->limit ? $this->limit : 12,				        
 				    ),
 			'sort'=>array(
 			    'defaultOrder'=>'t.DATE_CREATED DESC',

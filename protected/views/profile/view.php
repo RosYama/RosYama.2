@@ -9,7 +9,7 @@
 						<?php if($model->relProfile && $model->relProfile->avatar) echo CHtml::image($model->relProfile->avatar_folder.'/'.$model->relProfile->avatar); ?>
 					</div>
 					<div class="info">		
-						<h1><?php if($model->getParam('showFullname')) echo $model->fullName; else echo $model->username; ?></h1>
+						<h1><?php if($model->getParam('showFullname')) echo $model->fullName; elseif($model->name) echo $model->name; else echo $model->username; ?></h1>
 						<div class="www">
 							<a target="_blank" href="http://"></a>
 						</div>

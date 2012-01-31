@@ -29,6 +29,13 @@
 			<?php echo $form->error($model,'ADDRESS'); ?>
 		</div>
 		
+		<!-- адрес -->
+		<div class="f">
+		<?php echo $form->labelEx($model,'gibdd_id'); ?>
+		<?php echo $form->dropDownList($model, 'gibdd_id', CHtml::listData( $model->territorialGibdd, 'id', 'gibdd_name' ));?>
+		<?php echo $form->error($model,'gibdd_id'); ?>
+		</div>
+		
 		<!-- фотки -->
 		<div class="f">
 			<?php echo $form->labelEx($model,'upploadedPictures'); ?>

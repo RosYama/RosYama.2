@@ -12,19 +12,19 @@ $this->menu=array(
 	array('label'=>'Manage News', 'url'=>array('admin')),
 );
 ?>
-
-<h1>View News #<?php echo $model->id; ?></h1>
-
-<?php $this->widget('zii.widgets.CDetailView', array(
-	'data'=>$model,
-	'attributes'=>array(
-		'id',
-		'date',
-		'picture',
-		'title',
-		'introtext',
-		'fulltext',
-		'published',
-		'archive',
-	),
-)); ?>
+<div class="lCol">
+<?php $this->widget('application.widgets.social.socialWidget'); ?>
+</div>
+<div class="rCol">
+	<div class="news-detail">
+				<h1><?php echo $model->title; ?></h1>
+						 <p class="date"><?php echo CHtml::encode(Y::dateFromTime($model->date)); ?></p>
+			
+	<?php echo $model->fulltext; ?>
+	<div style="clear:both"></div>
+		<br />
+				</div>
+	<p><?php echo CHtml::link('Возврат к списку', array('index')); ?></p>
+	 
+	</div>
+</div>

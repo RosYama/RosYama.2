@@ -50,21 +50,24 @@ class UserGroupsIdentity extends CUserIdentity
 	 * these constants rappresent new possible errors
 	 * @var int
 	 */
+	protected $service;
+	
 	const ERROR_USER_BANNED = 3;
 	const ERROR_USER_INACTIVE = 4;
 	const ERROR_USER_APPROVAL = 5;
 	const ERROR_PASSWORD_REQUESTED = 6;
 	const ERROR_USER_ACTIVE = 7;
 	const ERROR_ACTIVATION_CODE = 8;
+	const ERROR_NOT_AUTHENTICATED = 3;
+
 
 	/**
 	 * Authenticates a user.
 	 * @return boolean whether authentication succeeds.
 	 */
 	public function authenticate()
-	{
+	{		
 		$model=UserGroupsUser::model()->findByAttributes(array('username' => $this->username));
-
 		if(!count($model))
 			$this->errorCode=self::ERROR_USERNAME_INVALID;
 		else if((int)$model->status === UserGroupsUser::WAITING_ACTIVATION)

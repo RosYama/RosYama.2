@@ -849,19 +849,20 @@ function setCoordValue(map, ev)
 		$('#Holes_LATITUDE').val(ev.getCoordPoint().getY());
 		$('#Holes_LONGITUDE').val(ev.getCoordPoint().getX());
 	}
+	else var ev=false; 
 	var lon = $('#Holes_LATITUDE').val();
 	var lat = $('#Holes_LONGITUDE').val();
 	coordpoint = new YMaps.Placemark(new YMaps.GeoPoint(lat, lon), { style: 'default#violetPoint', draggable: true, hasBalloon: false, hideIcon: false });
 	YMaps.Events.observe(coordpoint, coordpoint.Events.DragEnd, function (obj) {
 		$('#Holes_LATITUDE').val(obj.getCoordPoint().getY());
 		$('#Holes_LONGITUDE').val(obj.getCoordPoint().getX());
-		geocodeOnSetCoordValue();
+		geocodeOnSetCoordValue(true);
 	});
 	map.addOverlay(coordpoint);	
-	geocodeOnSetCoordValue();
+	geocodeOnSetCoordValue(ev);
 }
 
-function geocodeOnSetCoordValue()
+function geocodeOnSetCoordValue(ev)
 {
 	var geocoder = new YMaps.Geocoder(coordpoint.getGeoPoint());
 	YMaps.Events.observe(geocoder, geocoder.Events.Load, function () {
@@ -954,5 +955,17 @@ function geocodeOnSetCoordValue()
 		document.getElementById('Holes_ADR_CITY').value = city;
 		document.getElementById('recognized_address_str').innerHTML = subjectrf + (city.length && city != subjectrf ? ', ' + city : '') + (otherstr.length ? ', ' : '');
 		document.getElementById('other_address_str').innerHTML = otherstr;
+		
+		if (ev){
+		jQuery.ajax({'type':'POST','url':'/holes/territorialGibdd','data':$('#holes-form').serialize(),'beforeSend':function(){
+														$("#Holes_gibdd_id").attr("disabled", "true");
+													 },'complete':function(){
+														$("#Holes_gibdd_id").removeAttr("disabled");
+													 },'cache':false,'success':function(html){
+													 $("#Holes_gibdd_id").html(html);
+													 //jQuery("#gibdd_form").html(html)
+													 }});
+		}
+		
 	});
 }

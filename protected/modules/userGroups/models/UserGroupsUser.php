@@ -328,6 +328,8 @@ class UserGroupsUser extends CActiveRecord
 		$criteria->addCondition('points.lat <= '.($right+0.1), 'OR');
 		$criteria->addCondition('points.lng <= '.($top+0.1), 'OR');
 		$criteria->addCondition('points.lat >= '.($bottom-0.1), 'OR');
+		$criteria->addCondition('t.id != '.$this->id);
+		$criteria->addCondition('t.params LIKE ("%showMyarea%") OR t.params IS NULL');
 		$criteria->together=true;
 		return $this->findAll($criteria);
 		
@@ -525,7 +527,11 @@ class UserGroupsUser extends CActiveRecord
 
 		// copy the group home
 		$this->group_home = $this->relUserGroupsGroup->home;
-		$this->params=unserialize($this->params);
+		
+		//Получение параметров
+		if ($this->params) $this->params=unserialize($this->params);
+		else $this->params=array_keys($this->ParamsFields);
+		
 		// get the user readable home
 		$home_array = UserGroupsAccess::homeList();
 		if ($this->home)
@@ -550,9 +556,21 @@ class UserGroupsUser extends CActiveRecord
 				$this->_identity=new UserGroupsIdentity($this->username,$this->activation_code);
 				$this->_identity->recovery();
 			}
+			else if ($mode === 'service') {
+				$service = Yii::app()->request->getQuery('service');
+				if (isset($service)) {
+					$authIdentity = Yii::app()->eauth->getIdentity($service);
+					$authIdentity->redirectUrl = Yii::app()->user->returnUrl;
+       				$authIdentity->cancelUrl = Yii::app()->getController()->createAbsoluteUrl('/UserGroups/');
+       				if ($authIdentity->authenticate()) {
+						$this->_identity=new ServiceUserIdentity($authIdentity);       				
+						$this->_identity->authenticate();
+					}
+				}				
+			}
 		}
 		if($this->_identity->errorCode===UserGroupsIdentity::ERROR_NONE)
-		{
+		{			
 			$duration=$this->rememberMe ? 3600*24*30 : 0; // 30 days
 			Yii::app()->user->login($this->_identity,$duration);
 			return true;

@@ -1,5 +1,8 @@
 <div class="view">
 
+<p  class="date"><?php echo CHtml::encode(Y::dateFromTime($data->date)); ?></p>				
+<p class="preview_text"><?php echo CHtml::encode($data->introtext); ?> <?php echo CHtml::link('&gt;&gt;', array('view', 'id'=>$data->id)); ?></p>
+	<?php /*
 	<b><?php echo CHtml::encode($data->getAttributeLabel('id')); ?>:</b>
 	<?php echo CHtml::link(CHtml::encode($data->id), array('view', 'id'=>$data->id)); ?>
 	<br />
@@ -27,8 +30,6 @@
 	<b><?php echo CHtml::encode($data->getAttributeLabel('published')); ?>:</b>
 	<?php echo CHtml::encode($data->published); ?>
 	<br />
-
-	<?php /*
 	<b><?php echo CHtml::encode($data->getAttributeLabel('archive')); ?>:</b>
 	<?php echo CHtml::encode($data->archive); ?>
 	<br />

@@ -245,6 +245,7 @@ EOD
 	'cssFile'=>'/css/holes_list.css',
 	'itemsCssClass'=>'holes_list',
 	'summaryText'=>false,
+	
 )); ?>
 <?php if (Yii::app()->user->isModer && $model->NOT_PREMODERATED && $dataProvider->totalItemCount > 0) : ?>
 	<input type="button" id="all_right" value="Разрешить все дефекты" />

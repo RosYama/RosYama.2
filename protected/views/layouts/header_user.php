@@ -36,9 +36,10 @@
 	echo '<br/>';
 	$this->widget('zii.widgets.CMenu', array(
 				'items'=>Array(
-						array('label'=>'Пользователи', 'url'=>array('/userGroups/')),
-						array('label'=>'Типы ям', 'url'=>array('/holeTypes/index')),
-						array('label'=>'Результаты запроса в ГИБДД (анкета)', 'url'=>array('/holeAnswerResults/index')),
+						array('label'=>'Новости', 'url'=>array('/news/admin'), 'linkOptions'=>array('class'=>'profileBtn')),
+						array('label'=>'Пользователи', 'url'=>array('/userGroups/'), 'linkOptions'=>array('class'=>'profileBtn')),
+						array('label'=>'Типы ям', 'url'=>array('/holeTypes/index'), 'linkOptions'=>array('class'=>'profileBtn')),
+						array('label'=>'Результаты запроса в ГИБДД (анкета)', 'url'=>array('/holeAnswerResults/index'), 'linkOptions'=>array('class'=>'profileBtn')),
 					),
 				'htmlOptions'=>array('class'=>'operations'),
 			));			

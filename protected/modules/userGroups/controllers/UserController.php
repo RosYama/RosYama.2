@@ -428,6 +428,30 @@ class UserController extends Controller
 
 	public function actionLogin()
 	{
+		$service = Yii::app()->request->getQuery('service');
+		if (isset($service)) {
+			$authIdentity = Yii::app()->eauth->getIdentity($service);
+			// Успешный вход
+			$model=new UserGroupsUser('login');
+				if($model->login('service')) {				
+					if (Yii::app()->user->userModel && Yii::app()->user->userModel->holes_fresh_cnt) 
+						Yii::app()->user->setFlash('user', 
+							Yii::t('user','PREVED',Array(
+								'{count}'=>Yii::app()->user->userModel->holes_fresh_cnt,
+								'{user}'=>Yii::app()->user->userModel->name ? Yii::app()->user->userModel->name : Yii::app()->user->userModel->username
+								)
+							)
+						);
+					
+					// Специальный редирект с закрытием popup окна
+					$authIdentity->redirect();					
+				}
+				else {
+					// Закрываем popup окно и перенаправляем на cancelUrl
+					$authIdentity->cancel();
+				}
+		}		
+		else {
 		$model=new UserGroupsUser('login');
 
 		// if it is ajax validation request
@@ -453,6 +477,7 @@ class UserController extends Controller
 					);
 				$this->redirect(Yii::app()->user->returnUrl);
 			}
+		}
 		}
 
 		// display the login form

@@ -91,7 +91,7 @@ class Profile extends CActiveRecord
 				else 	
 					$image->resize(93, 20000)->rotate(0)->quality(90)->sharpen(20);
 				$image->crop(93, 93);
-				$file_name=Yii::app()->user->name.rand().'.'.$picture->extensionName;
+				$file_name=rand().'.'.$picture->extensionName;
 				$savename=$_SERVER['DOCUMENT_ROOT'].$this->avatar_folder.'/'.$file_name;
 				$image->save($savename);
 				$this->avatar=$file_name;

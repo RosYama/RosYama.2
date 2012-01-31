@@ -8,10 +8,14 @@ $this->menu=array(
 	array('label'=>'Manage News', 'url'=>array('admin')),
 );
 ?>
-
-<h1>News</h1>
+<div class="lCol">
+<?php $this->widget('application.widgets.social.socialWidget'); ?>
+</div>
+<div class="rCol">
+<h1>Новости</h1>
 
 <?php $this->widget('zii.widgets.CListView', array(
 	'dataProvider'=>$dataProvider,
 	'itemView'=>'_view',
 )); ?>
+</div>

@@ -27,6 +27,10 @@ return array(
 		'application.extensions.fpdf.*',
 		'application.extensions.*',
 		'application.helpers.*',
+	    'ext.eoauth.*',
+		'ext.eoauth.lib.*',
+		'ext.lightopenid.*',
+		'ext.eauth.services.*',
 			),
 	'modules'=>array(
 		
@@ -84,7 +88,67 @@ return array(
             'params'=>array('directory'=>'/opt/local/bin'),
         ),
 
-
+		'loid' => array(
+			'class' => 'application.extensions.lightopenid.loid',
+		),
+		
+		 'eauth' => array(
+			'class' => 'ext.eauth.EAuth',
+			'popup' => true, // Use the popup window instead of redirecting.
+			'services' => array( // You can change the providers and their classes.
+				'google' => array(
+					'class' => 'GoogleOpenIDService',
+				),
+				'yandex' => array(
+					'class' => 'YandexOpenIDService',
+				),
+				'twitter' => array(
+					// регистрация приложения: https://dev.twitter.com/apps/new
+					'class' => 'TwitterOAuthService',
+					'key' => '...',
+					'secret' => '...',
+				),
+				'google_oauth' => array(
+					// регистрация приложения: https://code.google.com/apis/console/
+					'class' => 'GoogleOAuthService',
+					'client_id' => '433170583991.apps.googleusercontent.com',
+					'client_secret' => 'FAZmvzjXjciqkENr4-a8c61q',
+					'title' => 'Google (OAuth)',
+				),
+				'facebook' => array(
+					// регистрация приложения: https://developers.facebook.com/apps/
+					'class' => 'FacebookOAuthService',
+					'client_id' => '...',
+					'client_secret' => '...',
+				),
+				'vkontakte' => array(
+					// регистрация приложения: http://vkontakte.ru/editapp?act=create&site=1
+					'class' => 'VKontakteOAuthService',
+					'client_id' => '...',
+					'client_secret' => '...',
+				),
+				'mailru' => array(
+					// регистрация приложения: http://api.mail.ru/sites/my/add
+					'class' => 'MailruOAuthService',
+					'client_id' => '...',
+					'client_secret' => '...',
+				),
+				'moikrug' => array(
+					// регистрация приложения: https://oauth.yandex.ru/client/my
+					'class' => 'MoikrugOAuthService',
+					'client_id' => '...',
+					'client_secret' => '...',
+				),
+				'odnoklassniki' => array(
+					// регистрация приложения: http://www.odnoklassniki.ru/dk?st.cmd=appsInfoMyDevList&st._aid=Apps_Info_MyDev
+					'class' => 'OdnoklassnikiOAuthService',
+					'client_id' => '...',
+					'client_public' => '...',
+					'client_secret' => '...',
+					'title' => 'Однокл.',
+				),
+			),
+		),
 
 		'db'=>array(
 			'class'=>'CDbConnection',

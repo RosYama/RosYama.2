@@ -32,7 +32,7 @@ $this->widget('application.extensions.fancybox.EFancyBox', array(
 							<div id="requests_gibdd_history" style="display:none;">
 							<ul>
 							<?php foreach ($hole->requests_gibdd as $request) : ?>
-								<li><?php echo date('d.m.Y',$request->date_sent);?> <?php echo CHtml::link(CHtml::encode($request->user->getParam('showFullname') ? $request->user->Fullname : $request->user->username), array('/profile/view', 'id'=>$request->user->id),array('class'=>""));?></li>
+								<li><?php echo date('d.m.Y',$request->date_sent);?> <?php echo CHtml::link(CHtml::encode($request->user->getParam('showFullname') ? $request->user->Fullname : ($request->user->name ? $request->user->name : $request->user->username)), array('/profile/view', 'id'=>$request->user->id),array('class'=>""));?></li>
 							<?php endforeach; ?>
 							</ul>							
 							</div>
@@ -265,7 +265,7 @@ $this->widget('application.extensions.fancybox.EFancyBox', array(
 				?>				
 				<div class="pdf_form" id="pdf_form"<?= isset($_GET['show_pdf_form']) ? ' style="display: block;"' : '' ?>>
 				<a href="#" onclick="var c=document.getElementById('pdf_form');if(c){c.style.display=c.style.display=='block'?'none':'block';}return false;" class="close">&times;</a>
-				<?php echo CHtml::dropDownList('gibdd_id','',CHtml::listData($hole->territorialGibdd, 'id', 'gibdd_name' ),
+				<?php /* echo CHtml::dropDownList('gibdd_id','',CHtml::listData($hole->territorialGibdd, 'id', 'gibdd_name' ),
 									array(
 									'prompt'=>'Выберете отдел ГИБДД',
 									'ajax' => array(
@@ -279,9 +279,9 @@ $this->widget('application.extensions.fancybox.EFancyBox', array(
 									'complete'=>'js:function(){
 														$("#gibdd_form").removeClass("loading");
 													 }',				 
-									))); ?>
+									))); */ ?>
 				<div id="gibdd_form"></div>
-				<?php //$this->renderPartial('_form_gibdd',Array('hole'=>$hole)); 
+				<?php $this->renderPartial('_form_gibdd',Array('hole'=>$hole, 'gibdd'=>$hole->gibdd)); 
 				?>
 				</div>
 			<? endif; ?>
@@ -414,4 +414,5 @@ $this->widget('application.extensions.fancybox.EFancyBox', array(
 			</div>
 		<? endif; ?>
 	</div>
+</div>
 </div>
