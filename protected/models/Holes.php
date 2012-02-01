@@ -44,6 +44,7 @@ class Holes extends CActiveRecord
 	public $time;
 	public $limit;
 	public $offset=0;
+	public $type_alias;
 
 	/**
 	 * @return string the associated database table name
@@ -181,13 +182,13 @@ class Holes extends CActiveRecord
 		$criteria->having='ABS(distance) < 1000';
 		$criteria->limit=5;
 		$gibdds=GibddHeads::model()->findAll($criteria);
-		if ($this->subject) $gibdds[]=$this->subject->gibdd;
+		if ($this->subject) array_unshift ($gibdds, $this->subject->gibdd);
 		return $gibdds;
 	}
 		
 	
 	public function getUpploadedPictures(){
-		return CUploadedFile::getInstancesByName('Holes[upploadedPictures]');
+		return CUploadedFile::getInstancesByName('');
 	}
 	
 	public function savePictures(){						
@@ -322,6 +323,7 @@ class Holes extends CActiveRecord
 	$this->DATE_SENT_PROSECUTOR = time();
 	$this->STATE='prosecutor';
 	$this->update();
+	return true;
 	}
 	
 	public function updateRevokep(){
@@ -334,6 +336,7 @@ class Holes extends CActiveRecord
 						$this->STATE='achtung';
 						$this->update();
 					}
+		return true;			
 		}
 	else return false;	
 
@@ -352,15 +355,16 @@ class Holes extends CActiveRecord
 							'type'=>$type,
 							);
 			if ($request->save())	
-			if ($type=='gibdd') $this->updateSetinprogress();
+			if ($type=='gibdd') if ($this->updateSetinprogress()) return true;
 			elseif ($type=='prosecutor') $this->updateToprosecutor();
-		}		
+		}
+		return true;
 	}
 
 	
 	public function updateSetinprogress()
 	{
-		if($this->STATE != 'fresh' && !($this->STATE == 'fixed' && !sizeof($this->pictures['original']['fixed'])))
+		if($this->STATE != 'fresh' && !($this->STATE == 'fixed' && !sizeof($this->pictures_fixed)))
 				{
 					return false;
 				}
@@ -503,8 +507,9 @@ class Holes extends CActiveRecord
 
 		$criteria=new CDbCriteria;
 		//$criteria->with=Array('pictures_fresh','pictures_fixed');
-		$criteria->compare('ID',$this->ID,true);
-		$criteria->compare('USER_ID',$this->USER_ID,true);
+		$criteria->with=Array('type');
+		$criteria->compare('t.ID',$this->ID,false);
+		$criteria->compare('USER_ID',$this->USER_ID,false);
 		$criteria->compare('LATITUDE',$this->LATITUDE);
 		$criteria->compare('LONGITUDE',$this->LONGITUDE);
 		$criteria->compare('ADDRESS',$this->ADDRESS,true);
@@ -514,13 +519,14 @@ class Holes extends CActiveRecord
 		$criteria->compare('DATE_STATUS',$this->DATE_STATUS,true);
 		$criteria->compare('COMMENT1',$this->COMMENT1,true);
 		$criteria->compare('COMMENT2',$this->COMMENT2,true);
-		$criteria->compare('TYPE_ID',$this->TYPE_ID,true);
-		$criteria->compare('ADR_SUBJECTRF',$this->ADR_SUBJECTRF,true);
+		$criteria->compare('TYPE_ID',$this->TYPE_ID,false);
+		$criteria->compare('type.alias',$this->type_alias,true);
+		$criteria->compare('ADR_SUBJECTRF',$this->ADR_SUBJECTRF,false);
 		$criteria->compare('ADR_CITY',$this->ADR_CITY,true);
 		$criteria->compare('COMMENT_GIBDD_REPLY',$this->COMMENT_GIBDD_REPLY,true);
 		$criteria->compare('GIBDD_REPLY_RECEIVED',$this->GIBDD_REPLY_RECEIVED);
 		if ($this->NOT_PREMODERATED) $criteria->compare('PREMODERATED',0);
-		if (!Yii::app()->user->isModer) $criteria->compare('PREMODERATED',1);
+		if (!Yii::app()->user->isModer) $criteria->compare('PREMODERATED',$this->PREMODERATED,true);
 		$criteria->compare('DATE_SENT_PROSECUTOR',$this->DATE_SENT_PROSECUTOR,true);
 		//$criteria->together=true;
 	

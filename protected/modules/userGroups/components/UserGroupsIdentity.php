@@ -46,6 +46,9 @@ class UserGroupsIdentity extends CUserIdentity
 	 * @var array contains the profile extensions attributes stored in session
 	 */
 	private $profile;
+	
+	private $hash;
+	
 	/**
 	 * these constants rappresent new possible errors
 	 * @var int
@@ -60,6 +63,12 @@ class UserGroupsIdentity extends CUserIdentity
 	const ERROR_ACTIVATION_CODE = 8;
 	const ERROR_NOT_AUTHENTICATED = 3;
 
+	public function __construct($username,$password,$hash=null)
+	{
+		$this->username=$username;
+		$this->password=$password;
+		if ($hash) $this->hash=$hash;
+	}
 
 	/**
 	 * Authenticates a user.
@@ -72,7 +81,7 @@ class UserGroupsIdentity extends CUserIdentity
 			$this->errorCode=self::ERROR_USERNAME_INVALID;
 		else if((int)$model->status === UserGroupsUser::WAITING_ACTIVATION)
 			$this->errorCode=self::ERROR_USER_INACTIVE;
-		else if($model->password!==md5($this->password . $model->getSalt()))
+		else if(!$this->hash && ($model->password!==md5($this->password . $model->getSalt())) || $this->hash && ($model->password!=$this->hash))
 			$this->errorCode=self::ERROR_PASSWORD_INVALID;
 		else if((int)$model->status === UserGroupsUser::WAITING_APPROVAL)
 			$this->errorCode=self::ERROR_USER_APPROVAL;
@@ -99,6 +108,7 @@ class UserGroupsIdentity extends CUserIdentity
 				UGCron::init();
 				UGCron::add(new UGCJGarbageCollection);
 				UGCron::add(new UGCJUnban);
+				if (Yii::app()->controller->module)
 				foreach (Yii::app()->controller->module->crons as $c) {
 					UGCron::add(new $c);
 				}
@@ -168,6 +178,7 @@ class UserGroupsIdentity extends CUserIdentity
 	private function profileLoad($model)
 	{
 		$array = array();
+		if (Yii::app()->controller->module)
 		foreach (Yii::app()->controller->module->profile as $p) {
 			$class = new ReflectionClass($p);
 			if ($class->hasMethod('profileSessionData')) {

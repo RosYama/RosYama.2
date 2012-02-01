@@ -266,9 +266,10 @@ class HolesController extends Controller
 		$this->layout='//layouts/header_user';
 		
 		$model=$this->loadModel($id);
-		if (!$model->isUserHole && Yii::app()->user->level < 50)
+		if (!$model->isUserHole && Yii::app()->user->level < 50){
 			if ($model->STATE=='fixed' || !$model->request_gibdd || !$model->request_gibdd->answers)
-				throw new CHttpException(403,'Доступ запрещен.');			
+				throw new CHttpException(403,'Доступ запрещен.');
+		}		
 		elseif ($model->STATE=='fixed')
 				throw new CHttpException(403,'Доступ запрещен.');		
 			
@@ -449,7 +450,7 @@ class HolesController extends Controller
 	
 		$model=new Holes('search');
 		$model->unsetAttributes();  // clear any default values
-		//$model->PREMODERATED;
+		$model->PREMODERATED=1;
 		if(isset($_POST['Holes']) || isset($_GET['Holes']))
 			$model->attributes=isset($_POST['Holes']) ? $_POST['Holes'] : $_GET['Holes'];
 			if ($model->ADR_CITY=="Город") $model->ADR_CITY='';

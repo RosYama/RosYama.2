@@ -91,7 +91,7 @@ class HoleAnswers extends CActiveRecord
 	}	
 	
 	public function getuppload_files(){
-		return CUploadedFile::getInstancesByName('HoleAnswers[uppload_files]');
+		return CUploadedFile::getInstancesByName('');
 	}
 	
 	public function afterSave()

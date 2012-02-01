@@ -552,6 +552,9 @@ class UserGroupsUser extends CActiveRecord
 			if ($mode === 'regular') {
 				$this->_identity=new UserGroupsIdentity($this->username,$this->password);
 				$this->_identity->authenticate();
+			} else if ($mode === 'fromHash') {
+				$this->_identity=new UserGroupsIdentity($this->username,'',$this->password);
+				$this->_identity->authenticate();
 			} else if ($mode === 'recovery') {
 				$this->_identity=new UserGroupsIdentity($this->username,$this->activation_code);
 				$this->_identity->recovery();

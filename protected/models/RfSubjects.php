@@ -122,6 +122,105 @@ class RfSubjects extends CActiveRecord
 		return $result;
 	}
 	
+	public function Address($address)
+	{
+		// достанем из адреса субъект РФ и город
+		$_address = explode(',', $address);
+		do
+		{
+			$subject_rf = '';
+			$city       = '';
+			if
+			(
+				$_address[0] == 'Россия'
+				|| $_address[0] == 'Российская Федерация'
+				|| $_address[0] == 'Russia'
+				|| $_address[0] == 'Russian Federation')
+			{
+				$_address = array_slice($_address, 1);
+			}
+			$_address[0] = trim($_address[0]);
+			// города - субъекты РФ
+			if($_address[0] == 'Москва' || $_address[0] == 'Санкт-Петербург')
+			{
+				$subject_rf  = $this->SearchID($_address[0]);
+				$city        = $_address[0];
+				$_address[0] = '';
+				$_address[1] = trim($_address[1]);
+				// города-спутники
+				if
+				(
+					$_address[1] == 'Зеленоград'
+					|| strpos($_address[1], 'поселок') !== false
+					|| strpos($_address[1], 'город')   !== false
+					|| strpos($_address[1], 'деревня') !== false
+					|| strpos($_address[1], 'село')    !== false
+				)
+				{
+					$city        = $_address[1];
+					$_address[1] = '';
+					$address     = implode(', ', $_address);
+					break;
+				}
+				$address = implode(', ', $_address);
+				break;
+			}
+			// неизвестно что
+			if(!$_address[1])
+			{
+				$subject_rf = '';
+				$city       = '';
+				$address    = implode(', ', $_address);
+				break;
+			}
+			$subject_rf = trim($_address[0]);
+			$subject_rf = $this->SearchID($subject_rf);
+			if(!$subject_rf)
+			{
+				// регион не определился
+				$subject_rf = '';
+				$city       = '';
+				$address    = implode(', ', $_address);
+				break;
+			}
+			$_address[0] = '';
+			// район или город
+			if(strpos($_address[1], 'район') !== false)
+			{
+				$_address[1] = '';
+				// точка попала в город
+				if($_address[2])
+				{
+					$city        = trim($_address[2]);
+					$_address[2] = '';
+					$address     = implode(', ', $_address);
+				}
+				// точка попала фиг знает куда
+				else
+				{
+					$city       = '';
+					$address    = implode(', ', $_address);
+					break;
+				}
+			}
+			else
+			{
+				$city        = trim($_address[1]);
+				$_address[1] = '';
+				$address     = implode(', ', $_address);
+			}
+		}
+		while(false);
+		$address = trim($address, ' ,');
+		$address = str_replace('  ', ' ', $address);
+		return array
+		(
+			'subject_rf' => $subject_rf,
+			'city'       => $city,
+			'address'    => $address
+		);
+	}
+	
 	public function search()
 	{
 		// Warning: Please modify the following code to remove attributes that
