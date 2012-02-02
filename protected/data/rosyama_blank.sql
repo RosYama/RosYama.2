@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: localhost
--- Время создания: Фев 02 2012 г., 20:51
+-- Время создания: Фев 03 2012 г., 01:43
 -- Версия сервера: 5.5.9
 -- Версия PHP: 5.3.5
 
@@ -823,7 +823,6 @@ CREATE TABLE IF NOT EXISTS `yii_usergroups_user` (
   `external_auth_id` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`),
-  UNIQUE KEY `email` (`email`),
   KEY `group_id_idxfk` (`group_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
