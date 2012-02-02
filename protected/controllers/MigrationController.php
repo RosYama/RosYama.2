@@ -36,6 +36,17 @@ class MigrationController extends Controller
 		);
 	}
 	
+	public function sql_valid($data) { 
+	  $data = str_replace("\\", "\\\\", $data); 
+	  $data = str_replace("'", "\'", $data); 
+	  $data = str_replace('"', '\"', $data); 
+	  $data = str_replace("\x00", "\\x00", $data); 
+	  $data = str_replace("\x1a", "\\x1a", $data); 
+	  $data = str_replace("\r", "\\r", $data); 
+	  $data = str_replace("\n", "\\n", $data); 
+	  return($data);  
+	 } 
+	
 	public function actionIndex()
 	{
 	$this->layout='//layouts/blank';
@@ -58,7 +69,7 @@ class MigrationController extends Controller
 		foreach ($users as $user){
 			$group=BUserGroup::model()->find('USER_ID='.$user->ID);
 			if ($group && $group->GROUP_ID!=2){				
-				$user->LOGIN=mysql_real_escape_string($user->LOGIN);
+				$user->LOGIN=$this->sql_valid($user->LOGIN);
 				$model=UserGroupsUser::model()->find("username='".$user->LOGIN."'");
 				if (!$model) $model=new UserGroupsUser('import');
 				$group_id=2;
