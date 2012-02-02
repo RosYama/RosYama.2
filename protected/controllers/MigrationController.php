@@ -117,6 +117,7 @@ class MigrationController extends Controller
 	
 	public function actionImportHoles()
 	{
+		set_time_limit(0);
 		$holes=BHoles::model()->findAll();
 		$count=0;
 		foreach ($holes as $hole){
