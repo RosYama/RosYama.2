@@ -1,6 +1,6 @@
 <?php
 
-class ApiController extends Controller
+class XmlController extends Controller
 {
 	/**
 	 * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
@@ -622,6 +622,14 @@ class ApiController extends Controller
 				}
 		}
 		else return Yii::app()->user; 
+	}
+	
+	public function actionError()
+	{
+		if($error=Yii::app()->errorHandler->error){
+       		if ($error['code']==404) $this->error('NOT_FOUND');
+      		else $this->error('INTERNAL');
+       	}	 
 	}
 	
 	public function error($str)

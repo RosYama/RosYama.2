@@ -167,16 +167,7 @@ return array(
 		'errorHandler'=>array(
 			// use 'site/error' action to display errors
             'errorAction'=>'site/error',
-        ),
-
-        'getprice'=>array(
-			'class'=>'application.classes.CGetTourPrice',
-			),
-
-		'getmenu'=>array(
-			'class'=>'application.classes.CLeftMenu',
-			),
-			
+        ),			
 
 
 		 'widgetFactory'=>array(

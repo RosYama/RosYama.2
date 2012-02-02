@@ -135,7 +135,9 @@ class UserGroupsUser extends CActiveRecord
 		$rules = array(
 			array('group_id', 'length', 'max'=>20),
 			array('username, password, home, last_name,second_name, name', 'length', 'max'=>120),
+			array('xml_id, external_auth_id', 'length', 'max'=>255),
 			array('email', 'email'),
+			array('is_bitrix_pass', 'numerical', 'integerOnly'=>true),
 			array('rememberMe, params', 'safe'),
 			// rules for registration
 			array('captcha', 'required', 'on' => 'registration'),
@@ -260,14 +262,35 @@ class UserGroupsUser extends CActiveRecord
 	 * This is the 'oldPassMatch' validator as declared in rules().
 	 */
 	public function oldPassMatch($attribute,$params)
-	{
+	{		
 		// check if you have user admin permission, in that case this validation will
 		// be skipped, otherwise will check if you are trying to update your own account
 		if ((Yii::app()->user->pbac('userGroups.user.admin') || Yii::app()->user->pbac('userGroups.admin.admin')) && Yii::app()->user->id !== $this->id)
 			return true;
 		// load the user model and check if the old password match
 		$user = self::model()->findByPk($this->id);
-		if ($user->password !== md5($this->old_password.$user->getSalt()))
+		
+		if ($user->is_bitrix_pass){
+			if(strlen($user->password) > 32)
+					{
+						$salt = substr($user->password, 0, strlen($user->password) - 32);
+						$db_password = substr($user->password, -32);
+					}
+					else
+					{
+						$salt = "";
+						$db_password = $user->password;
+					}
+			$user_password =  md5($salt.$this->old_password);
+			//echo $salt.'<br/>'.$user_password.'<br/>'.$db_password;
+			//die();
+		}
+		else {
+			$user_password=md5($this->old_password . $user->getSalt());
+			$db_password = $user->password;
+		}		
+		
+		if ($db_password !== $user_password)
 			$this->addError('old_password', Yii::t('userGroupsModule.general','You didn\'t enter the correct password'));
 	}
 
@@ -429,7 +452,7 @@ class UserGroupsUser extends CActiveRecord
 		if (parent::beforeSave()) {
 		$this->params=serialize($this->params);
 			// set the new user creation_date
-			if ($this->isNewRecord)
+			if ($this->isNewRecord && $this->scenario != 'import')
 				$this->creation_date = date('Y-m-d H:i:s');
 
 			// populate the attributes when a new record is created in an admin scenario
@@ -447,13 +470,15 @@ class UserGroupsUser extends CActiveRecord
 				else
 					$this->status = self::ACTIVE;
 			// if it's a new record generates a new password if a password was defined
-			if (($this->isNewRecord || $this->scenario === 'recovery' || $this->scenario === 'changePassword') && !empty($this->password)) {
+			if (($this->isNewRecord || $this->scenario === 'recovery' || $this->scenario === 'changePassword') && !empty($this->password) && $this->scenario != 'import') {
 				$this->password = md5($this->password . $this->getSalt());
+				$this->is_bitrix_pass=0;
 			}
 			// in the passRequest scenario change the status and delete the old password
-			if ($this->scenario === 'passRequest') {
+			if ($this->scenario === 'passRequest') {				
 				$this->status = self::PASSWORD_CHANGE_REQUEST;
 				$this->password = NULL;
+				$this->is_bitrix_pass=0;
 				$this->activation_code = uniqid();
 				$this->activation_time = date('Y-m-d H:i:s');
 			}

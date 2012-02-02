@@ -77,11 +77,33 @@ class UserGroupsIdentity extends CUserIdentity
 	public function authenticate()
 	{		
 		$model=UserGroupsUser::model()->findByAttributes(array('username' => $this->username));
+		
+		//Тупая битриксовская проверка пароля.
+		if ($model && $model->is_bitrix_pass){
+			if(strlen($model->password) > 32)
+					{
+						$salt = substr($model->password, 0, strlen($model->password) - 32);
+						$db_password = substr($model->password, -32);
+					}
+					else
+					{
+						$salt = "";
+						$db_password = $model->password;
+					}
+			$user_password =  md5($salt.$this->password);
+			//echo $salt.'<br/>'.$user_password.'<br/>'.$db_password;
+			//die();
+		}
+		elseif ($model && !$model->is_bitrix_pass){
+			$user_password=md5($this->password . $model->getSalt());
+			$db_password = $model->password;
+		}
+		
 		if(!count($model))
 			$this->errorCode=self::ERROR_USERNAME_INVALID;
 		else if((int)$model->status === UserGroupsUser::WAITING_ACTIVATION)
 			$this->errorCode=self::ERROR_USER_INACTIVE;
-		else if(!$this->hash && ($model->password!==md5($this->password . $model->getSalt())) || $this->hash && ($model->password!=$this->hash))
+		else if(!$this->hash && ($user_password!==$db_password) || $this->hash && ($model->password!=$this->hash))
 			$this->errorCode=self::ERROR_PASSWORD_INVALID;
 		else if((int)$model->status === UserGroupsUser::WAITING_APPROVAL)
 			$this->errorCode=self::ERROR_USER_APPROVAL;

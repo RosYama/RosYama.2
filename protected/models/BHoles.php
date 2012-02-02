@@ -149,7 +149,6 @@ class BHoles extends CActiveRecord
 		$v['small']['fresh']=Array();
 		
 			$k = $this->ID;
-			
 				$dir = opendir($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/original/'.$k);
 				while($f = readdir($dir))
 				{

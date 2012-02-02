@@ -849,7 +849,10 @@ function setCoordValue(map, ev)
 		$('#Holes_LATITUDE').val(ev.getCoordPoint().getY());
 		$('#Holes_LONGITUDE').val(ev.getCoordPoint().getX());
 	}
-	else var ev=false; 
+	else {
+		var ev=false; 
+		map.setCenter(new YMaps.GeoPoint($('#Holes_LONGITUDE').val(), $('#Holes_LATITUDE').val()));
+		}
 	var lon = $('#Holes_LATITUDE').val();
 	var lat = $('#Holes_LONGITUDE').val();
 	coordpoint = new YMaps.Placemark(new YMaps.GeoPoint(lat, lon), { style: 'default#violetPoint', draggable: true, hasBalloon: false, hideIcon: false });

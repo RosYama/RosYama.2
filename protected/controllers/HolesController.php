@@ -446,9 +446,15 @@ class HolesController extends Controller
 	 */
 	public function actionIndex()
 	{
+		
 		$this->layout='//layouts/header_default';
+		
+		//Если нет таблиц в базе редиректим на контроллер миграции
+		if(Holes::getDbConnection()->getSchema()->getTable(Holes::tableName())===null)
+			$this->redirect(array('migration/index'));
 	
-		$model=new Holes('search');
+		$model=new Holes('search');		
+		
 		$model->unsetAttributes();  // clear any default values
 		$model->PREMODERATED=1;
 		if(isset($_POST['Holes']) || isset($_GET['Holes']))
