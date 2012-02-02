@@ -167,7 +167,7 @@ class UserGroupsUser extends CActiveRecord
 			array('password', 'passwordStrength', 'on'=>array('registration','admin','recovery','changePassword')),
 			array('password_confirm', 'required', 'on'=>array('registration', 'recovery','changePassword')),
 			array('password_confirm', 'compare', 'compareAttribute' => 'password','on'=>array('changePassword','recovery', 'registration'),
-				'message' => Yii::t('userGroupsModule.general', 'Пароли не совпадают')),
+				'message' => 'Пароли не совпадают'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
 			array('id, group_name, group_id, username, home, status', 'safe', 'on'=>'search'),
