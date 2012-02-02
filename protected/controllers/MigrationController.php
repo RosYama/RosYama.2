@@ -95,7 +95,7 @@ class MigrationController extends Controller
 					'external_auth_id'=>$user->EXTERNAL_AUTH_ID,
 					'is_bitrix_pass'=>1,
 				);
-				if ($model->validate() && $model->save()){
+				if ($model->save()){
 					$count++;
 					if (!$model->relProfile){
 					$profile=new Profile;
