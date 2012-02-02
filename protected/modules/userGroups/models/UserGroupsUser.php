@@ -162,7 +162,7 @@ class UserGroupsUser extends CActiveRecord
 			array('email', 'required', 'on'=>array('registration','admin','mailRequest','changeMisc','invitation')),
 			array('username, email', 'unique', 'on'=>array('registration','admin', 'recovery','changeMisc', 'invitation')),
 			array('username', 'match', 'pattern'=>'/^[A-Za-z0-9-_]{4,}$/', 'on'=>array('registration','admin','recovery'),
-				'message' => Yii::t('userGroupsModule.general','Имя пользователя может состоять из латинских букв и символов "-" и "_"')),
+				'message' => 'Имя пользователя может состоять из латинских букв и символов "-" и "_"',
 			array('password', 'required', 'on'=>array('recovery','changePassword')),
 			array('password', 'passwordStrength', 'on'=>array('registration','admin','recovery','changePassword')),
 			array('password_confirm', 'required', 'on'=>array('registration', 'recovery','changePassword')),
