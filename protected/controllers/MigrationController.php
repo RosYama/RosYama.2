@@ -156,7 +156,7 @@ class MigrationController extends Controller
 				
 				if ($model->DATE_SENT){
 				$request=new HoleRequests;
-				$request->hole_id=$model->id;
+				$request->hole_id=$model->ID;
 				$request->user_id=$model->USER_ID;
 				$request->gibdd_id=$model->gibdd_id;
 				$request->date_sent=$model->DATE_SENT;
