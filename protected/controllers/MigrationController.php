@@ -125,6 +125,7 @@ class MigrationController extends Controller
 		if ($hole->picturenames && isset($hole->picturenames['medium']['fresh']) && count($hole->picturenames['medium']['fresh']) > 0){
 			$model=new Holes('import');
 			$model->attributes=$hole->attributes;
+			$model->ID=$hole->ID;
 			$type=HoleTypes::model()->find('alias = "'.$hole->TYPE.'"');
 			$model->TYPE_ID=$type->id;
 			if ($model->ADR_SUBJECTRF){
@@ -136,7 +137,7 @@ class MigrationController extends Controller
 			  
 			if ($model->validate() && $model->user)$count++;
 			//if ($model->errors) print_r ($model->errors);			
-			if ($model->STATE="inprogress") {
+			if ($model->STATE=="inprogress") {
 			if (!$model->DATE_SENT) $model->DATE_SENT=$model->DATE_CREATED;
 			//echo date('d.m.Y', $model->DATE_SENT).'<br/>';
 			}
