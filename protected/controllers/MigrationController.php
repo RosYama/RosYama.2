@@ -168,7 +168,7 @@ class MigrationController extends Controller
 						$answer->date=$model->DATE_STATUS;
 						$answer->comment=$model->COMMENT_GIBDD_REPLY;						
 						//еще надо на ответы ГИБДД сделать
-						if ($answer->save())
+						if ($answer->save()){
 							$dir=$_SERVER['DOCUMENT_ROOT'].$answer->filesFolder;
 							if (!is_dir($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/answers/'))
 								mkdir($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/answers/');
@@ -189,6 +189,7 @@ class MigrationController extends Controller
 									unlink ($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/medium/'.$src);
 								$pict->save();	
 							}
+						}	
 					}	
 				}
 			}
