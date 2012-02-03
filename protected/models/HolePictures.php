@@ -99,9 +99,9 @@ class HolePictures extends CActiveRecord
 	
 	
 	public function BeforeDelete(){
-				unlink($_SERVER['DOCUMENT_ROOT'].$this->original);
-				unlink($_SERVER['DOCUMENT_ROOT'].$this->medium);
-				unlink($_SERVER['DOCUMENT_ROOT'].$this->small);		
+				if (is_file($_SERVER['DOCUMENT_ROOT'].$this->original)) unlink($_SERVER['DOCUMENT_ROOT'].$this->original);
+				if (is_file($_SERVER['DOCUMENT_ROOT'].$this->medium)) unlink($_SERVER['DOCUMENT_ROOT'].$this->medium);
+				if (is_file($_SERVER['DOCUMENT_ROOT'].$this->small)) unlink($_SERVER['DOCUMENT_ROOT'].$this->small);		
 	
 				return true;
 	}
