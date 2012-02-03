@@ -422,7 +422,7 @@ class Holes extends CActiveRecord
 	
 	public function afterFind(){
 	
-		if (!$this->pictures || !$this->user) $this->delete();
+		//if (!$this->pictures || !$this->user) $this->delete();
 		//вычисляем количество дней с момента отправки
 		if(($this->STATE == 'inprogress' || $this->STATE == 'achtung') && $this->DATE_SENT && !$this->STATE != 'gibddre')
 		{
