@@ -109,9 +109,9 @@ class HolePictures extends CActiveRecord
 	public function afterDelete(){
 		$pictdir=$_SERVER['DOCUMENT_ROOT'].'/upload/st1234/';
 		if (!count ($this->findAll('hole_id='.$this->hole_id))){
-			rmdir($pictdir.'original/'.$this->hole_id);
-			rmdir($pictdir.'medium/'.$this->hole_id);
-			rmdir($pictdir.'small/'.$this->hole_id);
+			//rmdir($pictdir.'original/'.$this->hole_id);
+			//rmdir($pictdir.'medium/'.$this->hole_id);
+			//rmdir($pictdir.'small/'.$this->hole_id);
 			}
 		return true;	
 	}
