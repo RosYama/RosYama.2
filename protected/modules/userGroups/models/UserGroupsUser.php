@@ -400,7 +400,7 @@ class UserGroupsUser extends CActiveRecord
 	
 	public function getParam($str)
 	{
-		if (!$this->params) return true;
+		if (!$this->params || !is_array($this->params)) return true;
 		foreach ($this->params as $param) if ($str==$param) return true;
 		return false;
 	}	
