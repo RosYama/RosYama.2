@@ -92,15 +92,15 @@ class StaticsController extends Controller
 		$limit_sql = !empty($this->arParams['LIMIT']) ? ' limit '.$this->arParams['LIMIT'] : '';
 		
 		//по городам
-		$arResult['geography'][]=Holes::model()->findAll(Array('select'=>'count(*) as counts, ADR_CITY','condition'=>'ADR_CITY!="" and PREMODERATED=1','group'=>'trim(ADR_CITY)','order'=>'counts desc'));
-		$arResult['geography'][]=Holes::model()->findAll(Array('select'=>'count(*) as counts, ADR_CITY','condition'=>'STATE="fixed" and ADR_CITY!="" and PREMODERATED=1','group'=>'trim(ADR_CITY)','order'=>'counts desc'));
+		$arResult['geography'][]=Holes::model()->findAll(Array('select'=>'count(*) as counts, ADR_CITY','condition'=>'ADR_CITY!="" and PREMODERATED=1','group'=>'trim(ADR_CITY)','order'=>'counts desc','limit'=>10));
+		$arResult['geography'][]=Holes::model()->findAll(Array('select'=>'count(*) as counts, ADR_CITY','condition'=>'STATE="fixed" and ADR_CITY!="" and PREMODERATED=1','group'=>'trim(ADR_CITY)','order'=>'counts desc','limit'=>10));
 		// по статусам
-		$arResult['STATE'][]=Holes::model()->findAll(Array('select'=>'count(*) as counts, STATE as state_to_filter','condition'=>'PREMODERATED=1','group'=>'STATE_to_filter','order'=>'counts desc'));
-		$arResult['STATE'][]=Holes::model()->findAll(Array('select'=>'avg(DATE_STATUS-DATE_SENT) as time','condition'=>'STATE="fixed" and ADR_CITY!="" and PREMODERATED=1'));
+		$arResult['STATE'][]=Holes::model()->findAll(Array('select'=>'count(*) as counts, STATE as state_to_filter','condition'=>'PREMODERATED=1','group'=>'STATE_to_filter','order'=>'counts desc','limit'=>10));
+		$arResult['STATE'][]=Holes::model()->findAll(Array('select'=>'avg(DATE_STATUS-DATE_SENT) as time','condition'=>'STATE="fixed" and ADR_CITY!="" and PREMODERATED=1','limit'=>10));
 		
 		// по пользователям
-		$arResult['user'][]=Holes::model()->with('user')->findAll(Array('select'=>'count(*) as counts','condition'=>'PREMODERATED=1','group'=>'USER_ID','order'=>'counts desc'));
-		$arResult['user'][]=Holes::model()->with('user')->findAll(Array('select'=>'count(*) as counts','condition'=>'STATE="fixed" and PREMODERATED=1','group'=>'USER_ID','order'=>'counts desc'));		
+		$arResult['user'][]=Holes::model()->with('user')->findAll(Array('select'=>'count(*) as counts','condition'=>'PREMODERATED=1','group'=>'USER_ID','order'=>'counts desc','limit'=>10));
+		$arResult['user'][]=Holes::model()->with('user')->findAll(Array('select'=>'count(*) as counts','condition'=>'STATE="fixed" and PREMODERATED=1','group'=>'USER_ID','order'=>'counts desc','limit'=>10));		
 	
 		
 		$ru = array(

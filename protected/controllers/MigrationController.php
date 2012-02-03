@@ -121,7 +121,8 @@ class MigrationController extends Controller
 		$holes=BHoles::model()->findAll();
 		$count=0;
 		foreach ($holes as $hole){
-		if ($hole->picturenames){
+		//if (1){
+		if ($hole->picturenames && isset($hole->picturenames['medium']['fresh']) && $hole->picturenames['medium']['fresh']){
 			$model=new Holes('import');
 			$model->attributes=$hole->attributes;
 			$type=HoleTypes::model()->find('alias = "'.$hole->TYPE.'"');
@@ -132,11 +133,15 @@ class MigrationController extends Controller
 				else $model->gibdd_id=0;
 			}
 			else $model->gibdd_id=0;
-			
-			$model->validate();
-			print_r ($model->errors);			
-			
+			  
+			if ($model->validate() && $model->user)$count++;
+			//if ($model->errors) print_r ($model->errors);			
+			if ($model->STATE="inprogress") {
+			if (!$model->DATE_SENT) $model->DATE_SENT=$model->DATE_CREATED;
+			echo date('d.m.Y', $model->DATE_SENT).'<br/>';
+			}
 			if ($model->save()){
+			//if (0){
 				$count++;
 				foreach($hole->picturenames['medium']['fresh'] as $i=>$src){
 					$picture=new HolePictures;
@@ -155,7 +160,8 @@ class MigrationController extends Controller
 					$picture->save();
 				}
 				
-				if ($model->DATE_SENT){
+				if ($model->STATE!="fresh"){
+				if (!$model->DATE_SENT) $model->DATE_SENT=$model->DATE_CREATED;
 				$request=new HoleRequests;
 				$request->hole_id=$model->ID;
 				$request->user_id=$model->USER_ID;
@@ -185,9 +191,9 @@ class MigrationController extends Controller
 								$pict->file_type='image';
 								$pict->answer_id=$answer->id;
 								if (copy($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/original/'.$src, $dir.'/'.$src))
-									unlink ($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/original/'.$src);
+									//unlink ($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/original/'.$src);
 								if (copy($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/medium/'.$src, $dir.'/thumbs/'.$src))
-									unlink ($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/medium/'.$src);
+									//unlink ($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/medium/'.$src);
 								$pict->save();	
 							}
 						}	
