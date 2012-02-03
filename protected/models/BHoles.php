@@ -149,7 +149,7 @@ class BHoles extends CActiveRecord
 		$v['small']['fresh']=Array();
 			$count=0;
 			$k = $this->ID;
-				if (!is_dir($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/original/'.$k)) return false();
+				if (!is_dir($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/original/'.$k)) return false;
 				$dir = opendir($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/original/'.$k);
 				while($f = readdir($dir))
 				{
@@ -187,7 +187,7 @@ class BHoles extends CActiveRecord
 				sort($v['medium']['fixed']);
 				sort($v['original']['fixed']);
 			}
-		if (!$count) return false();
+		if (!$count) return false;
 		return $v;	
 	
 	}
