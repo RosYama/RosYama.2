@@ -138,7 +138,7 @@ class MigrationController extends Controller
 			//if ($model->errors) print_r ($model->errors);			
 			if ($model->STATE="inprogress") {
 			if (!$model->DATE_SENT) $model->DATE_SENT=$model->DATE_CREATED;
-			echo date('d.m.Y', $model->DATE_SENT).'<br/>';
+			//echo date('d.m.Y', $model->DATE_SENT).'<br/>';
 			}
 			if ($model->save()){
 			//if (0){
