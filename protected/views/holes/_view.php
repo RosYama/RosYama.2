@@ -1,5 +1,5 @@
 <li<?php if(($index+1)%3==0):?> class="noMargin"<?php endif; ?>>
-			<?php echo CHtml::link(CHtml::image($data->STATE == 'fixed' && $data->pictures_fixed ? $data->pictures_fixed[0]->small : $data->pictures_fresh[0]->small), array('view', 'id'=>$data->ID), array('class'=>'photo')); ?>			
+			<?php if ($data->pictures_fixed) echo CHtml::link(CHtml::image($data->STATE == 'fixed' && $data->pictures_fixed ? $data->pictures_fixed[0]->small : $data->pictures_fresh[0]->small), array('view', 'id'=>$data->ID), array('class'=>'photo')); ?>
 			<?php if(Yii::app()->user->isModer): ?>
 				<?php if(!$data->PREMODERATED): ?>
 					<div class="premoderate" id="premoderate_<?php echo $data->ID ?>"><img src="/images/st1234/iconpm.gif" onclick="setPM_OK('<?php echo $data->ID ?>');" title="Показывать этот дефект всем"></div>

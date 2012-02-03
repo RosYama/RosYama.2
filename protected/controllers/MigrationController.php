@@ -121,6 +121,7 @@ class MigrationController extends Controller
 		$holes=BHoles::model()->findAll();
 		$count=0;
 		foreach ($holes as $hole){
+		if ($hole->picturenames){
 			$model=new Holes('import');
 			$model->attributes=$hole->attributes;
 			$type=HoleTypes::model()->find('alias = "'.$hole->TYPE.'"');
@@ -196,6 +197,7 @@ class MigrationController extends Controller
 			
 			
 		}
+	}
 	echo "Добавлено $count ям.";
 	}
 	
