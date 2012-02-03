@@ -122,7 +122,7 @@ class MigrationController extends Controller
 		$count=0;
 		foreach ($holes as $hole){
 		//if (1){
-		if ($hole->picturenames && isset($hole->picturenames['medium']['fresh']) && $hole->picturenames['medium']['fresh']){
+		if ($hole->picturenames && isset($hole->picturenames['medium']['fresh']) && count($hole->picturenames['medium']['fresh']) > 0){
 			$model=new Holes('import');
 			$model->attributes=$hole->attributes;
 			$type=HoleTypes::model()->find('alias = "'.$hole->TYPE.'"');
