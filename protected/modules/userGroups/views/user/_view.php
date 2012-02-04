@@ -1,4 +1,4 @@
-<div class="view">
+<?php /* <div class="view">
 	 
 	<b><?php echo CHtml::encode($data->getAttributeLabel('group_id')); ?>:</b>
 	<?php echo CHtml::encode($data->relUserGroupsGroup->groupname); ?>
@@ -20,14 +20,15 @@
 	<?php endif; ?>
 	<br />
 </div>
-
+*/
+?>
 
 <?php
 // render the profile extensions
-foreach ($profiles as $p) {
+/*foreach ($profiles as $p) {
 echo '//'.str_replace(array('{','}'), NULL, $p['model']->tableName()).'/'.$p['view'];
 	$this->renderPartial('//profile/'.$p['view'], array('model' => $p['model']));
-} 
+} */
 ?>
 
 <?php #form for user approval ?>
@@ -46,6 +47,26 @@ echo '//'.str_replace(array('{','}'), NULL, $p['model']->tableName()).'/'.$p['vi
 
 <?php #form used to ban user ?>
 <?php if ((Yii::app()->user->pbac('userGroups.user.admin') || Yii::app()->user->pbac('userGroups.admin.admin')) && (int)$data->status === UserGroupsUser::ACTIVE && $data->relUserGroupsGroup->level < Yii::app()->user->level) : ?>
+
+<?php $form=$this->beginWidget('CActiveForm', array(
+	'id'=>'user-groups-ban-form',
+	'enableAjaxValidation'=>false,
+	'action'=>Yii::app()->baseUrl.'/userGroups/user/update/id/'.$data->id,
+	
+)); ?>
+
+
+<div class="row">
+		<?php echo $form->labelEx($data,'group_id'); ?>
+		<?php echo $form->dropDownList($data, 'group_id', CHtml::listData( UserGroupsGroup::model()->findAll(Array('order'=>'level DESC')), 'id', 'groupname' ));?>
+		<?php echo $form->error($data,'group_id'); ?>
+	</div>
+
+<div class="row buttons">	
+	<?php echo CHtml::submitButton('Сохранить'); ?>
+</div>
+<?php $this->endWidget(); ?>
+<br/><br/><br/>
 <?php $form=$this->beginWidget('CActiveForm', array(
 	'id'=>'user-groups-ban-form',
 	'enableAjaxValidation'=>false,
