@@ -75,6 +75,7 @@ class MigrationController extends Controller
 				$group_id=2;
 				if ($group->GROUP_ID==1) $group_id=5;
 				if ($group->GROUP_ID==4) $group_id=3;
+				if ($user->LOGIN=='admin') $group_id=1;
 				$model->attributes=Array(
 					'id'=>$user->ID,
 					'group_id'=>$group_id,
@@ -95,6 +96,7 @@ class MigrationController extends Controller
 					'external_auth_id'=>$user->EXTERNAL_AUTH_ID,
 					'is_bitrix_pass'=>1,
 				);
+				$model->id=$user->ID;
 				if ($model->save()){
 					$count++;
 					if (!$model->relProfile){
