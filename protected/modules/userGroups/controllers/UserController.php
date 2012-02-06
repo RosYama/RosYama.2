@@ -71,7 +71,7 @@ class UserController extends Controller
 				'pbac'=>array('write'),
 			),
 			array('allow',  // allow user with user admin permission to view every profile, approve, ban and invite users
-				'actions'=>array('view', 'approve', 'ban', 'invite'),
+				'actions'=>array('view', 'approve', 'ban', 'invite', 'changeGroup'),
 				'pbac'=>array('admin', 'admin.admin'),
 			),
 			array('allow',  // allow a user tu open an update view just on their own accounts
@@ -322,6 +322,34 @@ class UserController extends Controller
 
 		$this->renderPartial('application.views.profile.update',array('miscModel'=>$miscModel,'passModel'=>$passModel, 'profiles' => $profile_models), false, true);
 	}
+	
+	
+	public function actionChangeGroup($id)
+	{
+		$miscModel=$this->loadModel($id, 'changeMisc');		
+
+		// pass the models inside the array for ajax validation
+		$ajax_validation = array($miscModel);
+		
+		// perform ajax validation
+		$this->performAjaxValidation($ajax_validation);
+		
+
+		if(isset($_POST['UserGroupsUser']))
+		{
+			$model = $miscModel;
+			$model->attributes = $_POST['UserGroupsUser'];
+
+			if ($model->validate()) {
+				if ($model->save()) {
+					Yii::app()->user->setFlash('user', Yii::t('userGroupsModule.general','Data Updated Successfully'));
+					$this->renderPartial('view', array('model'=>$model, 'profiles' => Array()), false, true);
+				} else
+					Yii::app()->user->setFlash('user', Yii::t('userGroupsModule.general','An Error Occurred. Please try later.'));
+			}
+		}
+		
+	}	
 
 	/**
 	 * user activation view

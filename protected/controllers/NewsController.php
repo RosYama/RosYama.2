@@ -8,13 +8,11 @@ class NewsController extends Controller
 	 */
 	public $layout='//layouts/header_default_without_add';
 
-	/**
-	 * @return array action filters
-	 */
+	
 	public function filters()
 	{
 		return array(
-			'accessControl', // perform access control for CRUD operations
+			'userGroupsAccessControl', // perform access control for CRUD operations
 		);
 	}
 
@@ -26,23 +24,22 @@ class NewsController extends Controller
 	public function accessRules()
 	{
 		return array(
+			array('allow',
+				'actions'=>array('admin', 'create','update', 'order','delete','publish'),
+				'groups'=>array('root', 'admin'), 
+			),
+			
 			array('allow',  // allow all users to perform 'index' and 'view' actions
 				'actions'=>array('index','view'),
 				'users'=>array('*'),
 			),
-			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('create','update'),
-				'users'=>array('@'),
-			),
-			array('allow', // allow admin user to perform 'admin' and 'delete' actions
-				'actions'=>array('admin','delete'),
-				'users'=>array('admin'),
-			),
+			
 			array('deny',  // deny all users
 				'users'=>array('*'),
 			),
 		);
-	}
+	}	
+	
 
 	/**
 	 * Displays a particular model.
@@ -62,20 +59,31 @@ class NewsController extends Controller
 	public function actionCreate()
 	{
 		$model=new News;
-
+		$this->layout='//layouts/header_user';
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
 		if(isset($_POST['News']))
 		{
 			$model->attributes=$_POST['News'];
+			$model->date=CDateTimeParser::parse($model->date, 'dd.MM.yyyy');
 			if($model->save())
-				$this->redirect(array('view','id'=>$model->id));
+				$this->redirect(array('admin'));
 		}
 
 		$this->render('create',array(
 			'model'=>$model,
 		));
+	}
+	
+	public function actionPublish($id)
+	{
+		$model=$this->loadModel($id);
+		if ($model->published) $model->published=0;
+		else $model->published=1;
+		$model->update();
+		if(!isset($_GET['ajax']))
+			$this->redirect($_SERVER['HTTP_REFERER']);
 	}
 
 	/**
@@ -86,15 +94,16 @@ class NewsController extends Controller
 	public function actionUpdate($id)
 	{
 		$model=$this->loadModel($id);
-
+		$this->layout='//layouts/header_user';
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
 		if(isset($_POST['News']))
 		{
 			$model->attributes=$_POST['News'];
+			$model->date=CDateTimeParser::parse($model->date, 'dd.MM.yyyy');
 			if($model->save())
-				$this->redirect(array('view','id'=>$model->id));
+				$this->redirect(array('admin'));
 		}
 
 		$this->render('update',array(
@@ -139,6 +148,7 @@ class NewsController extends Controller
 	 */
 	public function actionAdmin()
 	{
+		$this->layout='//layouts/header_user';
 		$model=new News('search');
 		$model->unsetAttributes();  // clear any default values
 		if(isset($_GET['News']))

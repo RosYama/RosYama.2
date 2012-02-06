@@ -26,14 +26,12 @@ $this->breadcrumbs=array(
 					'CHtml::link($data->username, Yii::app()->baseUrl ."/userGroups?u=".$data->username)' : '$data->username',
 				'type'=>'raw',
 			),
-			'group_name',
-			array(
-				'name'=>'email',
-				'visible'=>Yii::app()->user->pbac('userGroups.user.admin'),
+			Array(
+			'name'=>'group_name',
+			'filter'=>CHtml::listData( UserGroupsGroup::model()->findAll(Array('order'=>'level DESC')), 'groupname', 'groupname' ),  
 			),
 			array(
-				'name'=>'readable_home',
-				'type'=>'raw',
+				'name'=>'email',
 				'visible'=>Yii::app()->user->pbac('userGroups.user.admin'),
 			),
 			array(

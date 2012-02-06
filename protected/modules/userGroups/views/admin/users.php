@@ -23,7 +23,10 @@
 			'type'=>'raw',
 			'filter' => CHtml::dropDownList('UserGroupsUser[status]', $userModel->status, array_merge(array('null' => Yii::t('userGroupsModule.admin','all')), CHtml::listData(UserGroupsLookup::model()->findAll(), 'value', 'text')) ),
 		),
-		'group_name',	
+		Array(
+		'name'=>'group_name',
+		'filter'=>CHtml::listData( UserGroupsGroup::model()->findAll(Array('order'=>'level')), 'id', 'groupname' ),  
+		),
 	),
 )); ?>
 <?php

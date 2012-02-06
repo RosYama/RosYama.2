@@ -1,4 +1,4 @@
-<?php /* <div class="view">
+ <div class="view">
 	 
 	<b><?php echo CHtml::encode($data->getAttributeLabel('group_id')); ?>:</b>
 	<?php echo CHtml::encode($data->relUserGroupsGroup->groupname); ?>
@@ -10,22 +10,18 @@
 	<br />
 	<?php endif; ?>
 
-	<b><?php echo CHtml::encode($data->getAttributeLabel('home')); ?>:</b>
-	<?php echo $data->readable_home; ?>
-	<br />
-
 	<?php if (Yii::app()->user->pbac('userGroups.user.admin') || Yii::app()->user->pbac('userGroups.admin.admin') || Yii::app()->user->id === $data->id): ?>
 	<b><?php echo CHtml::encode($data->getAttributeLabel('status')); ?>:</b>
 	<?php echo CHtml::encode(UserGroupsLookup::resolve('status', $data->status)); ?>
 	<?php endif; ?>
 	<br />
 </div>
-*/
-?>
 
-<?php
+
+
+<?php /*
 // render the profile extensions
-/*foreach ($profiles as $p) {
+foreach ($profiles as $p) {
 echo '//'.str_replace(array('{','}'), NULL, $p['model']->tableName()).'/'.$p['view'];
 	$this->renderPartial('//profile/'.$p['view'], array('model' => $p['model']));
 } */
@@ -47,25 +43,26 @@ echo '//'.str_replace(array('{','}'), NULL, $p['model']->tableName()).'/'.$p['vi
 
 <?php #form used to ban user ?>
 <?php if ((Yii::app()->user->pbac('userGroups.user.admin') || Yii::app()->user->pbac('userGroups.admin.admin')) && (int)$data->status === UserGroupsUser::ACTIVE && $data->relUserGroupsGroup->level < Yii::app()->user->level) : ?>
-
+<div id="groups-group-container">
 <?php $form=$this->beginWidget('CActiveForm', array(
-	'id'=>'user-groups-ban-form',
+	'id'=>'user-groups-group-form',
 	'enableAjaxValidation'=>false,
-	'action'=>Yii::app()->baseUrl.'/userGroups/user/update/id/'.$data->id,
+	//'action'=>Yii::app()->baseUrl.'/userGroups/user/update/id/'.$data->id,
 	
 )); ?>
 
-
-<div class="row">
+	<div class="row">
 		<?php echo $form->labelEx($data,'group_id'); ?>
 		<?php echo $form->dropDownList($data, 'group_id', CHtml::listData( UserGroupsGroup::model()->findAll(Array('order'=>'level DESC')), 'id', 'groupname' ));?>
 		<?php echo $form->error($data,'group_id'); ?>
 	</div>
 
 <div class="row buttons">	
-	<?php echo CHtml::submitButton('Сохранить'); ?>
+	<?php echo CHtml::ajaxSubmitButton('Сохранить', Yii::app()->baseUrl . '/userGroups/user/changeGroup/id/'.$data->id, array('update' => '#userGroups-container'), array('id' => 'submit-mail'.$data->id.rand()) ); ?>
 </div>
+
 <?php $this->endWidget(); ?>
+</div>
 <br/><br/><br/>
 <?php $form=$this->beginWidget('CActiveForm', array(
 	'id'=>'user-groups-ban-form',
