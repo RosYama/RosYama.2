@@ -642,43 +642,81 @@ class HolesController extends Controller
 		if(isset($_GET['Holes']['type']) && $_GET['Holes']['type'])
 		{
 			$criteria->addInCondition('TYPE_ID', $_GET['Holes']['type']);
+		}	
+		
+		$markers = Holes::model()->findAll($criteria);	
+		
+		if (isset($_GET['zoom'])) $ZOOM=$_GET['zoom'];
+		else $_GET['zoom']=12;		
+		
+		//$ZOOM-=1;
+		if ($ZOOM >=14) $ZOOM=30;
+				
+		$singleMarkers = array();
+		$clusterMarkers = array();
+		
+		// Minimum distance between markers to be included in a cluster, at diff. zoom levels
+		$DISTANCE = (10000000 >> $ZOOM) / 100000;
+		
+		// Loop until all markers have been compared.
+		while (count($markers)) {
+			$marker  = array_pop($markers);
+			$cluster = array();
+		
+			// Compare against all markers which are left.
+			foreach ($markers as $key => $target) {
+				$pixels = abs($marker->LONGITUDE-$target->LONGITUDE) + abs($marker->LATITUDE-$target->LATITUDE);
+		
+				// If the two markers are closer than given distance remove target marker from array and add it to cluster.
+				if ($pixels < $DISTANCE) {
+					unset($markers[$key]);
+					$cluster[] = $target;
+				}
+			}
+		
+			// If a marker has been added to cluster, add also the one we were comparing to.
+			if (count($cluster) > 0) {
+				$cluster[] = $marker;
+				$clusterMarkers[] = $cluster;
+			} else {
+				$singleMarkers[] = $marker;
+			}
 		}
 		
-		// определение, нужна ли премодерация
-		/*$raw = file_get_contents($_SERVER['DOCUMENT_ROOT'].'/index.php');
-		preg_match('/(\'|\")PREMODERATION\1 => (\"|\')(Y|N|)\2/', $raw, $_match);
-		if($_match[3] == 'Y')
-		{
-			$arFilter['PREMODERATED'] = 1;
-		}*/
-		
-		/// Если не заданы параметры, то производится выборка всех записей ям
-		/*if(!$_GET['bottom'] && !$_GET['top'] && !$_GET['bottom'] && !$_GET['right'])
-		{
-			$res = C1234Hole::GetList();
-		}
-		else
-		{
-			$res = C1234Hole::GetList
-			(
-				array(),
-				$arFilter,
-				array('nopicts' => true)
-			);
-		}*/
-		
-		$res = Holes::model()->findAll($criteria);	
 		
 		$markers=Array();
-		
-		foreach($res as &$hole)
+		foreach($singleMarkers as &$hole)
 		{
 			if(!isset($_REQUEST['skip_id']) || $_REQUEST['skip_id'] != $hole['ID'])
 			{
 				$markers[]=Array('id'=>$hole->ID, 'type'=>$hole->type->alias, 'lat'=>$hole->LONGITUDE, 'lng'=>$hole->LATITUDE, 'state'=>$hole->STATE);				
 			}
 		}
-		echo $_GET['jsoncallback'].'({"markers": '.CJSON::encode($markers).'})';
+		
+		$clusters=Array();
+		foreach($clusterMarkers as $markerss)
+		{
+			$lats=Array();
+			$lngs=Array();
+				foreach($markerss as &$hole)
+					{
+						$lats[]=$hole->LONGITUDE;
+						$lngs[]=$hole->LATITUDE;
+					}
+			sort($lats);
+			sort($lngs);
+			$center_lat=($lats[0]+$lats[count($lats)-1])/2;
+			$center_lng=($lngs[count($lngs)-1]+$lngs[0])/2;
+			
+			
+				$clusters[]=Array('count'=>count($markerss), 				
+				'lat'=>$center_lat, 'lng'=>$center_lng, 
+				);				
+				
+		}
+		echo $_GET['jsoncallback'].'({"clusters": '.CJSON::encode($clusters).', "markers": '.CJSON::encode($markers).' })';
+		
+		
 		Yii::app()->end();		
 		
 	}
