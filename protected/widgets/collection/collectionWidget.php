@@ -19,14 +19,12 @@ class collectionWidget extends CWidget {
 
 
         public function run() {
-        $model=Holes::model()->findAll('PREMODERATED=1');
-        $all=count($model);
-        $ingibdd=0;
-        $fixed=0;
-        foreach ($model as $item){
-        	if ($item->STATE=='inprogress') $ingibdd++; 
-        	if ($item->STATE=='fixed') $fixed++;
-        }
+        $model=Holes::model()->count(Array('condition'=>'PREMODERATED=1'));
+        $all=$model;
+        $model=Holes::model()->count(Array('condition'=>'PREMODERATED=1 AND STATE="inprogress"'));
+        $ingibdd=$model;
+        $model=Holes::model()->count(Array('condition'=>'PREMODERATED=1 AND STATE="fixed"'));
+        $fixed=$model;        
             $this->registerCoreScripts();
                 $this->render($this->itemview, Array(
                 'all'=>Y::declOfNum($all, array('дефект', 'дефекта', 'дефектов')),

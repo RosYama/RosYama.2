@@ -7,7 +7,7 @@
 						'htmlOptions'=>Array ('onsubmit'=>"document.getElementById('pdf_form').style.display='none';"),
 					)); 
 					$model=new HoleRequestForm;
-					$model->to=$gibdd->post_dative.' '.$gibdd->fio_dative;
+					$model->to=$gibdd ? $gibdd->post_dative.' '.$gibdd->fio_dative : '';
 					$model->from=CHtml::encode(Yii::app()->user->userModel->last_name.' '.Yii::app()->user->userModel->name.' '.Yii::app()->user->userModel->second_name);
 					$model->address=CHtml::encode($hole->ADDRESS);
 					$model->signature=CHtml::encode(Yii::app()->user->userModel->last_name.' '.substr(Yii::app()->user->userModel->name, 0, 2).(Yii::app()->user->userModel->name ? '.' : '').' '.substr(Yii::app()->user->userModel->second_name, 0, 2).(Yii::app()->user->userModel->second_name ? '.' : ''));

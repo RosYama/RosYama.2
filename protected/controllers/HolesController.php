@@ -647,16 +647,15 @@ class HolesController extends Controller
 		$markers = Holes::model()->findAll($criteria);	
 		
 		if (isset($_GET['zoom'])) $ZOOM=$_GET['zoom'];
-		else $_GET['zoom']=12;		
+		else $ZOOM=14;
 		
-		//$ZOOM-=1;
 		if ($ZOOM >=14) $ZOOM=30;
 				
 		$singleMarkers = array();
 		$clusterMarkers = array();
 		
 		// Minimum distance between markers to be included in a cluster, at diff. zoom levels
-		$DISTANCE = (10000000 >> $ZOOM) / 100000;
+		$DISTANCE = (7000000 >> $ZOOM) / 100000;
 		
 		// Loop until all markers have been compared.
 		while (count($markers)) {
