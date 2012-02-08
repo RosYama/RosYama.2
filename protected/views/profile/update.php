@@ -105,7 +105,7 @@
 </table>	
 <div class="row buttons">
 			<?php echo CHtml::hiddenField('formID', $form->id) ?>
-			<?php echo CHtml::submitButton(Yii::t('userGroupsModule.general','Update User Profile')); ?>
+			<?php echo CHtml::submitButton('Обновить профиль'); ?>
 			<?php //echo CHtml::ajaxSubmitButton(Yii::t('userGroupsModule.general','Update User Profile'), Yii::app()->baseUrl . '/profile/', array('update' => '#userGroups-container'), array('id' => 'submit-mail'.$passModel->id.rand()) ); ?>
 		</div>
 	<?php $this->endWidget(); ?>
@@ -154,7 +154,7 @@
 		<?php endif; ?>
 		<div class="row buttons">
 			<?php echo CHtml::hiddenField('formID', $form->id) ?>
-			<?php echo CHtml::submitButton(Yii::t('userGroupsModule.general','Change Password')); ?>
+			<?php echo CHtml::submitButton('Изменить пароль'); ?>
 			<?php //echo CHtml::ajaxSubmitButton(Yii::t('userGroupsModule.general','Change Password'), Yii::app()->baseUrl .'/userGroups/user/update/id/'.$passModel->id, array('update' => '#userGroups-container'), array('id' => 'submit-pass'.$passModel->id.rand()) ); ?>
 		</div>
 

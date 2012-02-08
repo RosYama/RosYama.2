@@ -23,7 +23,8 @@ abstract class EOpenIDService extends EAuthServiceBase implements IAuthService {
 	/**
 	 * @var string the OpenID authorization url.
 	 */
-	protected $url;
+	protected $url;	
+
 	
 	/**
 	 * @var array the OpenID required attributes.
@@ -47,6 +48,7 @@ abstract class EOpenIDService extends EAuthServiceBase implements IAuthService {
 	 * @return boolean whether user was successfuly authenticated.
 	 */
 	public function authenticate() { 
+	//echo $this->url; die();
 		if (!empty($_REQUEST['openid_mode'])) {
 			switch ($_REQUEST['openid_mode']) {
 				case 'id_res':

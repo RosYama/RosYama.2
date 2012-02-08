@@ -88,9 +88,11 @@ class EAuthWidget extends CWidget {
 			$cs->registerScriptFile($url.'/js/auth.js', CClientScript::POS_HEAD);
 			$js = '';
 			foreach ($this->services as $name => $service) {
-				$args = $service->jsArguments;
-				$args['id'] = $service->id;
-				$js .= '$(".auth-service.'.$service->id.' a").eauth('.json_encode($args).');'."\n";
+				if (!isset($service->jsArguments['autologin']) || $service->jsArguments['autologin']){
+					$args = $service->jsArguments;
+					$args['id'] = $service->id;
+					$js .= '$(".auth-service.'.$service->id.' a").eauth('.json_encode($args).');'."\n";
+				}	
 			}
 			$cs->registerScript('eauth-services', $js, CClientScript::POS_READY);
 		}

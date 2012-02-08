@@ -121,21 +121,27 @@ return array(
 				'facebook' => array(
 					// регистрация приложения: https://developers.facebook.com/apps/
 					'class' => 'FacebookOAuthService',
-					'client_id' => '...',
-					'client_secret' => '...',
+					'client_id' => '321432484568993',
+					'client_secret' => 'd8290ffe86ea761fa1125bbd86eea708',
 				),
 				'vkontakte' => array(
 					// регистрация приложения: http://vkontakte.ru/editapp?act=create&site=1
 					'class' => 'VKontakteOAuthService',
-					'client_id' => '...',
-					'client_secret' => '...',
+					'client_id' => '2794711',
+					'client_secret' => 'YghxsVhTwKk5wmKb9WRj',
 				),
 				'mailru' => array(
+					'class' => 'MailruOpenIDService', 
+				),
+				'livejournal' => array(
+					'class' => 'LJOpenIDService', 
+				),
+				/*'mailru' => array(
 					// регистрация приложения: http://api.mail.ru/sites/my/add
 					'class' => 'MailruOAuthService',
 					'client_id' => '...',
 					'client_secret' => '...',
-				),
+				),*/
 				'moikrug' => array(
 					// регистрация приложения: https://oauth.yandex.ru/client/my
 					'class' => 'MoikrugOAuthService',

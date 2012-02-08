@@ -1,3 +1,24 @@
+<div id="userGroups-container">
+	<?php if(isset(Yii::app()->request->cookies['success'])): ?>
+	<div class="info">
+		<?php echo Yii::app()->request->cookies['success']->value; ?>
+		<?php unset(Yii::app()->request->cookies['success']);?>
+	</div>
+	<?php endif; ?>
+	<?php if(Yii::app()->user->hasFlash('success')):?>
+    <div class="info">
+        <?php echo Yii::app()->user->getFlash('success'); ?>
+    </div>
+	<?php endif; ?>
+	<?php if(Yii::app()->user->hasFlash('mail')):?>
+    <div class="info">
+        <?php echo Yii::app()->user->getFlash('mail'); ?>
+    </div>
+	<?php endif; ?>
+	<div class="form center">
+	
+	</div><!-- form -->
+</div>
 <div class="bx-auth">
 	<div class="bx-auth-title">Войти на сайт</div>
 	<div class="bx-auth-note">Пожалуйста, авторизуйтесь:</div>
@@ -62,25 +83,3 @@ try{document.form_auth.USER_PASSWORD.focus();}catch(e){}
 <div class="bx-auth-note">Вы можете войти на сайт, если вы зарегистрированы на одном из этих сервисов:</div>
 <?php $this->widget('ext.eauth.EAuthWidget', array('action' => '/userGroups/')); ?>
 
-
-<div id="userGroups-container">
-	<?php if(isset(Yii::app()->request->cookies['success'])): ?>
-	<div class="info">
-		<?php echo Yii::app()->request->cookies['success']->value; ?>
-		<?php unset(Yii::app()->request->cookies['success']);?>
-	</div>
-	<?php endif; ?>
-	<?php if(Yii::app()->user->hasFlash('success')):?>
-    <div class="info">
-        <?php echo Yii::app()->user->getFlash('success'); ?>
-    </div>
-	<?php endif; ?>
-	<?php if(Yii::app()->user->hasFlash('mail')):?>
-    <div class="info">
-        <?php echo Yii::app()->user->getFlash('mail'); ?>
-    </div>
-	<?php endif; ?>
-	<div class="form center">
-	
-	</div><!-- form -->
-</div>

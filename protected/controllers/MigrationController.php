@@ -71,6 +71,13 @@ class MigrationController extends Controller
 			if ($group && $group->GROUP_ID!=2){				
 				$user->LOGIN=$this->sql_valid($user->LOGIN);
 				$model=UserGroupsUser::model()->find("username='".$user->LOGIN."'");
+				if ($model) {
+					if ($model->xml_id){
+						$username=$model->username.'_'.$model->external_auth_id;
+						$model=new UserGroupsUser('import');
+						$model->username=$username;
+						}
+				}
 				if (!$model) $model=new UserGroupsUser('import');
 				$group_id=2;
 				if ($group->GROUP_ID==1) $group_id=5;
