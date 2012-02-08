@@ -86,7 +86,7 @@ class MigrationController extends Controller
 				$model->attributes=Array(
 					'id'=>$user->ID,
 					'group_id'=>$group_id,
-					'username'=>$user->LOGIN,
+					'username'=>isset($username) ? $username : $user->LOGIN,
 					'password'=>$user->PASSWORD,
 					'email'=>trim($user->EMAIL) ? trim($user->EMAIL) : null,
 					'name'=>$user->NAME,
