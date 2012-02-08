@@ -17,7 +17,7 @@ require_once dirname(dirname(__FILE__)).'/EOAuthService.php';
  */
 class TwitterOAuthService extends EOAuthService {	
 	
-	protected $name = 'twitter';
+	protected $name = 'Twitter';
 	protected $title = 'Twitter';
 	protected $type = 'OAuth';
 	protected $jsArguments = array('popup' => array('width' => 900, 'height' => 550));
@@ -31,7 +31,8 @@ class TwitterOAuthService extends EOAuthService {
 	);
 	
 	protected function fetchAttributes() {
-		$info = $this->makeSignedRequest('https://api.twitter.com/1/account/verify_credentials.json');		
+		$info = $this->makeSignedRequest('https://api.twitter.com/1/account/verify_credentials.json');
+		
 		$this->attributes['id'] = $info->id;
 		$this->attributes['name'] = $info->name;
 		$this->attributes['url'] = 'http://twitter.com/account/redirect_by_id?id='.$info->id_str;

@@ -276,7 +276,7 @@ abstract class EAuthServiceBase extends CComponent implements IAuthService {
 				'Result: '.$result,
 				CLogger::LEVEL_ERROR, 'application.extensions.eauth'
 			);
-			throw new EAuthException('Invalid response http code: '.$headers['http_code'].'.', $headers['http_code']);
+			throw new EAuthException(Yii::t('eauth', 'Invalid response http code: {code}.', array('{code}' => $headers['http_code']), 'en'), $headers['http_code']);
 		}
 		
 		curl_close($ch);
@@ -314,7 +314,7 @@ abstract class EAuthServiceBase extends CComponent implements IAuthService {
 			$result = json_decode($response);
 			$error = $this->fetchJsonError($result);
 			if (!isset($result)) {
-				throw new EAuthException('Invalid response format.', 500);
+				throw new EAuthException(Yii::t('eauth', 'Invalid response format.', array(), 'en'), 500);
 			}
 			else if (isset($error)) {
 				throw new EAuthException($error['message'], $error['code']);
@@ -418,6 +418,7 @@ abstract class EAuthServiceBase extends CComponent implements IAuthService {
 	 * @return mixed the user id.
 	 */
 	public function getId() {
+		$this->_fetchAttributes();
 		return $this->attributes['id'];
 	}
 	
@@ -455,6 +456,7 @@ abstract class EAuthServiceBase extends CComponent implements IAuthService {
 	 * @return boolean true if attribute exists, false otherwise.
 	 */
 	public function hasAttribute($key) {
+		$this->_fetchAttributes();
 		return isset($this->attributes[$key]);
 	}
 	

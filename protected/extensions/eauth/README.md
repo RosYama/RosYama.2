@@ -1,13 +1,43 @@
 Yii EAuth extension
 ===================
 
-EAuth extension allows to authenticate users by the OpenID and OAuth providers.
+EAuth extension allows to authenticate users with accounts on other websites.
+Supported protocols: OpenID, OAuth 1.0 and OAuth 2.0.
 
-Supported providers out of box:
+EAuth is a extension for provide a unified (does not depend on the selected service) method to authenticate the user. So, the extension itself does not perform login, does not register the user and does not bind the user accounts from different providers.
 
-* OpenID: Google, Yandex;
-* OAuth: Twitter;
-* OAuth 2.0: Google, Facebook, VKontakte, Mail.ru, MoiKrug, Odnoklassniki.
+
+### Why own extension and not a third-party service?
+The implementation of the authorization on your own server has several advantages:
+
+* Full control over the process: what will be written in the authorization window, what data we get, etc.
+* Ability to change the appearance of the widget.
+* When logging via OAuth is possible to invoke methods on API.
+* Fewer dependencies on third-party services - more reliable application.
+
+
+### The extension allows you to:
+
+* Ignore the nuances of authorization through the different types of services, use the class based adapters for each service.
+* Get a unique user ID that can be used to register user in your application.
+* Extend the standard authorization classes to obtain additional data about the user.
+* Work with the API of social networks by extending the authorization classes.
+* Set up a list of supported services, customize the appearance of the widget, use the popup window without closing your application.
+	
+
+### Extension includes:
+
+* The component that contains utility functions.
+* A widget that displays a list of services in the form of icons and allowing authorization in the popup window.
+* Base classes to create your own services.
+* Ready for authenticate via Google, Twitter, Facebook and other providers.
+
+
+### Supported providers "out of box":
+
+* OpenID: Google, Yandex(ru)
+* OAuth: Twitter
+* OAuth 2.0: Google, Facebook, VKontake(ru), Mail.ru(ru), Moi Krug(ru), Odnoklassniki(ru)
 
 
 ### Resources
@@ -42,6 +72,7 @@ Supported providers out of box:
 		'ext.eoauth.*',
 		'ext.eoauth.lib.*',
 		'ext.lightopenid.*',
+		'ext.eauth.*',
 		'ext.eauth.services.*',
 	),
 ...
@@ -114,48 +145,6 @@ Supported providers out of box:
 
 ## Usage
 
-#### The user identity
-
-```php
-<?php
-
-class ServiceUserIdentity extends UserIdentity {
-	const ERROR_NOT_AUTHENTICATED = 3;
-
-	/**
-	 * @var EAuthServiceBase the authorization service instance.
-	 */
-	protected $service;
-	
-	/**
-	 * Constructor.
-	 * @param EAuthServiceBase $service the authorization service instance.
-	 */
-	public function __construct($service) {
-		$this->service = $service;
-	}
-	
-	/**
-	 * Authenticates a user based on {@link username}.
-	 * This method is required by {@link IUserIdentity}.
-	 * @return boolean whether authentication succeeds.
-	 */
-	public function authenticate() {		
-		if ($this->service->isAuthenticated) {
-			$this->username = $this->service->getAttribute('name');
-			$this->setState('id', $this->service->id);
-			$this->setState('name', $this->username);
-			$this->setState('service', $this->service->serviceName);
-			$this->errorCode = self::ERROR_NONE;		
-		}
-		else {
-			$this->errorCode = self::ERROR_NOT_AUTHENTICATED;
-		}
-		return !$this->errorCode;
-	}
-}
-```
-
 #### The action
 
 ```php
@@ -169,7 +158,7 @@ class ServiceUserIdentity extends UserIdentity {
 			$authIdentity->cancelUrl = $this->createAbsoluteUrl('site/login');
 			
 			if ($authIdentity->authenticate()) {
-				$identity = new ServiceUserIdentity($authIdentity);
+				$identity = new EAuthUserIdentity($authIdentity);
 				
 				// successful authentication
 				if ($identity->authenticate()) {
@@ -188,7 +177,7 @@ class ServiceUserIdentity extends UserIdentity {
 			$this->redirect(array('site/login'));
 		}
 		
-		// default action code...
+		// default authorization code through login/password ..
 	}
 ```
 
@@ -201,6 +190,19 @@ class ServiceUserIdentity extends UserIdentity {
 ?>
 ```
 
+#### Getting more user data (optional)
+
+To receive all the necessary data to your application, you can override the base class of any provider.
+Base classes are stored in `protected/extensions/eauth/services/`.
+Examples of extended classes can be found in `protected/extensions/eauth/custom_services/`.
+
+After overriding the base class, you need to modify your configuration file to set new name of the class.
+Also you may need to override the `EAuthUserIdentity` class to store additional data.
+
+#### Translations (optional)
+
+* Copy the file `/protected/extensions/eauth/messages/[lang]/eauth.php` to `/protected/messages/[lang]/eauth.php` to translate the EAuth extension into other languages.
+* To add a new language, you can use the blank file `/protected/extensions/eauth/messages/blank/eauth.php`.
 
 ## License
 

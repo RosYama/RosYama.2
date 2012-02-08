@@ -23,8 +23,8 @@ class YandexOpenIDService extends EOpenIDService {
 	protected $url = 'http://openid.yandex.ru/';
 	protected $requiredAttributes = array(
 		'name' => array('fullname', 'namePerson'),
-		//'username' => array('nickname', 'namePerson/friendly'),
-		//'email' => array('email', 'contact/email'),
+		'username' => array('nickname', 'namePerson/friendly'),
+		'email' => array('email', 'contact/email'),
 		//'gender' => array('gender', 'person/gender'),
 		//'birthDate' => array('dob', 'birthDate'),
 	);
@@ -33,7 +33,10 @@ class YandexOpenIDService extends EOpenIDService {
 		if (isset($this->attributes['username']) && !empty($this->attributes['username']))
 			$this->attributes['url'] = 'http://openid.yandex.ru/'.$this->attributes['username'];
 			
-		//if (isset($this->attributes['birthDate']) && !empty($this->attributes['birthDate']))
-			//$this->attributes['birthDate'] = strtotime($this->attributes['birthDate']);
+		if (isset($this->attributes['birthDate']) && !empty($this->attributes['birthDate']))
+			$this->attributes['birthDate'] = strtotime($this->attributes['birthDate']);
+		$this->attributes['id']=strtolower($this->attributes['id']);
+		$this->attributes['external_auth_id']='OPENID#http://openid.yandex.ru/server/';		
+		
 	}
 }

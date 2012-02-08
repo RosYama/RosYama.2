@@ -17,7 +17,7 @@ require_once dirname(dirname(__FILE__)).'/EOAuth2Service.php';
  */
 class FacebookOAuthService extends EOAuth2Service {	
 	
-	protected $name = 'facebook';
+	protected $name = 'Facebook';
 	protected $title = 'Facebook';
 	protected $type = 'OAuth';
 	protected $jsArguments = array('popup' => array('width' => 585, 'height' => 290));
@@ -70,7 +70,7 @@ class FacebookOAuthService extends EOAuth2Service {
 	 */
 	protected function saveAccessToken($token) {
 		$this->setState('auth_token', $token['access_token']);
-		$this->setState('expires', time() + (int)$token['expires'] - 60);
+		$this->setState('expires', isset($token['expires']) ? time() + (int)$token['expires'] - 60 : 0);
 		$this->access_token = $token['access_token'];
 	}
 	

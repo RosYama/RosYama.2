@@ -99,24 +99,24 @@ return array(
 			'class' => 'ext.eauth.EAuth',
 			'popup' => true, // Use the popup window instead of redirecting.
 			'services' => array( // You can change the providers and their classes.
-				'google' => array(
+				/*'google' => array(
 					'class' => 'GoogleOpenIDService',
-				),
+				),*/
 				'yandex' => array(
 					'class' => 'YandexOpenIDService',
 				),
 				'twitter' => array(
 					// регистрация приложения: https://dev.twitter.com/apps/new
 					'class' => 'TwitterOAuthService',
-					'key' => '...',
-					'secret' => '...',
+					'key' => 'l3EbqAebpIlPR1SAI5KANQ',
+					'secret' => 'BPdGnGf0DvD5dLCkQKuyYKbzQ0ZnmvE2bXi795fUKk',
 				),
 				'google_oauth' => array(
 					// регистрация приложения: https://code.google.com/apis/console/
 					'class' => 'GoogleOAuthService',
 					'client_id' => '433170583991.apps.googleusercontent.com',
 					'client_secret' => 'FAZmvzjXjciqkENr4-a8c61q',
-					'title' => 'Google (OAuth)',
+					'title' => 'Google',
 				),
 				'facebook' => array(
 					// регистрация приложения: https://developers.facebook.com/apps/

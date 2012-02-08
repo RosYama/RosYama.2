@@ -66,11 +66,11 @@ class ServiceUserIdentity extends CUserIdentity {
     public function authenticate() {   
     
         if ($this->service && $this->service->isAuthenticated) {
-            $this->username = $this->service->id;         
+            $this->username = $this->service->serviceName.'#'.$this->service->id;
             $this->setState('name', $this->username);
             $this->setState('service', $this->service->serviceName);           
             $this->errorCode = self::ERROR_NONE; 
-            $model=UserGroupsUser::model()->findByAttributes(array('username' => $this->username));
+            $model=UserGroupsUser::model()->findByAttributes(array('xml_id' => $this->service->id, 'external_auth_id' => $this->service->getAttribute('external_auth_id') ? $this->service->getAttribute('external_auth_id') : $this->service->serviceName));
 			if (!$model){
 						$model=new UserGroupsUser();
 						$model->username = $this->username;
@@ -81,6 +81,8 @@ class ServiceUserIdentity extends CUserIdentity {
 						$model->group_id = 2;
 						$model->status=4;
 						$model->params=array_keys($model->ParamsFields);
+						$model->xml_id = $this->service->id;
+						$model->external_auth_id = $this->service->getAttribute('external_auth_id') ? $this->service->getAttribute('external_auth_id') : $this->service->serviceName;
 						$model->save();
 			}			
 			if(!$model)
