@@ -80,6 +80,11 @@ class MigrationController extends Controller
 						$model=new UserGroupsUser('import');
 						$model->username=$username;
 						}
+					elseif($model->external_auth_id && $model->xml_id ) {
+						$model->username=$model->username.'_'.$model->xml_id;
+						$model->update();
+						$model=new UserGroupsUser('import');
+					}	
 				}
 				if (!$model) $model=new UserGroupsUser('import');
 				$group_id=2;
