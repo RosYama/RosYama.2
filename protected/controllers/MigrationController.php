@@ -72,7 +72,7 @@ class MigrationController extends Controller
 				$user->LOGIN=$this->sql_valid($user->LOGIN);
 				$model=UserGroupsUser::model()->find("username='".$user->LOGIN."'");
 				if ($model) {
-					if ($user->EXTERNAL_AUTH_ID){
+					if ($user->EXTERNAL_AUTH_ID && $user->XML_ID){
 						$username=$user->LOGIN.'_'.$user->EXTERNAL_AUTH_ID;
 						$model=new UserGroupsUser('import');
 						$model->username=$username;
