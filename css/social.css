@@ -1,0 +1,51 @@
+.bx-ss-icon {background-image:url('/images/social_icons_login.png'); width:16px; height:16px; background-repeat:no-repeat;}
+.openid {background-position:0px -192px;}
+.yandex {background-position:0px 0px;}
+.openid-mail-ru {background-position:0px -48px;}
+.livejournal {background-position:0px -16px;}
+.liveinternet {background-position:0px -128px;}
+.blogger {background-position:0px -144px;}
+.rambler {background-position:0px -160px;}
+.liveid {background-position:0px -176px;}
+.facebook {background-position:0px -32px;}
+.twitter {background-position:0px -96px;}
+.vkontakte {background-position:0px -80px;}
+.mymailru {background-position:0px -64px;}
+.google {background-position:0px -112px;}
+
+.bx-ss-button {display:inline-block; background-image:url('/images/social_icons_login.png'); width:87px; height:21px; background-repeat:no-repeat; vertical-align:middle;}
+.liveid-button {background-position:0px -318px;}
+.facebook-button {background-position:0px -208px;}
+.twitter-button {background-position:0px -274px;}
+.vkontakte-button {background-position:0px -252px;}
+.mymailru-button {background-position:0px -230px;}
+.google-button {background-position:0px -296px;}
+
+div.bx-auth {max-width:600px; margin-top:16px; margin-bottom:24px;}
+div.bx-auth form {padding:0; margin:0;}
+div.bx-auth-line {border-bottom:1px solid #E3E3E3; padding-bottom:10px;}
+div.bx-auth-title {font-size:140%; border-bottom:solid 2px #E3E3E3; padding-bottom:12px; }
+div.bx-auth-note{margin:18px 0px 6px 0px;}
+
+div.bx-auth-services  {padding:0px; margin:0px; overflow:hidden; zoom:1;}
+div.bx-auth-services div {display:block; float:left; margin:4px 6px 0px 0px; width:110px;}
+div.bx-auth-services a {display:inline-block; margin:1px; padding:4px 4px 4px 4px; text-decoration:none; color:#646464; outline:none;}
+div.bx-auth-services a:hover {margin:0px; border:1px solid #D9D9D9;}
+div.bx-auth-services a.bx-ss-selected {margin:0px; border:1px solid #D9D9D9; background-color:#EBEBEB;}
+div.bx-auth-services i {display:inline-block; margin:0px; margin-right:4px; vertical-align:middle; cursor:pointer;}
+div.bx-auth-services b {vertical-align:middle; font-weight:bold; font-size:12px; font-family:Tahoma,Verdana,Arial,sans-serif;}
+
+div.bx-auth-service-form {color:black; background-color:#EEEEEE; border-bottom:solid 1px #D6D6D6; margin-top:1px; padding:16px; vertical-align:middle; font-size:12px;}
+div.bx-auth-service-form span, div.bx-auth-service-form input { vertical-align:middle;}
+div.bx-auth-service-form input.button {position:relative; left:10px;}
+div.bx-auth-service-form span.openid {display:inline-block; margin-right:6px;}
+
+span.bx-spacer {display:inline-block; width:16px;}
+
+div.bx-auth-serv-icons {}
+div.bx-auth-serv-icons a {display:inline-block; margin:1px; text-decoration:none; color:#646464; outline:none;}
+div.bx-auth-serv-icons a:hover {margin:0px; border:1px solid #D9D9D9;}
+div.bx-auth-serv-icons i {margin:3px; display:inline-block; vertical-align:middle;  cursor:pointer;}
+div.bx-auth-lbl {margin-top:8px; margin-bottom:4px;}
+
+div.bx-auth-float {padding-left:15px; padding-right:15px; font-size:120%;}

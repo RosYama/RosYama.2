@@ -1,0 +1,64 @@
+div#ymapcontainer { width: 745px; height: 400px; }
+.rCol .f #bx_address_search_control_map_yandex_COORDINATES_COORDINATES input { display: block }
+.rCol p, .rCol #bx_map_hint_novalue_map_yandex_COORDINATES_COORDINATES, .rCol #bx_address_search_control_map_yandex_COORDINATES_COORDINATES { color: #4c4c4c }
+#bx_address_search_control_map_yandex_COORDINATES_COORDINATES { padding-top: 1.38em }
+
+div.error { padding: 10px; font-size: 15px; border: 1px solid red; color: red; }
+div.inpphoto span { cursor: pointer; color: #46a; font-style: italic; border-bottom: 1px dotted #46a;}
+
+span.command { border-bottom: 1px dashed #333; color: #333; cursor: pointer; }
+span.command:hover { color: #555; }
+div.rCol div.picts { display: none; }
+div.rCol div.picts img { max-width: 400px; }
+div.rCol div.picts label { display: inline; }
+
+.hidden { display: none; }
+.f { padding-bottom: 16px; color: #222; position: relative; }
+.rCol .f { padding-bottom: 80px; }
+
+.f .textInput { border-width: 1px; background-color: white; font: normal 1em "Trebuchet MS", sans-serif; }
+.f select { border-width: 1px; background-color: white; font: normal 1em "Trebuchet MS", sans-serif; }
+.f texarea { border-width: 1px; font: normal 1em "Trebuchet MS", sans-serif; }
+.lCol .f input, .lCol .f select, .lCol .f textarea {width: 100%;}
+.rCol .f textarea {width: 100%; height: 100px; }
+div.lCol .f textarea { height: 200px; border-width: 1px; font-size: normal; }
+div.rCol .button { float: right; margin-top: 15px; }
+.bx-yandex-search-form .textInput {width: 350px;}
+.bx-yandex-search-form p {margin-bottom: 0.34em}
+.bx-yandex-search-results {margin-bottom: 2em}
+.f label { display: block; margin-bottom: 4px; }
+.f .tip { float: right; width: 240px;}
+hr { margin-left: -230px; border-left: none; border-bottom-color: white; }
+span.required { color: red; }
+#recognized_address_str { font-weight: bold; }
+#other_address_str { color: #505050; }
+
+.addSubmit {
+	border-top: 1px solid #cacaca;
+	clear: both;
+	padding-bottom: 70px;
+}
+
+.addSubmit .container {
+	border-top: 1px solid #fff;
+	padding: 2em 0 0 245px;
+	width: auto;
+}
+
+.addSubmit p {
+	float: left;
+	width: 510px;
+}
+
+.addSubmit .btn {
+	float: right;
+	font-size: 1.85em;
+}
+
+span.chekboxResult { background: #a3a3a8 url(/images/label_grey_bg.gif) repeat-x top;}
+
+.lCol .chekboxes input { width: 20px;float:left;}
+.lCol .chekboxes label {}
+
+div#overshadow { position: relative; z-index: 2; }
+span.comment { font-size: 75%; color: #666; }

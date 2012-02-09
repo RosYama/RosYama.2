@@ -1,0 +1,133 @@
+.holes_list {
+	font-size: 0.92em;
+	list-style-type: none;
+	margin: 0 0 2em;
+}
+
+	.holes_list li {
+		background: #fff url(/images/prop_bg.gif) repeat-x bottom;
+		box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+		-webkit-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+		-moz-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+		float: left;
+		margin: 0 25px 30px 0;
+		overflow: hidden;
+		width: 225px;
+		position: relative;
+	}
+	
+	.holes_list li .del {
+		position: absolute;
+		top: 10px;
+		left: 190px;
+		display: inline-block;
+	}  
+	
+	.holes_list li .premoderate {
+		position: absolute;
+		top: 10px;
+		left: 160px;
+		display: inline-block;
+	}
+	
+	.holes_list li .premoderate img {
+		cursor: pointer;
+	}
+	
+	.holes_list .noMargin {
+		margin-right: 0;
+	}
+	
+		.holes_list .photo {
+			display: block;
+			height: 160px;
+			overflow: hidden;
+			text-align: center;
+		}
+
+		.holes_list .properties {
+			color: #888;
+			padding: 7px 14px 10px;
+		}
+			
+			.holes_list .service {
+				font-size: 1.08em;
+				color: #303030;
+				line-height: 1em;
+				overflow: hidden;
+				position: relative;
+				white-space: nowrap;
+			}
+			
+			.holes_list .service i {
+				background: url(/images/fog.png) repeat-y;
+				display: block;
+				height: 100%;
+				position: absolute;
+				right: -1px;
+				top: 0;
+				width: 18px;
+			}
+
+			.holes_list .social {
+				float: none;
+				color: #a0a0a0;
+				padding: 0;
+			}
+
+				.holes_list .social span { margin-right: 4px; }
+				.holes_list .status_span { font-weight: bold; font-size: 20px; }
+				.holes_list .state_fresh { color: inherit; }
+				.holes_list .state_inprogress { color: orange; }
+				.holes_list .state_gibddre { color: orange; } 
+				.holes_list .state_achtung { color: maroon; } 
+				.holes_list .state_prosecutor { color: maroon; }
+				.holes_list .state_fixed { color: green; }
+				.holes_list .social img { float: right; }
+
+				.holes_list .status_days { border-left: 1px solid #dadadb; }
+				.holes_list .status_days i { border-left: 1px solid #fff; font-style: normal; padding-left: 4px; }
+
+	.holes_list a, .holes_list a:hover {
+		text-decoration: none;
+	}
+
+
+
+.pagination a, .pagination span {
+	margin-right: 1em;
+}
+
+
+
+.holes_list:after, .holes_list li:after, .holes_list .service p:after, .holes_list .social:after {
+	content: ".";
+	display: block;
+	height: 0;
+	clear: both;
+	visibility: hidden;
+	overflow: hidden;
+}
+
+#delform {
+	background: #f0f0f0;
+	color: black;
+	position: absolute;
+	border: 1px solid #333;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	padding: 5px;
+	display: none;
+	z-index: 5;
+}
+
+#delform span {
+	font-size: 1.5em;
+	cursor: pointer;
+}
+
+div#ymapcontainer { border: 1px solid #cacaca; height: 213px; margin-bottom: 2em; width: 213px; }
+div#ymapcontainer_big { display: none; position: absolute; border: 10px solid white; border-top: 0; z-index: 5; background-color: white; }
+div#ymapcontainer_big span.close { color: #333; font-size: 1.5em; font-weight: bold; cursor: pointer; padding: 0 5px; }
+div#ymapcontainer_big span.close:hover {color:#edb209}
+div#ymapcontainer_big_map { height: 600px; width: 1000px; }
