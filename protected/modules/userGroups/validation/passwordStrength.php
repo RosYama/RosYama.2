@@ -111,7 +111,7 @@ if(".$condition.") {
 			case self::WEAK:
 				if ($this->user_id === UserGroupsUser::ROOT) {
 					$array['pattern'] = $this->medium_pattern;
-					$array['message'] = Yii::t('userGroupsModule.general', 'Root password must contain at least 2 digits and 2 letters and have at least 5 characters');
+					$array['message'] = 'Рутовый пароль должен состоять из 2х цифр, 2х букв и быть не меньше 5ти символов';
 				} else {
 					$array['pattern'] = $this->weak_pattern;
 					$array['message'] = 'Пароль должен быть больше 5ти символов';
@@ -119,11 +119,11 @@ if(".$condition.") {
 				break;
 			case self::MEDIUM:
 				$array['pattern'] = $this->medium_pattern;
-				$array['message'] = Yii::t('userGroupsModule.general', 'the password must contain at least 2 digits and 2 letters and have at least 5 characters');
+				$array['message'] = 'Пароль должен состоять из 2х цифр, 2х букв и быть не меньше 5ти символов';
 				break;
 			case self::STRONG:
 				$array['pattern'] = $this->strong_pattern;
-				$array['message'] = Yii::t('userGroupsModule.general', 'the password must contain at least 2 digits, 2 letters and a special character');
+				$array['message'] = 'Пароль должен состоять из 2х цифр, 2х букв и быть не меньше 5ти символов';
 				break;
 		}
 		return $array;
