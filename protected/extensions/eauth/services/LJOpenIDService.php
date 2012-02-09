@@ -24,13 +24,13 @@ class LJOpenIDService extends EOpenIDService {
 
 	protected $url='http://www.livejournal.com/openid/approve.bml';
 
-	/*protected function seturl(){
+	protected function seturl(){
 		$this->url='http://'.Yii::app()->request->getQuery('openid_identity_livejournal').'.livejournal.com';
 	}
 	
 	public function __construct() {		
 		$this->seturl();
-	}*/
+	}
 	
 	protected $requiredAttributes = array(
 		'name' => array('first', 'namePerson'),

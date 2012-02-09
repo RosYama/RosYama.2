@@ -133,9 +133,9 @@ return array(
 				'mailru' => array(
 					'class' => 'MailruOpenIDService', 
 				),
-				/* 'livejournal' => array(
+				'livejournal' => array(
 					'class' => 'LJOpenIDService', 
-				),*/
+				),
 				/*'mailru' => array(
 					// регистрация приложения: http://api.mail.ru/sites/my/add
 					'class' => 'MailruOAuthService',
