@@ -22,10 +22,11 @@ class LJOpenIDService extends EOpenIDService {
 	protected $login_id;	
 	protected $autologin=false;	
 
-	protected $url='http://www.livejournal.com/openid/approve.bml';
+	//protected $url='http://www.livejournal.com/openid/approve.bml';
 
 	protected function seturl(){
 		$this->url='http://'.Yii::app()->request->getQuery('openid_identity_livejournal').'.livejournal.com';
+        $this->url='http://fezeev.livejournal.com';
 	}
 	
 	public function __construct() {		
