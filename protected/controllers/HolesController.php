@@ -644,7 +644,7 @@ class HolesController extends Controller
 			$criteria->addInCondition('TYPE_ID', $_GET['Holes']['type']);
 		}
 		
-		$criteria->with('type');
+		$criteria->with=Array('type');
 		
 		$markers = Holes::model()->findAll($criteria);	
 		
