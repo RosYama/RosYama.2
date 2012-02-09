@@ -68,7 +68,8 @@ class MigrationController extends Controller
 		$users=BUser::model()->findAll();
 		foreach ($users as $user){
 			$group=BUserGroup::model()->find('USER_ID='.$user->ID);
-			if ($group && $group->GROUP_ID!=2){				
+			if ($group && $group->GROUP_ID!=2){	
+				$username='';
 				$user->LOGIN=$this->sql_valid($user->LOGIN);
 				$model=UserGroupsUser::model()->find("username='".$user->LOGIN."'");
 				if ($model) {
@@ -86,7 +87,7 @@ class MigrationController extends Controller
 				$model->attributes=Array(
 					'id'=>$user->ID,
 					'group_id'=>$group_id,
-					'username'=>isset($username) ? $username : $user->LOGIN,
+					'username'=>$username ? $username : $user->LOGIN,
 					'password'=>$user->PASSWORD,
 					'email'=>trim($user->EMAIL) ? trim($user->EMAIL) : null,
 					'name'=>$user->NAME,
