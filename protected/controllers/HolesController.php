@@ -625,10 +625,10 @@ class HolesController extends Controller
 	{
 		$criteria=new CDbCriteria;
 		/// Фильтрация по масштабу позиции карты
-		if (isset ($_GET['bottom'])) $criteria->addCondition('LATITUDE > '.(float)$_GET['bottom']);
-		if (isset ($_GET['left'])) $criteria->addCondition('LONGITUDE > '.(float)$_GET['left']);		
-		if (isset ($_GET['right'])) $criteria->addCondition('LONGITUDE < '.(float)$_GET['right']);		
-		if (isset ($_GET['top'])) $criteria->addCondition('LATITUDE < '.(float)$_GET['top']);		
+		if (isset ($_GET['bottom'])) $criteria->addCondition('LATITUDE > '.abs((float)$_GET['bottom']));
+		if (isset ($_GET['left'])) $criteria->addCondition('LONGITUDE > '.abs((float)$_GET['left']));		
+		if (isset ($_GET['right'])) $criteria->addCondition('LONGITUDE < '.abs((float)$_GET['right']));		
+		if (isset ($_GET['top'])) $criteria->addCondition('LATITUDE < '.abs((float)$_GET['top']));		
 		if (isset ($_GET['exclude_id']) && $_GET['exclude_id']) $criteria->addCondition('ID != '.(int)$_GET['exclude_id']); 
 		if (!Yii::app()->user->isModer) $criteria->compare('PREMODERATED',1);
 	

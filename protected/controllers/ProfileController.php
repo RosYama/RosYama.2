@@ -76,7 +76,7 @@ class ProfileController extends Controller
 			$miscModel->relProfile->ug_id = $id;			
 			// save the model
 			if ($miscModel->relProfile->save()) {	
-				Yii::app()->user->setFlash('user', Yii::t('userGroupsModule.general','Data Updated Successfully'));
+				Yii::app()->user->setFlash('user', 'Данные успешно обновлены');
 				//$this->redirect(Yii::app()->baseUrl . '/userGroups?_isAjax=1&u='.$passModel->username);
 			} else {
 				//Yii::app()->user->setFlash('user', Yii::t('userGroupsModule.general','An Error Occurred. Please try later.'));
@@ -100,13 +100,13 @@ class ProfileController extends Controller
 			
 			if ($model->validate()) {
 				if ($model->save()) {
-					Yii::app()->user->setFlash('user', Yii::t('userGroupsModule.general','Data Updated Successfully'));
+					Yii::app()->user->setFlash('user', 'Данные успешно обновлены');
 					$this->refresh();
 					//$this->renderPartial('update',array('miscModel'=>$miscModel,'passModel'=>$passModel, 'profiles' => $profile_models), false, true);
 					//$this->redirect(Array('/holes/personal'));
 					//$this->redirect(Yii::app()->baseUrl . '/userGroups?_isAjax=1&u='.$model->username);
 				} else
-					Yii::app()->user->setFlash('user', Yii::t('userGroupsModule.general','An Error Occurred. Please try later.'));
+					Yii::app()->user->setFlash('user', 'Произошла ошибка. Попробуйте позже.');
 			}
 		}		
 		$this->render('update',array('miscModel'=>$miscModel,'passModel'=>$passModel, 'profiles' => $profile_models), false, true);
@@ -192,7 +192,7 @@ class ProfileController extends Controller
 	{
 		$model=UserGroupsUser::model()->findByPk((int)$id);
 		if($model===null || ($model->relUserGroupsGroup->level > Yii::app()->user->level && !UserGroupsConfiguration::findRule('public_profiles')))
-			throw new CHttpException(404,Yii::t('userGroupsModule.general','The requested page does not exist.'));
+			throw new CHttpException(404,'The requested page does not exist.');
 		if ($scenario)
 			$model->setScenario($scenario);
 		return $model;

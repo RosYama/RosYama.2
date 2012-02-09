@@ -90,7 +90,7 @@ abstract class EOpenIDService extends EAuthServiceBase implements IAuthService {
 			}
 		} 
 		else {
-			$this->auth->identity = $this->url; //Setting identifier
+			$this->auth->identity = $this->url; //Setting identifier			
 			$this->auth->required = array(); //Try to get info from openid provider
 			foreach ($this->requiredAttributes as $attribute)
 				$this->auth->required[$attribute[0]] = $attribute[1];

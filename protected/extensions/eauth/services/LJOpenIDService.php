@@ -18,22 +18,22 @@ class LJOpenIDService extends EOpenIDService {
 	protected $name = 'livejournal';
 	protected $title = 'Livejournal';
 	protected $type = 'OpenID';
-	protected $jsArguments = array('popup' => array('width' => 900, 'height' => 550),'autologin'=>false);
+	protected $jsArguments = array('popup' => array('width' => 900, 'height' => 550));
 	protected $login_id;	
 	protected $autologin=false;	
 
-	protected $url='';
+	protected $url='http://www.livejournal.com/openid/approve.bml';
 
-	protected function seturl(){
-		$this->url=''.Yii::app()->request->getQuery('openid_identity_livejournal').'.livejournal.com';
+	/*protected function seturl(){
+		$this->url='http://'.Yii::app()->request->getQuery('openid_identity_livejournal').'.livejournal.com';
 	}
 	
 	public function __construct() {		
 		$this->seturl();
-	}
+	}*/
 	
 	protected $requiredAttributes = array(
-		//'name' => array('first', 'namePerson'),
+		'name' => array('first', 'namePerson'),
 		//'lastname' => array('last', 'namePerson'),
 		//'email' => array('email', 'contact/email'),
 		//'gender' => array('gender', 'person/gender'),
@@ -48,7 +48,7 @@ class LJOpenIDService extends EOpenIDService {
 		if (isset($this->attributes['birthDate']) && !empty($this->attributes['birthDate']))
 			$this->attributes['birthDate'] = strtotime($this->attributes['birthDate']);
 		$this->attributes['id']=strtolower($this->attributes['id']);
-		$this->attributes['external_auth_id']='OPENID#http://openid.mail.ru/login';		
+		$this->attributes['external_auth_id']='OPENID#http://www.livejournal.com/openid/server.bml';		
 		
 	}
 }

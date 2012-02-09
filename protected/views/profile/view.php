@@ -35,7 +35,7 @@
 	<?php endif; ?>
 	</div>
 	<div class="rCol">
-	<?php if($model->getParam('showContactForm')) : ?>
+	<?php if($model->email && $model->getParam('showContactForm')) : ?>
 		<?php if(Yii::app()->user->hasFlash('contact')): ?>
 	
 		<div class="flash-success">
