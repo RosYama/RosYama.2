@@ -13,12 +13,19 @@
  * $data['{link}']
  */
 ?>
-You requested a password reset.<br/>
-Your account will be disabled until you set a new password.<br/>
-To reactivate your account and set the new password please click on this link:<br/>
-<?php echo $data['{full_link}']; ?><br/>
-or you can go to this address<br/>
-<?php echo $data['{link}']; ?><br/>
-and insert in the form the following data<br/>
-username: <b><?php echo $data['{username}']; ?></b><br/>
-activation code: <b><?php echo $data['{activation_code}']; ?></b>
+
+Информационное сообщение сайта РосЯма<br/>
+------------------------------------------<br/>
+{username},<br/>
+<br/>
+Вы запросили ваши регистрационные данные.<br/>
+<br/>
+Ваша регистрационная информация:<br/>
+<br/>
+Login: <b><?php echo $data['{username}']; ?></b><br/>
+Код активации: <b><?php echo $data['{activation_code}']; ?></b><br/>
+<br/>
+Для смены пароля перейдите по следующей ссылке:<br/>
+<a href="<?php echo $data['{full_link}']; ?>"><?php echo $data['{full_link}']; ?></a><br/>
+<br/>
+Сообщение сгенерировано автоматически.<br/>

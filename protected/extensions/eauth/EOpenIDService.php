@@ -48,7 +48,6 @@ abstract class EOpenIDService extends EAuthServiceBase implements IAuthService {
 	 * @return boolean whether user was successfuly authenticated.
 	 */
 	public function authenticate() { 
-	//echo $this->url; die();
 		if (!empty($_REQUEST['openid_mode'])) {
 			switch ($_REQUEST['openid_mode']) {
 				case 'id_res':
@@ -90,7 +89,7 @@ abstract class EOpenIDService extends EAuthServiceBase implements IAuthService {
 			}
 		} 
 		else {
-			$this->auth->identity = $this->url; //Setting identifier			
+			$this->auth->identity = $this->url; //Setting identifier
 			$this->auth->required = array(); //Try to get info from openid provider
 			foreach ($this->requiredAttributes as $attribute)
 				$this->auth->required[$attribute[0]] = $attribute[1];

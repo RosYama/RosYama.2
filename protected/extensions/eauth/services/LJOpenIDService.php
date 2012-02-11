@@ -18,27 +18,24 @@ class LJOpenIDService extends EOpenIDService {
 	protected $name = 'livejournal';
 	protected $title = 'Livejournal';
 	protected $type = 'OpenID';
-	protected $jsArguments = array('popup' => array('width' => 900, 'height' => 550));
+	protected $jsArguments = array('popup' => array('width' => 900, 'height' => 550),'autologin'=>false);
 	protected $login_id;	
 	protected $autologin=false;	
 
-	protected $url='http://www.livejournal.com/openid/approve.bml';
+	protected $url='';
 
-    /*
 	protected function seturl(){
 		$this->url='http://'.Yii::app()->request->getQuery('openid_identity_livejournal').'.livejournal.com';
-        //$this->url='http://fezeev.livejournal.com/openid/approve.bml';
 	}
 	
 	public function __construct() {		
 		$this->seturl();
 	}
-    */
 	
 	protected $requiredAttributes = array(
 		'name' => array('first', 'namePerson'),
-		//'lastname' => array('last', 'namePerson'),
-		//'email' => array('email', 'contact/email'),
+		'lastname' => array('last', 'namePerson'),
+		'email' => array('email', 'contact/email'),
 		//'gender' => array('gender', 'person/gender'),
 		//'birthDate' => array('dob', 'birthDate'),  
 	);
