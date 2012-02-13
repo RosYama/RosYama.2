@@ -608,7 +608,7 @@ class XmlController extends Controller
 	{
 		if (Yii::app()->user->isGuest){
 			$model=new UserGroupsUser('login');
-			$loginmode='';
+			$loginmode='regular';
 			$model->username=Yii::app()->request->getQuery('login');
 			$model->password=Yii::app()->request->getQuery('password');
 			if (Yii::app()->request->getQuery('passwordhash')) {
