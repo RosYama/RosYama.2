@@ -189,7 +189,7 @@ class UserGroupsUser extends CActiveRecord
 	{
 		$group = UserGroupsGroup::model()->findByPk((int)$this->group_id);
 		if ($group->level >= Yii::app()->user->level)
-			$this->addError('level', Yii::t('userGroupsModule.admin','You cannot assign to a User a Group that has a Level equal or higher then the one you belong to'));
+			$this->addError('level', Yii::t('UserGroupsModule.admin','You cannot assign to a User a Group that has a Level equal or higher then the one you belong to'));
 	}
 
 	/**
@@ -200,11 +200,11 @@ class UserGroupsUser extends CActiveRecord
 	{
 		$user = self::model()->findByAttributes(array('username'=>$this->username));
 		if (empty($user))
-			$this->addError('username', Yii::t('userGroupsModule.recovery','Username not valid'));
+			$this->addError('username', Yii::t('UserGroupsModule.recovery','Username not valid'));
 		else if ((int)$user->status !== self::WAITING_ACTIVATION && (int)$user->status !== self::PASSWORD_CHANGE_REQUEST)
-			$this->addError('username', Yii::t('userGroupsModule.recovery','Username not valid'));
+			$this->addError('username', Yii::t('UserGroupsModule.recovery','Username not valid'));
 		else if ($user->activation_code !== $this->activation_code)
-			$this->addError('activation_code', Yii::t('userGroupsModule.recovery','Invalid activation code'));
+			$this->addError('activation_code', Yii::t('UserGroupsModule.recovery','Invalid activation code'));
 	}
 
 	/**
@@ -215,11 +215,11 @@ class UserGroupsUser extends CActiveRecord
 	{
 		$user = self::model()->findByAttributes(array('username'=>$this->username));
 		if (empty($user))
-			$this->addError('username', Yii::t('userGroupsModule.recovery','Username not valid'));
+			$this->addError('username', Yii::t('UserGroupsModule.recovery','Username not valid'));
 		else if ((int)$user->status !== self::ACTIVE)
-			$this->addError('username', Yii::t('userGroupsModule.recovery','Username not valid'));
+			$this->addError('username', Yii::t('UserGroupsModule.recovery','Username not valid'));
 		else if ($user->email !== $this->email)
-			$this->addError('email', Yii::t('userGroupsModule.recovery','Invalid email address'));
+			$this->addError('email', Yii::t('UserGroupsModule.recovery','Invalid email address'));
 	}
 
 	/**
@@ -232,12 +232,12 @@ class UserGroupsUser extends CActiveRecord
 			return true;
 		$user = self::model()->findByAttributes(array('username'=>$this->username));
 		if (empty($user))
-			$this->addError('username', Yii::t('userGroupsModule.recovery','Username not valid'));
+			$this->addError('username', Yii::t('UserGroupsModule.recovery','Username not valid'));
 		else if ((int)$user->status !== self::ACTIVE)
-			$this->addError('username', Yii::t('userGroupsModule.recovery','Username not valid'));
+			$this->addError('username', Yii::t('UserGroupsModule.recovery','Username not valid'));
 		else if ($user->answer !== $this->answer) {
 			$this->addError('question', $user->question);
-			$this->addError('answer', Yii::t('userGroupsModule.recovery','Input the right answer'));
+			$this->addError('answer', Yii::t('UserGroupsModule.recovery','Input the right answer'));
 		}
 	}
 
@@ -251,9 +251,9 @@ class UserGroupsUser extends CActiveRecord
 
 		$user = self::model()->findByAttributes(array('email'=>$this->email));
 		if (empty($user))
-			$this->addError('email', Yii::t('userGroupsModule.general','Invalid email address'));
+			$this->addError('email', Yii::t('UserGroupsModule.general','Invalid email address'));
 		else if ((int)$user->status !== self::WAITING_ACTIVATION)
-			$this->addError('email', Yii::t('userGroupsModule.general','Invalid email address'));
+			$this->addError('email', Yii::t('UserGroupsModule.general','Invalid email address'));
 	}
 
 	/**
@@ -291,7 +291,7 @@ class UserGroupsUser extends CActiveRecord
 		}		
 		
 		if ($db_password !== $user_password)
-			$this->addError('old_password', Yii::t('userGroupsModule.general','You didn\'t enter the correct password'));
+			$this->addError('old_password', Yii::t('UserGroupsModule.general','You didn\'t enter the correct password'));
 	}
 
 	/**
@@ -305,7 +305,7 @@ class UserGroupsUser extends CActiveRecord
 		if (Yii::app()->user->pbac('userGroups.user.admin') || Yii::app()->user->pbac('userGroups.admin.admin'))
 			return true;
 		else if ($this->id !== Yii::app()->user->id)
-			$this->addError($attribute, Yii::t('userGroupsModule.general','You are not allowed to update other accounts'));
+			$this->addError($attribute, Yii::t('UserGroupsModule.general','You are not allowed to update other accounts'));
 	}
 
 	/**
@@ -525,11 +525,11 @@ class UserGroupsUser extends CActiveRecord
 		// set the flash messages
 		if ($this->scenario === 'registration' || $this->scenario === 'recovery' || $this->scenario === 'swift_recovery') {
 			if ((int)$this->status === self::WAITING_ACTIVATION)
-				Yii::app()->user->setFlash('success', Yii::t('userGroupsModule.general','An email was sent with the instructions to activate your account to the address {email}.', array('{email}'=>$this->email)));
+				Yii::app()->user->setFlash('success', Yii::t('UserGroupsModule.general','An email was sent with the instructions to activate your account to the address {email}.', array('{email}'=>$this->email)));
 			else if ((int)$this->status === self::WAITING_APPROVAL)
-				Yii::app()->user->setFlash('success', Yii::t('userGroupsModule.general','Registration Complete. You now have to wait for an admin to approve your account.'));
+				Yii::app()->user->setFlash('success', Yii::t('UserGroupsModule.general','Registration Complete. You now have to wait for an admin to approve your account.'));
 			else
-				Yii::app()->user->setFlash('success', Yii::t('userGroupsModule.general','Registration Complete, you can now login.'));
+				Yii::app()->user->setFlash('success', Yii::t('UserGroupsModule.general','Registration Complete, you can now login.'));
 		}
 	}
 
@@ -604,19 +604,19 @@ class UserGroupsUser extends CActiveRecord
 			return true;
 		}
 		else if ($this->_identity->errorCode === UserGroupsIdentity::ERROR_USER_BANNED)
-			$this->addError('username',Yii::t('userGroupsModule.general','We are sorry, but your account is banned'));
+			$this->addError('username',Yii::t('UserGroupsModule.general','We are sorry, but your account is banned'));
 		else if ($this->_identity->errorCode === UserGroupsIdentity::ERROR_USER_INACTIVE)
-			$this->addError('username',Yii::t('userGroupsModule.general','Account not active').'<br/>'.CHtml::link(Yii::t('userGroupsModule.general','Activate the account'), array('/userGroups/user/activate')));
+			$this->addError('username',Yii::t('UserGroupsModule.general','Account not active').'<br/>'.CHtml::link(Yii::t('UserGroupsModule.general','Activate the account'), array('/userGroups/user/activate')));
 		else if ($this->_identity->errorCode === UserGroupsIdentity::ERROR_USER_APPROVAL)
-			$this->addError('username',Yii::t('userGroupsModule.general','This account is not approved yet'));
+			$this->addError('username',Yii::t('UserGroupsModule.general','This account is not approved yet'));
 		else if ($this->_identity->errorCode === UserGroupsIdentity::ERROR_PASSWORD_REQUESTED)
-			$this->addError('password',Yii::t('userGroupsModule.general','A password change has been requested.<br/>You won\'t be able to login until you change the password.'));
+			$this->addError('password',Yii::t('UserGroupsModule.general','A password change has been requested.<br/>You won\'t be able to login until you change the password.'));
 		else if ($this->_identity->errorCode === UserGroupsIdentity::ERROR_ACTIVATION_CODE)
-			$this->addError('activation_code',Yii::t('userGroupsModule.recovery','Invalid activation code'));
+			$this->addError('activation_code',Yii::t('UserGroupsModule.recovery','Invalid activation code'));
 		else if ($this->_identity->errorCode === UserGroupsIdentity::ERROR_USER_ACTIVE)
-			$this->addError('activation_code',Yii::t('userGroupsModule.recovery','This user cannot login in recovery mode.'));
+			$this->addError('activation_code',Yii::t('UserGroupsModule.recovery','This user cannot login in recovery mode.'));
 		else
-			$this->addError('password',Yii::t('userGroupsModule.recovery','wrong user or password.').'<br/>'.CHtml::link(Yii::t('userGroupsModule.recovery', 'Password Recovery'), array('/userGroups/user/passRequest')));
+			$this->addError('password',Yii::t('UserGroupsModule.recovery','wrong user or password.').'<br/>'.CHtml::link(Yii::t('UserGroupsModule.recovery', 'Password Recovery'), array('/userGroups/user/passRequest')));
 			return false;
 	}
 
