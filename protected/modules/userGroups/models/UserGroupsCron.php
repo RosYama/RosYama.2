@@ -61,11 +61,11 @@ class UsergroupsCron extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'name' => Yii::t('userGroupsModule.general','Name'),
-			'lapse' => Yii::t('userGroupsModule.admin','Lapse'),
-			'last_occurrence' => Yii::t('userGroupsModule.admin','Last Execution'),
-			'status' => Yii::t('userGroupsModule.admin','Status'),
-			'description' => Yii::t('userGroupsModule.admin','Description'),
+			'name' => Yii::t('UserGroupsModule.general','Name'),
+			'lapse' => Yii::t('UserGroupsModule.admin','Lapse'),
+			'last_occurrence' => Yii::t('UserGroupsModule.admin','Last Execution'),
+			'status' => Yii::t('UserGroupsModule.admin','Status'),
+			'description' => Yii::t('UserGroupsModule.admin','Description'),
 		);
 	}
 

@@ -162,7 +162,7 @@ class UserGroupsIdentity extends CUserIdentity
 		else {
 			$this->errorCode=self::ERROR_NONE;
 			$this->id = $model->id;
-			$this->name = Yii::t('userGroupsModule.general','Recovery Mode');
+			$this->name = Yii::t('UserGroupsModule.general','Recovery Mode');
 			$this->group = $model->group_id;
 			$this->groupName = $model->relUserGroupsGroup->groupname;
 			$this->level = $model->relUserGroupsGroup->level;

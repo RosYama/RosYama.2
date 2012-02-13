@@ -74,7 +74,7 @@ class UGCron {
 	{
 		// check if the class was initialized
 		if (!self::$object)
-			throw new CHttpException('500', Yii::t('userGroupsModule.cron','you didn\'t initialize the UGCron singleton'));
+			throw new CHttpException('500', Yii::t('UserGroupsModule.cron','you didn\'t initialize the UGCron singleton'));
 		
 		// check if the cronjob was already added
 		if (!isset(self::$object->status[$cronjob->name])) {
@@ -106,13 +106,13 @@ class UGCron {
 		// if string is true extract the corresponding string to the status
 		if ($string) {
 			if ($status === self::OK)
-				$return_value = Yii::t('userGroupsModule.cron', 'installed and running');
+				$return_value = Yii::t('UserGroupsModule.cron', 'installed and running');
 			elseif ($status === self::ERRORS)
 				$return_value = self::getErrors($cronName);
 			elseif ($status === self::NOT_INSTALLED)
-				$return_value =  Yii::t('userGroupsModule.cron', 'not installed');
+				$return_value =  Yii::t('UserGroupsModule.cron', 'not installed');
 			elseif ($status === self::NOT_INITIALIZED)
-				$return_value = Yii::t('userGroupsModule.cron','you didn\'t initialize the UGCron singleton');
+				$return_value = Yii::t('UserGroupsModule.cron','you didn\'t initialize the UGCron singleton');
 		} else
 			$return_value = $status;
 		
@@ -133,10 +133,10 @@ class UGCron {
 	public static function getErrors($cronName = NULL, $print = false)
 	{
 		if (!self::$object)
-			$return_value = Yii::t('userGroupsModule.cron','you didn\'t initialize the UGCron singleton');
+			$return_value = Yii::t('UserGroupsModule.cron','you didn\'t initialize the UGCron singleton');
 		elseif ($cronName)
 			$return_value = isset(self::$object->errors[$cronName]) ? self::$object->errors[$cronName] : 
-				Yii::t('userGroupsModule.cron', 'not installed');
+				Yii::t('UserGroupsModule.cron', 'not installed');
 		else
 			$return_value = self::$object->errors;
 		
@@ -156,10 +156,10 @@ class UGCron {
 	public static function getDescriptions($cronName = NULL, $print = false)
 	{
 		if (!self::$object)
-			$return_value = Yii::t('userGroupsModule.cron','you didn\'t initialize the UGCron singleton');
+			$return_value = Yii::t('UserGroupsModule.cron','you didn\'t initialize the UGCron singleton');
 		elseif ($cronName)
 			$return_value = isset(self::$object->descriptions[$cronName]) ? self::$object->descriptions[$cronName] : 
-				Yii::t('userGroupsModule.cron', 'No description found for the requested cron job');
+				Yii::t('UserGroupsModule.cron', 'No description found for the requested cron job');
 		else
 			$return_value = self::$object->descriptions;
 		
@@ -186,7 +186,7 @@ class UGCron {
 	{
 		// check if the class was initialized
 		if (!self::$object)
-			throw new CHttpException('500', Yii::t('userGroupsModule.cron','you didn\'t initialize the UGCron singleton'));
+			throw new CHttpException('500', Yii::t('UserGroupsModule.cron','you didn\'t initialize the UGCron singleton'));
 		// array containing the loaded cronTables
 		$loaded_cron_tables = array();
 		foreach (self::$object->crons as $cron) {
@@ -213,7 +213,7 @@ class UGCron {
 					$cItem->save();
 				}
 			} else
-				self::$object->errors = array_merge(self::$object->errors, array($cron->name => Yii::t('userGroupsModule.cron', 'Cronjob not installed')));
+				self::$object->errors = array_merge(self::$object->errors, array($cron->name => Yii::t('UserGroupsModule.cron', 'Cronjob not installed')));
 		}
 	}	
 }
@@ -239,19 +239,19 @@ abstract class UGCronJob {
 	{
 		// check the integrity
 		if (!$instance->cronTable || !is_string($instance->cronTable))
-			throw new CHttpException('500', Yii::t('userGroupsModule.cron', 'You didn\'t set the cron table name'));
+			throw new CHttpException('500', Yii::t('UserGroupsModule.cron', 'You didn\'t set the cron table name'));
 		$name = $instance->name;
 		if (!$name)
-			throw new CHttpException('500', Yii::t('userGroupsModule.cron', 'You have to provide a name for the cronjob'));
+			throw new CHttpException('500', Yii::t('UserGroupsModule.cron', 'You have to provide a name for the cronjob'));
 		$model = $instance->model;
 		if (!$model instanceof CActiveRecord)
-			return array($name => Yii::t('userGroupsModule.cron', 'the model provided is not an instance of CActiveRecord'));
+			return array($name => Yii::t('UserGroupsModule.cron', 'the model provided is not an instance of CActiveRecord'));
 		if (!$instance->criteria instanceof CDbCriteria)
-			return array($name => Yii::t('userGroupsModule.cron', 'the provided criteria are not an instance of CDbCriteria'));
+			return array($name => Yii::t('UserGroupsModule.cron', 'the provided criteria are not an instance of CDbCriteria'));
 		if ($instance->action !== self::DELETE && $instance->action !== self::UPDATE)
-			return array($name => Yii::t('userGroupsModule.cron', 'you didn\'t provide a valid action'));
+			return array($name => Yii::t('UserGroupsModule.cron', 'you didn\'t provide a valid action'));
 		elseif ($instance->action === self::UPDATE && (!is_array($instance->columns) || !count($instance->columns)))
-			return array($name => Yii::t('userGroupsModule.cron', 'you didn\'t set the columns to update'));
+			return array($name => Yii::t('UserGroupsModule.cron', 'you didn\'t set the columns to update'));
 			
 		// check if the cron is installed and install it if not
 		$cTable = new $instance->cronTable;
@@ -260,7 +260,7 @@ abstract class UGCronJob {
 		$cItem = $cTable->findByAttributes($attributes);
 		if ($cItem === NULL)
 			if (!$this->installCron($cTable, $name, $instance->lapse))
-				return array($name => Yii::t('userGroupsModule.cron', 'could not install the module. Lapse must be an integer'));
+				return array($name => Yii::t('UserGroupsModule.cron', 'could not install the module. Lapse must be an integer'));
 		
 		
 		return $model;	
@@ -368,7 +368,7 @@ class UGCJGarbageCollection extends UGCronJob {
 	 */
 	protected function getDescription()
 	{
-		return Yii::t('userGroupsModule.cron', 'delete users who have not been activated for more then 7 days');
+		return Yii::t('UserGroupsModule.cron', 'delete users who have not been activated for more then 7 days');
 	}
 	
 	/**
@@ -442,7 +442,7 @@ class UGCJUnban extends UGCronJob {
 	 */
 	protected function getDescription()
 	{
-		return Yii::t('userGroupsModule.cron', 'reactivate users whose ban period is over');
+		return Yii::t('UserGroupsModule.cron', 'reactivate users whose ban period is over');
 	}
 	
 	/**

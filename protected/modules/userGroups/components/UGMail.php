@@ -208,7 +208,7 @@ class UGMailActivation implements UGMailMessage {
 	 */
 	public function mailSubject($data)
 	{
-		return Yii::t('userGroupsModule.mail', 'account activation');
+		return Yii::t('UserGroupsModule.mail', 'account activation');
 	}
 
 	/**
@@ -227,7 +227,7 @@ class UGMailActivation implements UGMailMessage {
 	 */
 	public function mailSuccess($data)
 	{
-		return Yii::t('userGroupsModule.general','The activation email was successfully sent to {email}', $data);
+		return Yii::t('UserGroupsModule.general','The activation email was successfully sent to {email}', $data);
 	}
 
 	/**
@@ -235,7 +235,7 @@ class UGMailActivation implements UGMailMessage {
 	 */
 	public function mailError($data)
 	{
-		return Yii::t('userGroupsModule.general','Impossible to send email to the address {email}', $data);
+		return Yii::t('UserGroupsModule.general','Impossible to send email to the address {email}', $data);
 	}
 }
 
@@ -262,7 +262,7 @@ class UGMailPassReset implements UGMailMessage {
 	 */
 	public function mailSubject($data)
 	{
-		return Yii::t('userGroupsModule.mail', 'password reset request');
+		return Yii::t('UserGroupsModule.mail', 'password reset request');
 	}
 
 	/**
@@ -281,7 +281,7 @@ class UGMailPassReset implements UGMailMessage {
 	 */
 	public function mailSuccess($data)
 	{
-		return Yii::t('userGroupsModule.general','An email containing the instructions to reset your password has been sent to your email address: {email}', $data);
+		return Yii::t('UserGroupsModule.general','An email containing the instructions to reset your password has been sent to your email address: {email}', $data);
 	}
 
 	/**
@@ -289,7 +289,7 @@ class UGMailPassReset implements UGMailMessage {
 	 */
 	public function mailError($data)
 	{
-		return Yii::t('userGroupsModule.general','Impossible to send email to the address {email}', $data);
+		return Yii::t('UserGroupsModule.general','Impossible to send email to the address {email}', $data);
 	}
 }
 
@@ -316,7 +316,7 @@ class UGMailInvitation implements UGMailMessage {
 	 */
 	public function mailSubject($data)
 	{
-		return Yii::t('userGroupsModule.mail', 'invitation to {website}', $data);
+		return Yii::t('UserGroupsModule.mail', 'invitation to {website}', $data);
 	}
 
 	/**
@@ -334,7 +334,7 @@ class UGMailInvitation implements UGMailMessage {
 	 */
 	public function mailSuccess($data)
 	{
-		return Yii::t('userGroupsModule.general','An invitation email was sent to the address {email}', $data);
+		return Yii::t('UserGroupsModule.general','An invitation email was sent to the address {email}', $data);
 	}
 
 	/**
@@ -342,6 +342,6 @@ class UGMailInvitation implements UGMailMessage {
 	 */
 	public function mailError($data)
 	{
-		return Yii::t('userGroupsModule.general','Impossible to send email to the address {email}', $data);
+		return Yii::t('UserGroupsModule.general','Impossible to send email to the address {email}', $data);
 	}
 }

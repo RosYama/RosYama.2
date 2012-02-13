@@ -105,11 +105,11 @@ class UserGroupsAccess extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'element' => Yii::t('userGroupsModule.admin','Element'),
+			'element' => Yii::t('UserGroupsModule.admin','Element'),
 			'element_id' => 'Element ID',
-			'module' => Yii::t('userGroupsModule.admin','Module'),
-			'controller' => Yii::t('userGroupsModule.admin','Controller'),
-			'permission' => Yii::t('userGroupsModule.admin','Permission'),
+			'module' => Yii::t('UserGroupsModule.admin','Module'),
+			'controller' => Yii::t('UserGroupsModule.admin','Controller'),
+			'permission' => Yii::t('UserGroupsModule.admin','Permission'),
 		);
 	}
 	
@@ -244,7 +244,7 @@ class UserGroupsAccess extends CActiveRecord
 			if (is_array(self::$_uRules)) {
 				// copy the user rules inside the rules variable. Used to check later what permissions are setted
 				$rules = self::$_uRules;
-				$checkmark_text = Yii::t('userGroupsModule.admin', 'Permission granted from Group');
+				$checkmark_text = Yii::t('UserGroupsModule.admin', 'Permission granted from Group');
 				if (isset(self::$_gRules[self::$_moduleName][self::$_controllerName][$mode]))
 					$checkmark = CHtml::image(Yii::app()->getAssetManager()->publish(Yii::getPathOfAlias('userGroups.img')) . '/checkmark.png', $checkmark_text, array('title' => $checkmark_text ));
 				else
@@ -255,12 +255,12 @@ class UserGroupsAccess extends CActiveRecord
 			}
 			// extract the text
 			if ($permissionControl === NULL) {
-				$info_text = Yii::t('userGroupsModule.admin','it was not possible to get the value of permissionControl inside your controller. Check your Controller.');
+				$info_text = Yii::t('UserGroupsModule.admin','it was not possible to get the value of permissionControl inside your controller. Check your Controller.');
 				$r = 'black_';
 			} elseif ($permissionControl[$mode]) {
-				$info_text = Yii::t('userGroupsModule.cont_description', ''.$permissionControl[$mode]);
+				$info_text = Yii::t('UserGroupsModule.cont_description', ''.$permissionControl[$mode]);
 			} else {
-				$info_text = Yii::t('userGroupsModule.admin','no tooltip provided');
+				$info_text = Yii::t('UserGroupsModule.admin','no tooltip provided');
 				$r = 'def_';
 			}
 			return CHtml::checkBox('UserGroupsAccess[access]['.self::$_moduleName.'.'.self::$_controllerName.'.'.$mode.']', isset($rules[self::$_moduleName][self::$_controllerName][$mode])) . 

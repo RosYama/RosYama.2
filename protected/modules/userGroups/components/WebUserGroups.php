@@ -69,7 +69,7 @@ class WebUserGroups extends CWebUser
 	            if($this->allowAutoLogin)
 	                $this->saveToCookie($duration);
 	            else
-	                throw new CException(Yii::t('userGroupsModule.admin','{class}.allowAutoLogin must be set true in order to use cookie-based authentication.',
+	                throw new CException(Yii::t('UserGroupsModule.admin','{class}.allowAutoLogin must be set true in order to use cookie-based authentication.',
 	                    array('{class}'=>get_class($this))));
 	        }
 
@@ -297,7 +297,7 @@ class WebUserGroups extends CWebUser
 	        $request->redirect($url);
 	    }
 	    else
-	        throw new CHttpException(403,Yii::t('userGroupsModule.general','Login Required'));
+	        throw new CHttpException(403,Yii::t('UserGroupsModule.general','Login Required'));
 	}
 
 	/**

@@ -64,19 +64,19 @@ class UserGroupsConfiguration extends CActiveRecord
 		if ($this->rule === 'user_registration_group') {
 			$group = UserGroupsGroup::model()->findByPk((int)$this->value);
 			if ($group === NULL)
-				$this->addError('value',Yii::t('userGroupsModule.admin','This group does not exist'));
+				$this->addError('value',Yii::t('UserGroupsModule.admin','This group does not exist'));
 			elseif ((int)$group->level >= (int)Yii::app()->user->level)
-				$this->addError('value',Yii::t('userGroupsModule.admin','You cannot set this value to a level equal or higher then your own'));
+				$this->addError('value',Yii::t('UserGroupsModule.admin','You cannot set this value to a level equal or higher then your own'));
 		}
 		// check valid input for bool options, const and others
 		if ($this->options === 'BOOL' && $this->value !== 'FALSE' && $this->value !== 'TRUE')
-			$this->addError('value',Yii::t('userGroupsModule.admin','invalid value'));
+			$this->addError('value',Yii::t('UserGroupsModule.admin','invalid value'));
 		elseif ($this->options === 'CONST' && $this->scenario !== 'module_update')
-			$this->addError('value',Yii::t('userGroupsModule.admin','You cannot change constant values'));
+			$this->addError('value',Yii::t('UserGroupsModule.admin','You cannot change constant values'));
 		elseif (strpos($this->options, 'a:') === 0) {
 			$options_array = unserialize($this->options);
 			if (!isset($options_array[$this->value]))
-				$this->addError('value',Yii::t('userGroupsModule.admin','invalid value'));
+				$this->addError('value',Yii::t('UserGroupsModule.admin','invalid value'));
 		}
 	}
 
@@ -97,11 +97,11 @@ class UserGroupsConfiguration extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'rule' => Yii::t('userGroupsModule.admin','Setting'),
-			'value' => Yii::t('userGroupsModule.admin','Value'),
-			'options' => Yii::t('userGroupsModule.admin','Options'),
-			'description' => Yii::t('userGroupsModule.admin','Description'),
-			'render' => Yii::t('userGroupsModule.admin','Value'),
+			'rule' => Yii::t('UserGroupsModule.admin','Setting'),
+			'value' => Yii::t('UserGroupsModule.admin','Value'),
+			'options' => Yii::t('UserGroupsModule.admin','Options'),
+			'description' => Yii::t('UserGroupsModule.admin','Description'),
+			'render' => Yii::t('UserGroupsModule.admin','Value'),
 		);
 	}
 
@@ -154,7 +154,7 @@ class UserGroupsConfiguration extends CActiveRecord
 
 
 		if (Yii::app()->controller->module instanceof UserGroupsModule)
-			$this->description = Yii::t('userGroupsModule.conf_description', ''.$this->description);
+			$this->description = Yii::t('UserGroupsModule.conf_description', ''.$this->description);
 
 		parent::afterFind();
 	}

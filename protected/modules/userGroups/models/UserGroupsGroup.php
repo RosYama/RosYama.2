@@ -66,9 +66,9 @@ class UserGroupsGroup extends CActiveRecord
 		if ($this->scenario === 'installation')
 			return true;
 		if ($this->$attribute >= Yii::app()->user->level)
-			$this->addError('level', Yii::t('userGroupsModule.admin','You cannot set a Group Level equal or superior to your own'));
+			$this->addError('level', Yii::t('UserGroupsModule.admin','You cannot set a Group Level equal or superior to your own'));
 		else if ($this->$attribute >= UserGroupsUser::ROOT_LEVEL)
-			$this->addError('level', Yii::t('userGroupsModule.admin','You cannot set a Group Level equal or higher then Root'));
+			$this->addError('level', Yii::t('UserGroupsModule.admin','You cannot set a Group Level equal or higher then Root'));
 	}
 	
 	/**
@@ -89,8 +89,8 @@ class UserGroupsGroup extends CActiveRecord
 	{
 		return array(
 			'id' => 'ID',
-			'groupname' => Yii::t('userGroupsModule.general','Group Name'),
-			'level' => Yii::t('userGroupsModule.general', 'Level'),
+			'groupname' => Yii::t('UserGroupsModule.general','Group Name'),
+			'level' => Yii::t('UserGroupsModule.general', 'Level'),
 		);
 	}
 
