@@ -625,8 +625,14 @@ class HolesController extends Controller
 	{
 		$criteria=new CDbCriteria;
 		/// Фильтрация по масштабу позиции карты
-		if (isset ($_GET['bottom'])) $criteria->addCondition('LATITUDE > '.abs((float)$_GET['bottom']));
-		if (isset ($_GET['left'])) $criteria->addCondition('LONGITUDE > '.abs((float)$_GET['left']));		
+		
+		if (isset($_GET['zoom'])) $ZOOM=$_GET['zoom'];
+		else $ZOOM=14;
+		
+		if ($ZOOM < 3) { $_GET['left']=-190; $_GET['right']=190;}
+		
+		if (isset ($_GET['bottom'])) $criteria->addCondition('LATITUDE > '.(float)$_GET['bottom']);
+		if (isset ($_GET['left'])) $criteria->addCondition('LONGITUDE > '.(float)$_GET['left']);	 	
 		if (isset ($_GET['right'])) $criteria->addCondition('LONGITUDE < '.abs((float)$_GET['right']));		
 		if (isset ($_GET['top'])) $criteria->addCondition('LATITUDE < '.abs((float)$_GET['top']));		
 		if (isset ($_GET['exclude_id']) && $_GET['exclude_id']) $criteria->addCondition('ID != '.(int)$_GET['exclude_id']); 
@@ -648,8 +654,7 @@ class HolesController extends Controller
 		
 		$markers = Holes::model()->findAll($criteria);	
 		
-		if (isset($_GET['zoom'])) $ZOOM=$_GET['zoom'];
-		else $ZOOM=14;
+
 		
 		if ($ZOOM >=14) $ZOOM=30;
 				
