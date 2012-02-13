@@ -25,7 +25,7 @@ class LJOpenIDService extends EOpenIDService {
 	protected $url='';
 
 	protected function seturl(){
-		$this->url='http://'.Yii::app()->request->getQuery('openid_identity_livejournal').'.livejournal.com';
+		$this->url='http://'.Yii::app()->request->getQuery('openid_identity_livejournal').'.livejournal.com'; 
 	}
 	
 	public function __construct() {		

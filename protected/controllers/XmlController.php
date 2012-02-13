@@ -68,57 +68,57 @@ class XmlController extends Controller
 		$tags=Array();
 		if (!$model->ID){
 		$tags[]=CHtml::tag('sort', array (), false, false);
-			$tags[]=CHtml::tag('item', array ('code'=>$data->sort->orderBy), $data->sort->descTag, true);
+			$tags[]=CHtml::tag('item', array ('code'=>$data->sort->orderBy), CHtml::encode($data->sort->descTag), true);
 		$tags[]=CHtml::closeTag('sort');
 		$tags[]=CHtml::tag('filter', array (), false, false);
-			$tags[]=CHtml::tag('item', array ('code'=>'PREMODERATED'), $model->PREMODERATED, true);
-			$tags[]=CHtml::tag('item', array ('code'=>'filter_rf_subject_id'), $model->ADR_SUBJECTRF, true);
-			$tags[]=CHtml::tag('item', array ('code'=>'filter_city'), $model->ADR_CITY, true);
-			$tags[]=CHtml::tag('item', array ('code'=>'filter_status'), $model->STATE, true);
-			$tags[]=CHtml::tag('item', array ('code'=>'filter_type'), $model->type_alias, true);			
+			$tags[]=CHtml::tag('item', array ('code'=>'PREMODERATED'), CHtml::encode($model->PREMODERATED), true);
+			$tags[]=CHtml::tag('item', array ('code'=>'filter_rf_subject_id'), CHtml::encode($model->ADR_SUBJECTRF), true);
+			$tags[]=CHtml::tag('item', array ('code'=>'filter_city'), CHtml::encode($model->ADR_CITY), true);
+			$tags[]=CHtml::tag('item', array ('code'=>'filter_status'), CHtml::encode($model->STATE), true);
+			$tags[]=CHtml::tag('item', array ('code'=>'filter_type'), CHtml::encode($model->type_alias), true);			
 		$tags[]=CHtml::closeTag('filter');
 		$tags[]=CHtml::tag('navigation', array (), false, false);
-			$tags[]=CHtml::tag('item', array ('code'=>'limit'), $model->limit, true);
-			$tags[]=CHtml::tag('item', array ('code'=>'offset'), $offset/$model->limit, true);
+			$tags[]=CHtml::tag('item', array ('code'=>'limit'), CHtml::encode($model->limit), true);
+			$tags[]=CHtml::tag('item', array ('code'=>'offset'), CHtml::encode($offset/$model->limit), true);
 		$tags[]=CHtml::closeTag('navigation');
 		}
 		$tags[]=CHtml::tag('defectslist', array (), false, false);
 			foreach ($data->data as $hole){
 				$tags[]=CHtml::tag('hole', array ('id'=>$hole->ID), false, false);
-					$tags[]=CHtml::tag('id', array (), $hole->ID, true);
+					$tags[]=CHtml::tag('id', array (), CHtml::encode($hole->ID), true);
 					$tags[]=CHtml::tag('username', array ('full'=>$hole->user->Fullname), false, false);
-						$tags[]=CHtml::tag('name', array (), $hole->user->name, true);
-						$tags[]=CHtml::tag('secondname', array (), $hole->user->second_name, true);
-						$tags[]=CHtml::tag('lastname', array (), $hole->user->last_name, true);
+						$tags[]=CHtml::tag('name', array (), CHtml::encode($hole->user->name), true);
+						$tags[]=CHtml::tag('secondname', array (), CHtml::encode($hole->user->second_name), true);
+						$tags[]=CHtml::tag('lastname', array (), CHtml::encode($hole->user->last_name), true);
 					$tags[]=CHtml::closeTag('username');
-					$tags[]=CHtml::tag('latitude', array (), $hole->LATITUDE, true);
-					$tags[]=CHtml::tag('longitude', array (), $hole->LONGITUDE, true);
-					$tags[]=CHtml::tag('address', array ('city'=>$hole->ADR_CITY, 'subjectrf'=>$hole->ADR_SUBJECTRF), $hole->ADDRESS, true);
-					$tags[]=CHtml::tag('state', array ('code'=>$hole->STATE), $hole->StateName, true);
-					$tags[]=CHtml::tag('type', array ('code'=>$hole->type->alias), $hole->type->name, true);
-					$tags[]=CHtml::tag('datecreated', array ('readable'=>date('d.m.Y',$hole->DATE_CREATED)), $hole->DATE_CREATED, true);
-					$tags[]=CHtml::tag('datesent', array ('readable'=>$hole->DATE_SENT ? date('d.m.Y',$hole->DATE_SENT) : ''), $hole->DATE_SENT, true);
-					$tags[]=CHtml::tag('datestatus', array ('readable'=>$hole->DATE_STATUS ? date('d.m.Y',$hole->DATE_STATUS) : ''), $hole->DATE_STATUS, true);
-					$tags[]=CHtml::tag('commentfresh', array (), $hole->COMMENT1, true);
-					$tags[]=CHtml::tag('commentfixed', array (), $hole->COMMENT2, true);
+					$tags[]=CHtml::tag('latitude', array (), CHtml::encode($hole->LATITUDE), true);
+					$tags[]=CHtml::tag('longitude', array (), CHtml::encode($hole->LONGITUDE), true);
+					$tags[]=CHtml::tag('address', array ('city'=>$hole->ADR_CITY, 'subjectrf'=>$hole->ADR_SUBJECTRF), CHtml::encode($hole->ADDRESS), true);
+					$tags[]=CHtml::tag('state', array ('code'=>$hole->STATE), CHtml::encode($hole->StateName), true);
+					$tags[]=CHtml::tag('type', array ('code'=>$hole->type->alias), CHtml::encode($hole->type->name), true);
+					$tags[]=CHtml::tag('datecreated', array ('readable'=>date('d.m.Y',$hole->DATE_CREATED)), CHtml::encode($hole->DATE_CREATED), true);
+					$tags[]=CHtml::tag('datesent', array ('readable'=>$hole->DATE_SENT ? date('d.m.Y',$hole->DATE_SENT) : ''), CHtml::encode($hole->DATE_SENT), true);
+					$tags[]=CHtml::tag('datestatus', array ('readable'=>$hole->DATE_STATUS ? date('d.m.Y',$hole->DATE_STATUS) : ''), CHtml::encode($hole->DATE_STATUS), true);
+					$tags[]=CHtml::tag('commentfresh', array (), CHtml::encode($hole->COMMENT1), true);
+					$tags[]=CHtml::tag('commentfixed', array (), CHtml::encode($hole->COMMENT2), true);
 					$tags[]=CHtml::tag('commentgibddre', array (), false, true);
 					$tags[]=CHtml::tag('pictures', array (), false, false);
 						$tags[]=CHtml::tag('original', array (), false, false);
 							$tags[]=CHtml::tag('fresh', array (), false, false);
 								foreach ($hole->pictures_fresh as $pict){
-								$tags[]=CHtml::tag('src', array ('id'=>$pict->id), $pict->original, true);
+								$tags[]=CHtml::tag('src', array ('id'=>$pict->id), CHtml::encode($pict->original), true);
 								}
 							$tags[]=CHtml::closeTag('fresh');
 							$tags[]=CHtml::tag('fixed', array (), false, false);
 								foreach ($hole->pictures_fixed as $pict){
-								$tags[]=CHtml::tag('src', array ('id'=>$pict->id), $pict->original, true);
+								$tags[]=CHtml::tag('src', array ('id'=>$pict->id), CHtml::encode($pict->original), true);
 								}								
 							$tags[]=CHtml::closeTag('fixed');
 							$tags[]=CHtml::tag('gibddreply', array (), false, false);								
 								foreach ($hole->requests_gibdd as $request)
 									foreach ($request->answers as $answer)
 										foreach ($answer->files_img as $pict){
-										$tags[]=CHtml::tag('src', array ('id'=>$pict->id), $answer->filesFolder.'/'.$pict->file_name, true);
+										$tags[]=CHtml::tag('src', array ('id'=>$pict->id), CHtml::encode($answer->filesFolder.'/'.$pict->file_name), true);
 										}
 							$tags[]=CHtml::closeTag('gibddreply');
 						$tags[]=CHtml::closeTag('original');
@@ -126,19 +126,19 @@ class XmlController extends Controller
 						$tags[]=CHtml::tag('medium', array (), false, false);
 							$tags[]=CHtml::tag('fresh', array (), false, false);
 								foreach ($hole->pictures_fresh as $pict){
-								$tags[]=CHtml::tag('src', array ('id'=>$pict->id), $pict->medium, true);
+								$tags[]=CHtml::tag('src', array ('id'=>$pict->id), CHtml::encode($pict->medium), true);
 								}
 							$tags[]=CHtml::closeTag('fresh');
 							$tags[]=CHtml::tag('fixed', array (), false, false);
 								foreach ($hole->pictures_fixed as $pict){
-								$tags[]=CHtml::tag('src', array ('id'=>$pict->id), $pict->medium, true);
+								$tags[]=CHtml::tag('src', array ('id'=>$pict->id), CHtml::encode($pict->medium), true);
 								}								
 							$tags[]=CHtml::closeTag('fixed');
 							$tags[]=CHtml::tag('gibddreply', array (), false, false);								
 								foreach ($hole->requests_gibdd as $request)
 									foreach ($request->answers as $answer)
 										foreach ($answer->files_img as $pict){
-										$tags[]=CHtml::tag('src', array ('id'=>$pict->id), $answer->filesFolder.'/'.$pict->file_name, true);
+										$tags[]=CHtml::tag('src', array ('id'=>$pict->id), CHtml::encode($answer->filesFolder.'/'.$pict->file_name), true);
 										}
 							$tags[]=CHtml::closeTag('gibddreply');
 						$tags[]=CHtml::closeTag('medium');
@@ -146,19 +146,19 @@ class XmlController extends Controller
 						$tags[]=CHtml::tag('small', array (), false, false);
 							$tags[]=CHtml::tag('fresh', array (), false, false);
 								foreach ($hole->pictures_fresh as $pict){
-								$tags[]=CHtml::tag('src', array ('id'=>$pict->id), $pict->small, true);
+								$tags[]=CHtml::tag('src', array ('id'=>$pict->id), CHtml::encode($pict->small), true);
 								}
 							$tags[]=CHtml::closeTag('fresh');
 							$tags[]=CHtml::tag('fixed', array (), false, false);
 								foreach ($hole->pictures_fixed as $pict){
-								$tags[]=CHtml::tag('src', array ('id'=>$pict->id), $pict->small, true);
+								$tags[]=CHtml::tag('src', array ('id'=>$pict->id), CHtml::encode($pict->small), true);
 								}								
 							$tags[]=CHtml::closeTag('fixed');
 							$tags[]=CHtml::tag('gibddreply', array (), false, false);								
 								foreach ($hole->requests_gibdd as $request)
 									foreach ($request->answers as $answer)
 										foreach ($answer->files_img as $pict){
-										$tags[]=CHtml::tag('src', array ('id'=>$pict->id), $answer->filesFolder.'/thumbs/'.$pict->file_name, true);
+										$tags[]=CHtml::tag('src', array ('id'=>$pict->id), CHtml::encode($answer->filesFolder.'/thumbs/'.$pict->file_name), true);
 										}
 							$tags[]=CHtml::closeTag('gibddreply');
 						$tags[]=CHtml::closeTag('small');
@@ -178,7 +178,7 @@ class XmlController extends Controller
 		$tags=Array();
 		$tags[]=CHtml::tag('regionslist', array (), false, false);
 		foreach ($model as $item){
-			$tags[]=CHtml::tag('region', array ('id'=>$item->id), $item->name_full, true);
+			$tags[]=CHtml::tag('region', array ('id'=>$item->id), CHtml::encode($item->name_full), true);
 		}
 		$tags[]=CHtml::closeTag('regionslist');
 		$this->renderXml($tags);
@@ -190,11 +190,11 @@ class XmlController extends Controller
 		$user=$this->auth();
 		$tags[]=CHtml::tag('user', array ('id'=>$user->id), false, false);
 			$tags[]=CHtml::tag('username', array ('full'=>$user->Fullname), false, false);
-				$tags[]=CHtml::tag('name', array (), $user->userModel->name, true);
-				$tags[]=CHtml::tag('secondname', array (), $user->userModel->second_name, true);
-				$tags[]=CHtml::tag('lastname', array (), $user->userModel->last_name, true);	
+				$tags[]=CHtml::tag('name', array (), CHtml::encode($user->userModel->name), true);
+				$tags[]=CHtml::tag('secondname', array (), CHtml::encode($user->userModel->second_name), true);
+				$tags[]=CHtml::tag('lastname', array (), CHtml::encode($user->userModel->last_name), true);	
 			$tags[]=CHtml::closeTag('username'); 		
-			$tags[]=CHtml::tag('passwordhash', array (), $user->userModel->password, true);
+			$tags[]=CHtml::tag('passwordhash', array (), CHtml::encode($user->userModel->password), true);
 		$tags[]=CHtml::closeTag('user'); 
 		$this->renderXml($tags);
 		
@@ -426,8 +426,8 @@ class XmlController extends Controller
 			{
 				if ($model->gibdd) {
 					$tags[]=CHtml::tag('gibddhead', array ('subjectid'=>$model->gibdd->subject->id, 'id'=>$model->gibdd->id), false, false);
-						$tags[]=CHtml::tag('nominative', array ('post'=>$model->gibdd->post, 'gibdd'=>$model->gibdd->gibdd_name), $model->gibdd->fio, true);
-						$tags[]=CHtml::tag('nominative', array ('dative'=>$model->gibdd->post_dative), $model->gibdd->fio_dative, true);
+						$tags[]=CHtml::tag('nominative', array ('post'=>$model->gibdd->post, 'gibdd'=>$model->gibdd->gibdd_name), CHtml::encode($model->gibdd->fio), true);
+						$tags[]=CHtml::tag('nominative', array ('dative'=>$model->gibdd->post_dative), CHtml::encode($model->gibdd->fio_dative), true);
 					$tags[]=CHtml::closeTag('gibddhead');
 				}
 				else $this->error('UNAPPROPRIATE_METHOD'); 
@@ -521,16 +521,16 @@ class XmlController extends Controller
 		$tags=Array();
 		if ($model->gibdd){
 			$tags[]=CHtml::tag('gibdd', array ('type'=>'regional', 'subjectid'=>$model->id, 'id'=>$model->gibdd->id), false, false);
-				$tags[]=CHtml::tag('gibdditem', array ('address'=>$model->gibdd->address, 'tel'=>$model->gibdd->tel_degurn), $model->gibdd->gibdd_name, true);
-				$tags[]=CHtml::tag('nominative', array ('post'=>$model->gibdd->post, 'gibdd'=>$model->gibdd->gibdd_name), $model->gibdd->fio, true);
-				$tags[]=CHtml::tag('nominative', array ('dative'=>$model->gibdd->post_dative), $model->gibdd->fio_dative, true);
+				$tags[]=CHtml::tag('gibdditem', array ('address'=>$model->gibdd->address, 'tel'=>$model->gibdd->tel_degurn), CHtml::encode($model->gibdd->gibdd_name), true);
+				$tags[]=CHtml::tag('nominative', array ('post'=>$model->gibdd->post, 'gibdd'=>$model->gibdd->gibdd_name), CHtml::encode($model->gibdd->fio), true);
+				$tags[]=CHtml::tag('nominative', array ('dative'=>$model->gibdd->post_dative), CHtml::encode($model->gibdd->fio_dative), true);
 			$tags[]=CHtml::closeTag('gibdd');		
 		}
 		foreach ($model->gibdd_local as $gibdd){
 			$tags[]=CHtml::tag('gibdd', array ('type'=>'local', 'subjectid'=>$model->id, 'id'=>$gibdd->id), false, false);
-				$tags[]=CHtml::tag('gibdditem', array ('address'=>$gibdd->address, 'tel'=>$gibdd->tel_degurn, 'lat'=>$gibdd->lat, 'lng'=>$gibdd->lng), $gibdd->gibdd_name, true);
-				$tags[]=CHtml::tag('nominative', array ('post'=>$gibdd->post, 'gibdd'=>$gibdd->gibdd_name), $gibdd->fio, true);
-				$tags[]=CHtml::tag('nominative', array ('dative'=>$gibdd->post_dative), $gibdd->fio_dative, true);
+				$tags[]=CHtml::tag('gibdditem', array ('address'=>$gibdd->address, 'tel'=>$gibdd->tel_degurn, 'lat'=>$gibdd->lat, 'lng'=>$gibdd->lng), CHtml::encode($gibdd->gibdd_name), true);
+				$tags[]=CHtml::tag('nominative', array ('post'=>$gibdd->post, 'gibdd'=>$gibdd->gibdd_name), CHtml::encode($gibdd->fio), true);
+				$tags[]=CHtml::tag('nominative', array ('dative'=>$gibdd->post_dative), CHtml::encode($gibdd->fio_dative), true);
 			$tags[]=CHtml::closeTag('gibdd');		
 		}	
 		$this->renderXml($tags);		
