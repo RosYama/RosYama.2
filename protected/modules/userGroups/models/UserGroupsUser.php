@@ -201,7 +201,7 @@ class UserGroupsUser extends CActiveRecord
 		$user = self::model()->findByAttributes(array('username'=>$this->username));
 		if (empty($user))
 			$this->addError('username', Yii::t('UserGroupsModule.recovery','Username not valid'));
-		else if ((int)$user->status !== self::WAITING_ACTIVATION && (int)$user->status !== self::PASSWORD_CHANGE_REQUEST)
+		else if ((int)$user->status !== self::WAITING_ACTIVATION && (int)$user->status !== self::PASSWORD_CHANGE_REQUEST && (int)$user->status !== self::ACTIVE)
 			$this->addError('username', Yii::t('UserGroupsModule.recovery','Username not valid'));
 		else if ($user->activation_code !== $this->activation_code)
 			$this->addError('activation_code', Yii::t('UserGroupsModule.recovery','Invalid activation code'));
@@ -476,7 +476,7 @@ class UserGroupsUser extends CActiveRecord
 			}
 			// in the passRequest scenario change the status and delete the old password
 			if ($this->scenario === 'passRequest') {		
-				$this->status = self::PASSWORD_CHANGE_REQUEST;
+				//$this->status = self::PASSWORD_CHANGE_REQUEST;
 				//$this->password = NULL;
 				//$this->is_bitrix_pass=0;
 				$this->activation_code = uniqid();

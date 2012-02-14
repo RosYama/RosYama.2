@@ -153,8 +153,8 @@ class UserGroupsIdentity extends CUserIdentity
 			$this->errorCode=self::ERROR_USERNAME_INVALID;
 		else if((int)$model->status === UserGroupsUser::BANNED)
 			$this->errorCode=self::ERROR_USER_BANNED;
-		else if((int)$model->status === UserGroupsUser::ACTIVE)
-			$this->errorCode=self::ERROR_USER_ACTIVE;
+		/*else if((int)$model->status === UserGroupsUser::ACTIVE)
+			$this->errorCode=self::ERROR_USER_ACTIVE;*/
 		else if((int)$model->status === UserGroupsUser::WAITING_APPROVAL)
 			$this->errorCode=self::ERROR_USER_APPROVAL;
 		else if($model->activation_code !== $this->password)
