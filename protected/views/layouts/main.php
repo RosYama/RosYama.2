@@ -114,7 +114,8 @@
 			<p class="autochmo"><a target="_blank" href="http://autochmo.ru/" title="Доска позора водителей &aring;вточмо">&aring;utochmo</a><br>Доска позора водителей</p>
 			<p class="copy">&copy; <a href="http://navalny.ru/">Алексей Навальный</a>, 2011<br />
 			<a href="mailto:rossyama@gmail.com">rossyama@gmail.com</a><br />
-			<br />
+			<br/>Developed by @vlasovilya<br/>Powered by Yii Framework.
+			<br /></p>
 			<?php if($this->beginCache('countHoles', array('duration'=>3600))) { ?>
 			<?php $this->widget('application.widgets.collection.collectionWidget'); ?>			
 			<?php $this->endCache(); } ?>

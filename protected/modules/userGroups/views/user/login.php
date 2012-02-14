@@ -57,7 +57,7 @@
 		
 		<noindex>
 			<p>
-				<a href="/personal/holes.php?forgot_password=yes" rel="nofollow">Забыли свой пароль?</a>
+				<a href="/userGroups/user/passRequest/" rel="nofollow">Забыли свой пароль?</a>
 			</p>
 		</noindex>
 		

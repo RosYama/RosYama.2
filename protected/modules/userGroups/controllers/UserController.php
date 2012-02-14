@@ -408,9 +408,11 @@ class UserController extends Controller
 		}
 	}
 
+	
 	/**
 	 * form for new pass request
 	 */
+	/* 
 	public function actionPassRequest()
 	{
 		$model = new UserGroupsUser('passRequest');
@@ -425,6 +427,35 @@ class UserController extends Controller
 					$mail->send();
 				} else
 					Yii::app()->user->setFlash('success', Yii::t('userGroupsModule.general','An Error Occurred. Please try later.'));
+				$this->redirect(Yii::app()->baseUrl . '/userGroups');
+			}
+		}
+
+		$this->render('passRequest', array('model'=>$model));
+	}*/
+	
+	/**
+	 * form for new pass request
+	 */
+	public function actionPassRequest()
+	{
+		$model = new UserGroupsUser('passRequest');
+		if (isset($_POST['UserGroupsUser'])) {
+			$model->attributes = $_POST['UserGroupsUser'];
+			$attr='username'; $val=$model->username;
+			if (!$model->username) {$attr='email'; $val=$model->email;}
+			if (!$model->email) {$attr='username'; $val=$model->username;}		
+			$model = UserGroupsUser::model()->findByAttributes(array($attr=>$val));
+
+			if ($model) {				
+				$model->scenario = 'passRequest';
+				if ($model->save()) {				
+					$mail = new UGMail($model, UGMail::PASS_RESET);
+					$mail->send();
+				} else {					
+					print_r ($model->errors); die(); 
+					Yii::app()->user->setFlash('success', Yii::t('userGroupsModule.general','An Error Occurred. Please try later.'));
+					}
 				$this->redirect(Yii::app()->baseUrl . '/userGroups');
 			}
 		}

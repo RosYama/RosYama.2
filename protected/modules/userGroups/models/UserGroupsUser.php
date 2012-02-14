@@ -475,10 +475,10 @@ class UserGroupsUser extends CActiveRecord
 				$this->is_bitrix_pass=0;
 			}
 			// in the passRequest scenario change the status and delete the old password
-			if ($this->scenario === 'passRequest') {				
+			if ($this->scenario === 'passRequest') {		
 				$this->status = self::PASSWORD_CHANGE_REQUEST;
-				$this->password = NULL;
-				$this->is_bitrix_pass=0;
+				//$this->password = NULL;
+				//$this->is_bitrix_pass=0;
 				$this->activation_code = uniqid();
 				$this->activation_time = date('Y-m-d H:i:s');
 			}

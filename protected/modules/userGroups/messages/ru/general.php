@@ -19,7 +19,7 @@
  * @version $Id: $
  */
 return array (
-  'An email containing the instructions to reset your password has been sent to your email address: {email}' => 'Письмо, содержащее инструкции по смене пароля было отправлено на ваш адрес электронной почты: {email}',
+  'An email containing the instructions to reset your password has been sent to your email address: {email}' => 'Письмо, содержащее инструкции по смене пароля было отправлено на адрес электронной почты, указанный при регистрации.',
   'An invitation email was sent to the address {email}' => 'Приглашение было отправлено на адрес {email}',
   'Creation Date' => 'Дата создания',
   'Impossible to send email to the address {email}' => 'Невозможно отправить письмо по адресу {email}',
