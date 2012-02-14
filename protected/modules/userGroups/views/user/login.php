@@ -54,7 +54,12 @@
 				<td class="authorize-submit-cell"><?php echo CHtml::submitButton('Войти'); ?></td>
 			</tr>
 		</table>
-
+		
+		<noindex>
+			<p>
+				<a href="/userGroups/user/passRequest/" rel="nofollow">Забыли свой пароль?</a>
+			</p>
+		</noindex>
 		
 		<?php if (UserGroupsConfiguration::findRule('registration')): ?>
 		<noindex>
