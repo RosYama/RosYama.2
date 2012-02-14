@@ -453,7 +453,7 @@ class UserController extends Controller
 					$mail = new UGMail($model, UGMail::PASS_RESET);
 					$mail->send();
 				} else {					
-					print_r ($model->errors); die(); 
+					//print_r ($model->errors); die(); 
 					Yii::app()->user->setFlash('success', Yii::t('userGroupsModule.general','An Error Occurred. Please try later.'));
 					}
 				$this->redirect(Yii::app()->baseUrl . '/userGroups');

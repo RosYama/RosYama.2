@@ -19,6 +19,7 @@ $this->breadcrumbs=array(
 			<?php echo $form->textField($model,'username'); ?>
 			<?php echo $form->error($model,'username'); ?>
 		</div>
+		ИЛИ
 		<div class="row">
 			<?php echo $form->labelEx($model,'email'); ?>
 			<?php echo $form->textField($model,'email'); ?>
