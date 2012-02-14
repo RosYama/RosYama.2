@@ -102,10 +102,14 @@ class UGMail {
 	{
 		$sentmail = $this->_swiftmail ? Yii::app()->mail->send($this->_message) : mail($this->_to, $this->_subject, $this->_body, $this->_header);
 
-		if ($sentmail)
+		if ($sentmail){
 			Yii::app()->user->setFlash('mail', $this->_sent);
-		else
+			return true;
+			}
+		else{
 			Yii::app()->user->setFlash('mail', $this->_error);
+			return false;
+			}
 	}
 
 	/**
@@ -198,7 +202,7 @@ class UGMailActivation implements UGMailMessage {
 	public function mailHeader($admin_mail)
 	{
 		$headers = 'MIME-Version: 1.0' . "\n";
-		$headers .= 'Content-type: text/html; charset=iso-8859-1' . "\n";
+		$headers .= 'Content-type: text/html; charset=utf8' . "\n";
 		$headers .= 'From: '.Yii::app()->name.' <'.$admin_mail.'>';
 		return $headers;
 	}
@@ -252,7 +256,7 @@ class UGMailPassReset implements UGMailMessage {
 	public function mailHeader($admin_mail)
 	{
 		$headers = 'MIME-Version: 1.0' . "\n";
-		$headers .= 'Content-type: text/html; charset=iso-8859-1' . "\n";
+		$headers .= 'Content-type: text/html; charset=utf8' . "\n";
 		$headers .= 'From: '.Yii::app()->name.' <'.$admin_mail.'>';
 		return $headers;
 	}
@@ -306,7 +310,7 @@ class UGMailInvitation implements UGMailMessage {
 	public function mailHeader($admin_mail)
 	{
 		$headers = 'MIME-Version: 1.0' . "\n";
-		$headers .= 'Content-type: text/html; charset=utf-8' . "\n";
+		$headers .= 'Content-type: text/html; charset=utf8' . "\n";
 		$headers .= 'From: '.Yii::app()->name.' <'.$admin_mail.'>';
 		return $headers;
 	}
