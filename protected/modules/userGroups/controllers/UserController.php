@@ -439,28 +439,30 @@ class UserController extends Controller
 	 */
 	public function actionPassRequest()
 	{
-		$model = new UserGroupsUser('passRequest');
+		$formmodel = new UserGroupsUser('passRequest');
 		if (isset($_POST['UserGroupsUser'])) {
-			$model->attributes = $_POST['UserGroupsUser'];
-			$attr='username'; $val=$model->username;
-			if (!$model->username) {$attr='email'; $val=$model->email;}
-			if (!$model->email) {$attr='username'; $val=$model->username;}		
-			$model = UserGroupsUser::model()->findByAttributes(array($attr=>$val));
-
-			if ($model) {				
-				$model->scenario = 'passRequest';
-				if ($model->save()) {				
-					$mail = new UGMail($model, UGMail::PASS_RESET);
-					$mail->send();
-				} else {					
-					//print_r ($model->errors); die(); 
-					Yii::app()->user->setFlash('success', Yii::t('userGroupsModule.general','An Error Occurred. Please try later.'));
+			$formmodel->attributes = $_POST['UserGroupsUser'];
+			$attr='username'; $val=$formmodel->username;
+			if (!$formmodel->username) {$attr='email'; $val=$formmodel->email;}
+			if (!$formmodel->email) {$attr='username'; $val=$formmodel->username;}		
+			if ($formmodel->username || $formmodel->email) {
+				$model = UserGroupsUser::model()->findByAttributes(array($attr=>$val));			
+					if ($model) {				
+						$model->scenario = 'passRequest';
+						if ($model->save()) {				
+							$mail = new UGMail($model, UGMail::PASS_RESET);
+							$mail->send();
+						} else {					
+							//print_r ($model->errors); die(); 
+							Yii::app()->user->setFlash('success', Yii::t('userGroupsModule.general','An Error Occurred. Please try later.'));
+							}
+						$this->redirect(Yii::app()->baseUrl . '/userGroups');
 					}
-				$this->redirect(Yii::app()->baseUrl . '/userGroups');
-			}
+				}
+			$formmodel->validate();
 		}
 
-		$this->render('passRequest', array('model'=>$model));
+		$this->render('passRequest', array('model'=>$formmodel));
 	}
 
 	/**

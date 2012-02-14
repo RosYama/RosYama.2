@@ -503,7 +503,7 @@ class UserGroupsUser extends CActiveRecord
 					$this->status = self::ACTIVE;
 			}
 			// erese the activation code for security reasons
-			if ((int)$this->status !== self::WAITING_ACTIVATION && (int)$this->status !== self::WAITING_APPROVAL && (int)$this->status !== self::PASSWORD_CHANGE_REQUEST)
+			if ((int)$this->status !== self::WAITING_ACTIVATION && (int)$this->status !== self::WAITING_APPROVAL && (int)$this->status !== self::PASSWORD_CHANGE_REQUEST && $this->scenario !== 'passRequest')
 				$this->activation_code = NULL;
 			// sanitize the value of home
 			if ($this->home === '0')

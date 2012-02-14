@@ -14,14 +14,15 @@ $this->breadcrumbs=array(
 			'id'=>'user-groups-passrequest-form',
 			'enableAjaxValidation'=>true,
 		)); ?>
+		<strong>Укажите</strong>
 		<div class="row">
-			<?php echo $form->labelEx($model,'username'); ?>
+			<?php echo $form->label($model,'username'); ?>
 			<?php echo $form->textField($model,'username'); ?>
 			<?php echo $form->error($model,'username'); ?>
 		</div>
-		ИЛИ
+		<strong>ИЛИ</strong>
 		<div class="row">
-			<?php echo $form->labelEx($model,'email'); ?>
+			<?php echo $form->label($model,'email'); ?>
 			<?php echo $form->textField($model,'email'); ?>
 			<?php echo $form->error($model,'email'); ?>
 		</div>
