@@ -191,7 +191,8 @@ class ProfileController extends Controller
 	public function loadModel($id, $scenario = false)
 	{
 		$model=UserGroupsUser::model()->findByPk((int)$id);
-		if($model===null || ($model->relUserGroupsGroup->level > Yii::app()->user->level && !UserGroupsConfiguration::findRule('public_profiles')))
+		//if($model===null || ($model->relUserGroupsGroup->level > Yii::app()->user->level && !UserGroupsConfiguration::findRule('public_profiles')))
+		if($model===null)
 			throw new CHttpException(404,'The requested page does not exist.');
 		if ($scenario)
 			$model->setScenario($scenario);
