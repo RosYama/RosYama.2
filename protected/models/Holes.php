@@ -105,10 +105,13 @@ class Holes extends CActiveRecord
 			'pictures'=>array(self::HAS_MANY, 'HolePictures', 'hole_id', 'order'=>'pictures.type, pictures.ordering'),
 			'pictures_fresh'=>array(self::HAS_MANY, 'HolePictures', 'hole_id', 'condition'=>'pictures_fresh.type="fresh"','order'=>'pictures_fresh.ordering'),
 			'pictures_fixed'=>array(self::HAS_MANY, 'HolePictures', 'hole_id', 'condition'=>'pictures_fixed.type="fixed"','order'=>'pictures_fixed.ordering'),
+			'user_pictures_fixed'=>array(self::HAS_MANY, 'HolePictures', 'hole_id', 'condition'=>'user_pictures_fixed.type="fixed" AND user_pictures_fixed.user_id='.Yii::app()->user->id,'order'=>'user_pictures_fixed.ordering'),
 			'request_gibdd'=>array(self::HAS_ONE, 'HoleRequests', 'hole_id', 'condition'=>'request_gibdd.type="gibdd" AND user_id='.Yii::app()->user->id),
 			'request_prosecutor'=>array(self::HAS_ONE, 'HoleRequests', 'hole_id', 'condition'=>'request_prosecutor.type="prosecutor" AND user_id='.Yii::app()->user->id),
 			'requests_gibdd'=>array(self::HAS_MANY, 'HoleRequests', 'hole_id', 'condition'=>'requests_gibdd.type="gibdd"','order'=>'date_sent DESC'),
 			'requests_prosecutor'=>array(self::HAS_MANY, 'HoleRequests', 'hole_id', 'condition'=>'requests_prosecutor.type="prosecutor"','order'=>'date_sent DESC'),
+			'fixeds'=>array(self::HAS_MANY, 'HoleFixeds', 'hole_id','order'=>'fixeds.date_fix DESC'),
+			'user_fix'=>array(self::HAS_ONE, 'HoleFixeds', 'hole_id', 'condition'=>'user_fix.user_id='.Yii::app()->user->id),
 			'type'=>array(self::BELONGS_TO, 'HoleTypes', 'TYPE_ID'),
 			'user'=>array(self::BELONGS_TO, 'UserGroupsUser', 'USER_ID'),		
 			'gibdd'=>array(self::BELONGS_TO, 'GibddHeads', 'gibdd_id'),
@@ -155,6 +158,14 @@ class Holes extends CActiveRecord
 	{	
 		return $this->AllstatesShort[$this->STATE];
 	}
+	
+	public function getFixByUser($id)	
+	{	
+		foreach ($this->fixeds as $fix){
+			if ($fix->user_id==$id) return $fix;
+		}
+		return null;
+	}	
 	
 	const EARTH_RADIUS_KM = 6373;
 	public function getTerritorialGibdd()	
@@ -277,6 +288,7 @@ class Holes extends CActiveRecord
 								$imgmodel->type=$this->scenario=='fix'?'fixed':'fresh'; 
 								$imgmodel->filename=$imgname;
 								$imgmodel->hole_id=$this->ID;
+								$imgmodel->user_id=Yii::app()->user->id;
 								$imgmodel->ordering=$imgmodel->lastOrder+1;
 								$imgmodel->save();
 								}
@@ -364,39 +376,47 @@ class Holes extends CActiveRecord
 	
 	public function updateSetinprogress()
 	{
-		if($this->STATE != 'fresh' && !($this->STATE == 'fixed' && !sizeof($this->pictures_fixed)))
+		if($this->STATE != 'fresh' && !($this->STATE == 'fixed' && !sizeof($this->user_pictures_fixed)))
 				{
 					return false;
 				}
-		else {
-				$this->DATE_STATUS=time();
-				if($this->STATE == 'fresh')  
-				{
-					if (!$this->DATE_SENT) {
-						$this->DATE_SENT = time(); 						
+		else {			
+			$this->user_fix->delete();			
+			if (count ($this->fixeds) == 0) {
+					$this->DATE_STATUS=time();
+					if($this->STATE == 'fresh')  
+					{
+						if (!$this->DATE_SENT) {
+							$this->DATE_SENT = time(); 						
+						}
+						$this->STATE='inprogress';										
 					}
-					$this->STATE='inprogress';										
+					else
+					{
+						if($this->DATE_SENT)
+						{
+							$this->STATE = 'inprogress';
+						}						
+						if($this->DATE_SENT < time() - 37 * 86400)
+						{
+							$this->STATE = 'achtung';
+						}
+						if($this->GIBDD_REPLY_RECEIVED)
+						{
+							$this->STATE = 'gibddre';
+						}
+						if($this->DATE_SENT_PROSECUTOR)
+						{
+							$this->STATE = 'prosecutor';
+						}
+						if(!$this->DATE_SENT)
+						{
+							$this->STATE = 'fresh';
+							if ($this->request_gibdd) $this->request_gibdd->delete();
+						}
+					}
 				}
-				else
-				{
-					if($this->DATE_SENT < time() - 37 * 86400)
-					{
-						$this->STATE = 'achtung';
-					}
-					if($this->GIBDD_REPLY_RECEIVED)
-					{
-						$this->STATE = 'gibddre';
-					}
-					if($this->DATE_SENT_PROSECUTOR)
-					{
-						$this->STATE = 'prosecutor';
-					}
-					if(!$this->DATE_SENT)
-					{
-						$this->STATE = 'fresh';
-						if ($this->request_gibdd) $this->request_gibdd->delete();
-					}
-				}
+				
 			if ($this->update()) return true;
 			else return false;
 		}	
@@ -447,9 +467,25 @@ class Holes extends CActiveRecord
 				
 				//Потом удаляем все запросы вместе со всем содержимым
 				foreach ($this->requests as $request) $request->delete();
+				
+				//Потом все отметки об исправленности
+				foreach ($this->fixeds as $fixed) $fixed->delete();
 	
 				return true;
 	}	
+	
+	public function BeforeSave(){
+				parent::beforeSave();
+					if ($this->scenario=='fix'){
+						$fixmodel=new HoleFixeds;
+						$fixmodel->user_id=Yii::app()->user->id;
+						$fixmodel->hole_id=$this->ID;
+						$fixmodel->date_fix=time();
+						$fixmodel->comment=$this->COMMENT2;
+						$fixmodel->save();					
+					}
+				return true;
+	}		
 	
 	public function getIsUserHole(){				
 				if ($this->USER_ID==Yii::app()->user->id) return true;

@@ -1,3 +1,6 @@
+<?
+$this->pageTitle=Yii::app()->name . ' :: Загрузка ответа ГИБДД';
+?>
 <div class="form">
 <?php $form=$this->beginWidget('CActiveForm', array(
 	'id'=>'holes-form',

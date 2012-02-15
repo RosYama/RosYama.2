@@ -1,4 +1,6 @@
-
+<?
+$this->pageTitle=Yii::app()->name . ' :: Мои ямы';
+?>
 <div class="lCol">
 
 

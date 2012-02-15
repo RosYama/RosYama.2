@@ -166,6 +166,7 @@ class MigrationController extends Controller
 					$picture->type='fresh'; 
 					$picture->filename=$src;
 					$picture->hole_id=$hole->ID;
+					$picture->user_id=$model->USER_ID;
 					$picture->ordering=$i;
 					$picture->save();
 				}
@@ -174,8 +175,17 @@ class MigrationController extends Controller
 					$picture->type='fixed'; 
 					$picture->filename=$src;
 					$picture->hole_id=$hole->ID;
+					$picture->user_id=$model->USER_ID;
 					$picture->ordering=$i;
 					$picture->save();
+				}
+				if ($model->STATE!="fixed"){
+						$fixmodel=new HoleFixeds;
+						$fixmodel->user_id=$model->USER_ID;
+						$fixmodel->hole_id=$model->ID;
+						$fixmodel->date_fix=$model->DATE_STATUS;
+						$fixmodel->comment=$model->COMMENT2;
+						$fixmodel->save();
 				}
 				
 				if ($model->STATE!="fresh"){
@@ -192,7 +202,6 @@ class MigrationController extends Controller
 						$answer->request_id=$request->id;
 						$answer->date=$model->DATE_STATUS;
 						$answer->comment=$model->COMMENT_GIBDD_REPLY;						
-						//еще надо на ответы ГИБДД сделать
 						if ($answer->save()){
 							$dir=$_SERVER['DOCUMENT_ROOT'].$answer->filesFolder;
 							if (!is_dir($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/answers/'))

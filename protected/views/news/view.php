@@ -1,3 +1,6 @@
+<?
+$this->pageTitle=Yii::app()->name . ' :: Новости :: '.$model->title;
+?>
 <?php
 $this->breadcrumbs=array(
 	'News'=>array('index'),

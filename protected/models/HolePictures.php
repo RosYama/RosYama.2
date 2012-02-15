@@ -63,7 +63,7 @@ class HolePictures extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('hole_id, type, filename, ordering', 'required'),
-			array('hole_id, ordering', 'numerical', 'integerOnly'=>true),
+			array('hole_id, ordering, user_id', 'numerical', 'integerOnly'=>true),
 			array('type', 'length', 'max'=>63),
 			array('filename', 'length', 'max'=>255),
 			// The following rule is used by search().
@@ -80,6 +80,7 @@ class HolePictures extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
+		'hole'=>array(self::BELONGS_TO, 'Holes', 'hole_id'),
 		);
 	}
 

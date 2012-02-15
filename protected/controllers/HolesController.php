@@ -31,7 +31,7 @@ class HolesController extends Controller
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('add','update', 'personal','personalDelete','request','requestForm','sent','notsent','gibddreply', 'fix', 'defix', 'prosecutorsent', 'prosecutornotsent','delanswerfile','myarea', 'territorialGibdd'),
+				'actions'=>array('add','update', 'personal','personalDelete','request','requestForm','sent','notsent','gibddreply', 'fix', 'defix', 'prosecutorsent', 'prosecutornotsent','delanswerfile','myarea', 'territorialGibdd', 'delpicture'),
 				'users'=>array('@'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -267,10 +267,10 @@ class HolesController extends Controller
 		
 		$model=$this->loadModel($id);
 		if (!$model->isUserHole && Yii::app()->user->level < 50){
-			if ($model->STATE=='fixed' || !$model->request_gibdd || !$model->request_gibdd->answers)
+			if ($model->STATE=='fixed' || !$model->request_gibdd || !$model->request_gibdd->answers || $model->user_fix)
 				throw new CHttpException(403,'Доступ запрещен.');
 		}		
-		elseif ($model->STATE=='fixed')
+		elseif ($model->STATE=='fixed' && $model->user_fix)
 				throw new CHttpException(403,'Доступ запрещен.');		
 			
 		$model->scenario='fix';
@@ -284,8 +284,9 @@ class HolesController extends Controller
 			$model->STATE='fixed';
 			$model->COMMENT2=$_POST['Holes']['COMMENT2'];
 			$model->DATE_STATUS=time();
-				if ($model->save() && $model->savePictures())
+				if ($model->save() && $model->savePictures()){					
 					$this->redirect(array('view','id'=>$model->ID));
+					}
 		}
 
 		$this->render('fix_form',array(
@@ -296,7 +297,10 @@ class HolesController extends Controller
 	
 	public function actionDefix($id)
 	{
-		$model=$this->loadChangeModel($id);
+		$model=$this->loadModel($id);
+		if (!$model->user_fix && Yii::app()->user->level < 80)
+			throw new CHttpException(403,'Доступ запрещен.');
+			
 		$model->updateSetinprogress();
 			if(!isset($_GET['ajax']))
 				$this->redirect(array('view','id'=>$model->ID));
@@ -519,6 +523,24 @@ class HolesController extends Controller
 			if(!isset($_GET['ajax']))
 				$this->redirect(array('view','id'=>$model->ID));
 	}	
+	
+	//удаление изображения
+	public function actionDelpicture($id)
+	{
+			$picture=HolePictures::model()->findByPk((int)$id);
+			
+			if (!$picture)
+				throw new CHttpException(404,'The requested page does not exist.');
+				
+			if ($picture->user_id!=Yii::app()->user->id && Yii::app()->user->level < 80 && $picture->hole->USER_ID!=Yii::app()->user->id)
+				throw new CHttpException(403,'Доступ запрещен.');
+				
+			$picture->delete();			
+			
+			if(!isset($_GET['ajax']))
+				$this->redirect(array('view','id'=>$picture->hole->ID));
+		
+	}		
 	
 	//удаление файла ответа гибдд
 	public function actionDelanswerfile($id)

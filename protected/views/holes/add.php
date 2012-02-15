@@ -1,3 +1,7 @@
+<?
+$this->pageTitle=Yii::app()->name . ' :: Добавление дефекта';
+?>
+
 <div id="addmess" style="display:none; color:#0C0"><p><b>Выберите место на карте и кликните по нему два раза, чтобы отметить расположение ямы.</b></p></div>
   <div class="head">
 		<div class="container">

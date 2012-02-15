@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: localhost
--- Время создания: Фев 03 2012 г., 01:43
+-- Время создания: Фев 16 2012 г., 02:38
 -- Версия сервера: 5.5.9
 -- Версия PHP: 5.3.5
 
@@ -25,7 +25,6 @@ SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 -- Структура таблицы `yii_gibdd_heads`
 --
 
-DROP TABLE IF EXISTS `yii_gibdd_heads`;
 CREATE TABLE IF NOT EXISTS `yii_gibdd_heads` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` text COLLATE utf8_unicode_ci NOT NULL,
@@ -145,7 +144,6 @@ INSERT INTO `yii_gibdd_heads` (`id`, `name`, `subject_id`, `is_regional`, `moder
 -- Структура таблицы `yii_globals`
 --
 
-DROP TABLE IF EXISTS `yii_globals`;
 CREATE TABLE IF NOT EXISTS `yii_globals` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `var` varchar(255) NOT NULL,
@@ -167,7 +165,6 @@ INSERT INTO `yii_globals` (`id`, `var`, `name`, `value`) VALUES
 -- Структура таблицы `yii_holes`
 --
 
-DROP TABLE IF EXISTS `yii_holes`;
 CREATE TABLE IF NOT EXISTS `yii_holes` (
   `ID` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `USER_ID` int(10) unsigned NOT NULL,
@@ -202,7 +199,6 @@ CREATE TABLE IF NOT EXISTS `yii_holes` (
 -- Структура таблицы `yii_hole_answers`
 --
 
-DROP TABLE IF EXISTS `yii_hole_answers`;
 CREATE TABLE IF NOT EXISTS `yii_hole_answers` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `request_id` int(11) NOT NULL,
@@ -222,7 +218,6 @@ CREATE TABLE IF NOT EXISTS `yii_hole_answers` (
 -- Структура таблицы `yii_hole_answer_files`
 --
 
-DROP TABLE IF EXISTS `yii_hole_answer_files`;
 CREATE TABLE IF NOT EXISTS `yii_hole_answer_files` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `answer_id` int(11) NOT NULL,
@@ -258,7 +253,6 @@ INSERT INTO `yii_hole_answer_files` (`id`, `answer_id`, `file_name`, `file_type`
 -- Структура таблицы `yii_hole_answer_results`
 --
 
-DROP TABLE IF EXISTS `yii_hole_answer_results`;
 CREATE TABLE IF NOT EXISTS `yii_hole_answer_results` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
@@ -278,7 +272,6 @@ CREATE TABLE IF NOT EXISTS `yii_hole_answer_results` (
 -- Структура таблицы `yii_hole_answer_results_xref`
 --
 
-DROP TABLE IF EXISTS `yii_hole_answer_results_xref`;
 CREATE TABLE IF NOT EXISTS `yii_hole_answer_results_xref` (
   `answer_id` int(11) NOT NULL,
   `result_id` int(11) NOT NULL,
@@ -293,14 +286,33 @@ CREATE TABLE IF NOT EXISTS `yii_hole_answer_results_xref` (
 -- --------------------------------------------------------
 
 --
+-- Структура таблицы `yii_hole_fixeds`
+--
+
+CREATE TABLE IF NOT EXISTS `yii_hole_fixeds` (
+  `hole_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `date_fix` int(11) NOT NULL,
+  `comment` text COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`hole_id`,`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Дамп данных таблицы `yii_hole_fixeds`
+--
+
+
+-- --------------------------------------------------------
+
+--
 -- Структура таблицы `yii_hole_pictures`
 --
 
-DROP TABLE IF EXISTS `yii_hole_pictures`;
 CREATE TABLE IF NOT EXISTS `yii_hole_pictures` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `hole_id` int(11) NOT NULL,
   `type` varchar(63) COLLATE utf8_unicode_ci NOT NULL,
+  `user_id` int(11) NOT NULL DEFAULT '0',
   `filename` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `ordering` int(11) NOT NULL,
   PRIMARY KEY (`id`)
@@ -317,7 +329,6 @@ CREATE TABLE IF NOT EXISTS `yii_hole_pictures` (
 -- Структура таблицы `yii_hole_requests`
 --
 
-DROP TABLE IF EXISTS `yii_hole_requests`;
 CREATE TABLE IF NOT EXISTS `yii_hole_requests` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `hole_id` int(11) NOT NULL,
@@ -339,7 +350,6 @@ CREATE TABLE IF NOT EXISTS `yii_hole_requests` (
 -- Структура таблицы `yii_hole_types`
 --
 
-DROP TABLE IF EXISTS `yii_hole_types`;
 CREATE TABLE IF NOT EXISTS `yii_hole_types` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `alias` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
@@ -374,7 +384,6 @@ INSERT INTO `yii_hole_types` (`id`, `alias`, `name`, `pdf_body`, `pdf_footer`, `
 -- Структура таблицы `yii_hole_type_pdf_list_commands`
 --
 
-DROP TABLE IF EXISTS `yii_hole_type_pdf_list_commands`;
 CREATE TABLE IF NOT EXISTS `yii_hole_type_pdf_list_commands` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `hole_type_id` int(11) NOT NULL,
@@ -430,7 +439,6 @@ INSERT INTO `yii_hole_type_pdf_list_commands` (`id`, `hole_type_id`, `text`, `or
 -- Структура таблицы `yii_news`
 --
 
-DROP TABLE IF EXISTS `yii_news`;
 CREATE TABLE IF NOT EXISTS `yii_news` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `date` int(10) NOT NULL,
@@ -454,7 +462,6 @@ CREATE TABLE IF NOT EXISTS `yii_news` (
 -- Структура таблицы `yii_prosecutors`
 --
 
-DROP TABLE IF EXISTS `yii_prosecutors`;
 CREATE TABLE IF NOT EXISTS `yii_prosecutors` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
@@ -558,7 +565,6 @@ INSERT INTO `yii_prosecutors` (`id`, `name`, `subject_id`, `preview_text`, `gibd
 -- Структура таблицы `yii_rf_subjects`
 --
 
-DROP TABLE IF EXISTS `yii_rf_subjects`;
 CREATE TABLE IF NOT EXISTS `yii_rf_subjects` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
@@ -662,7 +668,6 @@ INSERT INTO `yii_rf_subjects` (`id`, `name`, `name_full`, `name_full_genitive`) 
 -- Структура таблицы `yii_usergroups_access`
 --
 
-DROP TABLE IF EXISTS `yii_usergroups_access`;
 CREATE TABLE IF NOT EXISTS `yii_usergroups_access` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `element` int(3) NOT NULL,
@@ -684,7 +689,6 @@ CREATE TABLE IF NOT EXISTS `yii_usergroups_access` (
 -- Структура таблицы `yii_usergroups_configuration`
 --
 
-DROP TABLE IF EXISTS `yii_usergroups_configuration`;
 CREATE TABLE IF NOT EXISTS `yii_usergroups_configuration` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `rule` varchar(40) COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -721,7 +725,6 @@ INSERT INTO `yii_usergroups_configuration` (`id`, `rule`, `value`, `options`, `d
 -- Структура таблицы `yii_usergroups_cron`
 --
 
-DROP TABLE IF EXISTS `yii_usergroups_cron`;
 CREATE TABLE IF NOT EXISTS `yii_usergroups_cron` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `name` varchar(40) COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -744,7 +747,6 @@ INSERT INTO `yii_usergroups_cron` (`id`, `name`, `lapse`, `last_occurrence`) VAL
 -- Структура таблицы `yii_usergroups_group`
 --
 
-DROP TABLE IF EXISTS `yii_usergroups_group`;
 CREATE TABLE IF NOT EXISTS `yii_usergroups_group` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `groupname` varchar(120) COLLATE utf8_unicode_ci NOT NULL,
@@ -771,7 +773,6 @@ INSERT INTO `yii_usergroups_group` (`id`, `groupname`, `level`, `home`) VALUES
 -- Структура таблицы `yii_usergroups_lookup`
 --
 
-DROP TABLE IF EXISTS `yii_usergroups_lookup`;
 CREATE TABLE IF NOT EXISTS `yii_usergroups_lookup` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `element` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -797,7 +798,6 @@ INSERT INTO `yii_usergroups_lookup` (`id`, `element`, `value`, `text`) VALUES
 -- Структура таблицы `yii_usergroups_user`
 --
 
-DROP TABLE IF EXISTS `yii_usergroups_user`;
 CREATE TABLE IF NOT EXISTS `yii_usergroups_user` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `group_id` bigint(20) DEFAULT NULL,
@@ -837,7 +837,6 @@ CREATE TABLE IF NOT EXISTS `yii_usergroups_user` (
 -- Структура таблицы `yii_usergroups_user_profile`
 --
 
-DROP TABLE IF EXISTS `yii_usergroups_user_profile`;
 CREATE TABLE IF NOT EXISTS `yii_usergroups_user_profile` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `ug_id` bigint(20) DEFAULT NULL,
@@ -859,7 +858,6 @@ CREATE TABLE IF NOT EXISTS `yii_usergroups_user_profile` (
 -- Структура таблицы `yii_user_area_shapes`
 --
 
-DROP TABLE IF EXISTS `yii_user_area_shapes`;
 CREATE TABLE IF NOT EXISTS `yii_user_area_shapes` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `ug_id` int(11) NOT NULL,
@@ -878,7 +876,6 @@ CREATE TABLE IF NOT EXISTS `yii_user_area_shapes` (
 -- Структура таблицы `yii_user_area_shape_points`
 --
 
-DROP TABLE IF EXISTS `yii_user_area_shape_points`;
 CREATE TABLE IF NOT EXISTS `yii_user_area_shape_points` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `shape_id` int(11) NOT NULL,

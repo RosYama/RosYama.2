@@ -1,3 +1,6 @@
+<?
+$this->pageTitle=Yii::app()->name . ' :: Новости';
+?>
 <?php
 $this->breadcrumbs=array(
 	'News',

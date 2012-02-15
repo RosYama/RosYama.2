@@ -1,3 +1,6 @@
+<?
+$this->pageTitle=Yii::app()->name . ' :: Список дефектов';
+?>
 <?php
 if(Yii::app()->user->isModer)
 	Yii::app()->clientScript->registerScript('modering',<<<EOD

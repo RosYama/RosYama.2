@@ -1,3 +1,7 @@
+<?
+$this->pageTitle=Yii::app()->name . ' :: Мой участок';
+?>
+
 <?php $this->menu=array(
 	Array('label'=>'Изменить границы моего участка', 'url'=>array('/profile/myarea'), 'linkOptions'=>array('class'=>'profileBtn')),
 ); ?>

@@ -1,3 +1,6 @@
+<?
+$this->pageTitle=Yii::app()->name . ' :: Карточка дефекта';
+?>
 <?php
 $this->widget('application.extensions.fancybox.EFancyBox', array(
     'target'=>'.holes_pict',
@@ -24,7 +27,7 @@ $this->widget('application.extensions.fancybox.EFancyBox', array(
 					<?= CHtml::encode($hole->StateName) ?>
 					<? if($hole->STATE == 'prosecutor' && $hole->DATE_STATUS): ?>
 						<?= CHtml::encode(Y::dateFromTime($hole->DATE_STATUS)).' '.Yii::t('holes_view', 'REQUEST_TO_PROSECUTOR_SENT') ?>
-					<? elseif($hole->STATE != 'fixed' && $hole->DATE_SENT): ?>
+					<? elseif($hole->DATE_SENT): ?>
 						<?php if (count($hole->requests_gibdd) == 1) : ?>
 							<?= CHtml::encode(Y::dateFromTime($hole->DATE_SENT))?> отправлен запрос в ГИБДД
 						<? else : ?>
@@ -33,7 +36,11 @@ $this->widget('application.extensions.fancybox.EFancyBox', array(
 							<ul>
 							<?php foreach ($hole->requests_gibdd as $request) : ?>
 							<?php  if ($request->user) : ?>
-								<li><?php echo date('d.m.Y',$request->date_sent);?> <?php echo CHtml::link(CHtml::encode($request->user->getParam('showFullname') ? $request->user->Fullname : ($request->user->name ? $request->user->name : $request->user->username)), array('/profile/view', 'id'=>$request->user->id),array('class'=>""));?></li>
+								<li><?php echo date('d.m.Y',$request->date_sent);?> <?php echo CHtml::link(CHtml::encode($request->user->getParam('showFullname') ? $request->user->Fullname : ($request->user->name ? $request->user->name : $request->user->username)), array('/profile/view', 'id'=>$request->user->id),array('class'=>""));?>
+								<?php if ($hole->STATE == 'fixed' && $fix=$hole->getFixByUser($request->user->id)) : ?>, 
+								<?php echo date('d.m.Y',$fix->date_fix);?> отметил факт исправления дефекта
+								<?php endif; ?>
+								</li>
 							<?php endif; ?>
 							<?php endforeach; ?>
 							</ul>							
@@ -406,6 +413,11 @@ $this->widget('application.extensions.fancybox.EFancyBox', array(
 				<? if($hole->pictures_fixed): ?>
 					<h2><?= Yii::t('holes_view', 'HOLE_ITBECAME') ?></h2>
 					<? foreach($hole->pictures_fixed as $i=>$picture): ?>
+					
+					<?php if ($picture->user_id==Yii::app()->user->id || Yii::app()->user->level > 80 || $hole->IsUserHole) : ?>
+							<?php echo CHtml::link('Удалить это изображение', Array('delpicture','id'=>$picture->id), Array('class'=>'declarationBtn')); ?></br>
+					<?php endif; ?>
+					
 						<?php echo CHtml::link(CHtml::image($picture->medium), $picture->original, 
 					Array('class'=>'holes_pict','rel'=>'hole_fixed', 'title'=>CHtml::encode($hole->ADDRESS).' - исправлено')); ?>
 					<? endforeach; ?>
