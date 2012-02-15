@@ -375,6 +375,7 @@ class HolesController extends Controller
 	//генерация запросов в ГИБДД
 	public function actionRequest($id)
 	{
+			ini_set ('mbstring.func_overload', '0');
 			$model=$this->loadModel($id);				
 			$request=new HoleRequestForm;
 			if(isset($_POST['HoleRequestForm']))
