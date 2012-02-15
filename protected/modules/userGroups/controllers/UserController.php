@@ -451,12 +451,16 @@ class UserController extends Controller
 						$model->scenario = 'passRequest';
 						if ($model->save()) {				
 							$mail = new UGMail($model, UGMail::PASS_RESET);
-							if ($mail->send()) Yii::app()->user->setFlash('success', Yii::t('UserGroupsModule.general','An email containing the instructions to reset your password has been sent to your email address: {email}'));
+							if ($mail->send()) {
+								if(!Yii::app()->user->hasFlash('success'))
+									Yii::app()->user->setFlash('success', Yii::t('UserGroupsModule.general','An email containing the instructions to reset your password has been sent to your email address: {email}'));									
+									}
+							
 						} else {					
 							//print_r ($model->errors); die(); 
 							Yii::app()->user->setFlash('success', Yii::t('userGroupsModule.general','An Error Occurred. Please try later.'));
 							}
-						$this->redirect(Yii::app()->baseUrl . '/userGroups');
+						$this->redirect(Array ('/userGroups/'));
 					}
 				}
 			$formmodel->validate();
