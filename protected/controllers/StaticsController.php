@@ -140,7 +140,7 @@ class StaticsController extends Controller
 		for($i = 0; $i < 2; $i++){
 			foreach($arResult['user'][$i] as $k=>$v)
 			{
-				$arResult['user'][$i][$k]['user'] = (!empty($v->user->name) && !empty($v->user->last_name)) ? $v->user->last_name.' '.$v->user->name : $v->user->username;
+				$arResult['user'][$i][$k]['user'] = (!empty($v->user->name) && !empty($v->user->last_name)) ? $v->user->name.' '.$v->user->last_name : $v->user->username;
 			}
 		}
 		$this->render('index',array(
