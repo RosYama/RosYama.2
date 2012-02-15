@@ -32,7 +32,9 @@ $this->widget('application.extensions.fancybox.EFancyBox', array(
 							<div id="requests_gibdd_history" style="display:none;">
 							<ul>
 							<?php foreach ($hole->requests_gibdd as $request) : ?>
+							<?php  if ($request->user) : ?>
 								<li><?php echo date('d.m.Y',$request->date_sent);?> <?php echo CHtml::link(CHtml::encode($request->user->getParam('showFullname') ? $request->user->Fullname : ($request->user->name ? $request->user->name : $request->user->username)), array('/profile/view', 'id'=>$request->user->id),array('class'=>""));?></li>
+							<?php endif; ?>
 							<?php endforeach; ?>
 							</ul>							
 							</div>
@@ -114,10 +116,12 @@ $this->widget('application.extensions.fancybox.EFancyBox', array(
 					{
 						?>
 						<? if($hole->request_gibdd): ?>
+						<?php if ($hole->IsUserHole || Yii::app()->user->level > 40) : ?>
 							<div class="cc" style="width:150px">
 								<p><?=  Yii::t('holes_view', 'HOLE_CART_ADMIN_TEXT_7') ?></p>
 								<p><?php echo CHtml::link(Yii::t('holes_view', 'HOLE_CART_ADMIN_TEXT_8'), array('fix', 'id'=>$hole->ID),array('class'=>"declarationBtn")); ?></p>
 							</div>
+						<?php endif; ?>	
 							<div class="rc" style="width:145px;padding: 24px 0 24px 15px;">
 								<p><a class="declarationBtn" href="#" onclick="var c=document.getElementById('pdf_form');if(c){c.style.display=c.style.display=='block'?'none':'block';}return false;"><?= Yii::t('holes_view', 'HOLE_CART_ADMIN_TEXT_15') ?></a></p>
 								<p><?php echo CHtml::link(Yii::t('holes_view', 'HOLE_CART_ADMIN_TEXT_12'), array('notsent', 'id'=>$hole->ID),array('class'=>"declarationBtn")); ?></p>

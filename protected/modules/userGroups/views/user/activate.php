@@ -1,6 +1,6 @@
 <?php
 $this->breadcrumbs=array(
-	Yii::t('userGroupsModule.recovery','User Activation'),
+	Yii::t('UserGroupsModule.recovery','User Activation'),
 );
 
 ?>
@@ -27,7 +27,7 @@ $this->breadcrumbs=array(
 		</div>
 		<div class="row buttons">
 			<?php echo CHtml::hiddenField('id',$form->id); ?>
-			<?php echo CHtml::submitButton(Yii::t('userGroupsModule.general','Proceed')); ?>
+			<?php echo CHtml::submitButton(Yii::t('UserGroupsModule.general','Proceed')); ?>
 		</div>
 		<?php $this->endWidget(); ?>
 	</div>
@@ -43,7 +43,7 @@ $this->breadcrumbs=array(
 		</div>
 		<div class="row buttons">
 			<?php echo CHtml::hiddenField('id',$form->id); ?>
-			<?php echo CHtml::submitButton(Yii::t('userGroupsModule.general','Resend Email')); ?>
+			<?php echo CHtml::submitButton(Yii::t('UserGroupsModule.general','Resend Email')); ?>
 		</div>
 		<?php $this->endWidget(); ?>
 	</div>

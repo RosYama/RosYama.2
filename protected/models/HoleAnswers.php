@@ -37,7 +37,7 @@ class HoleAnswers extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('request_id, date, results', 'required'),
+			array('request_id, date', 'required'),
 			array('request_id, date', 'numerical', 'integerOnly'=>true),
 			array('comment', 'length'),
 			array('uppload_files, results', 'safe'),

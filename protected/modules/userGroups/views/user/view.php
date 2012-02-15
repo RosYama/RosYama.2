@@ -1,6 +1,6 @@
 <?php
 $this->breadcrumbs=array(
-	$model->username.' '.Yii::t('userGroupsModule.general','profile'),
+	$model->username.' '.Yii::t('UserGroupsModule.general','profile'),
 );
 ?>
 <div id="userGroups-container">

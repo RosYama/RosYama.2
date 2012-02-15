@@ -1,6 +1,6 @@
 <?php
 $this->breadcrumbs=array(
-	Yii::t('userGroupsModule.general','User Registration'),
+	Yii::t('UserGroupsModule.general','User Registration'),
 );
 ?>
 <p>На указанный в форме e-mail придет запрос на подтверждение регистрации.</p>

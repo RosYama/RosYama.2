@@ -1,6 +1,6 @@
 <?php
 $this->breadcrumbs=array(
-	Yii::t('userGroupsModule.recovery','User Activation'),
+	Yii::t('UserGroupsModule.recovery','User Activation'),
 );
 
 ?>
@@ -40,7 +40,7 @@ $this->breadcrumbs=array(
 		</div>
 		<?php endif ?>
 		<div class="row buttons">
-			<?php echo CHtml::submitButton(Yii::t('userGroupsModule.general','Update')); ?>
+			<?php echo CHtml::submitButton(Yii::t('UserGroupsModule.general','Update')); ?>
 		</div>
 		<?php $this->endWidget(); ?>
 	</div>

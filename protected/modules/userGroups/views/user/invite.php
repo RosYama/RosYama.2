@@ -1,6 +1,6 @@
 <?php
 $this->breadcrumbs=array(
-	Yii::t('userGroupsModule.general','User Invitation'),
+	Yii::t('UserGroupsModule.general','User Invitation'),
 );
 ?>
 <div id="userGroups-container">
@@ -18,7 +18,7 @@ $this->breadcrumbs=array(
 			<?php echo $form->error($model,'email'); ?>
 		</div>
 		<div class="row buttons">
-			<?php echo CHtml::submitButton(Yii::t('userGroupsModule.general','Invite User')); ?>
+			<?php echo CHtml::submitButton(Yii::t('UserGroupsModule.general','Invite User')); ?>
 		</div>
 		<?php $this->endWidget(); ?>
 	</div>

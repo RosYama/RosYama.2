@@ -6,9 +6,9 @@
 		)); ?>
 	</div>
 
-	<h1><?php echo Yii::t('userGroupsModule.general','Update User').' '.ucfirst($miscModel->username); ?></h1>
+	<h1><?php echo Yii::t('UserGroupsModule.general','Update User').' '.ucfirst($miscModel->username); ?></h1>
 
-	<h2><?php echo Yii::t('userGroupsModule.general', 'General Info'); ?></h2>
+	<h2><?php echo Yii::t('UserGroupsModule.general', 'General Info'); ?></h2>
 	<div class="form">
 
 	<?php $form=$this->beginWidget('CActiveForm', array(
@@ -23,7 +23,7 @@
 			<?php echo $form->labelEx($miscModel,'home'); ?>
 			<?php
 			$home_lists = UserGroupsAccess::homeList();
-			array_unshift($home_lists, Yii::t('userGroupsModule.admin','Group Home: {home}', array('{home}'=>$miscModel->relUserGroupsGroup->home)));
+			array_unshift($home_lists, Yii::t('UserGroupsModule.admin','Group Home: {home}', array('{home}'=>$miscModel->relUserGroupsGroup->home)));
 			?>
 			<?php echo $form->dropDownList($miscModel,'home', $home_lists); ?>
 			<?php echo $form->error($miscModel,'home'); ?>
@@ -37,7 +37,7 @@
 
 		<div class="row buttons">
 			<?php echo CHtml::hiddenField('formID', $form->id) ?>
-			<?php echo CHtml::ajaxSubmitButton(Yii::t('userGroupsModule.general','Update User Profile'), Yii::app()->baseUrl . '/userGroups/user/update/id/'.$passModel->id, array('update' => '#userGroups-container'), array('id' => 'submit-mail'.$passModel->id.rand()) ); ?>
+			<?php echo CHtml::ajaxSubmitButton(Yii::t('UserGroupsModule.general','Update User Profile'), Yii::app()->baseUrl . '/userGroups/user/update/id/'.$passModel->id, array('update' => '#userGroups-container'), array('id' => 'submit-mail'.$passModel->id.rand()) ); ?>
 		</div>
 
 	<?php $this->endWidget(); ?>
@@ -52,7 +52,7 @@
 	}*/
 	?>
 
-	<h2><?php echo Yii::t('userGroupsModule.general', 'Security'); ?></h2>
+	<h2><?php echo Yii::t('UserGroupsModule.general', 'Security'); ?></h2>
 	<div class="form">
 
 	<?php $form=$this->beginWidget('CActiveForm', array(
@@ -95,7 +95,7 @@
 		<?php endif; ?>
 		<div class="row buttons">
 			<?php echo CHtml::hiddenField('formID', $form->id) ?>
-			<?php echo CHtml::ajaxSubmitButton(Yii::t('userGroupsModule.general','Change Password'), Yii::app()->baseUrl .'/userGroups/user/update/id/'.$passModel->id, array('update' => '#userGroups-container'), array('id' => 'submit-pass'.$passModel->id.rand()) ); ?>
+			<?php echo CHtml::ajaxSubmitButton(Yii::t('UserGroupsModule.general','Change Password'), Yii::app()->baseUrl .'/userGroups/user/update/id/'.$passModel->id, array('update' => '#userGroups-container'), array('id' => 'submit-pass'.$passModel->id.rand()) ); ?>
 		</div>
 
 	<?php $this->endWidget(); ?>

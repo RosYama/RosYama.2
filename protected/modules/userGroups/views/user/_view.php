@@ -36,7 +36,7 @@ echo '//'.str_replace(array('{','}'), NULL, $p['model']->tableName()).'/'.$p['vi
 )); ?>
 <div class="row buttons">
 	<?php echo CHtml::hiddenField('UserGroupsApprove[id]', $data->id); ?>
-	<?php echo CHtml::submitButton(Yii::t('userGroupsModule.general','Approve Registration'), array('onclick' => 'js: if(confirm("'. Yii::t('userGroupsModule.admin', 'Do you really want to approve {who} registration?', array('{who}' => $data->username)).'")) {return true;}else{return false;}')); ?>
+	<?php echo CHtml::submitButton(Yii::t('UserGroupsModule.general','Approve Registration'), array('onclick' => 'js: if(confirm("'. Yii::t('UserGroupsModule.admin', 'Do you really want to approve {who} registration?', array('{who}' => $data->username)).'")) {return true;}else{return false;}')); ?>
 </div>
 <?php $this->endWidget(); ?>
 <?php endif; ?>
@@ -71,24 +71,24 @@ echo '//'.str_replace(array('{','}'), NULL, $p['model']->tableName()).'/'.$p['vi
 )); ?>
 <div class="row buttons">
 	<?php echo CHtml::hiddenField('UserGroupsBan[id]', $data->id); ?>
-	<?php echo CHtml::label(Yii::t('userGroupsModule.admin','Ban Reason'), 'UserGroupsBan_reason'); ?> 
+	<?php echo CHtml::label(Yii::t('UserGroupsModule.admin','Ban Reason'), 'UserGroupsBan_reason'); ?> 
 	<?php echo CHtml::textField('UserGroupsBan[reason]'); ?>
-	<?php echo CHtml::label(Yii::t('userGroupsModule.admin','Ban Period'), 'UserGroupsBan_period'); ?>
+	<?php echo CHtml::label(Yii::t('UserGroupsModule.admin','Ban Period'), 'UserGroupsBan_period'); ?>
 	<?php 
 	$ban_periods = array(
-		1 => Yii::t('userGroupsModule.admin','{n} Day|{n} Days', array(1)), 
-		3 => Yii::t('userGroupsModule.admin','{n} Day|{n} Days', array(3)), 
-		5 => Yii::t('userGroupsModule.admin','{n} Day|{n} Days', array(5)),
-		7 => Yii::t('userGroupsModule.admin','{n} Day|{n} Days', array(7)),
-		14 => Yii::t('userGroupsModule.admin','{n} Week|{n} Weeks', array(2)), 
-		28 => Yii::t('userGroupsModule.admin','{n} Month|{n} Months', array(1)), 
-		56 => Yii::t('userGroupsModule.admin','{n} Month|{n} Months', array(2)),
-		84 => Yii::t('userGroupsModule.admin','{n} Month|{n} Months', array(3)),
-		400 => Yii::t('userGroupsModule.admin','Forever'),
+		1 => Yii::t('UserGroupsModule.admin','{n} Day|{n} Days', array(1)), 
+		3 => Yii::t('UserGroupsModule.admin','{n} Day|{n} Days', array(3)), 
+		5 => Yii::t('UserGroupsModule.admin','{n} Day|{n} Days', array(5)),
+		7 => Yii::t('UserGroupsModule.admin','{n} Day|{n} Days', array(7)),
+		14 => Yii::t('UserGroupsModule.admin','{n} Week|{n} Weeks', array(2)), 
+		28 => Yii::t('UserGroupsModule.admin','{n} Month|{n} Months', array(1)), 
+		56 => Yii::t('UserGroupsModule.admin','{n} Month|{n} Months', array(2)),
+		84 => Yii::t('UserGroupsModule.admin','{n} Month|{n} Months', array(3)),
+		400 => Yii::t('UserGroupsModule.admin','Forever'),
 	);
 	?> 
 	<?php echo CHtml::dropDownList('UserGroupsBan[period]', NULL, $ban_periods); ?>
-	<?php echo CHtml::submitButton(Yii::t('userGroupsModule.general','Ban User'), array('onclick' => 'js: if(confirm("'. Yii::t('userGroupsModule.admin', 'Do you really want to ban {who}?', array('{who}' => $data->username)).'")) {return true;}else{return false;}')); ?>
+	<?php echo CHtml::submitButton(Yii::t('UserGroupsModule.general','Ban User'), array('onclick' => 'js: if(confirm("'. Yii::t('UserGroupsModule.admin', 'Do you really want to ban {who}?', array('{who}' => $data->username)).'")) {return true;}else{return false;}')); ?>
 </div>
 <?php $this->endWidget(); ?>
 <?php endif; ?>

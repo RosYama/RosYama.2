@@ -1,14 +1,14 @@
 <div id="userGroups-container">
+	<?php if(Yii::app()->user->hasFlash('success')):?>
+    <div class="info">
+        <?php echo Yii::app()->user->getFlash('success'); ?>
+    </div>
+	<?php endif; ?>
 	<?php if(isset(Yii::app()->request->cookies['success'])): ?>
 	<div class="info">
 		<?php echo Yii::app()->request->cookies['success']->value; ?>
 		<?php unset(Yii::app()->request->cookies['success']);?>
 	</div>
-	<?php endif; ?>
-	<?php if(Yii::app()->user->hasFlash('success')):?>
-    <div class="info">
-        <?php echo Yii::app()->user->getFlash('success'); ?>
-    </div>
 	<?php endif; ?>
 	<?php if(Yii::app()->user->hasFlash('mail')):?>
     <div class="info">
