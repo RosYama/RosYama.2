@@ -191,7 +191,7 @@ class MigrationController extends Controller
 					$picture->ordering=$i;
 					$picture->save();
 				}
-				if ($model->STATE!="fixed"){
+				if ($model->STATE=="fixed"){
 						$fixmodel=new HoleFixeds;
 						$fixmodel->user_id=$model->USER_ID;
 						$fixmodel->hole_id=$model->ID;
