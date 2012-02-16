@@ -381,7 +381,7 @@ class Holes extends CActiveRecord
 					return false;
 				}
 		else {			
-			$this->user_fix->delete();			
+			if ($this->user_fix) $this->user_fix->delete();			
 			if (count ($this->fixeds) == 0) {
 					$this->DATE_STATUS=time();
 					if($this->STATE == 'fresh')  
