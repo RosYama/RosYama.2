@@ -37,8 +37,8 @@ $this->widget('application.extensions.fancybox.EFancyBox', array(
 							<?php foreach ($hole->requests_gibdd as $request) : ?>
 							<?php  if ($request->user) : ?>
 								<li><?php echo date('d.m.Y',$request->date_sent);?> <?php echo CHtml::link(CHtml::encode($request->user->getParam('showFullname') ? $request->user->Fullname : ($request->user->name ? $request->user->name : $request->user->username)), array('/profile/view', 'id'=>$request->user->id),array('class'=>""));?>
-								<?php if ($hole->STATE == 'fixed' && $fix=$hole->getFixByUser($request->user->id)) : ?>, 
-								<?php echo date('d.m.Y',$fix->date_fix);?> отметил факт исправления дефекта
+								<?php if ($hole->STATE == 'fixed' && $fix=$hole->getFixByUser($request->user->id)) : ?> 
+								<br /><?php echo date('d.m.Y',$fix->date_fix);?> отметил факт исправления дефекта
 								<?php endif; ?>
 								</li>
 							<?php endif; ?>
