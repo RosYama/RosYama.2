@@ -36,13 +36,14 @@ $this->widget('application.extensions.fancybox.EFancyBox', array(
 							<ul>
 							<?php foreach ($hole->requests_gibdd as $request) : ?>
 							<?php  if ($request->user) : ?>
-								<li><?php echo date('d.m.Y',$request->date_sent);?> <?php echo CHtml::link(CHtml::encode($request->user->getParam('showFullname') ? $request->user->Fullname : ($request->user->name ? $request->user->name : $request->user->username)), array('/profile/view', 'id'=>$request->user->id),array('class'=>""));?>
+								<li><?php echo date('d.m.Y',$request->date_sent);?> <?php echo $userlink=CHtml::link(CHtml::encode($request->user->getParam('showFullname') ? $request->user->Fullname : ($request->user->name ? $request->user->name : $request->user->username)), array('/profile/view', 'id'=>$request->user->id),array('class'=>""));?>  отправил запрос в ГИБДД
 								<?php if ($hole->STATE == 'fixed' && $fix=$hole->getFixByUser($request->user->id)) : ?> 
-								<br /><?php echo date('d.m.Y',$fix->date_fix);?> отметил факт исправления дефекта
+								<br /><?php echo date('d.m.Y',$fix->date_fix);?> <?php echo $userlink; ?> отметил факт исправления дефекта
 								<?php endif; ?>
 								</li>
 							<?php endif; ?>
 							<?php endforeach; ?>
+							<li>==========</li>
 							</ul>							
 							</div>
 						<? endif; ?>	
