@@ -76,15 +76,15 @@ echo '//'.str_replace(array('{','}'), NULL, $p['model']->tableName()).'/'.$p['vi
 	<?php echo CHtml::label(Yii::t('UserGroupsModule.admin','Ban Period'), 'UserGroupsBan_period'); ?>
 	<?php 
 	$ban_periods = array(
-		1 => Yii::t('UserGroupsModule.admin','{n} Day|{n} Days', array(1)), 
-		3 => Yii::t('UserGroupsModule.admin','{n} Day|{n} Days', array(3)), 
-		5 => Yii::t('UserGroupsModule.admin','{n} Day|{n} Days', array(5)),
-		7 => Yii::t('UserGroupsModule.admin','{n} Day|{n} Days', array(7)),
-		14 => Yii::t('UserGroupsModule.admin','{n} Week|{n} Weeks', array(2)), 
-		28 => Yii::t('UserGroupsModule.admin','{n} Month|{n} Months', array(1)), 
-		56 => Yii::t('UserGroupsModule.admin','{n} Month|{n} Months', array(2)),
-		84 => Yii::t('UserGroupsModule.admin','{n} Month|{n} Months', array(3)),
-		400 => Yii::t('UserGroupsModule.admin','Forever'),
+		1 => '1 день',
+		3 => '2 дня', 
+		5 => '5 дней',
+		7 => '7 дней',
+		14 => '2 недели', 
+		28 => '1 месяц',
+		56 => '2 месяца',
+		84 => '3 месяца',
+		666 => 'Навсегда',
 	);
 	?> 
 	<?php echo CHtml::dropDownList('UserGroupsBan[period]', NULL, $ban_periods); ?>
