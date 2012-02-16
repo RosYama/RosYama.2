@@ -52,6 +52,18 @@ class MigrationController extends Controller
 	$this->layout='//layouts/blank';
 	$this->render('index',array(
 		));		
+	}	
+	
+	public function actionDelthis()
+	{
+	$base=$_SERVER['DOCUMENT_ROOT'];
+	unlink($base.'/protected/views/migration/index.php');
+	rmdir($base.'/protected/views/migration');
+	unlink($base.'/protected/models/BHoles.php');
+	unlink($base.'/protected/models/BUser.php');
+	unlink($base.'/protected/models/BUserGroup.php');
+	unlink($base.'/protected/controllers/MigrationController.php');
+	$this->redirect(array('holes/index');
 	}
 	
 	

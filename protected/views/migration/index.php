@@ -49,5 +49,6 @@
                                 )); ?>
     <div id="importholes_result"></div> 
 	<?php endif; ?>
+	<?php echo CHtml::link('Удалить скрипт миграции', Array('delthis'), Array('class'=>'declarationBtn')); ?></br>
 	</div>	
 	</div>		
