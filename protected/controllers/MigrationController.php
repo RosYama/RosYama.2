@@ -63,7 +63,7 @@ class MigrationController extends Controller
 	unlink($base.'/protected/models/BUser.php');
 	unlink($base.'/protected/models/BUserGroup.php');
 	unlink($base.'/protected/controllers/MigrationController.php');
-	$this->redirect(array('holes/index');
+	$this->redirect(array('holes/index'));
 	}
 	
 	
