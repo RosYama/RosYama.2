@@ -159,6 +159,7 @@ class UserGroupsUser extends CActiveRecord
 			// rules for multiple scenarios
 			array('username, password', 'required', 'on' => array('login', 'registration')),
 			array('email, old_password, password, password_confirm', 'accountOwnership', 'on'=>array('changeMisc', 'changePassword')),
+			array('username', 'length', 'min'=>4, 'on'=>array('changePassword')),
 			array('email', 'required', 'on'=>array('registration','admin','mailRequest','changeMisc','invitation')),
 			array('username, email', 'unique', 'on'=>array('registration','admin', 'recovery','changeMisc', 'invitation')),
 			array('username', 'match', 'pattern'=>'/^[A-Za-z0-9-_\-]{4,}$/', 'on'=>array('registration','admin','recovery'),
@@ -265,10 +266,13 @@ class UserGroupsUser extends CActiveRecord
 	{		
 		// check if you have user admin permission, in that case this validation will
 		// be skipped, otherwise will check if you are trying to update your own account
+		
 		if ((Yii::app()->user->pbac('userGroups.user.admin') || Yii::app()->user->pbac('userGroups.admin.admin')) && Yii::app()->user->id !== $this->id)
 			return true;
 		// load the user model and check if the old password match
 		$user = self::model()->findByPk($this->id);
+		
+		if (!$user->password) return true;
 		
 		if ($user->is_bitrix_pass){
 			if(strlen($user->password) > 32)

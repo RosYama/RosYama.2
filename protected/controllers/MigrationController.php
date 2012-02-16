@@ -87,8 +87,7 @@ class MigrationController extends Controller
 				if ($model) {
 					if ($user->EXTERNAL_AUTH_ID && $user->XML_ID){
 						$username=$user->LOGIN.'_'.$user->EXTERNAL_AUTH_ID;
-						$username=substr($username, 0,110);
-						
+						$username=substr($username, 0,110);						
 						$model=new UserGroupsUser('import');
 						$model->username=$username;
 						}
@@ -103,6 +102,9 @@ class MigrationController extends Controller
 				if ($group->GROUP_ID==1) $group_id=5;
 				if ($group->GROUP_ID==4) $group_id=3;
 				if ($user->LOGIN=='admin') $group_id=1;
+				
+				if ($user->EXTERNAL_AUTH_ID && $user->XML_ID) $user->PASSWORD='';
+				
 				$model->attributes=Array(
 					'id'=>$user->ID,
 					'group_id'=>$group_id,

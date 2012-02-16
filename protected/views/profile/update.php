@@ -121,9 +121,18 @@
 		'enableClientValidation'=>true,
 	)); ?>
 
-		<?php if (Yii::app()->user->pbac('userGroups.user.admin') && Yii::app()->user->id !== $passModel->id) :?>
+		<?php if ($passModel->xml_id && $passModel->external_auth_id) :?>
+		<div class="row">
+			<?php echo $form->labelEx($passModel,'username'); ?>
+			<?php echo $form->textField($passModel,'username',array('size'=>60,'maxlength'=>120)); ?>
+			<p>Изменив логин вы потеряете возможность авторизовываться через аккаунт социальной сети!</p>
+			<?php echo $form->error($passModel,'username'); ?>
+		</div>
+		<?php endif; ?>
+		<?php if (!$miscModel->password || (Yii::app()->user->pbac('userGroups.user.admin') && Yii::app()->user->id !== $passModel->id)) :?>
 			<?php echo $form->hiddenField($passModel,'old_password', array('value'=>'filler'))?>
-		<?php else: ?>
+		<?php else: ?>		
+		
 		<div class="row">
 			<?php echo $form->labelEx($passModel,'old_password'); ?>
 			<?php echo $form->passwordField($passModel,'old_password',array('size'=>60,'maxlength'=>120)); ?>

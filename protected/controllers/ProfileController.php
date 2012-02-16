@@ -97,8 +97,10 @@ class ProfileController extends Controller
 			$model->attributes = $_POST['UserGroupsUser'];			
 			
 			//$model->unsetAttributes(Array('group_id','creation_date'));
-			
 			if ($model->validate()) {
+			if ($model->username!=$miscModel->username){
+				$model->xml_id=''; $model->external_auth_id='';
+			}
 				if ($model->save()) {
 					Yii::app()->user->setFlash('user', 'Данные успешно обновлены');
 					$this->refresh();
