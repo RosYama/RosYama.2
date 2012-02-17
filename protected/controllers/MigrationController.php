@@ -212,7 +212,7 @@ class MigrationController extends Controller
 				$request->save();
 					if ($model->GIBDD_REPLY_RECEIVED){ 
 						$answer=new HoleAnswers('import');
-						$answer->scenario='import';
+						$answer->isimport=true;
 						$answer->request_id=$request->id;
 						$answer->date=$model->DATE_STATUS;
 						$answer->comment=$model->COMMENT_GIBDD_REPLY;						

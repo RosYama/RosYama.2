@@ -15,6 +15,7 @@ class HoleAnswers extends CActiveRecord
 	 * Returns the static model of the specified AR class.
 	 * @return HoleAnswers the static model class
 	 */
+	public $isimport=false; 
 
 	public static function model($className=__CLASS__)
 	{
@@ -93,7 +94,7 @@ class HoleAnswers extends CActiveRecord
 	}	
 	
 	public function getuppload_files(){
-		if ($this->scenario=="insert") return CUploadedFile::getInstancesByName('');
+		if (!$this->isimport) return CUploadedFile::getInstancesByName('');
 		else return Array(123,321);
 	}
 	
