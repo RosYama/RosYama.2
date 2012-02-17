@@ -42,8 +42,8 @@ class HoleAnswers extends CActiveRecord
 			array('comment', 'length'),
 			array('uppload_files, results', 'safe'),
 			//Раскомментить после импорта
-			//array('uppload_files', 'required', 'on'=>'insert', 'message' => 'Необходимо загрузить ответ ГИБДД'),
-			//array('uppload_files', 'file', 'types'=>'jpg, png, gif, txt, pdf','maxFiles'=>10),			
+			array('uppload_files', 'required', 'on'=>'insert', 'message' => 'Необходимо загрузить ответ ГИБДД'),
+			array('uppload_files', 'file', 'types'=>'jpg, png, gif, txt, pdf','maxFiles'=>10),			
 			
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
@@ -93,7 +93,8 @@ class HoleAnswers extends CActiveRecord
 	}	
 	
 	public function getuppload_files(){
-		return CUploadedFile::getInstancesByName('');
+		if ($this->scenario=="insert") return CUploadedFile::getInstancesByName('');
+		else return Array();
 	}
 	
 	public function afterSave()

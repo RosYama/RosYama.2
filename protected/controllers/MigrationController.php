@@ -238,7 +238,10 @@ class MigrationController extends Controller
 								$pict->save();	
 							}
 						}
-						else print_r($answer->errors);	
+						else {
+							print_r($answer->errors);	
+							die();
+							}
 						
 					}	
 				}
