@@ -44,7 +44,7 @@ class HoleAnswers extends CActiveRecord
 			array('uppload_files, results', 'safe'),
 			//Раскомментить после импорта
 			array('uppload_files', 'required', 'on'=>'insert', 'message' => 'Необходимо загрузить ответ ГИБДД'),
-			array('uppload_files', 'file', 'types'=>'jpg, png, gif, txt, pdf','maxFiles'=>10),			
+			array('uppload_files', 'file', 'types'=>'jpg, png, gif, txt, pdf','maxFiles'=>10,'allowEmpty'=>true),			
 			
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
