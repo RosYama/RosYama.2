@@ -232,9 +232,9 @@ class MigrationController extends Controller
 								$pict->file_name=$src;
 								$pict->file_type='image';
 								$pict->answer_id=$answer->id;
-								copy($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/original/'.$src, $dir.'/'.$src);
+								copy($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/original/'.$answer->request->hole->ID.'/'.$src, $dir.'/'.$src);
 									//unlink ($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/original/'.$src);
-								copy($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/medium/'.$src, $dir.'/thumbs/'.$src);
+								copy($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/medium/'.$answer->request->hole->ID.'/'.$src, $dir.'/thumbs/'.$src);
 									//unlink ($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/medium/'.$src);
 								$pict->save();	
 							}
