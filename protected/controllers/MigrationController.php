@@ -212,7 +212,7 @@ class MigrationController extends Controller
 				$request->type='gibdd';
 				$request->save();
 					if ($model->GIBDD_REPLY_RECEIVED){ 
-						$answer=new HoleAnswers;
+						$answer=new HoleAnswers('import');
 						$answer->request_id=$request->id;
 						$answer->date=$model->DATE_STATUS;
 						$answer->comment=$model->COMMENT_GIBDD_REPLY;						
@@ -231,9 +231,9 @@ class MigrationController extends Controller
 								$pict->file_name=$src;
 								$pict->file_type='image';
 								$pict->answer_id=$answer->id;
-								if (copy($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/original/'.$src, $dir.'/'.$src))
+								copy($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/original/'.$src, $dir.'/'.$src);
 									//unlink ($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/original/'.$src);
-								if (copy($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/medium/'.$src, $dir.'/thumbs/'.$src))
+								copy($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/medium/'.$src, $dir.'/thumbs/'.$src);
 									//unlink ($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/medium/'.$src);
 								$pict->save();	
 							}

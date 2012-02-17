@@ -137,9 +137,6 @@ class LightOpenID
 
     protected function request_curl($url, $method='GET', $params=array())
     {
-    	//$url="google.com";
-    	//$method = 'HEAD';
-    	//echo $method;
         $params = http_build_query($params, '', '&');
         $curl = curl_init($url . ($method == 'GET' && $params ? '?' . $params : ''));
         curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
@@ -168,13 +165,9 @@ class LightOpenID
         } else {
             curl_setopt($curl, CURLOPT_HTTPGET, true);
         }
-        /*$headerSent = curl_getinfo($curl, CURLINFO_HEADER_OUT );
-        print_r(curl_getinfo($curl));*/
-        
+        print_r(curl_getinfo($curl)); die();
         $response = curl_exec($curl);
-		
-		/* print_r($response); die();*/
-		
+
         if($method == 'HEAD') {
             $headers = array();
             foreach(explode("\n", $response) as $header) {
