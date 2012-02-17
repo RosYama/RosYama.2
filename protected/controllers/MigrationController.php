@@ -212,6 +212,7 @@ class MigrationController extends Controller
 				$request->save();
 					if ($model->GIBDD_REPLY_RECEIVED){ 
 						$answer=new HoleAnswers('import');
+						$answer->attributes=Array('uppload_files'=>Array(123,456));
 						$answer->isimport=true;
 						$answer->request_id=$request->id;
 						$answer->date=$model->DATE_STATUS;
