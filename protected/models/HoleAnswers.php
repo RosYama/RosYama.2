@@ -94,41 +94,43 @@ class HoleAnswers extends CActiveRecord
 	
 	public function getuppload_files(){
 		if ($this->scenario=="insert") return CUploadedFile::getInstancesByName('');
-		else return Array();
+		else return Array(123,321);
 	}
 	
 	public function afterSave()
 	{			
 		parent::afterSave();
-		$files=$this->uppload_files;
-		if($files){
-		$dir=$_SERVER['DOCUMENT_ROOT'].$this->filesFolder;
-		if (!is_dir($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/answers/'))
-			mkdir($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/answers/');
-		if (!is_dir($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/answers/'.$this->request->hole->ID))
-			mkdir($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/answers/'.$this->request->hole->ID);
-		if (!is_dir($dir))
-			mkdir($dir);
-		if (!is_dir($dir.'/thumbs'))
-			mkdir($dir.'/thumbs');	
-			
-			foreach ($files as $file){
-			if(!$file->hasError){
-				$model=new HoleAnswerFiles;
-				$model->answer_id=$this->id;
-				$model->file_name=rand().'.'.$file->extensionName;
-				$filetypeArr=explode('/', $file->type);
-				if ($filetypeArr[0]=='image') $filetype='image';
-				else $filetype=$file->type;
-				$model->file_type=$filetype;
-				if ($model->save()){
-					$file->saveAs($dir.'/'.$model->file_name);
-					if ($model->file_type=='image'){						
-						$image = Yii::app()->image->load($dir.'/'.$model->file_name);
-						$image->resize(600, 450)->rotate(0)->quality(90)->sharpen(20);
-						//$image->crop($imgmax['width'], $imgmax['height']);
-						$savename=$dir.'/thumbs/'.$model->file_name;
-						$image->save($savename);
+		if ($this->scenario=="insert"){
+			$files=$this->uppload_files;
+			if($files){
+			$dir=$_SERVER['DOCUMENT_ROOT'].$this->filesFolder;
+			if (!is_dir($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/answers/'))
+				mkdir($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/answers/');
+			if (!is_dir($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/answers/'.$this->request->hole->ID))
+				mkdir($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/answers/'.$this->request->hole->ID);
+			if (!is_dir($dir))
+				mkdir($dir);
+			if (!is_dir($dir.'/thumbs'))
+				mkdir($dir.'/thumbs');	
+				
+				foreach ($files as $file){
+				if(!$file->hasError){
+					$model=new HoleAnswerFiles;
+					$model->answer_id=$this->id;
+					$model->file_name=rand().'.'.$file->extensionName;
+					$filetypeArr=explode('/', $file->type);
+					if ($filetypeArr[0]=='image') $filetype='image';
+					else $filetype=$file->type;
+					$model->file_type=$filetype;
+					if ($model->save()){
+						$file->saveAs($dir.'/'.$model->file_name);
+						if ($model->file_type=='image'){						
+							$image = Yii::app()->image->load($dir.'/'.$model->file_name);
+							$image->resize(600, 450)->rotate(0)->quality(90)->sharpen(20);
+							//$image->crop($imgmax['width'], $imgmax['height']);
+							$savename=$dir.'/thumbs/'.$model->file_name;
+							$image->save($savename);
+							}
 						}
 					}
 				}
