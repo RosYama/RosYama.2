@@ -166,7 +166,6 @@ class MigrationController extends Controller
 			}
 			else $model->gibdd_id=0;
 			  
-			if ($model->validate() && $model->user)$count++;
 			//if ($model->errors) print_r ($model->errors);			
 			if ($model->STATE=="inprogress") {
 			if (!$model->DATE_SENT) $model->DATE_SENT=$model->DATE_CREATED;
@@ -238,7 +237,9 @@ class MigrationController extends Controller
 									//unlink ($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/medium/'.$src);
 								$pict->save();	
 							}
-						}	
+						}
+						else print_r($answer->errors);	
+						
 					}	
 				}
 			}
