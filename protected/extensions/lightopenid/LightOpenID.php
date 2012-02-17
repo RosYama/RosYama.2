@@ -164,8 +164,7 @@ class LightOpenID
             curl_setopt($curl, CURLOPT_NOBODY, true);
         } else {
             curl_setopt($curl, CURLOPT_HTTPGET, true);
-        }
-        print_r(curl_getinfo($curl)); die();
+        }       
         $response = curl_exec($curl);
 
         if($method == 'HEAD') {
