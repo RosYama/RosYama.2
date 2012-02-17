@@ -41,7 +41,8 @@ class HoleAnswers extends CActiveRecord
 			array('request_id, date', 'numerical', 'integerOnly'=>true),
 			array('comment', 'length'),
 			array('uppload_files, results', 'safe'),
-			array('uppload_files', 'required', 'on'=>'insert', 'message' => 'Необходимо загрузить ответ ГИБДД'),
+			//Раскоммитить после импорта
+			//array('uppload_files', 'required', 'on'=>'insert', 'message' => 'Необходимо загрузить ответ ГИБДД'),
 			array('uppload_files', 'safe', 'skipOnError'=>true, 'on'=>'import'),
 			array('uppload_files', 'file', 'types'=>'jpg, png, gif, txt, pdf','maxFiles'=>10),			
 			// The following rule is used by search().
