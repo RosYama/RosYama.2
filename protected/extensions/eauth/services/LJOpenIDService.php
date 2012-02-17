@@ -33,11 +33,10 @@ class LJOpenIDService extends EOpenIDService {
 	}
 	
 	protected $requiredAttributes = array(
-		'name' => array('first', 'namePerson'),
-		'lastname' => array('last', 'namePerson'),
-		'email' => array('email', 'contact/email'),
-		//'gender' => array('gender', 'person/gender'),
-		//'birthDate' => array('dob', 'birthDate'),  
+		//'name' => array('first', 'namePerson/first'),
+		//'lastname' => array('lastname', 'namePerson/last'),
+		//'email' => array('email', 'contact/email'),
+		//'url' => array('url', 'url'),
 	);
 	
 	protected function fetchAttributes() {
@@ -47,7 +46,10 @@ class LJOpenIDService extends EOpenIDService {
 			
 		if (isset($this->attributes['birthDate']) && !empty($this->attributes['birthDate']))
 			$this->attributes['birthDate'] = strtotime($this->attributes['birthDate']);
-		$this->attributes['id']=strtolower($this->attributes['id']);
+		$id=strtolower($this->attributes['id']);
+		$id=substr($id, 0,strlen($id)-1);
+		$this->attributes['id']=$id;
+		$this->attributes['name']=Yii::app()->request->getQuery('openid_identity_livejournal');
 		$this->attributes['external_auth_id']='OPENID#http://www.livejournal.com/openid/server.bml';		
 		
 	}

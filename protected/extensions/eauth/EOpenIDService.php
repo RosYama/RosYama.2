@@ -56,6 +56,7 @@ abstract class EOpenIDService extends EAuthServiceBase implements IAuthService {
 							$this->attributes['id'] = $this->auth->identity;
 		
 							$attributes = $this->auth->getAttributes();
+							//print_r($attributes); die();
 							foreach ($this->requiredAttributes as $key => $attr) {
 								if (isset($attributes[$attr[1]])) {
 									$this->attributes[$key] = $attributes[$attr[1]];
