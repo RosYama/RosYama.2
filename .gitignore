@@ -1,3 +1,5 @@
 /upload/*
 /assets/*
 *.zip
+upload
+*~
