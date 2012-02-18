@@ -45,20 +45,20 @@ class XmlController extends Controller
 	{
 		$model=new Holes('search');
 		$model->unsetAttributes();  // clear any default values
-		$model->limit=Yii::app()->request->getQuery('limit');
+		$model->limit=Yii::app()->request->getParam('limit');
 		$model->PREMODERATED=1;
 		if ($user){
 			$model->unsetAttributes(Array('PREMODERATED'));	
 			$model->USER_ID=$user->id;
 			}
 		if ($id) $model->ID=(int)$id;
-		if (Yii::app()->request->getQuery('filter_rf_subject_id')) $model->ADR_SUBJECTRF=(int)Yii::app()->request->getQuery('filter_rf_subject_id');
-		if (Yii::app()->request->getQuery('filter_city')) $model->ADR_CITY=Yii::app()->request->getQuery('filter_city');
-		if (Yii::app()->request->getQuery('filter_status')) $model->STATE=Yii::app()->request->getQuery('filter_status');
-		if (Yii::app()->request->getQuery('filter_type')) $model->type_alias=Yii::app()->request->getQuery('filter_type');
-		$page=Yii::app()->request->getQuery('page');
+		if (Yii::app()->request->getParam('filter_rf_subject_id')) $model->ADR_SUBJECTRF=(int)Yii::app()->request->getParam('filter_rf_subject_id');
+		if (Yii::app()->request->getParam('filter_city')) $model->ADR_CITY=Yii::app()->request->getParam('filter_city');
+		if (Yii::app()->request->getParam('filter_status')) $model->STATE=Yii::app()->request->getParam('filter_status');
+		if (Yii::app()->request->getParam('filter_type')) $model->type_alias=Yii::app()->request->getParam('filter_type');
+		$page=Yii::app()->request->getParam('page');
 		if (!$model->limit) $model->limit=30;
-		$offset=Yii::app()->request->getQuery('offset');
+		$offset=Yii::app()->request->getParam('offset');
 		if (!$offset) $offset=0;
 		$data=$model->search();
 		
@@ -236,15 +236,15 @@ class XmlController extends Controller
 	public function actionAdd($id=null)
 	{
 		$user=$this->auth();
-		$address=Yii::app()->request->getQuery('address');
+		$address=Yii::app()->request->getParam('address');
 		if (!$address) $this->error('NO_ADDRESS'); 
-		$latitude=Yii::app()->request->getQuery('latitude');
+		$latitude=Yii::app()->request->getParam('latitude');
 		if (!$latitude) $this->error('LATITUDE_NOT_SET'); 
-		$longitude=Yii::app()->request->getQuery('longitude');
+		$longitude=Yii::app()->request->getParam('longitude');
 		if (!$longitude) $this->error('LONGITUDE_NOT_SET'); 
-		$comment=Yii::app()->request->getQuery('comment');
-		$gibdd_id=Yii::app()->request->getQuery('gibdd_id');
-		$type=Yii::app()->request->getQuery('type');
+		$comment=Yii::app()->request->getParam('comment');
+		$gibdd_id=Yii::app()->request->getParam('gibdd_id');
+		$type=Yii::app()->request->getParam('type');
 		if (!$type) $this->error('INCORRECT_TYPE');
 		else {
 			$typemodel=HoleTypes::model()->find('alias="'.$type.'"');
@@ -296,13 +296,13 @@ class XmlController extends Controller
 		if($model->STATE!='fresh')	
 			$this->error('UNAPPROPRIATE_METHOD');
 
-		$address=Yii::app()->request->getQuery('address');		
-		$latitude=Yii::app()->request->getQuery('latitude');		
-		$longitude=Yii::app()->request->getQuery('longitude');		 
-		$comment=Yii::app()->request->getQuery('comment');
-		$type=Yii::app()->request->getQuery('type');
-		$deletefiles=Yii::app()->request->getQuery('deletefiles');
-		$gibdd_id=Yii::app()->request->getQuery('gibdd_id');
+		$address=Yii::app()->request->getParam('address');		
+		$latitude=Yii::app()->request->getParam('latitude');		
+		$longitude=Yii::app()->request->getParam('longitude');		 
+		$comment=Yii::app()->request->getParam('comment');
+		$type=Yii::app()->request->getParam('type');
+		$deletefiles=Yii::app()->request->getParam('deletefiles');
+		$gibdd_id=Yii::app()->request->getParam('gibdd_id');
 		if ($type){
 			$typemodel=HoleTypes::model()->find('alias="'.$type.'"');
 			if (!$typemodel) $this->error('INCORRECT_TYPE');
@@ -366,7 +366,7 @@ class XmlController extends Controller
 				$answer=new HoleAnswers;
 				$answer->request_id=$model->request_gibdd->id;
 				$answer->date=time();
-				$model->comment=Yii::app()->request->getQuery('comment');
+				$model->comment=Yii::app()->request->getParam('comment');
 				if($answer->save()){
 					if ($model->STATE=="inprogress")
 						$model->STATE='gibddre';
@@ -387,7 +387,7 @@ class XmlController extends Controller
 					$this->error('UNAPPROPRIATE_METHOD');		
 				$model->scenario='fix';
 				$model->STATE='fixed';
-				$model->COMMENT2=Yii::app()->request->getQuery('comment');
+				$model->COMMENT2=Yii::app()->request->getParam('comment');
 				$model->DATE_STATUS=time();
 				if ($model->save() && $model->savePictures()) $tags[]=CHtml::tag('callresult', array ('result'=>1), 'ok', true);
 				else $this->error('CANNOT_UPDATE_DEFECT');
@@ -436,12 +436,12 @@ class XmlController extends Controller
 			case 'pdf_gibdd':
 			{
 				$attribs=Array(				
-				'to'=>Yii::app()->request->getQuery('to'),
-				'from'=>Yii::app()->request->getQuery('from'),
-				'postaddress'=>Yii::app()->request->getQuery('postaddress'),
-				'address'=>Yii::app()->request->getQuery('holeaddress') ? Yii::app()->request->getQuery('holeaddress') : $model->ADDRESS,
-				'comment'=>Yii::app()->request->getQuery('comment'),
-				'signature'=>Yii::app()->request->getQuery('signature'),
+				'to'=>Yii::app()->request->getParam('to'),
+				'from'=>Yii::app()->request->getParam('from'),
+				'postaddress'=>Yii::app()->request->getParam('postaddress'),
+				'address'=>Yii::app()->request->getParam('holeaddress') ? Yii::app()->request->getParam('holeaddress') : $model->ADDRESS,
+				'comment'=>Yii::app()->request->getParam('comment'),
+				'signature'=>Yii::app()->request->getParam('signature'),
 				'pdf'=>true,
 				);
 				$this->makepdf($attribs, $model);
@@ -453,14 +453,14 @@ class XmlController extends Controller
 			{
 				$attribs=Array(
 				'form_type'=>'prosecutor',
-				'to'=>Yii::app()->request->getQuery('to'),
-				'from'=>Yii::app()->request->getQuery('from'),
-				'postaddress'=>Yii::app()->request->getQuery('postaddress'),
-				'address'=>Yii::app()->request->getQuery('holeaddress') ? Yii::app()->request->getQuery('holeaddress') : $model->ADDRESS,
-				'comment'=>Yii::app()->request->getQuery('comment'),
-				'signature'=>Yii::app()->request->getQuery('signature'),
-				'gibdd'=>Yii::app()->request->getQuery('gibdd'),
-				'gibdd_reply'=>Yii::app()->request->getQuery('gibddre'),
+				'to'=>Yii::app()->request->getParam('to'),
+				'from'=>Yii::app()->request->getParam('from'),
+				'postaddress'=>Yii::app()->request->getParam('postaddress'),
+				'address'=>Yii::app()->request->getParam('holeaddress') ? Yii::app()->request->getParam('holeaddress') : $model->ADDRESS,
+				'comment'=>Yii::app()->request->getParam('comment'),
+				'signature'=>Yii::app()->request->getParam('signature'),
+				'gibdd'=>Yii::app()->request->getParam('gibdd'),
+				'gibdd_reply'=>Yii::app()->request->getParam('gibddre'),
 				'application_data'=>$model->request_gibdd ? date('d.m.Y',$model->request_gibdd->date_sent) : '',
 				'pdf'=>true,
 				);
@@ -480,7 +480,7 @@ class XmlController extends Controller
 	public function actionGeocode()
 	{
 		$user=$this->auth();
-		$string=Yii::app()->request->getQuery('geocode');
+		$string=Yii::app()->request->getParam('geocode');
 		if (!$string) $this->error('GEOCODE_EMPTY_REQUEST');
 		$tags=Array();
 		
@@ -515,7 +515,7 @@ class XmlController extends Controller
 	public function actionGetgibddheadbyregion()
 	{
 		$user=$this->auth();
-		$region_id=(int)Yii::app()->request->getQuery('region_id');		
+		$region_id=(int)Yii::app()->request->getParam('region_id');		
 		$model=RfSubjects::model()->findByPk($region_id);
 		if (!$model) $this->error('NOT_FOUND');
 		$tags=Array();
@@ -609,10 +609,10 @@ class XmlController extends Controller
 		if (Yii::app()->user->isGuest){
 			$model=new UserGroupsUser('login');
 			$loginmode='regular';
-			$model->username=Yii::app()->request->getQuery('login');
-			$model->password=Yii::app()->request->getQuery('password');
-			if (Yii::app()->request->getQuery('passwordhash')) {
-				$model->password=Yii::app()->request->getQuery('passwordhash');
+			$model->username=Yii::app()->request->getParam('login');
+			$model->password=Yii::app()->request->getParam('password');
+			if (Yii::app()->request->getParam('passwordhash')) {
+				$model->password=Yii::app()->request->getParam('passwordhash');
 				$loginmode='fromHash';
 				}
 			$model->rememberMe=0;		
