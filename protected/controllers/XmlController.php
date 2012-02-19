@@ -276,7 +276,8 @@ class XmlController extends Controller
 		$model->COMMENT1=$comment;
 		if (!$gibdd_id){
 			$subjmodel=RfSubjects::model()->findByPk($subject_rf);
-			$model->gibdd_id=$subjmodel->gibdd->id;
+			if ($subjmodel) $model->gibdd_id=$subjmodel->gibdd->id;
+			else $model->gibdd_id=0;
 			}
 		else $model->gibdd_id=$gibdd_id;
 		
