@@ -253,11 +253,11 @@ class XmlController extends Controller
 			}
 		
 		$addressArr    = RfSubjects::model()->Address($address);
-		$subject_rf = $address['subject_rf'];
-		$city       = $address['city'];
-		$address    = $address['address'];
+		$subject_rf = $addressArr['subject_rf'];
+		$city       = $addressArr['city'];
+		$address    = $addressArr['address'];
 		// ворнинги, если надо
-		if(!$subject_rf) $this->error('CANNOT_REALISE_SUBJECTRF');
+		if(!$subject_rf || $subject_rf==0) $this->error('CANNOT_REALISE_SUBJECTRF');
 	
 		if(!$city) $this->error('CANNOT_REALISE_CITY');
 		
