@@ -369,7 +369,7 @@ class XmlController extends Controller
 				$answer->date=time();
 				$model->comment=Yii::app()->request->getParam('comment');
 				if($answer->save()){
-					if ($model->STATE=="inprogress")
+					if ($model->STATE=="inprogress" || $model->STATE=="achtung")
 						$model->STATE='gibddre';
 					$model->GIBDD_REPLY_RECEIVED=1;
 					if (!$model->DATE_STATUS) $model->DATE_STATUS=time();

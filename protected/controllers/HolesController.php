@@ -246,7 +246,7 @@ class HolesController extends Controller
 			//if (isset($_POST['HoleAnswers']['results'])) $answer->results=$_POST['HoleAnswers']['results'];
 			$answer->date=time();
 			if($answer->save()){
-				if ($model->STATE=="inprogress")
+				if ($model->STATE=="inprogress" || $model->STATE=="achtung")
 					$model->STATE='gibddre';
 				$model->GIBDD_REPLY_RECEIVED=1;
 				if (!$model->DATE_STATUS) $model->DATE_STATUS=time();
