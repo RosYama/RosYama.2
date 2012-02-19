@@ -283,7 +283,7 @@ class XmlController extends Controller
 		
 		if (!$model->upploadedPictures) $this->error('NO_FILES'); 
 			if($model->save() && $model->savePictures())
-				$tags[]=CHtml::tag('callresult', array ('result'=>1, 'inserteddefectid'=>$model->id), 'ok', true);
+				$tags[]=CHtml::tag('callresult', array ('result'=>1, 'inserteddefectid'=>$model->ID), 'ok', true);
 			else $this->error('CANNOT_ADD_DEFECT');			
 		
 		$this->renderXml($tags);
