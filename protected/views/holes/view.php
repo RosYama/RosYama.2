@@ -360,7 +360,7 @@ $this->widget('application.extensions.fancybox.EFancyBox', array(
 			<p><b>Ссылка на эту страницу:</b></p>
 			<input onfocus="selectAll(this)" type="text" value='<a href="<?=Yii::app()->request->hostInfo?>/<?=Yii::app()->request->pathInfo?>">РосЯма :: <?= CHtml::encode($hole->ADDRESS) ?></a>'/>
 			<p><b>BBcode для форума:</b></p>
-			<textarea onfocus="selectAll(this)" rows="3">[url=<?=Yii::app()->request->hostInfo?>/<?=Yii::app()->request->pathInfo?>][img]<?=Yii::app()->request->hostInfo.'/'.$hole->pictures_fresh[0]->medium?>[/img][/url][url=<?=Yii::app()->request->hostInfo?>/<?=Yii::app()->request->pathInfo?>] 
+			<textarea onfocus="selectAll(this)" rows="3">[url=<?=Yii::app()->request->hostInfo?>/<?=Yii::app()->request->pathInfo?>]<?php if ($hole->pictures_fresh) : ?>[img]<?=Yii::app()->request->hostInfo.'/'.$hole->pictures_fresh[0]->medium?>[/img]<?php endif; ?>[/url][url=<?=Yii::app()->request->hostInfo?>/<?=Yii::app()->request->pathInfo?>] 
 			РосЯма :: <?=CHtml::encode($hole['ADDRESS'])?>[/url]</textarea>
 			
 			
