@@ -206,9 +206,10 @@
 			&lt;fixed&gt;...&lt;/fixed&gt;
 		&lt;/small&gt;
 	&lt;/pictures&gt;
+	&lt;gibddrequests&gt; - запросы в ГИБДД<br>		&lt;request id=&quot;6&quot; gibdd_id=&quot;75&quot; date=&quot;1326669064&quot; user_id=&quot;2&quot; user_name=&quot;Иванов Иван&quot;&gt; - ID запроса, ID ГИБДД, время отправки и имя пользователя<br>			&lt;answer id=&quot;2&quot; date=&quot;1326729513&quot;&gt; - Ответ из ГИБДД и его время<br>				&lt;files&gt;<br>					&lt;file id=&quot;7&quot; type=&quot;image&quot;&gt;src&lt;/file&gt; - Один из загруженых файлов, допустимые типы &quot;image&quot;, &quot;application/pdf&quot; и &quot;text/plain&quot;<br>						...<br>				&lt;/files&gt;<br>			&lt;/answer&gt;<br>		&lt;/request&gt;<br>	&lt;/gibddrequests&gt;
 &lt;/hole&gt;</pre>
 
-	<h2>Список дефектов</h2>
+<h2>Список дефектов</h2>
 	<p>Список дефектов получается простым запросом к корню http-сервера методом GET. Могут быть переданы параметры, влияющие на фильтрацию, возможно, упорядочивание и отображение списка дефектов. Например:</p>
 	<pre>GET /?filter_rf_subject_id=77&filter_type=holeonroad&filter_status=fixed</pre>
 	<p>Приведённый запрос отфильтрует выведет дефекты, расположенные в регионе 77, типа «яма на дороге» и в статусе «починенные». Просто запрос «GET / » выведет все ямы. Список дефектов можно получать без авторизации.</p>

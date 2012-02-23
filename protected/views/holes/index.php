@@ -142,7 +142,7 @@ EOD
 		<?php
 		$form=$this->beginWidget('CActiveForm', array(
 		//'action'=>Yii::app()->createUrl("departure/out"),
-		//'method'=>'get',
+		'method'=>'get',
 		'id'=>'filter_form',
 		'htmlOptions'=>array()
 		)); ?>
