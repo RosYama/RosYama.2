@@ -114,12 +114,7 @@ class XmlController extends Controller
 								$tags[]=CHtml::tag('src', array ('id'=>$pict->id), CHtml::encode($pict->original), true);
 								}								
 							$tags[]=CHtml::closeTag('fixed');
-							$tags[]=CHtml::tag('gibddreply', array (), false, false);								
-								foreach ($hole->requests_gibdd as $request)
-									foreach ($request->answers as $answer)
-										foreach ($answer->files_img as $pict){
-										$tags[]=CHtml::tag('src', array ('id'=>$pict->id), CHtml::encode($answer->filesFolder.'/'.$pict->file_name), true);
-										}
+							$tags[]=CHtml::tag('gibddreply', array (), false, false);				
 							$tags[]=CHtml::closeTag('gibddreply');
 						$tags[]=CHtml::closeTag('original');
 						
@@ -164,6 +159,22 @@ class XmlController extends Controller
 						$tags[]=CHtml::closeTag('small');
 					
 					$tags[]=CHtml::closeTag('pictures');
+					$tags[]=CHtml::tag('gibddrequests', array (), false, false);	
+						foreach ($hole->requests_gibdd as $request){
+						$tags[]=CHtml::tag('request', array ('id'=>$request->id, 'gibdd_id'=>$request->gibdd_id,'date'=>$request->date_sent,'user_id'=>$request->user_id, 'user_name'=>$request->user->Fullname
+						), false, false);
+								foreach ($request->answers as $answer){
+								$tags[]=CHtml::tag('answer', array ('id'=>$answer->id, 'date'=>$answer->date), false, false);
+									$tags[]=CHtml::tag('files', array (), false, false);
+										foreach ($answer->files as $pict){
+										$tags[]=CHtml::tag('file', array ('id'=>$pict->id, 'type'=>$pict->file_type), CHtml::encode($answer->filesFolder.'/'.$pict->file_name), true);
+										}
+									$tags[]=CHtml::closeTag('files');	
+								$tags[]=CHtml::closeTag('answer');	
+								}		
+						$tags[]=CHtml::closeTag('request');	
+						}
+					$tags[]=CHtml::closeTag('gibddrequests');					
 				$tags[]=CHtml::closeTag('hole');	
 				}
 		$tags[]=CHtml::closeTag('defectslist');
@@ -340,6 +351,27 @@ class XmlController extends Controller
 		$this->renderXml($tags);
 	}
 	
+	public $updateMethods=Array(
+		'fresh'=>Array('update', 'delete', 'setinprogress', 'setfixed'),
+		'inprogress'=>Array('revoke', 'setreplied', 'setfixed'),
+		'fixed'=>Array('defix'),
+		'achtung'=>Array('toprosecutor', 'setfixed'),
+		'gibddre'=>Array('setreplied', 'setfixed'),
+		'to_prosecutor'=>Array('revokep', 'setfixed'),
+	);
+	
+	public function actionGetupdatemethods()
+	{
+		$tags=Array();			
+		foreach ($this->updateMethods as $state=>$methods){
+			$tags[]=CHtml::tag('state', array ('id'=>$state), false, false);
+				foreach ($methods as $method)
+					$tags[]=CHtml::tag('method', array ('name'=>$method), false, true);
+			$tags[]=CHtml::closeTag('state');	
+		}
+		$this->renderXml($tags);
+	}
+	
 	public function actionSetstate($id,$type)
 	{
 		$user=$this->auth();
@@ -347,6 +379,14 @@ class XmlController extends Controller
 		$tags=Array();		
 		switch($type)
 		{
+			case 'getupdatemethods':
+			{
+				$tags[]=CHtml::tag('state', array ('id'=>$model->STATE), false, false);
+					foreach ($this->updateMethods[$model->STATE] as $method)
+						$tags[]=CHtml::tag('method', array ('name'=>$method), false, true);
+				$tags[]=CHtml::closeTag('state');		
+				break;
+			}			
 			case 'setinprogress':
 			{
 				if ($model->makeRequest('gibdd')) $tags[]=CHtml::tag('callresult', array ('result'=>1), 'ok', true);
