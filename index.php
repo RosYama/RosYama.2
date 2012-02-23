@@ -4,7 +4,8 @@ setlocale(LC_TIME, array("ru_RU","rus_RUS"));
 
 // change the following paths if necessary
 $yii=dirname(__FILE__).'/../yii-last/framework/yii.php';
-if($_SERVER['HTTP_HOST']!='xml.rosyama.ru')
+
+if($_SERVER['HTTP_HOST']!='xml.rosyama.ru' and $_SERVER['HTTP_HOST']!='xml.dev.rosyama.ru')
 	$config=dirname(__FILE__).'/protected/config/main.php';
 else 	
 	$config=dirname(__FILE__).'/protected/config/xml.php';
