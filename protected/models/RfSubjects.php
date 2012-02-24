@@ -166,7 +166,7 @@ class RfSubjects extends CActiveRecord
 				break;
 			}
 			// неизвестно что
-			if(!$_address[1])
+			if(!isset($_address[1]) || !$_address[1])
 			{
 				$subject_rf = '';
 				$city       = '';

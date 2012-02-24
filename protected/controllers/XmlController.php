@@ -17,6 +17,7 @@ class XmlController extends Controller
 		return Array(
 			'NOT_FOUND'=>Array(CHtml::tag('error', array ('code'=>"NOT_FOUND"), 'Запрашиваемый ресурс не найден', true)),
 			'AUTHORIZATION_REQUIRED'=>Array(CHtml::tag('error', array ('code'=>"AUTHORIZATION_REQUIRED"), 'Требуется авторизация', true)),
+			'CANNOT_REALISE_SUBJECTRF'=>Array(CHtml::tag('error', array ('code'=>"CANNOT_REALISE_SUBJECTRF"), 'Невозможно определить субъект РФ', true)),
 			'NOT_IMPLEMENTED'=>Array(CHtml::tag('error', array ('code'=>"NOT_IMPLEMENTED"), 'Метод не реализован', true)),
 			'NO_FILES'=>Array(CHtml::tag('error', array ('code'=>"NO_FILES"), 'Не загружено ни одного файла', true)),
 			'TOO_BIG_FILE'=>Array(CHtml::tag('error', array ('code'=>"TOO_BIG_FILE"), 'Слишком большой файл', true)),
@@ -178,9 +179,8 @@ class XmlController extends Controller
 				$tags[]=CHtml::closeTag('hole');	
 				}
 		$tags[]=CHtml::closeTag('defectslist');
-		if ($data->data)
-			$this->renderXml($tags);
-		else $this->error('NOT_FOUND');	
+		if (!$data->data && $id) $this->error('NOT_FOUND');	
+		$this->renderXml($tags);
 	}
 	
 	public function actionGetregions()
@@ -323,9 +323,9 @@ class XmlController extends Controller
 		
 		if ($address){
 			$addressArr    = RfSubjects::model()->Address($address);
-			$subject_rf = $address['subject_rf'];
-			$city       = $address['city'];
-			$address    = $address['address'];
+			$subject_rf = $addressArr['subject_rf'];
+			$city       = $addressArr['city'];
+			$address    = $addressArr['address'];
 			// ворнинги, если надо
 			if(!$subject_rf) $this->error('CANNOT_REALISE_SUBJECTRF');	
 			if(!$city) $this->error('CANNOT_REALISE_CITY');
@@ -468,7 +468,7 @@ class XmlController extends Controller
 				if ($model->gibdd) {
 					$tags[]=CHtml::tag('gibddhead', array ('subjectid'=>$model->gibdd->subject->id, 'id'=>$model->gibdd->id), false, false);
 						$tags[]=CHtml::tag('nominative', array ('post'=>$model->gibdd->post, 'gibdd'=>$model->gibdd->gibdd_name), CHtml::encode($model->gibdd->fio), true);
-						$tags[]=CHtml::tag('nominative', array ('dative'=>$model->gibdd->post_dative), CHtml::encode($model->gibdd->fio_dative), true);
+						$tags[]=CHtml::tag('dative', array ('post'=>$model->gibdd->post_dative), CHtml::encode($model->gibdd->fio_dative), true);
 					$tags[]=CHtml::closeTag('gibddhead');
 				}
 				else $this->error('UNAPPROPRIATE_METHOD'); 
