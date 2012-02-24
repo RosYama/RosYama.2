@@ -221,6 +221,33 @@ class RfSubjects extends CActiveRecord
 		);
 	}
 	
+	public function AddressfromLatLng($lat,$lng, $key){
+	
+		$c = curl_init('http://geocode-maps.yandex.ru/1.x/?format=xml&geocode='.urlencode($lng.','.$lat).'&key='.$key);
+				ob_start();
+				curl_exec($c);
+				$out = ob_get_clean();
+				$cinfo = curl_getinfo($c);
+				curl_close($c);
+				if
+				(
+					$cinfo['http_code'] != 200
+					|| !$out
+					|| substr($cinfo['content_type'], 0, 8) != 'text/xml'
+					|| !$cinfo['size_download']
+				)
+				{
+					return false;
+					break;
+				}
+				
+				$xml = simplexml_load_string($out);
+				
+				$addr=$xml->GeoObjectCollection->featureMember[0]->GeoObject->metaDataProperty->GeocoderMetaData->text;
+				return ($this->Address($addr));
+	
+	}
+	
 	public function search()
 	{
 		// Warning: Please modify the following code to remove attributes that

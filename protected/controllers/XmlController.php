@@ -95,7 +95,7 @@ class XmlController extends Controller
 					$tags[]=CHtml::closeTag('username');
 					$tags[]=CHtml::tag('latitude', array (), CHtml::encode($hole->LATITUDE), true);
 					$tags[]=CHtml::tag('longitude', array (), CHtml::encode($hole->LONGITUDE), true);
-					$tags[]=CHtml::tag('address', array ('city'=>$hole->ADR_CITY, 'subjectrf'=>$hole->ADR_SUBJECTRF), CHtml::encode($hole->ADDRESS), true);
+					$tags[]=CHtml::tag('address', array ('city'=>$hole->ADR_CITY, 'subjectrf'=>$hole->ADR_SUBJECTRF), CHtml::encode($hole->subject->name_full.', '.$hole->ADR_CITY.', '.$hole->ADDRESS), true);
 					$tags[]=CHtml::tag('state', array ('code'=>$hole->STATE), CHtml::encode($hole->StateName), true);
 					$tags[]=CHtml::tag('type', array ('code'=>$hole->type->alias), CHtml::encode($hole->type->name), true);
 					$tags[]=CHtml::tag('datecreated', array ('readable'=>date('d.m.Y',$hole->DATE_CREATED)), CHtml::encode($hole->DATE_CREATED), true);
@@ -268,6 +268,16 @@ class XmlController extends Controller
 		$subject_rf = $addressArr['subject_rf'];
 		$city       = $addressArr['city'];
 		$address    = $addressArr['address'];
+		
+		if((!$subject_rf || !$city || !$address) && ($latitude && $longitude)){
+				$addressArr    = RfSubjects::model()->AddressfromLatLng($latitude, $longitude, $this->mapkey);
+					if ($addressArr) {
+						$subject_rf = $addressArr['subject_rf'];
+						$city       = $addressArr['city'];
+						$address    = $addressArr['address'];	
+					}
+			}
+		
 		// ворнинги, если надо
 		if(!$subject_rf || $subject_rf==0) $this->error('CANNOT_REALISE_SUBJECTRF');
 	
@@ -328,6 +338,14 @@ class XmlController extends Controller
 			$city       = $addressArr['city'];
 			$address    = $addressArr['address'];
 			// ворнинги, если надо
+			if((!$subject_rf || !$city || !$address) && ($latitude && $longitude)){
+				$addressArr    = RfSubjects::model()->AddressfromLatLng($latitude, $longitude, $this->mapkey);
+					if ($addressArr) {
+						$subject_rf = $addressArr['subject_rf'];
+						$city       = $addressArr['city'];
+						$address    = $addressArr['address'];	
+					}
+			}
 			if(!$subject_rf) $this->error('CANNOT_REALISE_SUBJECTRF');	
 			if(!$city) $this->error('CANNOT_REALISE_CITY');
 		}
