@@ -189,7 +189,7 @@ class RfSubjects extends CActiveRecord
 			{
 				$_address[1] = '';
 				// точка попала в город
-				if($_address[2])
+				if(isset($_address[2]))
 				{
 					$city        = trim($_address[2]);
 					$_address[2] = '';

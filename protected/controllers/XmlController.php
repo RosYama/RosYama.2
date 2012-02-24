@@ -18,6 +18,7 @@ class XmlController extends Controller
 			'NOT_FOUND'=>Array(CHtml::tag('error', array ('code'=>"NOT_FOUND"), 'Запрашиваемый ресурс не найден', true)),
 			'AUTHORIZATION_REQUIRED'=>Array(CHtml::tag('error', array ('code'=>"AUTHORIZATION_REQUIRED"), 'Требуется авторизация', true)),
 			'CANNOT_REALISE_SUBJECTRF'=>Array(CHtml::tag('error', array ('code'=>"CANNOT_REALISE_SUBJECTRF"), 'Невозможно определить субъект РФ', true)),
+			'CANNOT_REALISE_CITY'=>Array(CHtml::tag('error', array ('code'=>"CANNOT_REALISE_CITY"), 'Невозможно определить город', true)),
 			'NOT_IMPLEMENTED'=>Array(CHtml::tag('error', array ('code'=>"NOT_IMPLEMENTED"), 'Метод не реализован', true)),
 			'NO_FILES'=>Array(CHtml::tag('error', array ('code'=>"NO_FILES"), 'Не загружено ни одного файла', true)),
 			'TOO_BIG_FILE'=>Array(CHtml::tag('error', array ('code'=>"TOO_BIG_FILE"), 'Слишком большой файл', true)),
