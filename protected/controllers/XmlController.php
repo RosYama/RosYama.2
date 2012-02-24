@@ -43,6 +43,12 @@ class XmlController extends Controller
 		);
 	}
 	
+	public function getUploadError($str){
+		$tags=Array(CHtml::tag('error', array ('code'=>"UPLOAD_ERROR"), CHtml::encode($str), true));
+		$this->renderXml($tags);
+		Yii::app()->end();
+	}	
+	
 	public function actionIndex($id=null, $user=null)
 	{
 		$model=new Holes('search');
@@ -304,6 +310,10 @@ class XmlController extends Controller
 		else $model->gibdd_id=$gibdd_id;
 		
 		if (!$model->upploadedPictures) $this->error('NO_FILES'); 
+		
+		$model->validate();
+		if ($model->getError('upploadedPictures')) $this->getUploadError($model->getError('upploadedPictures'));  
+		
 			if($model->save() && $model->savePictures())
 				$tags[]=CHtml::tag('callresult', array ('result'=>1, 'inserteddefectid'=>$model->ID), 'ok', true);
 			else $this->error('CANNOT_ADD_DEFECT');			
@@ -363,6 +373,8 @@ class XmlController extends Controller
 		if ($comment) $model->COMMENT1=$comment;
 		if ($deletefiles) $model->deletepict=$deletefiles;
 		if ($gibdd_id) $model->gibdd_id=$gibdd_id;
+		$model->validate();
+		if ($model->getError('upploadedPictures')) $this->getUploadError($model->getError('upploadedPictures'));
 			if($model->save() && $model->savePictures())
 				$tags[]=CHtml::tag('callresult', array ('result'=>1), 'ok', true);
 			else $this->error('CANNOT_UPDATE_DEFECT');
