@@ -477,6 +477,7 @@ class Holes extends CActiveRecord
 	
 	public function BeforeSave(){
 				parent::beforeSave();
+				$this->ADR_CITY=trim($this->ADR_CITY);
 					if ($this->scenario=='fix'){
 						$fixmodel=new HoleFixeds;
 						$fixmodel->user_id=Yii::app()->user->id;
