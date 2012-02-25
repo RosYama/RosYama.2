@@ -101,7 +101,7 @@ class XmlController extends Controller
 					$tags[]=CHtml::closeTag('username');
 					$tags[]=CHtml::tag('latitude', array (), CHtml::encode($hole->LATITUDE), true);
 					$tags[]=CHtml::tag('longitude', array (), CHtml::encode($hole->LONGITUDE), true);
-					$tags[]=CHtml::tag('address', array ('city'=>$hole->ADR_CITY, 'subjectrf'=>$hole->ADR_SUBJECTRF), CHtml::encode($hole->subject->name_full.', '.$hole->ADR_CITY.', '.$hole->ADDRESS), true);
+					$tags[]=CHtml::tag('address', array ('city'=>$hole->ADR_CITY, 'subjectrf'=>$hole->ADR_SUBJECTRF), CHtml::encode(($hole->subject ? $hole->subject->name_full.', ' : '') .$hole->ADR_CITY.', '.$hole->ADDRESS), true);
 					$tags[]=CHtml::tag('state', array ('code'=>$hole->STATE), CHtml::encode($hole->StateName), true);
 					$tags[]=CHtml::tag('type', array ('code'=>$hole->type->alias), CHtml::encode($hole->type->name), true);
 					$tags[]=CHtml::tag('datecreated', array ('readable'=>date('d.m.Y',$hole->DATE_CREATED)), CHtml::encode($hole->DATE_CREATED), true);
