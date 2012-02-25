@@ -11,8 +11,6 @@ else
 	$config=dirname(__FILE__).'/protected/config/xml.php';
 
 // remove the following lines when in production mode
-defined('YII_DEBUG') or define('YII_DEBUG',true);
-// remove the following lines when in production mode
 if (isset($_GET['testing']) && $_GET['testing']==1){
         defined('YII_DEBUG') or define('YII_DEBUG',true);
 }
