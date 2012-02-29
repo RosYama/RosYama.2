@@ -124,6 +124,8 @@
 			<p class="friends">Чиним ямы <a href="http://ukryama.com/">в Украине</a>, <a href="http://belyama.by/">Беларуси</a> и <a href="http://kazyama.kz/">Казахстане</a></p>
 		</div>
 	</div>
+	
+	<!--
 	<script type="text/javascript">
 	reformal_wdg_domain    = "rosyama";
 	reformal_wdg_mode    = 0;
@@ -147,8 +149,28 @@
 	</script>
 	
 	<script type="text/javascript" language="JavaScript" src="http://reformal.ru/tab6.js?charset=utf-8"></script><noscript><a href="http://rosyama.reformal.ru">rosyama feedback </a> <a href="http://reformal.ru"><img src="http://reformal.ru/i/logo.gif" /></a></noscript>
-	<script type="text/javascript">
+	-->
 	
+	<script type="text/javascript">
+                var reformalOptions = {
+                        project_id: 43983,
+                        project_host: "rosyama.reformal.ru",
+                        force_new_window: false,
+                        tab_alignment: "left",
+                        tab_top: "316",
+                        tab_image_url: "http://reformal.ru/files/images/buttons/reformal_tab_orange.png"
+                };
+                (function() {
+                        if ('https:' == document.location.protocol) return;
+                        var script = document.createElement('script');
+                        script.type = 'text/javascript';
+                        script.src = 'http://media.reformal.ru/widgets/v1/reformal.js';
+                        document.getElementsByTagName('head')[0].appendChild(script);
+                })();
+        </script>
+               	
+	
+	<script type="text/javascript">
 	  var _gaq = _gaq || [];
 	  _gaq.push(['_setAccount', 'UA-21943923-3']);
 	  _gaq.push(['_trackPageview']);
