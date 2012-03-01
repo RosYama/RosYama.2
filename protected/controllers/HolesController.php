@@ -652,6 +652,8 @@ class HolesController extends Controller
 		else $ZOOM=14;
 		
 		if ($ZOOM < 3) { $_GET['left']=-190; $_GET['right']=190;}
+
+		if (!isset ($_GET['bottom']) || !isset ($_GET['left']) || !isset ($_GET['right']) || !isset ($_GET['top'])) Yii::app()->end();
 		
 		if (isset ($_GET['bottom'])) $criteria->addCondition('LATITUDE > '.(float)$_GET['bottom']);
 		if (isset ($_GET['left'])) $criteria->addCondition('LONGITUDE > '.(float)$_GET['left']);	 	

@@ -546,7 +546,7 @@ class Holes extends CActiveRecord
 
 		$criteria=new CDbCriteria;
 		//$criteria->with=Array('pictures_fresh','pictures_fixed');
-		$criteria->with=Array('type');
+		$criteria->with=Array('type','pictures_fresh');
 		$criteria->compare('t.ID',$this->ID,false);
 		$criteria->compare('USER_ID',$this->USER_ID,false);
 		$criteria->compare('LATITUDE',$this->LATITUDE);
