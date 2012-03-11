@@ -27,6 +27,22 @@ $this->layout='//layouts/header_default_without_add';
 	<table class="faq-item">
 		<tr>
 			<th>Q:</th>
+			<td class="question">Где я могу скачать мобильные приложения для РосЯмы под IPhone или Android?</td>
+		</tr>		
+		<tr>
+			<th>A:</th>
+			<td><p>Приложение для IPhone: <a href="http://itunes.apple.com/ru/app/id456229487?mt=8">http://itunes.apple.com/ru/app/id456229487?mt=8</a></p>
+			    <p>Приложение для Android от UnrealMojo: <a href="https://market.android.com/details?id=ru.rosyama.android">https://market.android.com/details?id=ru.rosyama.android</a></p>
+			    <p>Приложение для Android от RedSolution: <a href="https://market.android.com/details?id=ru.redsolution.rosyama">https://market.android.com/details?id=ru.redsolution.rosyama</a></p>
+			    <p>Приложение для Samsung Bada: <a href="http://www.samsungapps.com/topApps/topAppsDetail.as?productId=G00004062550">http://www.samsungapps.com/topApps/topAppsDetail.as?productId=G00004062550</a></p>
+			    <p>Приложение для Windows Phone: <a href="http://www.windowsphone.com/ru-RU/apps/783e000f-c9ac-4c11-af17-f5e465cd881b">http://www.windowsphone.com/ru-RU/apps/783e000f-c9ac-4c11-af17-f5e465cd881b</a></p>
+			</td>
+
+		</tr>		
+	</table>	
+	<table class="faq-item">
+		<tr>
+			<th>Q:</th>
 			<td class="question">Почему бы не создать такой же сайт по другой проблемной тематике (жкх, помойки, наркотики, выборы, и т. д.)</td>
 		</tr>		
 		<tr>
@@ -69,22 +85,6 @@ $this->layout='//layouts/header_default_without_add';
 			<th>A:</th>
 			<td>В такой ситуации лучше всего объединить несколько ям в одно заявление.<br />
 Поскольку на каждое заявление ГИБДД должны отвечать отдельно - такое объединение нескольких ям в одном заявлении поможет им не заниматься бессмысленным бумагомаранием и оставит им больше времени на реальную работу.</td>
-		</tr>		
-	</table>	
-	<table class="faq-item">
-		<tr>
-			<th>Q:</th>
-			<td class="question">Где я могу скачать мобильные приложения для РосЯмы под IPhone или Android?</td>
-		</tr>		
-		<tr>
-			<th>A:</th>
-			<td><p>Приложение для IPhone: <a href="http://itunes.apple.com/ru/app/id456229487?mt=8">http://itunes.apple.com/ru/app/id456229487?mt=8</a></p>
-			    <p>Приложение для Android от UnrealMojo: <a href="https://market.android.com/details?id=ru.rosyama.android">https://market.android.com/details?id=ru.rosyama.android</a></p>
-			    <p>Приложение для Android от RedSolution: <a href="https://market.android.com/details?id=ru.redsolution.rosyama">https://market.android.com/details?id=ru.redsolution.rosyama</a></p>
-			    <p>Приложение для Samsung Bada: <a href="http://www.samsungapps.com/topApps/topAppsDetail.as?productId=G00004062550">http://www.samsungapps.com/topApps/topAppsDetail.as?productId=G00004062550</a></p>
-			    <p>Приложение для Windows Phone: <a href="http://www.windowsphone.com/ru-RU/apps/783e000f-c9ac-4c11-af17-f5e465cd881b">http://www.windowsphone.com/ru-RU/apps/783e000f-c9ac-4c11-af17-f5e465cd881b</a></p>
-			</td>
-
 		</tr>		
 	</table>	
 	<table class="faq-item">
