@@ -80,14 +80,4 @@ $this->layout='//layouts/header_default_without_add';
 			<td>Пришлите на <a class="txttohtmllink" href="mailto:rossyama@gmail.com" title="Написать письмо">rossyama@gmail.com</a> фотографию исправленного участка, желательно с того же ракурса, что и раньше. Укажите номер дефекта на сайте. Мы отметим факт исправления дефекта вручную.</td>
 		</tr>		
 	</table>	
-	<table class="faq-item">
-		<tr>
-			<th>Q:</th>
-			<td class="question">Я зарегистрировался, письмо о подтверждении регистрации не пришло, email теперь занят, учётная запись не активирована. Что делать - непонятно.</td>
-		</tr>		
-		<tr>
-			<th>A:</th>
-			<td>Для начала поищите письмо о подтверждении регистрации в папке со спамом. Если не помогло - напишите на <a class="txttohtmllink" href="mailto:rossyama@gmail.com" title="Написать письмо">rossyama@gmail.com</a> с указанием логина и емейла - Ваша учётная запись будет активирована вручную.</td>
-		</tr>		
-	</table>	
 </div>
