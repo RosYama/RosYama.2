@@ -11,6 +11,22 @@ $this->layout='//layouts/header_default_without_add';
 	<table class="faq-item">
 		<tr>
 			<th>Q:</th>
+			<td class="question">Где можно получить больше информации, пообщаться с единомышленниками, и т. д?</td>
+		</tr>		
+		<tr>
+			<th>A:</th>
+			<td>
+			Почта: <a href="mailto:rossyama.gmail.com">rossyama@gmail.com</a>
+                        Форум: <a href="http://forum.rosyama.ru">http://forum.rosyama.ru</a>
+                        Твиттер: <a href="https://twitter.com/#!/fezeev">https://twitter.com/#!/fezeev</a>
+                        LiveJournal: <a href="http://fezeev.livejournal.com/">http://fezeev.livejournal.com/</a> 
+                        </td>
+		</tr>		
+	</table>	
+
+	<table class="faq-item">
+		<tr>
+			<th>Q:</th>
 			<td class="question">Почему бы не создать такой же сайт по другой проблемной тематике (жкх, помойки, наркотики, выборы, и т. д.)</td>
 		</tr>		
 		<tr>
