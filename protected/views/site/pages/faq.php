@@ -63,7 +63,11 @@ $this->layout='//layouts/header_default_without_add';
 		<tr>
 			<th>A:</th>
 			<td><p>Приложение для IPhone: <a href="http://itunes.apple.com/ru/app/id456229487?mt=8">http://itunes.apple.com/ru/app/id456229487?mt=8</a></p>
-<p>Приложение для Android: <a href="https://market.android.com/details?id=ru.redsolution.rosyama">https://market.android.com/details?id=ru.redsolution.rosyama</a></p></td>
+<p>Приложение для Android от UnrealMojo: <a href="https://market.android.com/details?id=ru.rosyama.android">https://market.android.com/details?id=ru.rosyama.android</a></p></td>
+<p>Приложение для Android от RedSolution: <a href="https://market.android.com/details?id=ru.redsolution.rosyama">https://market.android.com/details?id=ru.redsolution.rosyama</a></p></td>
+<p>Приложение для Samsung Bada: <a href="http://www.samsungapps.com/topApps/topAppsDetail.as?productId=G00004062550">http://www.samsungapps.com/topApps/topAppsDetail.as?productId=G00004062550</a></p></td>
+<p>Приложение для Windows Phone: <a href="http://www.windowsphone.com/ru-RU/apps/783e000f-c9ac-4c11-af17-f5e465cd881b">http://www.windowsphone.com/ru-RU/apps/783e000f-c9ac-4c11-af17-f5e465cd881b</a></p></td>
+
 		</tr>		
 	</table>	
 	<table class="faq-item">
