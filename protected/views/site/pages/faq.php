@@ -16,10 +16,10 @@ $this->layout='//layouts/header_default_without_add';
 		<tr>
 			<th>A:</th>
 			<td>
-			Почта: <a href="mailto:rossyama.gmail.com">rossyama@gmail.com</a>
-                        Форум: <a href="http://forum.rosyama.ru">http://forum.rosyama.ru</a>
-                        Твиттер: <a href="https://twitter.com/#!/fezeev">https://twitter.com/#!/fezeev</a>
-                        LiveJournal: <a href="http://fezeev.livejournal.com/">http://fezeev.livejournal.com/</a> 
+			<p>Почта: <a href="mailto:rossyama.gmail.com">rossyama@gmail.com</a></p>
+                        <p>Форум: <a href="http://forum.rosyama.ru">http://forum.rosyama.ru</a></p>
+                        <p>Твиттер: <a href="https://twitter.com/#!/fezeev">https://twitter.com/#!/fezeev</a></p>
+                        <p>LiveJournal: <a href="http://fezeev.livejournal.com/">http://fezeev.livejournal.com/</a></p>
                         </td>
 		</tr>		
 	</table>	
