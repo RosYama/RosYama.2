@@ -81,7 +81,7 @@ class RfSubjects extends CActiveRecord
 	protected function gs_array_search($needle, $haystack)
 	{
 		foreach($haystack as $k => $v)
-		{		
+		{	
 			if(mb_strtoupper($v,'UTF-8') == mb_strtoupper($needle,'UTF-8'))
 			{
 				return $k;
@@ -93,9 +93,14 @@ class RfSubjects extends CActiveRecord
 	
 	public function SearchID($subject_name)
 	{
-		$subject_name = trim($subject_name, " \n\t");
-		$_RF_SUBJECTS=CHtml::listData($this->findAll(), 'id','name');
+		$subject_name = trim($subject_name, " \n\t");		
+		$subjects=$this->findAll();
+		$_RF_SUBJECTS=CHtml::listData($subjects, 'id','name');
 		$result = $this->gs_array_search($subject_name, $_RF_SUBJECTS);
+		if (!$result){
+			$_RF_SUBJECTS=CHtml::listData($subjects, 'id','name_full');
+			$result = $this->gs_array_search($subject_name, $_RF_SUBJECTS);
+		}
 		if(!$result)
 		{
 			$subject_name = explode(' ', $subject_name);
