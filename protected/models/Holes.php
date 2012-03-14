@@ -436,6 +436,9 @@ class Holes extends CActiveRecord
 					$this->DATE_STATUS = time();
 					$this->STATE = 'fresh';
 					}
+				else {
+					$this->DATE_SENT = $this->requests_gibdd[0]->date_sent;
+				}	
 			if ($this->update()) return true;
 			else return false;
 	}		
@@ -454,6 +457,10 @@ class Holes extends CActiveRecord
 		if ($this->WAIT_DAYS < 0 && $this->STATE == 'inprogress') {
 			$this->STATE = 'achtung';
 			$this->update();
+		}
+		elseif ($this->STATE == 'achtung' && $this->WAIT_DAYS > 0){
+			$this->STATE = 'inprogress';
+			$this->update();			
 		}
 		
 		if ($this->WAIT_DAYS<0) { 
