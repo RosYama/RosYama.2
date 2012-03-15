@@ -139,6 +139,10 @@ class MigrationController extends Controller
 					$model->status=4;
 					$model->update();
 				}
+				else{
+					echo "Пользователь ".$user->ID."(".$user->LOGIN.")"." не добавлен из-за : \n";
+					print_r($model->errors);
+					}
 			}
 		}
 		echo "Добавлено $count пользователей.";
