@@ -116,7 +116,7 @@
 			<a href="mailto:rossyama@gmail.com">rossyama@gmail.com</a><br />
 			<br/>Разработка прототипа и дизайна - <a href="http://greensight.ru">Greensight</a>.
 			<br />
-			<br/>Developed by @vlasovilya<br/>Powered by Yii Framework.
+			<br/>Разработано в <a href="http://pixelsmedia.ru">Pixelsmedia</a><br/>Powered by Yii Framework.
 			<br /></p>
 			<?php if($this->beginCache('countHoles', array('duration'=>3600))) { ?>
 			<?php $this->widget('application.widgets.collection.collectionWidget'); ?>			
