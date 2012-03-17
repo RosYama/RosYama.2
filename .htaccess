@@ -8,3 +8,5 @@ RewriteCond %{REQUEST_FILENAME} !-d
 
 # otherwise forward it to index.php
 RewriteRule . index.php
+
+Redirect 301 /personal/holes.php http://rosyama.ru/holes/personal/
