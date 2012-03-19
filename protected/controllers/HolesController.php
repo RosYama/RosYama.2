@@ -785,7 +785,7 @@ class HolesController extends Controller
 		$model=Holes::model()->findByPk($id);
 		if($model===null)
 			throw new CHttpException(404,'The requested page does not exist.');
-		elseif(!$model->IsUserHole)	
+		elseif(!$model->IsUserHole && !Yii::app()->user->level>80)	
 			throw new CHttpException(403,'Доступ запрещен.');
 		return $model;
 	}
