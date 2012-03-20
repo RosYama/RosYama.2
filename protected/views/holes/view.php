@@ -184,9 +184,7 @@ $this->widget('application.extensions.fancybox.EFancyBox', array(
 								<?php endif; ?>
 							</div>
 							<div class="rc">
-								Также можно отправить:<br />
-								<span><ins>&mdash;</ins>с&nbsp;<a href="/about/112/">сайта 112.ru</a></span>
-								<span><ins>&mdash;</ins>с&nbsp;официального сайта <a href="http://www.gibdd.ru/letter" target="_blank">ГИБДД&nbsp;МВД&nbsp;России</a></span>
+								Также можно отправить <span><ins>&mdash;</ins>с&nbsp;официального сайта <a href="http://www.gibdd.ru/letter" target="_blank">ГИБДД&nbsp;МВД&nbsp;России</a></span>
 							</div>						
 						<? endif; ?>	
 						<?
@@ -220,9 +218,7 @@ $this->widget('application.extensions.fancybox.EFancyBox', array(
 								<?php endif; ?>
 							</div>
 							<div class="rc">
-								Также можно отправить:<br />
-								<span><ins>&mdash;</ins>с&nbsp;<a href="/about/112/">сайта 112.ru</a></span>
-								<span><ins>&mdash;</ins>с&nbsp;официального сайта <a href="http://www.gibdd.ru/letter" target="_blank">ГИБДД&nbsp;МВД&nbsp;России</a></span>
+								Также можно отправить <span><ins>&mdash;</ins>с&nbsp;официального сайта <a href="http://www.gibdd.ru/letter" target="_blank">ГИБДД&nbsp;МВД&nbsp;России</a></span>
 							</div>	
 						<? endif; ?>	
 						<?
