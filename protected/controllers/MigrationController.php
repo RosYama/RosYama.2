@@ -80,7 +80,7 @@ class MigrationController extends Controller
 		$users=BUser::model()->findAll();
 		foreach ($users as $user){
 			$group=BUserGroup::model()->find('USER_ID='.$user->ID);
-			if ($group && $group->GROUP_ID!=2){	
+			if ($group && $group->GROUP_ID!=0){	
 				$username='';
 				$user->LOGIN=$this->sql_valid($user->LOGIN);
 				$model=UserGroupsUser::model()->find("username='".$user->LOGIN."'");
@@ -139,6 +139,10 @@ class MigrationController extends Controller
 					$model->status=4;
 					$model->update();
 				}
+				else{
+					echo "Пользователь ".$user->ID."(".$user->LOGIN.")"." не добавлен из-за : \n";
+					print_r($model->errors);
+					}
 			}
 		}
 		echo "Добавлено $count пользователей.";

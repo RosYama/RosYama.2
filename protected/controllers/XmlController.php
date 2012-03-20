@@ -438,7 +438,7 @@ class XmlController extends Controller
 				$answer=new HoleAnswers;
 				$answer->request_id=$model->request_gibdd->id;
 				$answer->date=time();
-				$model->comment=Yii::app()->request->getParam('comment');
+				$answer->comment=Yii::app()->request->getParam('comment'); 
 				if($answer->save()){
 					if ($model->STATE=="inprogress" || $model->STATE=="achtung")
 						$model->STATE='gibddre';

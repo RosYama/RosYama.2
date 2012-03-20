@@ -367,10 +367,12 @@ class Holes extends CActiveRecord
 							'date_sent'=>time(),
 							'type'=>$type,
 							);
-			if ($request->save())	
+			if ($request->save()){
 			if ($type=='gibdd') if ($this->updateSetinprogress()) return true;
-			elseif ($type=='prosecutor') $this->updateToprosecutor();
+			elseif ($type=='prosecutor') if ($this->updateToprosecutor()) return true;
+			}
 		}
+		elseif ($type=='prosecutor' && $this->STATE=='achtung') $this->updateToprosecutor();
 		return true;
 	}
 
@@ -436,6 +438,9 @@ class Holes extends CActiveRecord
 					$this->DATE_STATUS = time();
 					$this->STATE = 'fresh';
 					}
+				else {
+					$this->DATE_SENT = $this->requests_gibdd[0]->date_sent;
+				}	
 			if ($this->update()) return true;
 			else return false;
 	}		
@@ -454,6 +459,10 @@ class Holes extends CActiveRecord
 		if ($this->WAIT_DAYS < 0 && $this->STATE == 'inprogress') {
 			$this->STATE = 'achtung';
 			$this->update();
+		}
+		elseif ($this->STATE == 'achtung' && $this->WAIT_DAYS > 0){
+			$this->STATE = 'inprogress';
+			$this->update();			
 		}
 		
 		if ($this->WAIT_DAYS<0) { 
@@ -548,22 +557,22 @@ class Holes extends CActiveRecord
 		//$criteria->with=Array('pictures_fresh','pictures_fixed');
 		$criteria->with=Array('type','pictures_fresh');
 		$criteria->compare('t.ID',$this->ID,false);
-		$criteria->compare('USER_ID',$this->USER_ID,false);
-		$criteria->compare('LATITUDE',$this->LATITUDE);
-		$criteria->compare('LONGITUDE',$this->LONGITUDE);
-		$criteria->compare('ADDRESS',$this->ADDRESS,true);
-		$criteria->compare('STATE',$this->STATE,true);
-		$criteria->compare('DATE_CREATED',$this->DATE_CREATED,true);
-		$criteria->compare('DATE_SENT',$this->DATE_SENT,true);
-		$criteria->compare('DATE_STATUS',$this->DATE_STATUS,true);
-		$criteria->compare('COMMENT1',$this->COMMENT1,true);
-		$criteria->compare('COMMENT2',$this->COMMENT2,true);
-		$criteria->compare('TYPE_ID',$this->TYPE_ID,false);
+		$criteria->compare('t.USER_ID',$this->USER_ID,false);
+		$criteria->compare('t.LATITUDE',$this->LATITUDE);
+		$criteria->compare('t.LONGITUDE',$this->LONGITUDE);
+		$criteria->compare('t.ADDRESS',$this->ADDRESS,true);
+		$criteria->compare('t.STATE',$this->STATE,true);
+		$criteria->compare('t.DATE_CREATED',$this->DATE_CREATED,true);
+		$criteria->compare('t.DATE_SENT',$this->DATE_SENT,true);
+		$criteria->compare('t.DATE_STATUS',$this->DATE_STATUS,true);
+		$criteria->compare('t.COMMENT1',$this->COMMENT1,true);
+		$criteria->compare('t.COMMENT2',$this->COMMENT2,true);
+		$criteria->compare('t.TYPE_ID',$this->TYPE_ID,false);
 		$criteria->compare('type.alias',$this->type_alias,true);
-		$criteria->compare('ADR_SUBJECTRF',$this->ADR_SUBJECTRF,false);
-		$criteria->compare('ADR_CITY',$this->ADR_CITY,true);
-		$criteria->compare('COMMENT_GIBDD_REPLY',$this->COMMENT_GIBDD_REPLY,true);
-		$criteria->compare('GIBDD_REPLY_RECEIVED',$this->GIBDD_REPLY_RECEIVED);
+		$criteria->compare('t.ADR_SUBJECTRF',$this->ADR_SUBJECTRF,false);
+		$criteria->compare('t.ADR_CITY',$this->ADR_CITY,true);
+		$criteria->compare('t.COMMENT_GIBDD_REPLY',$this->COMMENT_GIBDD_REPLY,true);
+		$criteria->compare('t.GIBDD_REPLY_RECEIVED',$this->GIBDD_REPLY_RECEIVED);
 		if ($this->NOT_PREMODERATED) $criteria->compare('PREMODERATED',0);
 		if (!Yii::app()->user->isModer) $criteria->compare('PREMODERATED',$this->PREMODERATED,true);
 		$criteria->compare('DATE_SENT_PROSECUTOR',$this->DATE_SENT_PROSECUTOR,true);
