@@ -160,6 +160,13 @@ class Holes extends CActiveRecord
 		return $this->AllstatesShort[$this->STATE];
 	}
 	
+	public function getIsSelected()	
+	{	
+		foreach (Yii::app()->user->getState('selectedHoles', Array()) as $id) 
+			if ($id==$this->ID) return true;
+		return false;	
+	}	
+	
 	public function getFixByUser($id)	
 	{	
 		foreach ($this->fixeds as $fix){

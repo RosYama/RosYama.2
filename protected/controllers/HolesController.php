@@ -31,7 +31,7 @@ class HolesController extends Controller
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('add','update', 'personal','personalDelete','request','requestForm','sent','notsent','gibddreply', 'fix', 'defix', 'prosecutorsent', 'prosecutornotsent','delanswerfile','myarea', 'territorialGibdd', 'delpicture'),
+				'actions'=>array('add','update', 'personal','personalDelete','request','requestForm','sent','notsent','gibddreply', 'fix', 'defix', 'prosecutorsent', 'prosecutornotsent','delanswerfile','myarea', 'territorialGibdd', 'delpicture','selectHoles'),
 				'users'=>array('@'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -364,22 +364,22 @@ class HolesController extends Controller
 	}	
 	
 	//форма ГИБДД
-	public function actionRequestForm($type, $hole)
+	public function actionRequestForm($id, $type, $holes)
 	{
-		if (isset($_POST['id']) && $_POST['id']){
-			$id=(int)$_POST['id'];
-			$gibdd=GibddHeads::model()->findByPk($id);
-			$holemodel=Holes::model()->findByPk((int)$hole);
+		if ($id){
+			$gibdd=GibddHeads::model()->findByPk((int)$id);
+			$holemodel=Holes::model()->findAllByPk(explode(',',$holes));
 			if ($type=='gibdd') 
-				$this->renderPartial('_form_gibdd',Array('hole'=>$holemodel, 'gibdd'=>$gibdd));
+				$this->renderPartial('_form_gibdd_manyholes',Array('holes'=>$holemodel, 'gibdd'=>$gibdd));
 		}
 		//else echo "Выбирите отдел ГИБДД";
 	}	
 
 	//генерация запросов в ГИБДД
-	public function actionRequest($id)
+	public function actionRequest($id=null)
 	{			
-			$model=$this->loadModel($id);				
+			if ($id) $model=$this->loadModel($id);				
+			else $model=new Holes;
 			$request=new HoleRequestForm;
 			if(isset($_POST['HoleRequestForm']))
 			{
@@ -395,9 +395,9 @@ class HolesController extends Controller
 					'chief'       => $request->to,
 					'fio'         => $request->from,
 					'address'     => $request->postaddress,
-					'date1.day'   => date('d', $model->DATE_CREATED),
-					'date1.month' => date('m', $model->DATE_CREATED),
-					'date1.year'  => date('Y', $model->DATE_CREATED),
+					'date1.day'   => date('d', $model->DATE_CREATED ? $model->DATE_CREATED : time()),
+					'date1.month' => date('m', $model->DATE_CREATED ? $model->DATE_CREATED : time()),
+					'date1.year'  => date('Y', $model->DATE_CREATED ? $model->DATE_CREATED : time()),
 					'street'      => $request->address,
 					'date2.day'   => date('d', $date2),
 					'date2.month' => date('m', $date2),
@@ -419,12 +419,23 @@ class HolesController extends Controller
 					}
 					header('Content-Type: text/html; charset=utf8', true);
 					$HT = new html1234();
-					$HT->gethtml
-					(
-						$request->form_type ? $request->form_type : $model->type,
-						$_data,
-						$_images
-					);
+					if (!$request->holes)
+						$HT->gethtml
+						(
+							$request->form_type ? $request->form_type : $model->type,
+							$_data,
+							$_images
+						);
+					else {
+						$HT->models=Holes::model()->findAllByPk($request->holes);
+							$HT->gethtml
+							(
+								'gibdd',
+								$_data,
+								Array(),
+								$request->printAllPictures
+							);
+						}
 				}
 				else
 				{
@@ -435,12 +446,23 @@ class HolesController extends Controller
 					}
 					header('Content-Type: application/pdf; charset=utf-8', true);
 					$PDF = new pdf1234();
-					$PDF->getpdf
-					(
-						$request->form_type ? $request->form_type : $model->type,
-						$_data,
-						$_images
-					);
+					if (!$request->holes)
+						$PDF->getpdf
+						(
+							$request->form_type ? $request->form_type : $model->type,
+							$_data,
+							$_images
+						);
+					else {
+						$PDF->models=Holes::model()->findAllByPk($request->holes);
+							$PDF->getpdf
+							(
+								'gibdd',
+								$_data,
+								Array(),
+								$request->printAllPictures
+							);
+						}
 				}
 			}		
 	}		
@@ -569,8 +591,12 @@ class HolesController extends Controller
 		$user=Yii::app()->user;
 		
 		$cs=Yii::app()->getClientScript();
-        $cs->registerCssFile('/css/holes_list.css');
-		
+        $cs->registerCssFile('/css/holes_list.css');        
+        $cs->registerCssFile('/css/hole_view.css');
+        $cs->registerScriptFile(CHtml::asset($this->viewPath.DIRECTORY_SEPARATOR.'js'.DIRECTORY_SEPARATOR.'holes_selector.js'));
+		$cs->registerScriptFile('http://www.vertstudios.com/vertlib.min.js');        
+        $cs->registerScriptFile(CHtml::asset($this->viewPath.DIRECTORY_SEPARATOR.'js'.DIRECTORY_SEPARATOR.'StickyScroller'.DIRECTORY_SEPARATOR.'StickyScroller.min.js'));
+		$cs->registerScriptFile(CHtml::asset($this->viewPath.DIRECTORY_SEPARATOR.'js'.DIRECTORY_SEPARATOR.'StickyScroller'.DIRECTORY_SEPARATOR.'GetSet.js'));
 		$holes=Array();
 		$all_holes_count=0;
 		foreach ($model->AllstatesMany as $state_alias=>$state_name) {
@@ -585,6 +611,34 @@ class HolesController extends Controller
 			'user'=>$user
 		));
 	}
+	
+	public function actionSelectHoles($del=false)
+	{
+		//echo $del;
+		$del=filter_var($del, FILTER_VALIDATE_BOOLEAN);		
+		if ($_POST['holes']=='all' && $del) {
+			Yii::app()->user->setState('selectedHoles', Array());
+			Yii::app()->end();
+			}
+		$holes=explode(',',$_POST['holes']);
+		for ($i=0;$i<count($holes);$i++) {$holes[$i]=(int)$holes[$i]; if(!$holes[$i]) unset($holes[$i]);}
+		
+		$selected=Yii::app()->user->getState('selectedHoles', Array());
+		if (!$del){
+			$newsel=array_diff($holes, $selected);
+			$selected=array_merge($selected, $newsel);
+		}
+		else {	
+			$newsel=array_intersect($selected, $holes);
+			foreach ($newsel as $key=>$val) unset($selected[$key]);
+		}
+		Yii::app()->user->setState('selectedHoles', $selected);
+		if ($selected){
+			$gibdds=GibddHeads::model()->with('holes')->findAll('holes.id IN ('.implode(',',$selected).')');
+			$this->renderPartial('_selected', Array('gibdds'=>$gibdds));
+		}
+		//print_r(Yii::app()->user->getState('selectedHoles'));
+	}	
 	
 	public function actionMyarea()
 	{

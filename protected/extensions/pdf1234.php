@@ -7,6 +7,7 @@ class pdf1234{
 	public $pdf;
 	public $params;
 	public $temp;
+	public $models=Array();
 	private $note;
 	
 	public function __construct(){		
@@ -26,12 +27,12 @@ class pdf1234{
 	 *  $params['date3.*']    когда был получен ответ из ГИБДД (для шаблона заявления в прокуратуру)
 	 *@param array $image массив с картинками (если есть)
 	 */
-	public function getpdf($temp, $params, $image = null){
+	public function getpdf($temp, $params, $image = null, $printAllPictures=true){
 		$this->params = pdf1234::regexp($params);
 		if(is_object($temp) || method_exists(__CLASS__,'text_'.$temp)){
 			$this->temp = $temp;
 		}		
-		else return false;
+		elseif (!$this->models) return false;
 		$this->note = count($image);
 		
 		$this->pdf->Open();
@@ -51,6 +52,16 @@ class pdf1234{
 					}
 			}
 		}
+		// Обработка и вывод картинок на многоям
+		if ($this->models && $printAllPictures)
+			foreach($this->models as $model){
+				$this->pdf->AddPage();
+				pdf1234::getpages(pdf1234::slashN($model->ADDRESS, 100), 5, 20);
+				foreach($model->pictures_fresh as $picture)
+					{
+						$this->pdf->Image($_SERVER['DOCUMENT_ROOT'].$picture->original, null, null, 180, 0,'jpg');
+					}
+			}
 		
 		pdf1234::getsignature();
 		
@@ -174,6 +185,21 @@ class pdf1234{
 		$ar['count'][2] = 'Обязать организацию (учреждение), ответственную за содержание дороги в исправном состоянии, исполнить предписание ГИБДД.';
 		return $ar;
 	}
+	
+	// заявление на многоям
+	protected function text_manyholes($models){
+		$ar['body0'] = '    '.$this->params['date1.day'].'.'.$this->params['date1.month'].'.'.$this->params['date1.year'].' мною было обнаружено множество повреждений дорожного покрытия, размеры каждого из которых превышают нормативы, установленные ГОСТ Р 505097-93, и которые могут представлять серьёзную опасность для дорожного движения. Ниже список адресов, описаний и ссылок на фотографии обнаруженных мной повреждений. ';
+		$ar['body1'] = '';
+		$ar['holes']=Array();
+		foreach ($models as $model){
+		$ar['holes'][] = $model->ADDRESS.($model->COMMENT1 ? ', '.trim($model->COMMENT1) : '').', http://rosyama.ru'.CController::createUrl("/holes/view",Array('id'=>$model->ID))."";    
+		}
+		$ar['footerUP0'] = 'В соответствии с п.19 ч.1 ст.12 ФЗ «О полиции» на полицию возлагаются обязанность по осуществлению государственного контроля (надзора) за соблюдением правил, стандартов, технических норм и иных требований нормативных документов в области обеспечения безопасности дорожного движения. Максимальный срок, предусмотренный ГОСТ Р 50597-93 для исправления повреждений дорожного покрытия составляет 10 суток. В связи с изложенным, на основании п.11 Положения «О ГИБДД МВД РФ», ст. 12 ФЗ «О полиции», п.3 ч.1.ст. 28.1, ч.1 ст29.13 КоАП Российской Федерации прошу:';
+		$ar['count'][1] = 'Возбудить дело об административном правонарушении по статье 12.34 КоАП РФ «Несоблюдение требований по обеспечению безопасности дорожного движения при ремонте и содержании дорог, железнодорожных переездов или других дорожных сооружений» в отношении дорожной службы, ответственной за содержание и ремонт указанного дорожного участка.';
+		$ar['count'][2] = 'Выдать предписание о принятии мер по устранению указанных недостатков.';
+		$ar['count'][3] = 'По существу моего заявления и о принятых мерах сообщить мне письменно.';
+		return $ar;
+	}	
 
 	//универсальный шаблон для типов ям
 	protected function getTypeTemplate(){
@@ -244,9 +270,11 @@ class pdf1234{
 	 */
 	protected function template()
 	{
-
-		if (!is_object($this->temp)) $arResult = call_user_func(array(__CLASS__, 'text_'.$this->temp));
-		else $arResult=$this->getTypeTemplate();
+		if (!$this->models){
+			if (!is_object($this->temp)) $arResult = call_user_func(array(__CLASS__, 'text_'.$this->temp));
+			else $arResult=$this->getTypeTemplate();
+		}
+		else $arResult=$this->text_manyholes($this->models);
 
 		$x = $this->header();
 		$y = $this->footer();
@@ -270,8 +298,10 @@ class pdf1234{
 		pdf1234::getpages(pdf1234::slashN($this->name(), floor($str_len / 2.7)), 5, 80, 0);
 
 		pdf1234::getpages(pdf1234::slashN($arResult['body0'], $str_len), 5, 20);
-		pdf1234::getpages(pdf1234::slashN($arResult['body1'], $str_len), 5, 20);
-
+		if (!isset($arResult['holes']))
+			pdf1234::getpages(pdf1234::slashN($arResult['body1'], $str_len), 5, 20);
+		else 
+			foreach ($arResult['holes'] as $str) pdf1234::getpages(pdf1234::slashN($str, $str_len), 5, 20);
 		$this->pdf->Ln();
 		pdf1234::getpages(pdf1234::slashN($arResult['footerUP0'], $str_len), 5, 20);
 		$this->pdf->Ln();

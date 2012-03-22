@@ -1,0 +1,41 @@
+#main{
+margin-top: 0px;
+margin-left: 30px;
+}
+    #scrollbox{
+    position: fixed;
+    top: 400px;
+    left: 50px;
+    width: 100px;
+    background-color: #FF0000;
+    height: 100px;
+    }
+    
+    #blocks{
+    margin-top: 400px;
+    }
+    
+    .block{
+    margin: 0px 0px 100px 130px;
+    height: 200px;
+    width: 200px;
+    background-color: #000000;
+    }
+    
+    #blankspace{
+    height: 1000px;
+    }
+    
+    .blue{
+    background-color: #000099;
+    }
+    
+    #info{
+    position: absolute;
+    top: 0px;
+    left: 250px;
+    }
+    
+    .blue{
+    background-color: #000099;
+    }

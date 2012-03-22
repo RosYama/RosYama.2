@@ -42,6 +42,8 @@ $MESS['HOLE_REQUEST_FORM_COMMENT_COMMENT']     = 'можно указать пр
 $MESS['HOLE_REQUEST_FORM_SIGNATURE_COMMENT']   = 'Фамилия в именительном падеже и инициалы';
 $MESS['HOLE_REQUEST_FORM_SUBMIT']              = 'Сгенерировать PDF-файл';
 $MESS['HOLE_REQUEST_FORM_SUBMIT2']             = 'Текст заявления в HTML';
+$MESS['HOLE_REQUEST_FORM_PRINT_PICTURES']            = 'Выводить изображения к ямам';
+$MESS['HOLE_REQUEST_FORM_PRINT_PICTURES_COMMENT']            = 'Отметте если нужно выводить изображения';
 
 $MESS['HOLE_CART_ADMIN_TEXT_1']  = 'Пока заявление не выслано,';
 $MESS['HOLE_CART_ADMIN_TEXT_3']  = 'можно';
@@ -78,7 +80,6 @@ $MESS['HOLE_PROSECUTOR_FORM_APPLICATION_DATA']         = 'Дата ответа 
 $MESS['HOLE_PROSECUTOR_FORM_APPLICATION_DATA_COMMENT'] = 'Если есть ответ из ГИБДД, его можно приложить к жалобе, указав дату. Если нет, то не надо указывать';
 $MESS['HOLE_PRESECUTOR_FORM_GIBDD']                    = 'Отделение ГИБДД';
 $MESS['HOLE_PRESECUTOR_FORM_GIBDD_COMMENT']            = 'Укажите отделение ГИБДД, куда вы отправляли заявление';
-
 $MESS['HOLE_PROSECUTOR_FORM2_PREFACE']       = '<p>В том случае, если органы ГИБДД выполнили свои обязанности и направили предписание об устранении повреждений дорожного полотна в учреждение или организацию, ответственную за ремонт и содержание дороги, однако никакого результата это не принесло и ямы остались на прежнем месте, мы рекомендуем вам обратиться в прокуратуру.</p>
 <p>Предлагаем вам шаблон обращения, который вы сможете дополнить или изменить с учетом вашей конкретной ситуации.</p>';
 $MESS['HOLE_PRESECUTOR_FORM_GIBDD_REPLY']    = 'Резолютивная часть ответа из ГИБДД,';

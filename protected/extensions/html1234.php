@@ -10,13 +10,13 @@ class html1234 extends pdf1234
 	public function __construct() { }
 	
 	// получение HTML
-	public function gethtml($temp, $params, $image = null){
+	public function gethtml($temp, $params, $image = null, $printAllPictures=true){
 		$this->params = pdf1234::regexp($params);
 		if(is_object($temp) || method_exists(__CLASS__,'text_'.$temp))
 		{
 			$this->temp = $temp;
 		}
-		else return false;
+		elseif (!$this->models) return false;
 		$this->note = count($image);
 		$this->template();
 		if(is_array($image) && $this->temp != 'prosecutor' && $this->temp != 'prosecutor2')
@@ -29,6 +29,17 @@ class html1234 extends pdf1234
 				}
 			}
 		}
+		
+		// Обработка и вывод картинок на многоям
+		if ($this->models && $printAllPictures)
+			foreach($this->models as $model){
+				echo '<h3>'.$model->ADDRESS.'</h3>';
+				foreach($model->pictures_fresh as $picture)
+					{
+						echo '<p><img src="'.$picture->original.'"></p>'; 
+					}
+			}
+		
 		$this->getsignature();
 		echo '</body></html>';
 	}
@@ -36,8 +47,12 @@ class html1234 extends pdf1234
 	// собственно шаблон
 	protected function template()
 	{
-		if (!is_object($this->temp)) $arResult = call_user_func(array(__CLASS__, 'text_'.$this->temp));
-		else $arResult=$this->getTypeTemplate();
+		if (!$this->models){
+			if (!is_object($this->temp)) $arResult = call_user_func(array(__CLASS__, 'text_'.$this->temp));
+			else $arResult=$this->getTypeTemplate();
+		}
+		else $arResult=$this->text_manyholes($this->models);
+		
 		$header = $this->header();
 		$footer = $this->footer();
 		$name   = $this->name();
@@ -56,7 +71,14 @@ class html1234 extends pdf1234
 			<? endforeach; ?>
 		</div>
 		<h1 style="text-align: center;"><?= $name ?></h1>
-		<p><?= $arResult['body0'] ?> <?= $arResult['body1'] ?></p>
+		<p><?= $arResult['body0'] ?> <?php if(!isset($arResult['holes'])) echo $arResult['body1']; else { ?>
+			<ul>
+			<?php foreach ($arResult['holes'] as $str) : ?>
+			<li><?php echo $str; ?></li>
+			<?php endforeach; ?>
+			</ul>
+			<?php } ?>
+		</p>
 		<p><?= $arResult['footerUP0'] ?></p>
 		<ol>
 			<? foreach($arResult['count'] as $c): ?>

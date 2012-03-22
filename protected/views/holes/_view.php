@@ -1,5 +1,8 @@
 <li<?php if(($index+1)%3==0):?> class="noMargin"<?php endif; ?>>
 			<?php echo CHtml::link(CHtml::image($data->STATE == 'fixed' && $data->pictures_fixed ? $data->pictures_fixed[0]->small : ($data->pictures_fresh ? $data->pictures_fresh[0]->small:'')), array('view', 'id'=>$data->ID), array('class'=>'photo')); ?>
+			<?php if (isset($showcheckbox) && $showcheckbox) : ?>
+				<?php echo CHtml::checkBox('hole_id[]', $data->isSelected ? true : false, Array('value'=>$data->ID, 'class'=>'hole_check')); ?>
+			<?php endif; ?>
 			<?php if(Yii::app()->user->isModer): ?>
 				<?php if(!$data->PREMODERATED): ?>
 					<div class="premoderate" id="premoderate_<?php echo $data->ID ?>"><img src="/images/st1234/iconpm.gif" onclick="setPM_OK('<?php echo $data->ID ?>');" title="Показывать этот дефект всем"></div>
@@ -24,83 +27,4 @@
 					<? endif; */ ?>
 				</div>
 			</div>
-</li>
-	<?php /*		
-<div class="view">
-
-	<b><?php echo CHtml::encode($data->getAttributeLabel('ID')); ?>:</b>
-	<?php echo CHtml::link(CHtml::encode($data->ID), array('view', 'id'=>$data->ID)); ?>
-	<br />
-
-	<b><?php echo CHtml::encode($data->getAttributeLabel('USER_ID')); ?>:</b>
-	<?php echo CHtml::encode($data->USER_ID); ?>
-	<br />
-
-	<b><?php echo CHtml::encode($data->getAttributeLabel('LATITUDE')); ?>:</b>
-	<?php echo CHtml::encode($data->LATITUDE); ?>
-	<br />
-
-	<b><?php echo CHtml::encode($data->getAttributeLabel('LONGITUDE')); ?>:</b>
-	<?php echo CHtml::encode($data->LONGITUDE); ?>
-	<br />
-
-	<b><?php echo CHtml::encode($data->getAttributeLabel('ADDRESS')); ?>:</b>
-	<?php echo CHtml::encode($data->ADDRESS); ?>
-	<br />
-
-	<b><?php echo CHtml::encode($data->getAttributeLabel('STATE')); ?>:</b>
-	<?php echo CHtml::encode($data->STATE); ?>
-	<br />
-
-	<b><?php echo CHtml::encode($data->getAttributeLabel('DATE_CREATED')); ?>:</b>
-	<?php echo CHtml::encode($data->DATE_CREATED); ?>
-	<br />
-
-
-	<b><?php echo CHtml::encode($data->getAttributeLabel('DATE_SENT')); ?>:</b>
-	<?php echo CHtml::encode($data->DATE_SENT); ?>
-	<br />
-
-	<b><?php echo CHtml::encode($data->getAttributeLabel('DATE_STATUS')); ?>:</b>
-	<?php echo CHtml::encode($data->DATE_STATUS); ?>
-	<br />
-
-	<b><?php echo CHtml::encode($data->getAttributeLabel('COMMENT1')); ?>:</b>
-	<?php echo CHtml::encode($data->COMMENT1); ?>
-	<br />
-
-	<b><?php echo CHtml::encode($data->getAttributeLabel('COMMENT2')); ?>:</b>
-	<?php echo CHtml::encode($data->COMMENT2); ?>
-	<br />
-
-	<b><?php echo CHtml::encode($data->getAttributeLabel('TYPE')); ?>:</b>
-	<?php echo CHtml::encode($data->TYPE); ?>
-	<br />
-
-	<b><?php echo CHtml::encode($data->getAttributeLabel('ADR_SUBJECTRF')); ?>:</b>
-	<?php echo CHtml::encode($data->ADR_SUBJECTRF); ?>
-	<br />
-
-	<b><?php echo CHtml::encode($data->getAttributeLabel('ADR_CITY')); ?>:</b>
-	<?php echo CHtml::encode($data->ADR_CITY); ?>
-	<br />
-
-	<b><?php echo CHtml::encode($data->getAttributeLabel('COMMENT_GIBDD_REPLY')); ?>:</b>
-	<?php echo CHtml::encode($data->COMMENT_GIBDD_REPLY); ?>
-	<br />
-
-	<b><?php echo CHtml::encode($data->getAttributeLabel('GIBDD_REPLY_RECEIVED')); ?>:</b>
-	<?php echo CHtml::encode($data->GIBDD_REPLY_RECEIVED); ?>
-	<br />
-
-	<b><?php echo CHtml::encode($data->getAttributeLabel('PREMODERATED')); ?>:</b>
-	<?php echo CHtml::encode($data->PREMODERATED); ?>
-	<br />
-
-	<b><?php echo CHtml::encode($data->getAttributeLabel('DATE_SENT_PROSECUTOR')); ?>:</b>
-	<?php echo CHtml::encode($data->DATE_SENT_PROSECUTOR); ?>
-	<br />
-
-	
-
-</div> */ ?>
+</li>	
