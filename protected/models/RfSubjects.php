@@ -93,13 +93,10 @@ class RfSubjects extends CActiveRecord
 	
 	public function SearchID($subject_name)
 	{
-<<<<<<< HEAD
-		$subject_name = trim($subject_name, " \n\t");		
-		if ($subject_name=='республика Чувашская') $subject_name='Чувашская республика'; # http://dev.rosyama.ru/bugs/show_bug.cgi?id=50
-=======
+
 		$subject_name = trim($subject_name, " \n\t");	
 		if ($subject_name=='республика Чувашская') $subject_name='Чувашская республика';
->>>>>>> http://dev.rosyama.ru/bugs/show_bug.cgi?id=50
+
 		$subjects=$this->findAll();
 		$_RF_SUBJECTS=CHtml::listData($subjects, 'id','name');
 		$result = $this->gs_array_search($subject_name, $_RF_SUBJECTS);
