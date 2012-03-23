@@ -1,4 +1,28 @@
-jQuery(".state_block:not(.checked) .state_check").live("click",function() {
+			jQuery("#selectAll").live("click",function() {
+				var sel_holes = new Array;
+				var del;
+				var i = 0;
+				if ($(this).attr("checked")){
+					del=false;
+					$("#holes_list").find(".hole_check").each(function() {
+						$(this).attr("checked",true);
+						sel_holes[i]=$(this).val();
+						i++;
+						
+					});	
+				}				
+				else {
+					del=true;
+					$("#holes_list").find(".hole_check").each(function() {
+						$(this).removeAttr("checked");
+						sel_holes[i]=$(this).val();
+						i++;
+					});					
+				}
+				selectHoles(sel_holes,del);				
+			});
+			
+			jQuery(".state_block:not(.checked) .state_check").live("click",function() {
 				var sel_holes = new Array;
 				var i = 0;
 				$(this).parents("div.state_block").toggleClass("checked")
@@ -26,6 +50,23 @@ jQuery(".state_block:not(.checked) .state_check").live("click",function() {
 				selectHoles(sel_holes,true);									    	
 			});
 			
+			function checkInList(){
+				var all=0; var checked=0;	
+				$("#holes_list").find(".hole_check").each(function() {
+							if ($(this).attr("checked")){
+								checked++;
+							}
+						all++;	
+					});	  											     			
+				
+				if (all==checked) {
+					$("#selectAll").attr("checked",true);
+					}	
+				else {
+					$("#selectAll").removeAttr("checked");
+				}	
+			}
+			
 			function checkInState(obj){
 				var all=0; var checked=0;	
 				obj.find(".hole_check").each(function() {
@@ -50,7 +91,7 @@ jQuery(".state_block:not(.checked) .state_check").live("click",function() {
 				if ($(this).attr("checked")) del=false;
 				else del=true;
 				selectHoles($(this).val(),del);
-				checkInState($(this).parents(".holes_list"));
+				checkInList();
 			});		
 			
 			jQuery(".clear_selected").live("click",function() {
@@ -67,6 +108,21 @@ jQuery(".state_block:not(.checked) .state_check").live("click",function() {
 				return false;
 			});
 			
+			jQuery("a.save_selected").live("click",function() {
+				jQuery.ajax({"type":"POST","beforeSend":function(){
+					$("#holes_select_list").empty();
+					$("#holes_select_list").addClass("loading");
+				 },
+				 "complete":function(){
+				 $("#holes_select_list").removeClass("loading");
+					},"url":$(this).attr("href"),"cache":false,
+				"success":function(html){
+					jQuery("#holes_select_list").html(html);
+					}
+				});			
+				return false;
+			});	
+			
 			jQuery("a.show_form").live("click",function() {
 				jQuery.ajax({"type":"POST","beforeSend":function(){
 					$("#pdf_form").hide();		
@@ -80,3 +136,7 @@ jQuery(".state_block:not(.checked) .state_check").live("click",function() {
 				});				
 				return false;
 			});	
+			
+			jQuery("#holes_selectors select").live("change",function() {
+				$.fn.yiiListView.update("holes_list",{ data:$(this).parents("form").serialize()});								    	
+			});

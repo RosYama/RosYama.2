@@ -45,6 +45,7 @@ class Holes extends CActiveRecord
 	public $limit;
 	public $offset=0;
 	public $type_alias;
+	public $showUserHoles;
 
 	/**
 	 * @return string the associated database table name
@@ -83,7 +84,7 @@ class Holes extends CActiveRecord
 			array('USER_ID, STATE, DATE_CREATED, DATE_SENT, DATE_STATUS, ADR_SUBJECTRF, DATE_SENT_PROSECUTOR', 'length', 'max'=>10),
 			array('ADR_CITY', 'length', 'max'=>50),
 			array('STR_SUBJECTRF', 'length'),
-			array('COMMENT1, COMMENT2, COMMENT_GIBDD_REPLY, deletepict, upploadedPictures, request_gibdd', 'safe'),	
+			array('COMMENT1, COMMENT2, COMMENT_GIBDD_REPLY, deletepict, upploadedPictures, request_gibdd, showUserHoles', 'safe'),	
 			array('upploadedPictures', 'file', 'types'=>'jpg, jpeg, png, gif','maxFiles'=>10, 'allowEmpty'=>true, 'on' => 'update, import'),
 			array('upploadedPictures', 'file', 'types'=>'jpg, jpeg, png, gif','maxFiles'=>10, 'allowEmpty'=>false, 'on' => 'insert'),
 			array('upploadedPictures', 'required', 'on' => 'insert', 'message' => 'Необходимо загрузить фотографии'),			
@@ -109,15 +110,22 @@ class Holes extends CActiveRecord
 			'user_pictures_fixed'=>array(self::HAS_MANY, 'HolePictures', 'hole_id', 'condition'=>'user_pictures_fixed.type="fixed" AND user_pictures_fixed.user_id='.Yii::app()->user->id,'order'=>'user_pictures_fixed.ordering'),
 			'request_gibdd'=>array(self::HAS_ONE, 'HoleRequests', 'hole_id', 'condition'=>'request_gibdd.type="gibdd" AND user_id='.Yii::app()->user->id),
 			'request_prosecutor'=>array(self::HAS_ONE, 'HoleRequests', 'hole_id', 'condition'=>'request_prosecutor.type="prosecutor" AND user_id='.Yii::app()->user->id),
-			'requests_gibdd'=>array(self::HAS_MANY, 'HoleRequests', 'hole_id', 'condition'=>'requests_gibdd.type="gibdd"','order'=>'date_sent ASC'),
+			'requests_gibdd'=>array(self::HAS_MANY, 'HoleRequests', 'hole_id', 'condition'=>'requests_gibdd.type="gibdd"','order'=>'requests_gibdd.date_sent ASC'),
 			'requests_prosecutor'=>array(self::HAS_MANY, 'HoleRequests', 'hole_id', 'condition'=>'requests_prosecutor.type="prosecutor"','order'=>'date_sent ASC'),
 			'fixeds'=>array(self::HAS_MANY, 'HoleFixeds', 'hole_id','order'=>'fixeds.date_fix DESC'),
 			'user_fix'=>array(self::HAS_ONE, 'HoleFixeds', 'hole_id', 'condition'=>'user_fix.user_id='.Yii::app()->user->id),
 			'type'=>array(self::BELONGS_TO, 'HoleTypes', 'TYPE_ID'),
 			'user'=>array(self::BELONGS_TO, 'UserGroupsUser', 'USER_ID'),		
 			'gibdd'=>array(self::BELONGS_TO, 'GibddHeads', 'gibdd_id'),
+			'selected_lists'=>array(self::MANY_MANY, 'UserSelectedLists',
+               '{{user_selected_lists_holes_xref}}(hole_id,list_id)'),
 		);
 	}
+	
+	public function behaviors(){
+          return array( 'CAdvancedArBehavior' => array(
+            'class' => 'application.extensions.CAdvancedArBehavior'));
+    }
 
 	public static function getAllstates()	
 	{
@@ -487,6 +495,9 @@ class Holes extends CActiveRecord
 				
 				//Потом все отметки об исправленности
 				foreach ($this->fixeds as $fixed) $fixed->delete();
+				
+				$this->selected_lists=Array();
+				$this->update();
 	
 				return true;
 	}	
@@ -555,6 +566,49 @@ class Holes extends CActiveRecord
 		return $ret;
 
 	}
+	
+	public function userSearch()
+	{
+		// Warning: Please modify the following code to remove attributes that
+		// should not be searched.
+
+		$criteria=new CDbCriteria;
+		//$criteria->with=Array('pictures_fresh','pictures_fixed');
+		$criteria->with=Array('requests_gibdd', 'type','pictures_fresh');
+		$criteria->compare('t.ID',$this->ID,false);
+		if ($this->showUserHoles==1) $criteria->compare('t.USER_ID',Yii::app()->user->id,false);
+		elseif ($this->showUserHoles==2) $criteria->addCondition('t.USER_ID!='.Yii::app()->user->id);
+		$criteria->compare('t.LATITUDE',$this->LATITUDE);
+		$criteria->compare('t.LONGITUDE',$this->LONGITUDE);
+		$criteria->compare('t.ADDRESS',$this->ADDRESS,true);
+		$criteria->compare('t.STATE',$this->STATE,true);
+		$criteria->compare('t.DATE_CREATED',$this->DATE_CREATED,true);
+		$criteria->compare('t.DATE_SENT',$this->DATE_SENT,true);
+		$criteria->compare('t.DATE_STATUS',$this->DATE_STATUS,true);
+		$criteria->compare('t.COMMENT1',$this->COMMENT1,true);
+		$criteria->compare('t.COMMENT2',$this->COMMENT2,true);
+		$criteria->compare('t.TYPE_ID',$this->TYPE_ID,false);
+		$criteria->compare('type.alias',$this->type_alias,true);
+		$criteria->compare('t.ADR_SUBJECTRF',$this->ADR_SUBJECTRF,false);
+		$criteria->compare('t.ADR_CITY',$this->ADR_CITY,true);
+		$criteria->compare('t.COMMENT_GIBDD_REPLY',$this->COMMENT_GIBDD_REPLY,true);
+		$criteria->compare('t.GIBDD_REPLY_RECEIVED',$this->GIBDD_REPLY_RECEIVED);		
+		$criteria->compare('DATE_SENT_PROSECUTOR',$this->DATE_SENT_PROSECUTOR,true);
+		$criteria->join='LEFT OUTER JOIN `yii_hole_requests` `requests` ON (`requests`.`hole_id`=`t`.`ID`)';
+		//$criteria->together=true;
+		$criteria->addCondition('t.USER_ID='.Yii::app()->user->id.' OR requests.user_id='. Yii::app()->user->id);
+	
+		return new CActiveDataProvider($this, array(
+			'criteria'=>$criteria,
+			'pagination'=>array(
+				        'pageSize'=>$this->limit ? $this->limit : 12,				        
+				    ),
+			'sort'=>array(
+			    'defaultOrder'=>'t.DATE_CREATED DESC',
+				)
+		));
+	}	
+	
 	public function search()
 	{
 		// Warning: Please modify the following code to remove attributes that

@@ -16,6 +16,8 @@ class HoleAnswers extends CActiveRecord
 	 * @return HoleAnswers the static model class
 	 */
 	public $isimport=false; 
+	
+	public $firstAnswermodel;
 
 	public static function model($className=__CLASS__)
 	{
@@ -73,6 +75,10 @@ class HoleAnswers extends CActiveRecord
           return array( 'CAdvancedArBehavior' => array(
             'class' => 'application.extensions.CAdvancedArBehavior'));
     }
+    
+    public function getResultz(){
+		return CHtml::listData($this->results, 'id','id');
+    }
 
 	/**
 	 * @return array customized attribute labels (name=>label)
@@ -101,9 +107,8 @@ class HoleAnswers extends CActiveRecord
 	public function afterSave()
 	{			
 		parent::afterSave();
+		
 		if ($this->scenario=="insert"){
-			$files=$this->uppload_files;
-			if($files){
 			$dir=$_SERVER['DOCUMENT_ROOT'].$this->filesFolder;
 			if (!is_dir($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/answers/'))
 				mkdir($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/answers/');
@@ -112,8 +117,10 @@ class HoleAnswers extends CActiveRecord
 			if (!is_dir($dir))
 				mkdir($dir);
 			if (!is_dir($dir.'/thumbs'))
-				mkdir($dir.'/thumbs');	
-				
+				mkdir($dir.'/thumbs');
+		
+			$files=$this->uppload_files;			
+			if($files && !$this->firstAnswermodel){							
 				foreach ($files as $file){
 				if(!$file->hasError){
 					$model=new HoleAnswerFiles;
@@ -124,17 +131,36 @@ class HoleAnswers extends CActiveRecord
 					else $filetype=$file->type;
 					$model->file_type=$filetype;
 					if ($model->save()){
-						$file->saveAs($dir.'/'.$model->file_name);
-						if ($model->file_type=='image'){						
-							$image = Yii::app()->image->load($dir.'/'.$model->file_name);
-							$image->resize(600, 450)->rotate(0)->quality(90)->sharpen(20);
-							//$image->crop($imgmax['width'], $imgmax['height']);
-							$savename=$dir.'/thumbs/'.$model->file_name;
-							$image->save($savename);
+						if ($file->saveAs($dir.'/'.$model->file_name)){
+							if ($model->file_type=='image'){						
+								$image = Yii::app()->image->load($dir.'/'.$model->file_name);
+								$image->resize(600, 450)->rotate(0)->quality(90)->sharpen(20);
+								//$image->crop($imgmax['width'], $imgmax['height']);
+								$savename=$dir.'/thumbs/'.$model->file_name;
+								$image->save($savename);
+								}
 							}
+						}
+						else {
+						$model->delete();
+						$die();
 						}
 					}
 				}
+			}
+			else {
+				foreach ($this->firstAnswermodel->files as $file){
+					$model=new HoleAnswerFiles;
+					$model->answer_id=$this->id;
+					$model->file_name=$file->file_name;
+					$model->file_type=$file->file_type;
+					if ($model->save()){
+						if ($file->file_type=='image')
+							copy($_SERVER['DOCUMENT_ROOT'].$file->answer->filesFolder.'/thumbs/'.$file->file_name, $_SERVER['DOCUMENT_ROOT'].$this->filesFolder.'/thumbs/'.$model->file_name);						
+						copy($_SERVER['DOCUMENT_ROOT'].$file->answer->filesFolder.'/'.$file->file_name, $_SERVER['DOCUMENT_ROOT'].$this->filesFolder.'/'.$model->file_name);
+					}
+				}			
+				
 			}
 		}
 	}	

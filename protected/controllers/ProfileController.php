@@ -163,6 +163,35 @@ class ProfileController extends Controller
       	if (isset($_POST['i'])) $this->renderPartial('_area_point_fields',array('shape'=>new UserAreaShapes, 'i'=>$_POST['i'], 'form'=>new CActiveForm));
 	}
 	
+	//сохрание списка ям в избраное
+	public function actionSaveHoles2Selected($id, $holes)
+	{
+		if ($id){
+			$gibdd=GibddHeads::model()->findByPk((int)$id);
+			$holemodel=Holes::model()->findAllByPk(explode(',',$holes));
+			if ($gibdd && $holemodel) {
+				$model=new UserSelectedLists;
+				$model->user_id=Yii::app()->user->id;
+				$model->gibdd_id=$gibdd->id;
+				$model->date_created=time();
+				$model->holes=$holemodel;
+				$model->save();					
+			}
+		}
+		$p = Yii::app()->createController('holes');
+		$p[0]->actionSelectHoles(false);		
+	}	
+	
+	//удаление списка ям
+	public function actionDelHolesSelectList($id)
+	{
+		$model=UserSelectedLists::model()->findByPk((int)$id);	
+		if ($model && $model->user_id==Yii::app()->user->id) $model->delete();
+		$p = Yii::app()->createController('holes');
+		$p[0]->actionSelectHoles(false);
+	}		
+
+	
 	
 	public function actionView($id)
 	{

@@ -31,7 +31,7 @@ class HolesController extends Controller
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('add','update', 'personal','personalDelete','request','requestForm','sent','notsent','gibddreply', 'fix', 'defix', 'prosecutorsent', 'prosecutornotsent','delanswerfile','myarea', 'territorialGibdd', 'delpicture','selectHoles'),
+				'actions'=>array('add','update', 'personal','personalDelete','request','requestForm','sent','notsent','gibddreply', 'fix', 'defix', 'prosecutorsent', 'prosecutornotsent','delanswerfile','myarea', 'territorialGibdd', 'delpicture','selectHoles','sentMany'),
 				'users'=>array('@'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -219,45 +219,74 @@ class HolesController extends Controller
 		));
 	}
 	
-	public function actionGibddreply($id)
+	
+	public function actionGibddreply($id=null, $holes=null)
 	{
 		$this->layout='//layouts/header_user';
-		
+		$count=0;
+		$firstAnswermodel=Array();
+		$models=Array();
+		if (!$holes){
 		$model=$this->loadModel($id);
 		$model->scenario='gibdd_reply';
 		if($model->STATE!='inprogress' && $model->STATE!='achtung' && !$model->request_gibdd)	
 			throw new CHttpException(403,'Доступ запрещен.');
-
-		$answer=new HoleAnswers;
-		if (isset($_GET['answer']) && $_GET['answer'])
-			$answer=HoleAnswers::model()->findByPk((int)$_GET['answer']);
-			
-		$answer->request_id=$model->request_gibdd->id;
+		$models[]=$model;
+		}	
+		else $models=Holes::model()->findAllByPk(explode(',',$holes));
+		foreach ($models as $i=>$model){
+			if($model->STATE!='inprogress' && $model->STATE!='achtung' && !$model->request_gibdd) {unset ($models[$i]); continue;}
+			$answer=new HoleAnswers;
+			if (isset($_GET['answer']) && $_GET['answer'])
+				$answer=HoleAnswers::model()->findByPk((int)$_GET['answer']);
+				
+			$answer->request_id=$model->request_gibdd->id;
+	
+				if(isset($_POST['HoleAnswers']))
+				{					
+					$answer->attributes=$_POST['HoleAnswers'];
+					//if (isset($_POST['HoleAnswers']['results'])) $answer->results=$_POST['HoleAnswers']['results'];
+					$answer->request_id=$model->request_gibdd->id;
+					$answer->date=time();
+					if ($firstAnswermodel) $answer->firstAnswermodel=$firstAnswermodel;
+					if($answer->save()){
+						if ($model->STATE=="inprogress" || $model->STATE=="achtung")
+							$model->STATE='gibddre';
+						$model->GIBDD_REPLY_RECEIVED=1;
+						if (!$model->DATE_STATUS) $model->DATE_STATUS=time();
+						if ($model->update()){					
+							if ($count==0) $firstAnswermodel=$answer;
+							$count++;
+							$links[]=CHtml::link($model->ADDRESS,Array('view','id'=>$model->ID));						
+							if (!$holes) $this->redirect(array('view','id'=>$model->ID));						
+							}
+						}
+					else {
+						print_r($answer->errors);	echo count($models); die(); 
+						}
+					
+				}
+				else {
+					if (!$answer->isNewRecord) $answer->results=CHtml::listData($answer->results,'id','id');
+				}
+		}
 		
+		if ($holes && $count) {
+					if($count) Yii::app()->user->setFlash('user', 'Успешная загрузка ответа ГИБДД на ямы: <br/>'.implode('<br/>',$links).'<br/><br/><br/>');
+					else Yii::app()->user->setFlash('user', 'Произошла ошибка! Ни одного ответа не загружено');
+					$this->redirect(array('personal')); 
+		}	
+
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 		$cs=Yii::app()->getClientScript();
         $cs->registerCssFile('/css/add_form.css');
         $cs->registerScriptFile('http://api-maps.yandex.ru/1.1/index.xml?key='.$this->mapkey);
-
-		if(isset($_POST['HoleAnswers']))
-		{
-			$answer->attributes=$_POST['HoleAnswers'];
-			//if (isset($_POST['HoleAnswers']['results'])) $answer->results=$_POST['HoleAnswers']['results'];
-			$answer->date=time();
-			if($answer->save()){
-				if ($model->STATE=="inprogress" || $model->STATE=="achtung")
-					$model->STATE='gibddre';
-				$model->GIBDD_REPLY_RECEIVED=1;
-				if (!$model->DATE_STATUS) $model->DATE_STATUS=time();
-				if ($model->update())
-					$this->redirect(array('view','id'=>$model->ID));
-				}
-		}
-
+		
 		$this->render('gibddreply',array(
-			'model'=>$model,
+			'models'=>$models,
 			'answer'=>$answer,
+			'jsplacemarks'=>'',
 		));
 	}
 	
@@ -522,6 +551,23 @@ class HolesController extends Controller
 				$this->redirect(array('view','id'=>$model->ID));
 	}
 	
+	public function actionSentMany($holes)
+	{		
+		$holesmodels=Holes::model()->findAllByPk(explode(',',$holes));
+		$count=0;
+		$links=Array();
+		foreach ($holesmodels as $model){
+			if ($model->makeRequest('gibdd')) {
+				$count++;
+				$links[]=CHtml::link($model->ADDRESS,Array('view','id'=>$model->ID));
+				}
+		}		
+		if($count) Yii::app()->user->setFlash('user', 'Успешное изменение статуса ям: <br/>'.implode('<br/>',$links).'<br/><br/><br/>');
+		else Yii::app()->user->setFlash('user', 'Произошла ошибка! Ни одной ямы не изменено');
+		if(!isset($_GET['ajax']))
+			$this->redirect(array('personal'));
+	}		
+	
 	public function actionProsecutorsent($id)
 	{
 		$model=$this->loadModel($id);
@@ -590,6 +636,9 @@ class HolesController extends Controller
 		$model->unsetAttributes();  // clear any default values
 		$user=Yii::app()->user;
 		
+		if(isset($_POST['Holes']) || isset($_GET['Holes']))
+			$model->attributes=isset($_POST['Holes']) ? $_POST['Holes'] : $_GET['Holes'];
+		
 		$cs=Yii::app()->getClientScript();
         $cs->registerCssFile('/css/holes_list.css');        
         $cs->registerCssFile('/css/hole_view.css');
@@ -615,12 +664,14 @@ class HolesController extends Controller
 	public function actionSelectHoles($del=false)
 	{
 		//echo $del;
-		$del=filter_var($del, FILTER_VALIDATE_BOOLEAN);		
-		if ($_POST['holes']=='all' && $del) {
+		$del=filter_var($del, FILTER_VALIDATE_BOOLEAN);	
+		if (isset($_POST['holes'])) $holestr=$_POST['holes'];
+		else $holestr=''; 
+		if ($holestr=='all' && $del) {
 			Yii::app()->user->setState('selectedHoles', Array());
 			Yii::app()->end();
 			}
-		$holes=explode(',',$_POST['holes']);
+		$holes=explode(',',$holestr);
 		for ($i=0;$i<count($holes);$i++) {$holes[$i]=(int)$holes[$i]; if(!$holes[$i]) unset($holes[$i]);}
 		
 		$selected=Yii::app()->user->getState('selectedHoles', Array());
@@ -635,7 +686,7 @@ class HolesController extends Controller
 		Yii::app()->user->setState('selectedHoles', $selected);
 		if ($selected){
 			$gibdds=GibddHeads::model()->with('holes')->findAll('holes.id IN ('.implode(',',$selected).')');
-			$this->renderPartial('_selected', Array('gibdds'=>$gibdds));
+			$this->renderPartial('_selected', Array('gibdds'=>$gibdds,'user'=>Yii::app()->user->userModel));
 		}
 		//print_r(Yii::app()->user->getState('selectedHoles'));
 	}	

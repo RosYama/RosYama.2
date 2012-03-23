@@ -21,7 +21,7 @@ $this->pageTitle=Yii::app()->name . ' :: Мои ямы';
 			?>
 <?php Yii::app()->clientScript->registerScript('check_holes','
 
-			$(".holes_list").each(function() {  checkInState($(this));	});	
+			checkInList();	
 			
 			 var scroller = new StickyScroller("#holes_select_list",
 			{
@@ -53,7 +53,7 @@ $this->pageTitle=Yii::app()->name . ' :: Мои ямы';
 	<div id="holes_select_list">
 	<?php if ($selected=Yii::app()->user->getState('selectedHoles', Array())) : ?>
 		<?php 
-		$this->renderPartial('_selected', Array('gibdds'=>GibddHeads::model()->with('holes')->findAll('holes.id IN ('.implode(',',$selected).')')));
+		$this->renderPartial('_selected', Array('gibdds'=>GibddHeads::model()->with('holes')->findAll('holes.id IN ('.implode(',',$selected).')'),'user'=>Yii::app()->user->userModel));
 		?>
 	<?php endif; ?>
 	</div>
@@ -65,7 +65,37 @@ $this->pageTitle=Yii::app()->name . ' :: Мои ямы';
 				<a href="#" onclick="var c=document.getElementById('pdf_form');if(c){c.style.display=c.style.display=='block'?'none':'block';}return false;" class="close">&times;</a>
 				<div id="gibdd_form"></div>
 				</div>
-<?php foreach ($model->AllstatesMany as $state_alias=>$state_name) : ?>
+			<p>
+<?php $form=$this->beginWidget('CActiveForm', array(
+	'action'=>Yii::app()->createUrl($this->route),
+	'method'=>'get',
+	'id'=>'holes_selectors',
+)); ?>			
+			<?php echo $form->dropDownList($model, 'TYPE_ID', CHtml::listData( HoleTypes::model()->findAll(Array('condition'=>'published=1', 'order'=>'ordering')), 'id','name'), array('prompt'=>'Тип дефекта')); ?>
+			<?php echo $form->dropDownList($model, 'STATE', $model->Allstates, array('prompt'=>'Статус дефекта')); ?>
+			<?php echo $form->dropDownList($model, 'showUserHoles', Array(1=>'только мои', 2=>'только чужие'), array('prompt'=>'ямы всех пользователей')); ?>
+			<?php echo CHtml::checkBox('selectAll', false, Array('id'=>'selectAll','class'=>'state_check')); ?><?php echo CHtml::label('Выбрать все', 'selectAll'); ?>
+	<?php $this->endWidget(); ?>		
+			</p>
+				
+<?php $this->widget('zii.widgets.CListView', array(
+	'id'=>'holes_list',
+	'ajaxUpdate'=>true,
+	'dataProvider'=>$model->userSearch(),
+	'itemView'=>'_view',
+	'itemsTagName'=>'ul',
+	'cssFile'=>'/css/holes_list.css',
+	'itemsCssClass'=>'holes_list',
+	'summaryText'=>false,
+	'viewData'=>Array('showcheckbox'=>true),
+	'afterAjaxUpdate'=> 'function(id){
+		checkInList();
+		}',
+	
+)); ?>
+
+
+<?php /* foreach ($model->AllstatesMany as $state_alias=>$state_name) : ?>
 <?php  if ($holes[$state_alias]) : ?>
 <div class="state_block">
 	<h2><?php echo $state_name; ?> <?php echo CHtml::checkBox('state', false, Array('id'=>'state_'.$state_alias,'class'=>'state_check')); ?><?php echo CHtml::label('Выбрать все', 'state_'.$state_alias); ?></h2>
@@ -81,7 +111,7 @@ $this->pageTitle=Yii::app()->name . ' :: Мои ямы';
 </ul>
 </div>
 <?php endif; ?>
-<?php endforeach; ?>
+<?php endforeach; */ ?>
 </div>
 
 

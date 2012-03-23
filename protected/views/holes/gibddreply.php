@@ -19,6 +19,7 @@ $this->pageTitle=Yii::app()->name . ' :: Загрузка ответа ГИБД�
 	<!-- левая колоночка -->
 	<div class="lCol">
 		<!-- тип дефекта -->
+	<?php foreach ($models as $model) : ?>
 		<div class="f">
 			<?php echo $model->type->name; ?>
 		</div>
@@ -32,7 +33,7 @@ $this->pageTitle=Yii::app()->name . ' :: Загрузка ответа ГИБД�
 		<div class="f">
 			<?php echo $model->COMMENT1; ?>
 		</div>
-
+	<?php endforeach; ?>
 		
 		<!-- фотки -->
 		<div class="f">
@@ -44,7 +45,7 @@ $this->pageTitle=Yii::app()->name . ' :: Загрузка ответа ГИБД�
 		<!-- анкета -->
 		<div class="f chekboxes">
 			<?php echo $form->labelEx($answer,'results'); ?>
-			<?php echo $form->checkBoxList($answer,'results',CHtml::listData( HoleAnswerResults::model()->findAll(Array('order'=>'ordering','condition'=>'published=1')), 'id', 'name' ),Array('template'=>'{input}{label}')); ?>
+			<?php echo $form->checkBoxList($answer,'results',CHtml::listData( HoleAnswerResults::model()->findAll(Array('order'=>'ordering','condition'=>'published=1')), 'id', 'name' ),Array('attributeitem' => 'id', 'template'=>'{input}{label}')); ?>
 			<?php echo $form->error($answer,'results'); ?>
 		</div>
 		
@@ -57,12 +58,24 @@ $this->pageTitle=Yii::app()->name . ' :: Загрузка ответа ГИБД�
 		<div class="bx-yandex-view-layout">
 			<div class="bx-yandex-view-map">
 			<div id="ymapcontainer" class="ymapcontainer"></div>
+			<?php foreach ($models as $i=>$model) $jsplacemarks.="
+				var point = new YMaps.GeoPoint({$model->LONGITUDE},{$model->LATITUDE});
+                points[{$i}]=point;
+				placemarks[{$i}] = new YMaps.Placemark(point, { hideIcon: false, hasBalloon: false });
+				map.addOverlay(placemarks[{$i}]);
+				"; ?>
+				
 			<?php Yii::app()->clientScript->registerScript('initmap',<<<EOD
 				var map = new YMaps.Map(YMaps.jQuery("#ymapcontainer")[0]);
 				map.enableScrollZoom();
-				map.setCenter(new YMaps.GeoPoint({$model->LONGITUDE},{$model->LATITUDE}), 14);
-				var placemark = new YMaps.Placemark(new YMaps.GeoPoint({$model->LONGITUDE},{$model->LATITUDE}), { hideIcon: false, hasBalloon: false });
-				map.addOverlay(placemark);
+				map.setCenter(new YMaps.GeoPoint({$models[0]->LONGITUDE},{$models[0]->LATITUDE}), 14);
+				var bounds = new Array();
+				var placemarks = new Array();
+				var points = new Array();
+				{$jsplacemarks}
+				 bounds = new YMaps.GeoCollectionBounds(points);
+				map.setBounds(bounds);  
+				
 EOD
 ,CClientScript::POS_READY);
 ?>

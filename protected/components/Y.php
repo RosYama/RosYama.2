@@ -19,7 +19,11 @@ class Y
 	public function dateFromTime($time)
 		{
     		return date('d F Y',$time);
-		}	
+		}
+	public function dateFromTimeShort($time)
+		{
+    		return date('d.m.Y H:i',$time);
+		}		
 	
 }
 ?>
