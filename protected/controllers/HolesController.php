@@ -663,31 +663,33 @@ class HolesController extends Controller
 	
 	public function actionSelectHoles($del=false)
 	{
-		//echo $del;
+		$gibdds=Array();
 		$del=filter_var($del, FILTER_VALIDATE_BOOLEAN);	
 		if (isset($_POST['holes'])) $holestr=$_POST['holes'];
 		else $holestr=''; 
 		if ($holestr=='all' && $del) {
 			Yii::app()->user->setState('selectedHoles', Array());
-			Yii::app()->end();
+			//Yii::app()->end();
 			}
-		$holes=explode(',',$holestr);
-		for ($i=0;$i<count($holes);$i++) {$holes[$i]=(int)$holes[$i]; if(!$holes[$i]) unset($holes[$i]);}
+		else{	
+			$holes=explode(',',$holestr);
+			for ($i=0;$i<count($holes);$i++) {$holes[$i]=(int)$holes[$i]; if(!$holes[$i]) unset($holes[$i]);}
+			
+			$selected=Yii::app()->user->getState('selectedHoles', Array());
+			if (!$del){
+				$newsel=array_diff($holes, $selected);
+				$selected=array_merge($selected, $newsel);
+			}
+			else {	
+				$newsel=array_intersect($selected, $holes);
+				foreach ($newsel as $key=>$val) unset($selected[$key]);
+			}
+			Yii::app()->user->setState('selectedHoles', $selected);
+			if ($selected) $gibdds=GibddHeads::model()->with('holes')->findAll('holes.id IN ('.implode(',',$selected).')');
+
+		}
+		$this->renderPartial('_selected', Array('gibdds'=>$gibdds,'user'=>Yii::app()->user->userModel));
 		
-		$selected=Yii::app()->user->getState('selectedHoles', Array());
-		if (!$del){
-			$newsel=array_diff($holes, $selected);
-			$selected=array_merge($selected, $newsel);
-		}
-		else {	
-			$newsel=array_intersect($selected, $holes);
-			foreach ($newsel as $key=>$val) unset($selected[$key]);
-		}
-		Yii::app()->user->setState('selectedHoles', $selected);
-		if ($selected){
-			$gibdds=GibddHeads::model()->with('holes')->findAll('holes.id IN ('.implode(',',$selected).')');
-			$this->renderPartial('_selected', Array('gibdds'=>$gibdds,'user'=>Yii::app()->user->userModel));
-		}
 		//print_r(Yii::app()->user->getState('selectedHoles'));
 	}	
 	

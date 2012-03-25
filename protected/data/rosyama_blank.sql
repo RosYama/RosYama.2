@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: localhost
--- Время создания: Фев 16 2012 г., 02:38
+-- Время создания: Мар 23 2012 г., 20:30
 -- Версия сервера: 5.5.9
 -- Версия PHP: 5.3.5
 
@@ -887,5 +887,41 @@ CREATE TABLE IF NOT EXISTS `yii_user_area_shape_points` (
 
 --
 -- Дамп данных таблицы `yii_user_area_shape_points`
+--
+
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `yii_user_selected_lists`
+--
+
+CREATE TABLE IF NOT EXISTS `yii_user_selected_lists` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `gibdd_id` int(11) NOT NULL,
+  `date_created` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+
+--
+-- Дамп данных таблицы `yii_user_selected_lists`
+--
+
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `yii_user_selected_lists_holes_xref`
+--
+
+CREATE TABLE IF NOT EXISTS `yii_user_selected_lists_holes_xref` (
+  `list_id` int(11) NOT NULL,
+  `hole_id` int(11) NOT NULL,
+  PRIMARY KEY (`list_id`,`hole_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Дамп данных таблицы `yii_user_selected_lists_holes_xref`
 --
 

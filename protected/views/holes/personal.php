@@ -51,9 +51,11 @@ $this->pageTitle=Yii::app()->name . ' :: Мои ямы';
 <div class="lCol">
 	
 	<div id="holes_select_list">
-	<?php if ($selected=Yii::app()->user->getState('selectedHoles', Array())) : ?>
-		<?php 
-		$this->renderPartial('_selected', Array('gibdds'=>GibddHeads::model()->with('holes')->findAll('holes.id IN ('.implode(',',$selected).')'),'user'=>Yii::app()->user->userModel));
+	<?php 
+	$selected=Yii::app()->user->getState('selectedHoles', Array());
+	if ($selected || Yii::app()->user->userModel->selected_holes_lists) : ?>
+		<?php
+		$this->renderPartial('_selected', Array('gibdds'=>$selected ? GibddHeads::model()->with('holes')->findAll('holes.id IN ('.implode(',',$selected).')') : Array(),'user'=>Yii::app()->user->userModel));
 		?>
 	<?php endif; ?>
 	</div>

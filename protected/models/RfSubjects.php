@@ -36,7 +36,7 @@ class RfSubjects extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('name, name_full, name_full_genitive', 'required'),
+			array('name, name_full, name_full_genitive, region_num', 'required'),
 			array('name, name_full, name_full_genitive', 'length', 'max'=>255),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.

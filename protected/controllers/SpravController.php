@@ -148,8 +148,13 @@ class SpravController extends Controller
 			{
 				echo 'нет ссылки или ид субъекта '.$r['name'].'<br>';
 				die();
+			}	
+			$regionnum=str_replace('/regions/show/', '', $r['href']);
+			$subjmodel=RfSubjects::model()->findByPk($r['subject_id']);
+			if ($subjmodel && !$subjmodel->region_num) {
+			$subjmodel->region_num=(int)$regionnum;
+			$subjmodel->update();
 			}
-			
 			
 			$text = file_get_contents('http://www.gibdd.ru'.$r['href']);
 			$text = substr($text, strpos($text, '<p class="bold" style="padding-bottom:15px;">'));
@@ -281,7 +286,7 @@ class SpravController extends Controller
 	 */
 	public function actionIndex()
 	{
-		$model=RfSubjects::model()->with('gibdd')->findAll(Array('order'=>'t.id','together'=>true));
+		$model=RfSubjects::model()->with('gibdd')->findAll(Array('order'=>'t.region_num','together'=>true));
 		$this->render('index',array(
 			'model'=>$model,
 		));

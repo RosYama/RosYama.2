@@ -96,13 +96,9 @@
 			
 			jQuery(".clear_selected").live("click",function() {
 				selectHoles("all",true);
-				
-				$(".holes_list").each(function() {  
-					$(this).find(".hole_check").each(function() {
-							$(this).removeAttr("checked");	
-					});	
-					$(this).parent().find(".state_check").removeAttr("checked");
-					$(this).parents(".state_block").removeClass("checked");
+				$("#selectAll").removeAttr("checked");
+				$("#holes_list").find(".hole_check").each(function() {  				
+					$(this).removeAttr("checked");
 					});
 					
 				return false;
