@@ -145,7 +145,7 @@ class UserGroupsIdentity extends CUserIdentity
 	 * login in recovery mode
 	 * @return boolean wheter is possible to login in recovery mode
 	 */
-	public function recovery()
+	public function recovery($mode=null)
 	{
 		$model=UserGroupsUser::model()->findByAttributes(array('username' => $this->username));
 
@@ -155,9 +155,9 @@ class UserGroupsIdentity extends CUserIdentity
 			$this->errorCode=self::ERROR_USER_BANNED;
 		/*else if((int)$model->status === UserGroupsUser::ACTIVE)
 			$this->errorCode=self::ERROR_USER_ACTIVE;*/
-		else if((int)$model->status === UserGroupsUser::WAITING_APPROVAL)
+		else if($mode!='activate' && (int)$model->status === UserGroupsUser::WAITING_APPROVAL)
 			$this->errorCode=self::ERROR_USER_APPROVAL;
-		else if($model->activation_code !== $this->password)
+		else if($mode!='activate' && $model->activation_code !== $this->password)
 			$this->errorCode=self::ERROR_ACTIVATION_CODE;
 		else {
 			$this->errorCode=self::ERROR_NONE;
@@ -168,7 +168,8 @@ class UserGroupsIdentity extends CUserIdentity
 			$this->level = $model->relUserGroupsGroup->level;
 			$this->accessRules = $this->accessRulesComputation($model);
 			$this->home = $model->home;
-			$this->recovery = true;
+			if ($mode!='activate') $this->recovery = true;
+			else $model->status=4;
 			// load profile extension's data
 			$this->profileLoad($model);
 			// update the last login time

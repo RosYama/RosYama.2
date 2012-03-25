@@ -20,7 +20,7 @@
 Вы получили это сообщение, так как ваш адрес был использован при регистрации нового пользователя на сервере rosyama.ru.<br /><br />
 Ваш код для подтверждения регистрации: <?php echo $data['{activation_code}']; ?><br /><br />
 Для подтверждения регистрации перейдите по следующей ссылке:<br />
-<a href="<?php echo $data['{full_link}']; ?>"><?php echo $data['{full_link}']; ?></a><br/>
+<a href="<?php echo $data['{full_link}']; ?>&UserGroupsUser[active]=1"><?php echo $data['{full_link}']; ?>&UserGroupsUser[active]=1</a><br/>
 <br/>Вы также можете ввести код для подтверждения регистрации на странице:<br/>
 <a href="<?php echo $data['{link}']; ?>"><?php echo $data['{link}']; ?></a><br/><br/>
 

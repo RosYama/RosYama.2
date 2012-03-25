@@ -588,6 +588,9 @@ class UserGroupsUser extends CActiveRecord
 			} else if ($mode === 'recovery') {
 				$this->_identity=new UserGroupsIdentity($this->username,$this->activation_code);
 				$this->_identity->recovery();
+			} else if ($mode === 'activate') {
+				$this->_identity=new UserGroupsIdentity($this->username,$this->activation_code);
+				$this->_identity->recovery('activate');
 			}
 			else if ($mode === 'service') {
 				$service = Yii::app()->request->getQuery('service');

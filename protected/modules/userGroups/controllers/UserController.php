@@ -379,8 +379,14 @@ class UserController extends Controller
 
 			if($model->validate()) {
 				if (isset($_GET['UserGroupsUser']) || $_POST['id'] === 'user-groups-activate-form') {
-					$model->login('recovery');
-					$this->redirect(Yii::app()->baseUrl . '/userGroups/user/recovery');
+					if (!isset($_GET['UserGroupsUser']['active'])){
+						$model->login('recovery');
+						$this->redirect(Yii::app()->baseUrl . '/userGroups/user/recovery');
+						}
+					else {						
+						$model->login('activate');
+						$this->redirect(Yii::app()->baseUrl . '/holes/personal');
+					}	
 				} else {
 					$userModel = UserGroupsUser::model()->findByAttributes(array('email'=>$model->email));
 					$mail = new UGMail($userModel, UGMail::ACTIVATION);
