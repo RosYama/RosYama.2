@@ -361,7 +361,6 @@ class UserController extends Controller
 	 */
 	public function actionActivate()
 	{
-		Yii::app()->user->logout();
 		
 		$activeModel = new UserGroupsUser('activate');
 		$requestModel = new UserGroupsUser('mailRequest');
