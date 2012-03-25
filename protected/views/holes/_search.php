@@ -61,13 +61,18 @@
 	</div>
 
 	<div class="row">
-		<?php echo $form->label($model,'TYPE'); ?>
-		<?php echo $form->textField($model,'TYPE',array('size'=>10,'maxlength'=>10)); ?>
+		<?php echo $form->label($model,'TYPE_ID'); ?>
+		<?php echo $form->textField($model,'TYPE_ID'); ?>
 	</div>
 
 	<div class="row">
 		<?php echo $form->label($model,'ADR_SUBJECTRF'); ?>
 		<?php echo $form->textField($model,'ADR_SUBJECTRF',array('size'=>10,'maxlength'=>10)); ?>
+	</div>
+
+	<div class="row">
+		<?php echo $form->label($model,'gibdd_id'); ?>
+		<?php echo $form->textField($model,'gibdd_id'); ?>
 	</div>
 
 	<div class="row">

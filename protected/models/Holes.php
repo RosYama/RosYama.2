@@ -46,6 +46,7 @@ class Holes extends CActiveRecord
 	public $offset=0;
 	public $type_alias;
 	public $showUserHoles;
+	public $username;
 
 	/**
 	 * @return string the associated database table name
@@ -83,7 +84,7 @@ class Holes extends CActiveRecord
 			array('LATITUDE, LONGITUDE', 'numerical'),
 			array('USER_ID, STATE, DATE_CREATED, DATE_SENT, DATE_STATUS, ADR_SUBJECTRF, DATE_SENT_PROSECUTOR', 'length', 'max'=>10),
 			array('ADR_CITY', 'length', 'max'=>50),
-			array('STR_SUBJECTRF', 'length'),
+			array('STR_SUBJECTRF, username', 'length'),
 			array('COMMENT1, COMMENT2, COMMENT_GIBDD_REPLY, deletepict, upploadedPictures, request_gibdd, showUserHoles', 'safe'),	
 			array('upploadedPictures', 'file', 'types'=>'jpg, jpeg, png, gif','maxFiles'=>10, 'allowEmpty'=>true, 'on' => 'update, import'),
 			array('upploadedPictures', 'file', 'types'=>'jpg, jpeg, png, gif','maxFiles'=>10, 'allowEmpty'=>false, 'on' => 'insert'),
@@ -520,6 +521,14 @@ class Holes extends CActiveRecord
 				if ($this->USER_ID==Yii::app()->user->id) return true;
 				else return false;
 	}	
+	
+	public function getmodering(){
+		if ($this->PREMODERATED) {$publtext='снять модерацию'; $pubimg='published.png';}
+		else {$publtext='отмодерировать';  $pubimg='unpublished.png';}
+		return '<a class="publish ajaxupdate" title="'.$publtext.'" href="'.Yii::app()->getController()->CreateUrl("moderate", Array('id'=>$this->ID)).'">
+			<img src="/images/'.$pubimg.'" alt="'.$publtext.'"/>
+			</a>';
+	}	
 
 	/**
 	 * @return array customized attribute labels (name=>label)
@@ -528,23 +537,23 @@ class Holes extends CActiveRecord
 	{
 		return array(
 			'ID' => 'ID',
-			'USER_ID' => 'User',
+			'USER_ID' => 'Пользователь',
 			'LATITUDE' => 'Latitude',
 			'LONGITUDE' => 'Longitude',
 			'ADDRESS' => 'Адрес дефекта',
 			'gibdd_id'=>'Отдел ГИБДД',
-			'STATE' => 'State',
-			'DATE_CREATED' => 'Date Created',
-			'DATE_SENT' => 'Date Sent',
+			'STATE' => 'Статус',
+			'DATE_CREATED' => 'Дата создания',
+			'DATE_SENT' => 'Дата отправки в ГИБДД',
 			'DATE_STATUS' => 'Date Status',
 			'COMMENT1' => 'Комментарии',
 			'COMMENT2' => 'Комментарии',
 			'TYPE_ID' => 'Тип дефекта',
-			'ADR_SUBJECTRF' => 'Adr Subjectrf',
-			'ADR_CITY' => 'Adr City',
+			'ADR_SUBJECTRF' => 'Субъект РФ',
+			'ADR_CITY' => 'Город',
 			'COMMENT_GIBDD_REPLY' => 'Comment Gibdd Reply',
 			'GIBDD_REPLY_RECEIVED' => 'Gibdd Reply Received',
-			'PREMODERATED' => 'Premoderated',
+			'PREMODERATED' => 'Модер.',
 			'NOT_PREMODERATED' => 'только непроверенные',
 			'DATE_SENT_PROSECUTOR' => 'Date Sent Prosecutor',
 			'deletepict'=>'Удалить фотографию?',
@@ -649,4 +658,48 @@ class Holes extends CActiveRecord
 				)
 		));
 	}
+	
+	public function searchInAdmin()
+	{
+		// Warning: Please modify the following code to remove attributes that
+		// should not be searched.
+
+		$criteria=new CDbCriteria;
+		//$criteria->with=Array('pictures_fresh','pictures_fixed');
+		$criteria->with=Array('type','user','subject', 'gibdd');
+		$criteria->compare('t.ID',$this->ID,false);
+		$criteria->compare('user.username',$this->username,true);
+		$criteria->compare('t.LATITUDE',$this->LATITUDE);
+		$criteria->compare('t.LONGITUDE',$this->LONGITUDE);
+		$criteria->compare('t.ADDRESS',$this->ADDRESS,true);
+		$criteria->compare('t.STATE',$this->STATE,true);
+		if ($this->DATE_CREATED) {
+			$DATE_CREATED=CDateTimeParser::parse($this->DATE_CREATED, 'dd.MM.yyyy');
+			$criteria->addCondition('t.DATE_CREATED >='.$DATE_CREATED.' AND t.DATE_CREATED <='.($DATE_CREATED+86400));
+			}		
+		$criteria->compare('t.DATE_SENT',$this->DATE_SENT,true);
+		$criteria->compare('t.DATE_STATUS',$this->DATE_STATUS,true);
+		$criteria->compare('t.COMMENT1',$this->COMMENT1,true);
+		$criteria->compare('t.COMMENT2',$this->COMMENT2,true);
+		$criteria->compare('t.TYPE_ID',$this->TYPE_ID,false);
+		$criteria->compare('type.alias',$this->type_alias,true);
+		$criteria->compare('subject.name_full',$this->ADR_SUBJECTRF,true);
+		$criteria->compare('gibdd.name',$this->gibdd_id,true);
+		$criteria->compare('t.ADR_CITY',$this->ADR_CITY,true);
+		$criteria->compare('t.COMMENT_GIBDD_REPLY',$this->COMMENT_GIBDD_REPLY,true);
+		$criteria->compare('t.GIBDD_REPLY_RECEIVED',$this->GIBDD_REPLY_RECEIVED);
+		$criteria->compare('t.PREMODERATED',$this->PREMODERATED,true);
+		$criteria->compare('t.DATE_SENT_PROSECUTOR',$this->DATE_SENT_PROSECUTOR,true);
+		$criteria->together=true;
+	
+		return new CActiveDataProvider($this, array(
+			'criteria'=>$criteria,
+			'pagination'=>array(
+				        'pageSize'=> Yii::app()->user->getState('pageSize',20),			        
+				    ),
+			'sort'=>array(
+			    'defaultOrder'=>'t.DATE_CREATED DESC',
+				)
+		));
+	}	
 }

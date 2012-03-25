@@ -35,8 +35,12 @@ class HolesController extends Controller
 				'users'=>array('@'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
-				'actions'=>array('admin','delete', 'moderate'),
+				'actions'=>array('delete', 'moderate'),
 				'groups'=>array('root', 'admin', 'moder'), 
+			),
+			array('allow', // allow admin user to perform 'admin' and 'delete' actions
+				'actions'=>array('admin', 'itemsSelected'),
+				'groups'=>array('root',), 
 			),
 			array('deny',  // deny all users
 				'users'=>array('*'),
@@ -338,7 +342,7 @@ class HolesController extends Controller
 	//удаление ямы админом или модером
 	public function actionDelete()
 	{
-		if(Yii::app()->request->isPostRequest && (isset($_POST['id']) || $_POST['DELETE_ALL']))
+		if(Yii::app()->request->isPostRequest && (isset($_POST['id']) || (isset($_POST['DELETE_ALL']) && $_POST['DELETE_ALL'])))
 		{
 			if (!isset($_POST['DELETE_ALL'])){
 			$id=$_POST['id'];
@@ -374,9 +378,13 @@ class HolesController extends Controller
 			}			
 
 			// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-			if(!isset($_POST['ajax']))
+			if(!isset($_GET['ajax']))
 				$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('index'));
 		}
+		elseif (Yii::app()->user->groupName=='root'){
+			$model=Holes::model()->findByPk((int)$_GET['id']);
+			if ($model) $model->delete();
+			}
 		else
 			throw new CHttpException(400,'Invalid request. Please do not repeat this request again.');
 	}
@@ -530,6 +538,10 @@ class HolesController extends Controller
 				$model->PREMODERATED=1;
 				if ($model->update()) echo 'ok';
 				}
+			elseif (isset($_GET['ajax']) && $_GET['ajax']=='holes-grid'){
+				$model->PREMODERATED=0;
+				if ($model->update()) echo 'ok';	
+			}
 		}
 		else {
 			$holes=Holes::model()->findAll('id IN ('.$_GET['PREMODERATE_ALL'].')');
@@ -863,6 +875,13 @@ class HolesController extends Controller
 	 */
 	public function actionAdmin()
 	{
+		
+		if (isset($_GET['pageSize'])) {
+			Yii::app()->user->setState('pageSize',(int)$_GET['pageSize']);
+			unset($_GET['pageSize']);  // would interfere with pager and repetitive page size change
+		}
+		
+		$this->layout='//layouts/header_user';
 		$model=new Holes('search');
 		$model->unsetAttributes();  // clear any default values
 		if(isset($_GET['Holes']))
@@ -872,6 +891,39 @@ class HolesController extends Controller
 			'model'=>$model,
 		));
 	}
+	
+	public function actionItemsSelected()
+	{
+	if (isset ($_POST['submit_mult']) && isset($_POST['itemsSelected'])) {
+		if ($_POST['submit_mult']=='Удалить'){
+			foreach ( $_POST['itemsSelected'] as $id){
+				$model=Holes::model()->findByPk((int)$id);
+				if ($model) $model->delete();
+			}
+		}
+
+		if ($_POST['submit_mult']=='Отмодерировать'){
+			foreach ( $_POST['itemsSelected'] as $id){
+				$model=Holes::model()->findByPk((int)$id);
+				if ($model) {
+				$model->PREMODERATED=1;
+				$model->update();
+				}
+			}
+		}
+
+		if ($_POST['submit_mult']=='Демодерировать'){
+			foreach ( $_POST['itemsSelected'] as $id){
+				$model=Holes::model()->findByPk((int)$id);
+				if ($model) {
+				$model->PREMODERATED=0;
+				$model->update();
+				}
+			}
+		}
+    }
+		if (!isset($_GET['ajax'])) $this->redirect($_SERVER['HTTP_REFERER']);
+	}	
 
 	/**
 	 * Returns the data model based on the primary key given in the GET variable.
