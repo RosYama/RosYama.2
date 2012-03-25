@@ -6,3 +6,4 @@ upload
 bugs
 /bugs/*
 /protected/runtime/*
+protected/runtime/*
