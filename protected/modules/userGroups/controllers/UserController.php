@@ -28,7 +28,12 @@ class UserController extends Controller
 	{
 		return array(
 			array('allow',  // just guest can perform 'activate', 'login' and 'passRequest' actions
-				'actions'=>array('activate','login', 'passRequest'),
+				'actions'=>array('activate'),
+				'ajax'=>false,
+				'users'=>array('*'),
+			),
+			array('allow',  // just guest can perform 'activate', 'login' and 'passRequest' actions
+				'actions'=>array('login', 'passRequest'),
 				'ajax'=>false,
 				'users'=>array('?'),
 			),
@@ -356,6 +361,8 @@ class UserController extends Controller
 	 */
 	public function actionActivate()
 	{
+		Yii::app()->user->logout();
+		
 		$activeModel = new UserGroupsUser('activate');
 		$requestModel = new UserGroupsUser('mailRequest');
 
