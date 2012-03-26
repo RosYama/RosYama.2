@@ -20,25 +20,25 @@
 			));?>
 		</div>							
 	<div class="photo">
-		<?php if(Yii::app()->user->userModel->relProfile && Yii::app()->user->userModel->relProfile->avatar) echo CHtml::image(Yii::app()->user->userModel->relProfile->avatar_folder.'/'.Yii::app()->user->userModel->relProfile->avatar); ?>
+		<?php if($this->user->userModel->relProfile && $this->user->userModel->relProfile->avatar) echo CHtml::image($this->user->userModel->relProfile->avatar_folder.'/'.$this->user->userModel->relProfile->avatar); ?>
 	</div>
-	<div class="info">		
-		<h1><?php echo Yii::app()->user->fullName; ?></h1>
+	<div class="info">		 
+		<h1><?php echo $this->user->fullName; ?></h1>
 		<div class="www">
 			<a target="_blank" href="http://"></a>
 		</div>
 	</div>
 	<div class="counter">
-		<?php echo Y::declOfNum(Yii::app()->user->usermodel->holes_cnt, array('дефект', 'дефекта', 'дефектов')); ?> / <?php echo Y::declOfNum(Yii::app()->user->usermodel->holes_fixed_cnt, array('отремонтирован', 'отремонтировано', 'отремонтировано')); ?>		
+		<?php echo Y::declOfNum($this->user->usermodel->holes_cnt, array('дефект', 'дефекта', 'дефектов')); ?> / <?php echo Y::declOfNum($this->user->usermodel->holes_fixed_cnt, array('отремонтирован', 'отремонтировано', 'отремонтировано')); ?>		
 		
 	</div>
-	<?php if (Yii::app()->user->isAdmin) {
+	<?php if ($this->user->isAdmin) {
 	echo '<br/>';
 	$this->widget('zii.widgets.CMenu', array(
 				'items'=>Array(
 						array('label'=>'Новости', 'url'=>array('/news/admin'), 'linkOptions'=>array('class'=>'profileBtn')),
 						array('label'=>'Пользователи', 'url'=>array('/userGroups/'), 'linkOptions'=>array('class'=>'profileBtn')),
-						array('label'=>'Ямы', 'url'=>array('/holes/admin'), 'linkOptions'=>array('class'=>'profileBtn'), 'visible'=>Yii::app()->user->groupName=='root'),
+						array('label'=>'Ямы', 'url'=>array('/holes/admin'), 'linkOptions'=>array('class'=>'profileBtn'), 'visible'=>$this->user->groupName=='root'),
 						array('label'=>'Типы ям', 'url'=>array('/holeTypes/index'), 'linkOptions'=>array('class'=>'profileBtn')),
 						array('label'=>'Результаты запроса в ГИБДД (анкета)', 'url'=>array('/holeAnswerResults/index'), 'linkOptions'=>array('class'=>'profileBtn')),
 					),

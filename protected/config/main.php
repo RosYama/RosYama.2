@@ -162,13 +162,18 @@ return array(
 		'db'=>array(
 			'class'=>'CDbConnection',
 			'connectionString' => 'mysql:host=localhost;dbname=rosyama',
-			'enableParamLogging'=>true,
-			'emulatePrepare' => true,
+			'emulatePrepare' => false,
 			'username' => 'root',
 			'password' => 'qwe1024',
 			'charset' => 'utf8',
-			'tablePrefix'=>'yii_'
-		),	
+			'tablePrefix'=>'yii_',
+			'schemaCachingDuration'=>3600,
+			'enableProfiling' => true,
+            'enableParamLogging' => true,
+		),
+		'cache'=>array(
+            'class'=>'system.caching.CApcCache',          
+        ),
 
 		'errorHandler'=>array(
 			// use 'site/error' action to display errors
@@ -202,28 +207,15 @@ return array(
 		'log'=>array(
 			'class'=>'CLogRouter',
 			'routes'=>array(
-                                'web'=>array(
-                                        'class'=>'CWebLogRoute',
-                                        'levels'=>'trace, info, error, warning',
-                                        'categories'=>'system.db.*',
-                                        'showInFireBug'=>false //true/falsefirebug only - turn off otherwise
-                                ),
-                                'file'=>array(
-                                        'class'=>'CFileLogRoute',
-                                        'levels'=>'error, warning, watch',
-                                        'categories'=>'system.*',
-                                ),
-                                'profile'=>array(
-                                    'class' => 'CProfileLogRoute',
-                                    'report'=>'summary',
-                                    ),
-				// uncomment the following to show log messages on web pages
-
-				array(
-					'class'=>'CWebLogRoute',
-				),
-
-			),
+                array(
+                    'class'=>'CFileLogRoute',
+                    'levels'=>'error, warning',
+                ),
+                array(
+                    'class' => 'application.extensions.pqp.PQPLogRoute',
+                    'categories' => 'application.*, exception.*',
+                ),
+            ),
 			'enabled'=>isset($_GET['testing'])?true:false,  // enable caching in non-debug mode  
 		),
 	),

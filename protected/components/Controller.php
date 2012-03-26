@@ -19,6 +19,13 @@ class Controller extends CController
 	public $layout='//layouts/header_default';
 	
 	public $title='';
+	
+	private $_user;
+	
+	public function getUser(){
+		if (!$this->_user) $this->_user=Yii::app()->user;
+		return $this->_user;
+	}
 	/**
 	 * @var array context menu items. This property will be assigned to {@link CMenu::items}.
 	 */

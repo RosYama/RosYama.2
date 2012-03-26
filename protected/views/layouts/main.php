@@ -42,7 +42,7 @@
 				array('label'=>'Статистика', 'url'=>array('/statics/index')),
 				array('label'=>'FAQ', 'url'=>array('/site/page', 'view'=>'faq')),
 				array('label'=>'Справочники', 'url'=>array('/sprav/index')),
-				//array('label'=>'Logout ('.Yii::app()->user->name.')', 'url'=>array('/site/logout'), 'visible'=>!Yii::app()->user->isGuest)
+				//array('label'=>'Logout ('.$this->user->name.')', 'url'=>array('/site/logout'), 'visible'=>!$this->user->isGuest)
 			),
 			'htmlOptions'=>array('class'=>'menu'),
 			'firstItemCssClass'=>'first',
@@ -88,10 +88,10 @@
 	</form>
 			</div>
 			<div class="auth">
-			<?php if(!Yii::app()->user->isGuest) : ?>
+			<?php if(!$this->user->isGuest) : ?>
 					<?php echo CHtml::link('<img src="/images/logout.png" alt="Выйти" />',Array('/site/logout'),Array('title'=>'Выйти')); ?>
 					<div class="name">
-						<p><?php echo CHtml::link(Yii::app()->user->fullname,Array('/holes/personal')); ?></p><span class="grad"></span>
+						<p><?php echo CHtml::link($this->user->fullname,Array('/holes/personal')); ?></p><span class="grad"></span>
 					</div>
 				<?php else: ?>
 					<?php echo CHtml::link('Войти',Array('/holes/personal'),Array('title'=>'Войти', 'class'=>'profileBtn')); ?>
@@ -156,7 +156,7 @@
 	  })();
 	
 	</script>
-	<? if (!Yii::app()->user->isGuest && $flash=Yii::app()->user->getFlash('user')):?>
+	<? if (!$this->user->isGuest && $flash=$this->user->getFlash('user')):?>
 		<div id="addDiv">
 			<div id="fon">
 			</div>

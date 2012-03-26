@@ -3,7 +3,7 @@
 			<?php if (isset($showcheckbox) && $showcheckbox) : ?>
 				<?php echo CHtml::checkBox('hole_id[]', $data->isSelected ? true : false, Array('value'=>$data->ID, 'class'=>'hole_check')); ?>
 			<?php endif; ?>
-			<?php if(Yii::app()->user->isModer): ?>
+			<?php if($user->isModer): ?>
 				<?php if(!$data->PREMODERATED): ?>
 					<div class="premoderate" id="premoderate_<?php echo $data->ID ?>"><img src="/images/st1234/iconpm.gif" onclick="setPM_OK('<?php echo $data->ID ?>');" title="Показывать этот дефект всем"></div>
 				<?php endif; ?>

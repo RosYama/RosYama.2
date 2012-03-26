@@ -52,10 +52,10 @@ $this->pageTitle=Yii::app()->name . ' :: Мои ямы';
 	
 	<div id="holes_select_list">
 	<?php 
-	$selected=Yii::app()->user->getState('selectedHoles', Array());
-	if ($selected || Yii::app()->user->userModel->selected_holes_lists) : ?>
+	$selected=$user->getState('selectedHoles', Array());
+	if ($selected || $user->userModel->selected_holes_lists) : ?>
 		<?php
-		$this->renderPartial('_selected', Array('gibdds'=>$selected ? GibddHeads::model()->with('holes')->findAll('holes.id IN ('.implode(',',$selected).')') : Array(),'user'=>Yii::app()->user->userModel));
+		$this->renderPartial('_selected', Array('gibdds'=>$selected ? GibddHeads::model()->with('holes')->findAll('holes.id IN ('.implode(',',$selected).')') : Array(),'user'=>$user->userModel));
 		?>
 	<?php endif; ?>
 	</div>
@@ -89,7 +89,7 @@ $this->pageTitle=Yii::app()->name . ' :: Мои ямы';
 	'cssFile'=>'/css/holes_list.css',
 	'itemsCssClass'=>'holes_list',
 	'summaryText'=>false,
-	'viewData'=>Array('showcheckbox'=>true),
+	'viewData'=>Array('showcheckbox'=>true, 'user'=>$user),
 	'afterAjaxUpdate'=> 'function(id){
 		checkInList();
 		}',

@@ -31,7 +31,8 @@ $this->pageTitle=Yii::app()->name . ' :: Мой участок';
 		<?php 
 		$this->renderPartial('_view',array(
 			'data'=>$item,
-			'index'=>$i
+			'index'=>$i,
+			'user'=>Yii::app()->user,
 		));?>
 	<?php endforeach; ?>
 </ul>

@@ -646,7 +646,7 @@ class HolesController extends Controller
 	
 		$model=new Holes('search');
 		$model->unsetAttributes();  // clear any default values
-		$user=Yii::app()->user;
+		$user=$this->user;
 		
 		if(isset($_POST['Holes']) || isset($_GET['Holes']))
 			$model->attributes=isset($_POST['Holes']) ? $_POST['Holes'] : $_GET['Holes'];
@@ -659,16 +659,10 @@ class HolesController extends Controller
         $cs->registerScriptFile(CHtml::asset($this->viewPath.DIRECTORY_SEPARATOR.'js'.DIRECTORY_SEPARATOR.'StickyScroller'.DIRECTORY_SEPARATOR.'StickyScroller.min.js'));
 		$cs->registerScriptFile(CHtml::asset($this->viewPath.DIRECTORY_SEPARATOR.'js'.DIRECTORY_SEPARATOR.'StickyScroller'.DIRECTORY_SEPARATOR.'GetSet.js'));
 		$holes=Array();
-		$all_holes_count=0;
-		foreach ($model->AllstatesMany as $state_alias=>$state_name) {
-			$holes[$state_alias]=Holes::model()->findAll(Array('condition'=>'USER_ID='.$user->id.' AND STATE="'.$state_alias.'"', 'order'=>'DATE_CREATED DESC'));		
-			$all_holes_count+=count($holes[$state_alias]);
-		}
+		$all_holes_count=0;		
 			
 		$this->render('personal',array(
 			'model'=>$model,
-			'holes'=>$holes,
-			'all_holes_count'=>$all_holes_count,
 			'user'=>$user
 		));
 	}

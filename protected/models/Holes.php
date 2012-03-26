@@ -580,13 +580,13 @@ class Holes extends CActiveRecord
 	{
 		// Warning: Please modify the following code to remove attributes that
 		// should not be searched.
-
+		$userid=Yii::app()->user->id;
 		$criteria=new CDbCriteria;
 		//$criteria->with=Array('pictures_fresh','pictures_fixed');
 		$criteria->with=Array('requests_gibdd', 'type','pictures_fresh');
 		$criteria->compare('t.ID',$this->ID,false);
-		if ($this->showUserHoles==1) $criteria->compare('t.USER_ID',Yii::app()->user->id,false);
-		elseif ($this->showUserHoles==2) $criteria->addCondition('t.USER_ID!='.Yii::app()->user->id);
+		if ($this->showUserHoles==1) $criteria->compare('t.USER_ID',$userid,false);
+		elseif ($this->showUserHoles==2) $criteria->addCondition('t.USER_ID!='.$userid);
 		$criteria->compare('t.LATITUDE',$this->LATITUDE);
 		$criteria->compare('t.LONGITUDE',$this->LONGITUDE);
 		$criteria->compare('t.ADDRESS',$this->ADDRESS,true);
@@ -605,7 +605,7 @@ class Holes extends CActiveRecord
 		$criteria->compare('DATE_SENT_PROSECUTOR',$this->DATE_SENT_PROSECUTOR,true);
 		$criteria->join='LEFT OUTER JOIN `yii_hole_requests` `requests` ON (`requests`.`hole_id`=`t`.`ID`)';
 		//$criteria->together=true;
-		$criteria->addCondition('t.USER_ID='.Yii::app()->user->id.' OR requests.user_id='. Yii::app()->user->id);
+		$criteria->addCondition('t.USER_ID='.$userid.' OR requests.user_id='. $userid);
 	
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

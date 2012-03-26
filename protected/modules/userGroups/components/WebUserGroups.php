@@ -251,9 +251,11 @@ class WebUserGroups extends CWebUser
 		return UserGroupsUser::model()->findByPk((int)Yii::app()->user->id)->email;
 	}
 	
+	private $_usermodel;
 	public function getUserModel()
 	{
-		return UserGroupsUser::model()->findByPk((int)Yii::app()->user->id);
+		if (!$this->_usermodel) $this->_usermodel=UserGroupsUser::model()->findByPk((int)Yii::app()->user->id);
+		return $this->_usermodel;
 	}	
 
 	/**

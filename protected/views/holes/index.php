@@ -248,6 +248,7 @@ EOD
 	'cssFile'=>'/css/holes_list.css',
 	'itemsCssClass'=>'holes_list',
 	'summaryText'=>false,
+	'viewData'=>Array('user'=>Yii::app()->user),
 	
 )); ?>
 <?php if (Yii::app()->user->isModer && $model->NOT_PREMODERATED && $dataProvider->totalItemCount > 0) : ?>
