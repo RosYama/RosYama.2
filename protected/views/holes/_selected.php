@@ -9,9 +9,11 @@
 <br/><?php echo CHtml::link('Очистить список','#',Array('class'=>'clear_selected')); ?>
 <br/><br/>
 <?php endif; ?>
-<?php if ($user->selected_holes_lists) : ?>
+<?php 
+$sel=UserGroupsUser::model()->with(Array('holes'=>Array('with'=>Array('request_gibdd'=>Array('with'=>'answers')))))->findByPk($user->id);
+if ($sel->selected_holes_lists) : ?>
 <h2>Сохраненные:</h2>
-<?php foreach ($user->selected_holes_lists as $list) : ?>
+<?php foreach ($sel->selected_holes_lists as $list) : ?>
 	<?php echo Y::dateFromTimeShort($list->date_created); ?> <?php echo CHtml::link('удалить', Array('/profile/delHolesSelectList','id'=>$list->id), Array('class'=>'save_selected')); ?><br/>
 	<?php echo CHtml::link('Заявление', Array('requestForm','id'=>$list->gibdd_id,'type'=>'gibdd','holes'=>implode(',',CHtml::listData($list->holes,'ID','ID'))), Array('class'=>'show_form')); ?><br/>
 	<?php if ($list->notSentHoles) : ?>

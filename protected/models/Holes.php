@@ -109,7 +109,7 @@ class Holes extends CActiveRecord
 			'pictures_fresh'=>array(self::HAS_MANY, 'HolePictures', 'hole_id', 'condition'=>'pictures_fresh.type="fresh"','order'=>'pictures_fresh.ordering'),
 			'pictures_fixed'=>array(self::HAS_MANY, 'HolePictures', 'hole_id', 'condition'=>'pictures_fixed.type="fixed"','order'=>'pictures_fixed.ordering'),
 			'user_pictures_fixed'=>array(self::HAS_MANY, 'HolePictures', 'hole_id', 'condition'=>'user_pictures_fixed.type="fixed" AND user_pictures_fixed.user_id='.Yii::app()->user->id,'order'=>'user_pictures_fixed.ordering'),
-			'request_gibdd'=>array(self::HAS_ONE, 'HoleRequests', 'hole_id', 'condition'=>'request_gibdd.type="gibdd" AND user_id='.Yii::app()->user->id),
+			'request_gibdd'=>array(self::HAS_ONE, 'HoleRequests', 'hole_id', 'condition'=>'request_gibdd.type="gibdd" AND request_gibdd.user_id='.Yii::app()->user->id),
 			'request_prosecutor'=>array(self::HAS_ONE, 'HoleRequests', 'hole_id', 'condition'=>'request_prosecutor.type="prosecutor" AND user_id='.Yii::app()->user->id),
 			'requests_gibdd'=>array(self::HAS_MANY, 'HoleRequests', 'hole_id', 'condition'=>'requests_gibdd.type="gibdd"','order'=>'requests_gibdd.date_sent ASC'),
 			'requests_prosecutor'=>array(self::HAS_MANY, 'HoleRequests', 'hole_id', 'condition'=>'requests_prosecutor.type="prosecutor"','order'=>'date_sent ASC'),
@@ -583,7 +583,7 @@ class Holes extends CActiveRecord
 		$userid=Yii::app()->user->id;
 		$criteria=new CDbCriteria;
 		//$criteria->with=Array('pictures_fresh','pictures_fixed');
-		$criteria->with=Array('requests_gibdd', 'type','pictures_fresh');
+		$criteria->with=Array('type','pictures_fresh');
 		$criteria->compare('t.ID',$this->ID,false);
 		if ($this->showUserHoles==1) $criteria->compare('t.USER_ID',$userid,false);
 		elseif ($this->showUserHoles==2) $criteria->addCondition('t.USER_ID!='.$userid);
