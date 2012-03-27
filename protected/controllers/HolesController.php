@@ -264,10 +264,7 @@ class HolesController extends Controller
 							$links[]=CHtml::link($model->ADDRESS,Array('view','id'=>$model->ID));						
 							if (!$holes) $this->redirect(array('view','id'=>$model->ID));						
 							}
-						}
-					else {
-						print_r($answer->errors);	echo count($models); die(); 
-						}
+						}					
 					
 				}
 				else {
