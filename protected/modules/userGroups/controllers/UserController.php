@@ -138,6 +138,14 @@ class UserController extends Controller
 		else
 			throw new CHttpException(400,'Invalid request. Please do not repeat this request again.');
 	}	
+	
+	public function actionAdminActivate($id)
+	{
+	
+		$model=$this->loadModel($id);
+		$model->status=4;
+		$model->update();		
+	}	
 
 	/**
 	 * render a user profile
@@ -148,9 +156,9 @@ class UserController extends Controller
 		if (isset($_GET['u'])) {
 			// look for the right user criteria to use according to the viewer permissions
 			if (Yii::app()->user->pbac(array('user.admin', 'admin.admin')))
-				$criteria = array('username'=>$_GET['u']);
+				$criteria = array('id'=>$_GET['u']);
 			else
-				$criteria = array('username'=>$_GET['u'],'status'=>UserGroupsUser::ACTIVE);
+				$criteria = array('id'=>$_GET['u'],'status'=>UserGroupsUser::ACTIVE);
 			// load the profile
 			$model=UserGroupsUser::model()->findByAttributes($criteria);
 			if($model===null || ($model->relUserGroupsGroup->level > Yii::app()->user->level && !UserGroupsConfiguration::findRule('public_profiles')))

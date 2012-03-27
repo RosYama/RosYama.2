@@ -23,7 +23,7 @@ $this->breadcrumbs=array(
 			array(
 				'name'=>'username',
 				'value'=> Yii::app()->user->pbac('userGroups.user.admin') || Yii::app()->user->pbac('userGroups.admin.admin') ? 
-					'CHtml::link($data->username, Yii::app()->baseUrl ."/userGroups?u=".$data->username)' : '$data->username',
+					'CHtml::link($data->username, Yii::app()->baseUrl ."/userGroups?u=".$data->id)' : '$data->username',
 				'type'=>'raw',
 			),
 			Array(
@@ -36,8 +36,9 @@ $this->breadcrumbs=array(
 			),
 			array(
 				'name'=>'status',
-				'value'=>'UserGroupsLookup::resolve("status",$data->status)',
+				'value'=>'$data->status !=1 ? UserGroupsLookup::resolve("status",$data->status) : UserGroupsLookup::resolve("status",$data->status)."<br/>".CHtml::link("активировать", Array("/userGroups/user/adminActivate","id"=>$data->id), Array("class"=>"ajaxupdate"))',
 				'visible'=>Yii::app()->user->pbac('userGroups.user.admin'),
+				'type'=>'raw',
 				'filter' => CHtml::dropDownList('UserGroupsUser[status]', $model->status, array_merge(array('null' => Yii::t('UserGroupsModule.admin','all')), CHtml::listData(UserGroupsLookup::model()->findAll(), 'value', 'text')) ),
 			),
 			/*
@@ -57,5 +58,18 @@ $this->breadcrumbs=array(
 			'template'=>'{delete}',
 		),
 		),
-	)); ?>
+	)); 
+	Yii::app()->clientScript->registerScript('ajaxupdate', "
+	$('#user-groups-user-grid a.ajaxupdate').live('click', function() {
+			$.fn.yiiGridView.update('user-groups-user-grid', {
+					type: 'POST',
+					url: $(this).attr('href'),
+					success: function() {
+							$.fn.yiiGridView.update('user-groups-user-grid');
+					}
+			});
+			return false;
+	});
+");?>
+	
 </div>
