@@ -126,7 +126,7 @@ class UserGroupsIdentity extends CUserIdentity
 			// update the last login time
 			$model->last_login = date('Y-m-d H:i:s');
 			// run the cronjobs
-			if (UserGroupsConfiguration::findRule('server_executed_crons') === false) {
+			/*if (UserGroupsConfiguration::findRule('server_executed_crons') === false) {
 				UGCron::init();
 				UGCron::add(new UGCJGarbageCollection);
 				UGCron::add(new UGCJUnban);
@@ -135,7 +135,7 @@ class UserGroupsIdentity extends CUserIdentity
 					UGCron::add(new $c);
 				}
 				UGCron::run();
-			}
+			}*/
 			$model->save();
 		}
 		return !$this->errorCode;
