@@ -299,7 +299,15 @@ $this->widget('application.extensions.fancybox.EFancyBox', array(
 				<?php $this->renderPartial('_form_gibdd',Array('hole'=>$hole, 'gibdd'=>$hole->gibdd)); 
 				?>
 				</div>
-			<? endif; ?>
+			<?php else : ?>	
+				<div class="progress">
+
+								<p>		мешает эта яма? <?php  echo CHtml::link('авторизуйся', array('/userGroups'),array('class'=>"declarationBtn")); ?> и <?php echo CHtml::link('отправь заявление в гибдд', array('sent', 'id'=>$hole->ID),array('class'=>"declarationBtn")); ?>.
+								</p>
+
+
+				</div>
+			<?php endif; ?>
 			</div>
 			</div>
 		</div>
