@@ -11,7 +11,7 @@
 <?php endif; ?>
 <?php 
 $sel=UserGroupsUser::model()->with(Array('holes'=>Array('with'=>Array('request_gibdd'=>Array('with'=>'answers')))))->findByPk($user->id);
-if ($sel->selected_holes_lists) : ?>
+if ($sel && $sel->selected_holes_lists) : ?>
 <h2>Сохраненные:</h2>
 <?php foreach ($sel->selected_holes_lists as $list) : ?>
 	<?php echo Y::dateFromTimeShort($list->date_created); ?> <?php echo CHtml::link('удалить', Array('/profile/delHolesSelectList','id'=>$list->id), Array('class'=>'save_selected')); ?><br/>
@@ -19,8 +19,11 @@ if ($sel->selected_holes_lists) : ?>
 	<?php if ($list->notSentHoles) : ?>
 	<?php echo CHtml::link('Пометить как отправленное '.Y::declOfNum(count($list->notSentHoles),Array('яму','ямы','ям')), Array('sentMany','holes'=>implode(',',CHtml::listData($list->notSentHoles,'ID','ID'))), Array('class'=>'')); ?><br/>
 	<?php endif; ?>
-	<?php if ($list->sentedHoles) : ?>
-	<?php echo CHtml::link('Загрузить ответ на '.Y::declOfNum(count($list->sentedHoles),Array('яму','ямы','ям')), Array('gibddreply','holes'=>implode(',',CHtml::listData($list->sentedHoles,'ID','ID'))), Array('class'=>'')); ?><br/>
+	<?php if ($list->SentedHolesHasNoAnswer) : ?>
+	<?php echo CHtml::link('Загрузить ответ на '.Y::declOfNum(count($list->SentedHolesHasNoAnswer),Array('яму','ямы','ям')), Array('gibddreply','holes'=>implode(',',CHtml::listData($list->SentedHolesHasNoAnswer,'ID','ID'))), Array('class'=>'')); ?><br/>
+	<?php endif; ?>
+	<?php if ($list->SentedHolesHasAnswer) : ?>
+	<?php echo CHtml::link('Загрузить еще ответ на '.Y::declOfNum(count($list->SentedHolesHasAnswer),Array('яму','ямы','ям')), Array('gibddreply','holes'=>implode(',',CHtml::listData($list->SentedHolesHasAnswer,'ID','ID'))), Array('class'=>'')); ?><br/>
 	<?php endif; ?>
 	<br/>
 <?php endforeach; ?>

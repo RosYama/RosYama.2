@@ -21,17 +21,11 @@ $this->pageTitle=Yii::app()->name . ' :: Загрузка ответа ГИБД�
 		<!-- тип дефекта -->
 	<?php foreach ($models as $model) : ?>
 		<div class="f">
-			<?php echo $model->type->name; ?>
-		</div>
-		
-		<!-- адрес -->
-		<div class="f">
-			<?php echo $model->ADDRESS; ?>			
-		</div>
-		
-		<!-- камент -->
-		<div class="f">
-			<?php echo $model->COMMENT1; ?>
+			<?php echo $model->type->name; ?><br/>
+
+			<?php echo $model->ADDRESS; ?>	<br/>		
+
+			<?php echo $model->COMMENT1; ?><br/>
 		</div>
 	<?php endforeach; ?>
 		

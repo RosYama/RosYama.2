@@ -65,16 +65,30 @@ class UserSelectedLists extends CActiveRecord
     public function getNotSentHoles(){
     	$holes=Array();
 		foreach ($this->holes as $hole)
-			if ($hole->STATE=='fresh') $holes[]=$hole;
+			if (!$hole->request_gibdd) $holes[]=$hole;
 		return $holes;	
     }
     
     public function getSentedHoles(){
     	$holes=Array();
 		foreach ($this->holes as $hole)
-			if ($hole->request_gibdd && !$hole->request_gibdd->answers) $holes[]=$hole;
+			if ($hole->request_gibdd) $holes[]=$hole;
 		return $holes;	
     }
+    
+	public function getSentedHolesHasAnswer(){
+    	$holes=Array();
+		foreach ($this->sentedHoles as $hole)
+			if ($hole->request_gibdd->answer) $holes[]=$hole;
+		return $holes;	
+    }    
+    
+	public function getSentedHolesHasNoAnswer(){
+    	$holes=Array();
+		foreach ($this->sentedHoles as $hole)
+			if (!$hole->request_gibdd->answer) $holes[]=$hole;
+		return $holes;	
+    }        
     
     public function beforeDelete(){
 		parent::beforeDelete();
