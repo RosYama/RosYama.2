@@ -57,7 +57,7 @@ $this->pageTitle=Yii::app()->name . ' :: Мои ямы';
 		<?php
 		$this->renderPartial('_selected', Array('gibdds'=>$selected ? GibddHeads::model()->with('holes')->findAll('holes.id IN ('.implode(',',$selected).')') : Array(),'user'=>$user->userModel));
 		?>
-	<?php endif; ?>
+	<?php endif;  ?>
 	</div>
 
 </div>
@@ -75,7 +75,7 @@ $this->pageTitle=Yii::app()->name . ' :: Мои ямы';
 )); ?>			
 			<?php echo $form->dropDownList($model, 'TYPE_ID', CHtml::listData( HoleTypes::model()->findAll(Array('condition'=>'published=1', 'order'=>'ordering')), 'id','name'), array('prompt'=>'Тип дефекта')); ?>
 			<?php echo $form->dropDownList($model, 'STATE', $model->Allstates, array('prompt'=>'Статус дефекта')); ?>
-			<?php echo $form->dropDownList($model, 'showUserHoles', Array(1=>'только мои', 2=>'только чужие'), array('prompt'=>'ямы всех пользователей')); ?>
+			<?php echo $form->dropDownList($model, 'showUserHoles', Array(1=>'Мои ямы', 2=>'Чужие, на которые я отправил заявление')); ?>
 			<?php echo CHtml::checkBox('selectAll', false, Array('id'=>'selectAll','class'=>'state_check')); ?><?php echo CHtml::label('Выбрать все', 'selectAll'); ?>
 	<?php $this->endWidget(); ?>		
 			</p>

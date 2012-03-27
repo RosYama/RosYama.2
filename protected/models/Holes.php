@@ -585,8 +585,13 @@ class Holes extends CActiveRecord
 		//$criteria->with=Array('pictures_fresh','pictures_fixed');
 		$criteria->with=Array('type','pictures_fresh');
 		$criteria->compare('t.ID',$this->ID,false);
-		if ($this->showUserHoles==1) $criteria->compare('t.USER_ID',$userid,false);
-		elseif ($this->showUserHoles==2) $criteria->addCondition('t.USER_ID!='.$userid);
+		if (!$this->showUserHoles || $this->showUserHoles==1) $criteria->compare('t.USER_ID',$userid,false);
+		elseif ($this->showUserHoles==2) {
+			$criteria->with=Array('type','pictures_fresh','requests');
+			$criteria->addCondition('t.USER_ID!='.$userid);
+			$criteria->compare('requests.user_id',$userid,true);
+			$criteria->together=true;
+			}
 		$criteria->compare('t.LATITUDE',$this->LATITUDE);
 		$criteria->compare('t.LONGITUDE',$this->LONGITUDE);
 		$criteria->compare('t.ADDRESS',$this->ADDRESS,true);
@@ -602,10 +607,9 @@ class Holes extends CActiveRecord
 		$criteria->compare('t.ADR_CITY',$this->ADR_CITY,true);
 		$criteria->compare('t.COMMENT_GIBDD_REPLY',$this->COMMENT_GIBDD_REPLY,true);
 		$criteria->compare('t.GIBDD_REPLY_RECEIVED',$this->GIBDD_REPLY_RECEIVED);		
-		$criteria->compare('DATE_SENT_PROSECUTOR',$this->DATE_SENT_PROSECUTOR,true);
-		$criteria->join='LEFT OUTER JOIN `yii_hole_requests` `requests` ON (`requests`.`hole_id`=`t`.`ID`)';
-		//$criteria->together=true;
-		$criteria->addCondition('t.USER_ID='.$userid.' OR requests.user_id='. $userid);
+		$criteria->compare('DATE_SENT_PROSECUTOR',$this->DATE_SENT_PROSECUTOR,true);		
+		//
+		//$criteria->addCondition('t.USER_ID='.$userid);
 	
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
