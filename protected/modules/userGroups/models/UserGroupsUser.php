@@ -340,6 +340,15 @@ class UserGroupsUser extends CActiveRecord
 		return $relations;
 	}
 	
+	protected function beforeDelete()
+	{
+		parent::beforeDelete();
+		foreach ($this->holes as $item) $item->delete();
+		foreach ($this->hole_area as $item) $item->delete();
+		foreach ($this->selected_holes_lists as $item) $item->delete();		
+		return true;
+	}	
+	
 	public function getAreaNeighbors()
 	{
 		if (!$this->hole_area) return Array();

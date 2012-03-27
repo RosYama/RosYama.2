@@ -76,7 +76,7 @@ class UserController extends Controller
 				'pbac'=>array('write'),
 			),
 			array('allow',  // allow user with user admin permission to view every profile, approve, ban and invite users
-				'actions'=>array('view', 'approve', 'ban', 'invite', 'changeGroup'),
+				'actions'=>array('view', 'approve', 'ban', 'invite', 'changeGroup','delete'),
 				'pbac'=>array('admin', 'admin.admin'),
 			),
 			array('allow',  // allow a user tu open an update view just on their own accounts
@@ -123,6 +123,21 @@ class UserController extends Controller
 		else
 			$this->render('index',array('model'=>$model,), false, true);
 	}
+	
+	public function actionDelete($id)
+	{
+		if(Yii::app()->request->isPostRequest)
+		{
+			// we only allow deletion via POST request
+			$this->loadModel($id)->delete();
+
+			// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
+			if(!isset($_GET['ajax']))
+				$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+		}
+		else
+			throw new CHttpException(400,'Invalid request. Please do not repeat this request again.');
+	}	
 
 	/**
 	 * render a user profile

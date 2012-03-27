@@ -39,7 +39,7 @@ $this->breadcrumbs=array(
 				'value'=>'UserGroupsLookup::resolve("status",$data->status)',
 				'visible'=>Yii::app()->user->pbac('userGroups.user.admin'),
 				'filter' => CHtml::dropDownList('UserGroupsUser[status]', $model->status, array_merge(array('null' => Yii::t('UserGroupsModule.admin','all')), CHtml::listData(UserGroupsLookup::model()->findAll(), 'value', 'text')) ),
-			)
+			),
 			/*
 			'group_id',
 			'password',
@@ -52,6 +52,10 @@ $this->breadcrumbs=array(
 			'last_login',
 			'ban',
 			*/
+			array(
+			'class'=>'CButtonColumn',
+			'template'=>'{delete}',
+		),
 		),
 	)); ?>
 </div>
