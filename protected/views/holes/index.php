@@ -95,7 +95,7 @@ $all_elements=implode(',',$dataProvider->keys);
 			function(data)
 			{
 				if(data == 'ok'){
-					window.location = '/'
+					window.location.reload();
 				}
 			}
 		)
