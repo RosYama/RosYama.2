@@ -4,6 +4,7 @@
 
 // This is the main Web application configuration. Any writable
 // CWebApplication properties can be configured here.
+include ('appConfig.php');
 
 return array(
 	'basePath'=>dirname(__FILE__).DIRECTORY_SEPARATOR.'..',
@@ -79,16 +80,7 @@ return array(
         ),
 		
 
-		'db'=>array(
-			'class'=>'CDbConnection',
-			'connectionString' => 'mysql:host=localhost;dbname=rosyama',
-			'enableParamLogging'=>true,
-			'emulatePrepare' => true,
-			'username' => 'root',
-			'password' => 'qwe1024',
-			'charset' => 'utf8',
-			'tablePrefix'=>'yii_'
-		),	
+		'db'=>$bd,
 
 		 'widgetFactory'=>array(
 			'enableSkin'=>true,
@@ -117,11 +109,5 @@ return array(
 
 	// application-level parameters that can be accessed
 	// using Yii::app()->params['paramName']
-	'params'=>array(
-		// this is used in contact page
-		'adminEmail'=>'arbprint@mail.ru',
-		'YMapKey'=>'AEmk904BAAAAUCGkRAMAvTSoZfbI0tw8-95WnNcZkDQqXzAAAAAAAAAAAAB49EpXB9Mlar25hE3r2xY70FiRmQ==',
-		//'layout'=>'startpage',
-
-	),
+	'params'=>$params,
 );
