@@ -340,6 +340,11 @@ function init_MAP_DzDvWLBsil(context, type)
 		loc[1] = loc[1].split(':');
 		loc[0][1] = loc[0][1].split(',');
 		map.setCenter(new context.YMaps.GeoPoint(loc[0][1][0], loc[0][1][1]), loc[1][1]);
+		loc[2] = loc[2].split(':');
+		if (loc[2][1]=='map') map.setType(YMaps.MapType.MAP);
+		if (loc[2][1]=='sat') map.setType(YMaps.MapType.SATELLITE);
+		if (loc[2][1]=='sat,skl') map.setType(YMaps.MapType.HYBRID);
+		
 	}
 	if (type=="addhole" || type=="updatehole") {
 	map.disableDblClickZoom();
@@ -440,28 +445,40 @@ function GetPlacemarks(map)
 
 function BX_SetPlacemarks_MAP_DzDvWLBsil(map)
 {
-	var arObjects = {PLACEMARKS:[],POLYLINES:[]};
-
+	var arObjects = {PLACEMARKS:[],POLYLINES:[]};	
 
 	YMaps.Events.observe(map, map.Events.MoveEnd, function() {
 		var res = "{ 'center': '" + map.getCenter() + "', 'zoom': '" + map.getZoom() + "' }"
 		document.cookie = "map_settings="+res
-		res = "center:" + map.getCenter() + ";zoom:" + map.getZoom();
+		res = "center:" + map.getCenter() + ";zoom:" + map.getZoom() + ";type:" + map.getType().getLayers();
 		var loc = new String(document.location);
 		loc = loc.split('#');
 		document.location = loc[0] + '#' + res;
 		GetPlacemarks(map);
 	} );
+	
 	YMaps.Events.observe(map, map.Events.Move, function() { GetPlacemarks(map);	} );
+
 	YMaps.Events.observe(map, map.Events.Update, function() {
 		var res = "{ 'center': '" + map.getCenter() + "', 'zoom': '" + map.getZoom() + "' }"
 		document.cookie = "map_settings="+res
-		res = "center:" + map.getCenter() + ";zoom:" + map.getZoom();
+		res = "center:" + map.getCenter() + ";zoom:" + map.getZoom() + ";type:" + map.getType().getLayers();
 		var loc = new String(document.location);
 		loc = loc.split('#');
 		document.location = loc[0] + '#' + res;
 		GetPlacemarks(map);
 	} );
+	
+	YMaps.Events.observe(map, map.Events.TypeChange, function() { 
+		var res = "{ 'center': '" + map.getCenter() + "', 'zoom': '" + map.getZoom() + "' }"
+		document.cookie = "map_settings="+res
+		res = "center:" + map.getCenter() + ";zoom:" + map.getZoom() + ";type:" + map.getType().getLayers();
+		var loc = new String(document.location);
+		loc = loc.split('#');
+		document.location = loc[0] + '#' + res;
+	} );
+	
+	
 	//GetPlacemarks(map);
 }
 
