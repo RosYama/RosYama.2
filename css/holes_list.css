@@ -134,7 +134,7 @@ div#ymapcontainer_big_map { height: 600px; width: 1000px; }
 
 .state_block.checked {background-color: #ddd;}
 
-#holes_select_list{position: absolute; top:0px;}
+#holes_select_list{position: absolute; }
 #scrollcontainer{position: absolute; top:0px!important;}
 .holes_select_list_box{background-color: #ffc306; width: 175px; padding:20px;}
-.hole_check{position: absolute; z-index: 50; top:5px; left:5px;}
+.hole_check{position: absolute; z-index: 1; top:5px; left:5px;}

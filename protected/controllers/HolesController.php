@@ -712,31 +712,23 @@ class HolesController extends Controller
 		$model=new Holes('search');
 		$model->unsetAttributes();  // clear any default values
 		
+		if(isset($_POST['Holes']) || isset($_GET['Holes']))
+			$model->attributes=isset($_POST['Holes']) ? $_POST['Holes'] : $_GET['Holes'];
+		
 		
 		$cs=Yii::app()->getClientScript();
         $cs->registerCssFile('/css/holes_list.css');
-              
+		$cs->registerCssFile('/css/hole_view.css');
+        $cs->registerScriptFile(CHtml::asset($this->viewPath.DIRECTORY_SEPARATOR.'js'.DIRECTORY_SEPARATOR.'holes_selector.js'));
+		$cs->registerScriptFile('http://www.vertstudios.com/vertlib.min.js');        
+        $cs->registerScriptFile(CHtml::asset($this->viewPath.DIRECTORY_SEPARATOR.'js'.DIRECTORY_SEPARATOR.'StickyScroller'.DIRECTORY_SEPARATOR.'StickyScroller.min.js'));
+		$cs->registerScriptFile(CHtml::asset($this->viewPath.DIRECTORY_SEPARATOR.'js'.DIRECTORY_SEPARATOR.'StickyScroller'.DIRECTORY_SEPARATOR.'GetSet.js'));              
 		
 		$holes=Array();
 		$all_holes_count=0;		
-		foreach ($model->AllstatesMany as $state_alias=>$state_name) {
-			$criteria=new CDbCriteria;
-			foreach ($area as $shape){
-			$criteria->addCondition('LATITUDE >= '.$shape->points[0]->lat
-			.' AND LATITUDE <= '.$shape->points[2]->lat
-			.' AND LONGITUDE >= '.$shape->points[0]->lng
-			.' AND LONGITUDE <= '.$shape->points[2]->lng, 'OR');
-			}
-			$criteria->addCondition('STATE="'.$state_alias.'"');
-			$criteria->order='DATE_CREATED DESC';
-			$holes[$state_alias]=Holes::model()->findAll($criteria);		
-			$all_holes_count+=count($holes[$state_alias]);
-		}
-			
+					
 		$this->render('myarea',array(
 			'model'=>$model,
-			'holes'=>$holes,
-			'all_holes_count'=>$all_holes_count,
 			'user'=>$user,
 			'area'=>$area
 		));

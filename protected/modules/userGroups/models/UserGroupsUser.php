@@ -362,9 +362,9 @@ class UserGroupsUser extends CActiveRecord
 		$criteria=new CDbCriteria;
 		$criteria->with='hole_area';
 		$criteria->condition='points.lat >= '.($left-0.1);
-		$criteria->addCondition('points.lat <= '.($right+0.1), 'OR');
-		$criteria->addCondition('points.lng <= '.($top+0.1), 'OR');
-		$criteria->addCondition('points.lat >= '.($bottom-0.1), 'OR');
+		$criteria->addCondition('points.lat <= '.($right+0.1), 'AND');
+		$criteria->addCondition('points.lng <= '.($top+0.1), 'AND');
+		$criteria->addCondition('points.lat >= '.($bottom-0.1), 'AND');
 		$criteria->addCondition('t.id != '.$this->id);
 		$criteria->addCondition('t.params LIKE ("%showMyarea%") OR t.params IS NULL');
 		$criteria->together=true;
