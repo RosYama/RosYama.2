@@ -205,6 +205,7 @@ class ProfileController extends Controller
 			{
 				$headers="From: ".Yii::app()->params['adminEmail']."\r\nReply-To: ".Yii::app()->user->email;
 				$headers = "MIME-Version: 1.0\r\nFrom: ".Yii::app()->params['adminEmail']."\r\nReply-To: ".Yii::app()->user->email."\r\nContent-Type: text/html; charset=utf-8";
+				Yii::app()->request->baseUrl=Yii::app()->request->hostInfo;
 				$mailbody=$this->renderPartial('application.views.ugmail.user2user', Array(
 						'fromuser'=> Yii::app()->user->userModel,
 						'touser'=>$model,
