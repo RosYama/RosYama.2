@@ -31,7 +31,7 @@ class HolesController extends Controller
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('add','update', 'personal','personalDelete','request','requestForm','sent','notsent','gibddreply', 'fix', 'defix', 'prosecutorsent', 'prosecutornotsent','delanswerfile','myarea', 'territorialGibdd', 'delpicture','selectHoles','sentMany'),
+				'actions'=>array('add','update', 'personal','personalDelete','request','requestForm','sent','notsent','gibddreply', 'fix', 'defix', 'prosecutorsent', 'prosecutornotsent','delanswerfile','myarea', 'territorialGibdd', 'delpicture','selectHoles','sentMany','review'),
 				'users'=>array('@'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -120,6 +120,11 @@ class HolesController extends Controller
 
 		));
 	}
+	
+	public function actionReview($id)
+	{
+		$this->redirect(Array('view','id'=>(int)$id));
+	}	
 
 	/**
 	 * Creates a new model.
