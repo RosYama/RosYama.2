@@ -381,7 +381,7 @@ class HolesController extends Controller
 
 			// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
 			if(!isset($_GET['ajax']))
-				$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array($_SERVER['HTTP_REFERER']));
+				$this->redirect($_SERVER['HTTP_REFERER']);
 		}
 		elseif (Yii::app()->user->groupName=='root'){
 			$model=Holes::model()->findByPk((int)$_GET['id']);
