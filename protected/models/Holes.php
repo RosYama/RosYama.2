@@ -591,54 +591,23 @@ class Holes extends CActiveRecord
 			$criteria->addCondition('t.USER_ID!='.$userid);
 			$criteria->compare('requests.user_id',$userid,true);
 			$criteria->together=true;
-			}		
-		$criteria->compare('t.STATE',$this->STATE,true);	
-		$criteria->compare('t.TYPE_ID',$this->TYPE_ID,false);
-		$criteria->compare('type.alias',$this->type_alias,true);	
-		//
-		//$criteria->addCondition('t.USER_ID='.$userid);
-	
-		return new CActiveDataProvider($this, array(
-			'criteria'=>$criteria,
-			'pagination'=>array(
-				        'pageSize'=>$this->limit ? $this->limit : 12,				        
-				    ),
-			'sort'=>array(
-			    'defaultOrder'=>'t.DATE_CREATED DESC',
-				)
-		));
-	}	
-	
-	public function areaSearch($user)
-	{
-		// Warning: Please modify the following code to remove attributes that
-		// should not be searched.
-		
-		$area=$user->userModel->hole_area;
-		
-		$userid=$user->id;
-		
-		$criteria=new CDbCriteria;
-		$criteria->with=Array('type','pictures_fresh');
-		$criteria->compare('t.ID',$this->ID,false);
-
-		foreach ($area as $shape){
-			$criteria->addCondition('LATITUDE >= '.$shape->points[0]->lat
-			.' AND LATITUDE <= '.$shape->points[2]->lat
-			.' AND LONGITUDE >= '.$shape->points[0]->lng
-			.' AND LONGITUDE <= '.$shape->points[2]->lng, 'OR');
 			}
-
-		if ($this->showUserHoles==1) $criteria->compare('t.USER_ID',$userid,false);
-		elseif ($this->showUserHoles==2) {
-			$criteria->with=Array('type','pictures_fresh','requests');
-			$criteria->addCondition('t.USER_ID!='.$userid);
-			$criteria->compare('requests.user_id',$userid,true);
-			$criteria->together=true;
-			}		
-		$criteria->compare('t.STATE',$this->STATE,true);	
+		$criteria->compare('t.LATITUDE',$this->LATITUDE);
+		$criteria->compare('t.LONGITUDE',$this->LONGITUDE);
+		$criteria->compare('t.ADDRESS',$this->ADDRESS,true);
+		$criteria->compare('t.STATE',$this->STATE,true);
+		$criteria->compare('t.DATE_CREATED',$this->DATE_CREATED,true);
+		$criteria->compare('t.DATE_SENT',$this->DATE_SENT,true);
+		$criteria->compare('t.DATE_STATUS',$this->DATE_STATUS,true);
+		$criteria->compare('t.COMMENT1',$this->COMMENT1,true);
+		$criteria->compare('t.COMMENT2',$this->COMMENT2,true);
 		$criteria->compare('t.TYPE_ID',$this->TYPE_ID,false);
-		$criteria->compare('type.alias',$this->type_alias,true);	
+		$criteria->compare('type.alias',$this->type_alias,true);
+		$criteria->compare('t.ADR_SUBJECTRF',$this->ADR_SUBJECTRF,false);
+		$criteria->compare('t.ADR_CITY',$this->ADR_CITY,true);
+		$criteria->compare('t.COMMENT_GIBDD_REPLY',$this->COMMENT_GIBDD_REPLY,true);
+		$criteria->compare('t.GIBDD_REPLY_RECEIVED',$this->GIBDD_REPLY_RECEIVED);		
+		$criteria->compare('DATE_SENT_PROSECUTOR',$this->DATE_SENT_PROSECUTOR,true);		
 		//
 		//$criteria->addCondition('t.USER_ID='.$userid);
 	
@@ -652,8 +621,6 @@ class Holes extends CActiveRecord
 				)
 		));
 	}	
-	
-	
 	
 	public function search()
 	{
