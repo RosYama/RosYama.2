@@ -105,7 +105,7 @@ return array(
 		'db'=>$bd,
 		
 		'cache'=>array(
-            'class'=>'system.caching.CApcCache',          
+            'class'=>'system.caching.CDummyCache',
         ),
 
 		'errorHandler'=>array(

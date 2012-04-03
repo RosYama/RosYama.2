@@ -1,10 +1,10 @@
 <?php 
 $bd=array(
 			'class'=>'CDbConnection',
-			'connectionString' => 'mysql:host=localhost;dbname=rosyama',
+			'connectionString' => 'mysql:host=openserver;dbname=rosyama',
 			'emulatePrepare' => false,
 			'username' => 'root',
-			'password' => 'qwe1024',
+			'password' => '',
 			'charset' => 'utf8',
 			'tablePrefix'=>'yii_',
 			'schemaCachingDuration'=>3600,
@@ -75,7 +75,8 @@ $socials=array( // You can change the providers and their classes.
 $params=array(
 		// this is used in contact page
 		'adminEmail'=>'arbprint@mail.ru',
-		'YMapKey'=>'AEmk904BAAAAUCGkRAMAvTSoZfbI0tw8-95WnNcZkDQqXzAAAAAAAAAAAAB49EpXB9Mlar25hE3r2xY70FiRmQ==',
+		'YMapKey'=>'AAjBck8BAAAAv9G_cwIAli-wvjJ_pN5kx-jECY4tsjB5aHkAAAAAAAAAAABLdlRXEEEkpgRVjfliuy6ZblNx8w==',
+//		'YMapKey'=>'AEmk904BAAAAUCGkRAMAvTSoZfbI0tw8-95WnNcZkDQqXzAAAAAAAAAAAAB49EpXB9Mlar25hE3r2xY70FiRmQ==',
 		//'layout'=>'startpage',
 
 	);		
