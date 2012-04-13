@@ -221,8 +221,19 @@ class XmlController extends Controller
 	public function actionCheckauth()
 	{
 		$tags=Array();
-		if (Yii::app()->user->isGuest)
-			$tags[]=CHtml::tag('checkauthresult', array ('result'=>0), 'fail', true);	
+		if (Yii::app()->user->isGuest){
+			$model=new UserGroupsUser('login');
+			$loginmode='regular';
+			$model->username=Yii::app()->request->getParam('login');
+			$model->password=Yii::app()->request->getParam('password');
+			if (Yii::app()->request->getParam('passwordhash')) {
+				$model->password=Yii::app()->request->getParam('passwordhash');
+				$loginmode='fromHash';
+				}
+			$model->rememberMe=0;		
+			if ($model->validate() && $model->login($loginmode)) $tags[]=CHtml::tag('checkauthresult', array ('result'=>1), 'ok', true);
+			else $tags[]=CHtml::tag('checkauthresult', array ('result'=>0), 'fail', true); 
+			}
 		else
 			$tags[]=CHtml::tag('checkauthresult', array ('result'=>1), 'ok', true);
 		$this->renderXml($tags);		
