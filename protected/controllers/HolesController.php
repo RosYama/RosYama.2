@@ -157,13 +157,13 @@ class HolesController extends Controller
 				$this->redirect(array('view','id'=>$model->ID));
 		}
 		else {
-		//выставляем центр на карте по координатам IP юзера
-		$request=new CHttpRequest;
-		$geoIp = new EGeoIP();
-		$geoIp->locate($request->userHostAddress); 	
-		//echo ($request->userHostAddress);
-		if ($geoIp->longitude) $model->LATITUDE=$geoIp->longitude;
-		if ($geoIp->latitude) $model->LONGITUDE=$geoIp->latitude;
+			//выставляем центр на карте по координатам IP юзера
+			$request=new CHttpRequest;
+			$geoIp = new EGeoIP();
+			$geoIp->locate($request->userHostAddress); 	
+			//echo ($request->userHostAddress);
+			if ($geoIp->longitude) $model->LATITUDE=$geoIp->longitude;
+			if ($geoIp->latitude) $model->LONGITUDE=$geoIp->latitude;
 		}
 
 		$this->render('add',array(
