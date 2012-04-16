@@ -220,97 +220,100 @@ class Holes extends CActiveRecord
 	}
 	
 	public function savePictures(){						
-						foreach ($this->deletepict as $pictid) {
-						$pictmodel=HolePictures::model()->findByPk((int)$pictid);  
-						if ($pictmodel)$pictmodel->delete();
-						}
-						$imagess=$this->UpploadedPictures;
-						$id=$this->ID;
-						$prefix='';						
-						if (!is_dir($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/original/'.$id)){
-							if(!mkdir($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/original/'.$id))
-							{
-								$this->addError('upploadedPictures', Yii::t('errors', 'GREENSIGHT_ERROR_CANNOT_CREATE_DIR'));
-								return false;
-							}
-							if(!mkdir($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/medium/'.$id))
-							{
-								unlink($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/original/'.$id);
-								$this->addError('upploadedPictures',Yii::t('errors', 'GREENSIGHT_ERROR_CANNOT_CREATE_DIR'));
-								return false;
-							}
-							if(!mkdir($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/small/'.$id))
-							{
-								unlink($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/original/'.$id);
-								unlink($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/medium/'.$id);
-								$this->addError('upploadedPictures',Yii::t('errors', 'GREENSIGHT_ERROR_CANNOT_CREATE_DIR'));
-								return false;
-							}
-						}						
-						$_params=$this->params;
-						$file_counter = 0;
-						$k = $this->ID;			
-						$pictdir=$_SERVER['DOCUMENT_ROOT'].'/upload/st1234/';
+		foreach ($this->deletepict as $pictid) {
+			$pictmodel=HolePictures::model()->findByPk((int)$pictid);  
+			if ($pictmodel)$pictmodel->delete();
+		}
+
+		$imagess=$this->UpploadedPictures;
+		$id=$this->ID;
+		$prefix='';						
+		if (!is_dir($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/original/'.$id)){
+			if(!mkdir($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/original/'.$id))
+			{
+				$this->addError('upploadedPictures', Yii::t('errors', 'GREENSIGHT_ERROR_CANNOT_CREATE_DIR'));
+				return false;
+			}
+			if(!mkdir($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/medium/'.$id))
+			{
+				unlink($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/original/'.$id);
+				$this->addError('upploadedPictures',Yii::t('errors', 'GREENSIGHT_ERROR_CANNOT_CREATE_DIR'));
+				return false;
+			}
+			if(!mkdir($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/small/'.$id))
+			{
+				unlink($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/original/'.$id);
+				unlink($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/medium/'.$id);
+				$this->addError('upploadedPictures',Yii::t('errors', 'GREENSIGHT_ERROR_CANNOT_CREATE_DIR'));
+				return false;
+			}
+		}						
+
+		$_params=$this->params;
+		$file_counter = 0;
+		$k = $this->ID;			
+		$pictdir=$_SERVER['DOCUMENT_ROOT'].'/upload/st1234/';
 						
-				        foreach ($imagess as $_file){
-							if(!$_file->hasError)
-							{	
-								$imgname=rand().'.jpg';
-								$image = $this->imagecreatefromfile($_file->getTempName(), &$_image_info);
-								if(!$image)
-								{
-									$this->addError('pictures',Yii::t('errors', 'GREENSIGHT_ERROR_UNSUPPORTED_IMAGE_TYPE'));
-									return false;
-								}
-								$aspect = max($_image_info[0] / $_params['big_sizex'], $_image_info[1] / $_params['big_sizey']);
-								if($aspect > 1)
-								{
-									$new_x    = floor($_image_info[0] / $aspect);
-									$new_y    = floor($_image_info[1] / $aspect);
-									$newimage = imagecreatetruecolor($new_x, $new_y);
-									imagecopyresampled($newimage, $image, 0, 0, 0, 0, $new_x, $new_y, $_image_info[0], $_image_info[1]);
-									imagejpeg($newimage, $_SERVER['DOCUMENT_ROOT'].'/upload/st1234/original/'.$id.'/'.$imgname);
-								}
-								else
-								{
-									imagejpeg($image, $_SERVER['DOCUMENT_ROOT'].'/upload/st1234/original/'.$id.'/'.$imgname);
-								}
-								$aspect   = max($_image_info[0] / $_params['medium_sizex'], $_image_info[1] / $_params['medium_sizey']);
-								$new_x    = floor($_image_info[0] / $aspect);
-								$new_y    = floor($_image_info[1] / $aspect);
-								$newimage = imagecreatetruecolor($new_x, $new_y);
-								imagecopyresampled($newimage, $image, 0, 0, 0, 0, $new_x, $new_y, $_image_info[0], $_image_info[1]);
-								imagejpeg($newimage, $_SERVER['DOCUMENT_ROOT'].'/upload/st1234/medium/'.$id.'/'.$imgname);
-								imagedestroy($newimage);
-								$aspect   = min($_image_info[0] / $_params['small_sizex'], $_image_info[1] / $_params['small_sizey']);
-								$newimage = imagecreatetruecolor($_params['small_sizex'], $_params['small_sizey']);
-								imagecopyresampled
-								(
-									$newimage,
-									$image,
-									0,
-									0,
-									$_image_info[0] > $_image_info[1] ? floor(($_image_info[0] - $aspect * $_params['small_sizex']) / 2) : 0,
-									$_image_info[0] < $_image_info[1] ? floor(($_image_info[1] - $aspect * $_params['small_sizey']) / 2) : 0,
-									$_params['small_sizex'],
-									$_params['small_sizey'],
-									ceil($aspect * $_params['small_sizex']),
-									ceil($aspect * $_params['small_sizey'])
-								);
-								imagejpeg($newimage, $_SERVER['DOCUMENT_ROOT'].'/upload/st1234/small/'.$id.'/'.$imgname);
-								imagedestroy($newimage);
-								imagedestroy($image);
-								
-								$imgmodel=new HolePictures;
-								$imgmodel->type=$this->scenario=='fix'?'fixed':'fresh'; 
-								$imgmodel->filename=$imgname;
-								$imgmodel->hole_id=$this->ID;
-								$imgmodel->user_id=Yii::app()->user->id;
-								$imgmodel->ordering=$imgmodel->lastOrder+1;
-								$imgmodel->save();
-								}
-						}
-			return true;			
+        foreach ($imagess as $_file){
+			if(!$_file->hasError)
+			{	
+				$imgname=rand().'.jpg';
+				$image = $this->imagecreatefromfile($_file->getTempName(), &$_image_info);
+				if(!$image)
+				{
+					$this->addError('pictures',Yii::t('errors', 'GREENSIGHT_ERROR_UNSUPPORTED_IMAGE_TYPE'));
+					return false;
+				}
+				$aspect = max($_image_info[0] / $_params['big_sizex'], $_image_info[1] / $_params['big_sizey']);
+				if($aspect > 1)
+				{
+					$new_x    = floor($_image_info[0] / $aspect);
+					$new_y    = floor($_image_info[1] / $aspect);
+					$newimage = imagecreatetruecolor($new_x, $new_y);
+					imagecopyresampled($newimage, $image, 0, 0, 0, 0, $new_x, $new_y, $_image_info[0], $_image_info[1]);
+					imagejpeg($newimage, $_SERVER['DOCUMENT_ROOT'].'/upload/st1234/original/'.$id.'/'.$imgname);
+				}
+				else
+				{
+					imagejpeg($image, $_SERVER['DOCUMENT_ROOT'].'/upload/st1234/original/'.$id.'/'.$imgname);
+				}
+	
+				$aspect   = max($_image_info[0] / $_params['medium_sizex'], $_image_info[1] / $_params['medium_sizey']);
+				$new_x    = floor($_image_info[0] / $aspect);
+				$new_y    = floor($_image_info[1] / $aspect);
+				$newimage = imagecreatetruecolor($new_x, $new_y);
+				imagecopyresampled($newimage, $image, 0, 0, 0, 0, $new_x, $new_y, $_image_info[0], $_image_info[1]);
+				imagejpeg($newimage, $_SERVER['DOCUMENT_ROOT'].'/upload/st1234/medium/'.$id.'/'.$imgname);
+				imagedestroy($newimage);
+				$aspect   = min($_image_info[0] / $_params['small_sizex'], $_image_info[1] / $_params['small_sizey']);
+				$newimage = imagecreatetruecolor($_params['small_sizex'], $_params['small_sizey']);
+				imagecopyresampled
+				(
+					$newimage,
+					$image,
+					0,
+					0,
+					$_image_info[0] > $_image_info[1] ? floor(($_image_info[0] - $aspect * $_params['small_sizex']) / 2) : 0,
+					$_image_info[0] < $_image_info[1] ? floor(($_image_info[1] - $aspect * $_params['small_sizey']) / 2) : 0,
+					$_params['small_sizex'],
+					$_params['small_sizey'],
+					ceil($aspect * $_params['small_sizex']),
+					ceil($aspect * $_params['small_sizey'])
+				);
+				imagejpeg($newimage, $_SERVER['DOCUMENT_ROOT'].'/upload/st1234/small/'.$id.'/'.$imgname);
+				imagedestroy($newimage);
+				imagedestroy($image);
+							
+				$imgmodel=new HolePictures;
+				$imgmodel->type=$this->scenario=='fix'?'fixed':'fresh'; 
+				$imgmodel->filename=$imgname;
+				$imgmodel->hole_id=$this->ID;
+				$imgmodel->user_id=Yii::app()->user->id;
+				$imgmodel->ordering=$imgmodel->lastOrder+1;
+				$imgmodel->save();
+			}
+		}
+		return true;			
 	}
 
 	public static function imagecreatefromfile($file_name, &$_image_info = array())
