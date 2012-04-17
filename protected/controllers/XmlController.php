@@ -17,6 +17,7 @@ class XmlController extends Controller
 		return Array(
 			'NOT_FOUND'=>Array(CHtml::tag('error', array ('code'=>"NOT_FOUND"), 'Запрашиваемый ресурс не найден', true)),
 			'AUTHORIZATION_REQUIRED'=>Array(CHtml::tag('error', array ('code'=>"AUTHORIZATION_REQUIRED"), 'Требуется авторизация', true)),
+			'WRONG_CREDENTIALS'=>Array(CHtml::tag('error', array ('code'=>"WRONG_CREDENTIALS"), 'Неправильный логин и/или пароль', true)),
 			'CANNOT_REALISE_SUBJECTRF'=>Array(CHtml::tag('error', array ('code'=>"CANNOT_REALISE_SUBJECTRF"), 'Невозможно определить субъект РФ', true)),
 			'CANNOT_REALISE_CITY'=>Array(CHtml::tag('error', array ('code'=>"CANNOT_REALISE_CITY"), 'Невозможно определить город', true)),
 			'NOT_IMPLEMENTED'=>Array(CHtml::tag('error', array ('code'=>"NOT_IMPLEMENTED"), 'Метод не реализован', true)),
@@ -700,9 +701,11 @@ class XmlController extends Controller
 				}
 			$model->rememberMe=0;		
 			if ($model->validate() && $model->login($loginmode)) return Yii::app()->user;
-			else {
+			elseif($model->username && $model->password)
+				$this->error('WRONG_CREDENTIALS');
+			else
 				$this->error('AUTHORIZATION_REQUIRED');
-				}
+				
 		}
 		else return Yii::app()->user; 
 	}
