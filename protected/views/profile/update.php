@@ -101,6 +101,19 @@
 		</div>
 		</td>
 		</tr>
+		<tr>
+		<td colspan="3">
+		<?php echo $form->labelEx($miscModel->relProfile,'request_from'); ?>
+		<?php echo $form->textField($miscModel->relProfile,'request_from',array('maxlength'=>255,'class'=>'textInput')); ?>
+		<?php echo $form->error($miscModel->relProfile,'request_from'); ?>
+		</td>
+		</tr><tr>
+		<td colspan="3">
+		<?php echo $form->labelEx($miscModel->relProfile,'request_signature'); ?>
+		<?php echo $form->textField($miscModel->relProfile,'request_signature',array('maxlength'=>100,'class'=>'textInput')); ?>
+		<?php echo $form->error($miscModel->relProfile,'request_signature'); ?>
+		</td>
+		</tr>	
 	</tbody>
 </table>	
 <div class="row buttons">
