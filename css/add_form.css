@@ -21,7 +21,7 @@ div.rCol div.picts label { display: inline; }
 .f texarea { border-width: 1px; font: normal 1em "Trebuchet MS", sans-serif; }
 .lCol .f input, .lCol .f select, .lCol .f textarea {width: 100%;}
 .rCol .f textarea {width: 100%; height: 100px; }
-div.lCol .f textarea { height: 200px; border-width: 1px; font-size: normal; }
+div.lCol .f textarea.big { height: 160px; border-width: 1px; font-size: normal; }
 div.rCol .button { float: right; margin-top: 15px; }
 .bx-yandex-search-form .textInput {width: 350px;}
 .bx-yandex-search-form p {margin-bottom: 0.34em}
