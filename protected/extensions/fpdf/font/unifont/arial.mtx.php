@@ -13,7 +13,7 @@ $desc=array (
 );
 $up=-106;
 $ut=73;
-$ttffile='protected/extensions/fpdf/font/unifont/arial.ttf';
+$ttffile='/Users/servak/html/RosYama.2/protected/extensions/fpdf/font/unifont/arial.ttf';
 $originalsize=367112;
 $fontkey='arial';
 ?>
