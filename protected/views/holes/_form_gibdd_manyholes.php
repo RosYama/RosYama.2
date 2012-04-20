@@ -6,10 +6,11 @@
 						'action'=>Yii::app()->createUrl("holes/request"),
 						'htmlOptions'=>Array ('onsubmit'=>"document.getElementById('pdf_form').style.display='none';"),
 					)); 
+					$usermodel=Yii::app()->user->userModel;
 					$model=new HoleRequestForm;
 					$model->to=$gibdd ? $gibdd->post_dative.' '.$gibdd->fio_dative : '';
-					$model->from=CHtml::encode(Yii::app()->user->userModel->last_name.' '.Yii::app()->user->userModel->name.' '.Yii::app()->user->userModel->second_name);
-					$model->signature=CHtml::encode(Yii::app()->user->userModel->last_name.' '.substr(Yii::app()->user->userModel->name, 0, 2).(Yii::app()->user->userModel->name ? '.' : '').' '.substr(Yii::app()->user->userModel->second_name, 0, 2).(Yii::app()->user->userModel->second_name ? '.' : ''));
+					$model->from=$usermodel->relProfile->request_from ? $usermodel->relProfile->request_from : $usermodel->last_name.' '.$usermodel->name.' '.$usermodel->second_name;
+					$model->signature=$usermodel->relProfile->request_signature ? $usermodel->relProfile->request_signature : $usermodel->last_name.' '.substr($usermodel->name, 0, 2).($usermodel->name ? '.' : '').' '.substr($usermodel->second_name, 0, 2).($usermodel->second_name ? '.' : '');
 					?>					
 						<h2><?= Yii::t('holes_view', 'HOLE_REQUEST_FORM') ?></h2>
 						<table>
