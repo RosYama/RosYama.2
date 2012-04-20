@@ -14,6 +14,7 @@
 									$model->signature=$usermodel->relProfile->request_signature ? $usermodel->relProfile->request_signature : $usermodel->last_name.' '.substr($usermodel->name, 0, 2).($usermodel->name ? '.' : '').' '.substr($usermodel->second_name, 0, 2).($usermodel->second_name ? '.' : '');
 									$model->gibdd=$hole->subject && $hole->subject->gibdd ? $hole->subject->gibdd->gibdd_name : '';
 									$model->application_data=$hole->request_gibdd ? date('d.m.Y',$hole->request_gibdd->date_sent) : '';
+									$model->postaddress=$usermodel->relProfile->request_address ? $usermodel->relProfile->request_address : '';
 									?>					
 									<?php echo $form->hiddenField($model,'form_type'); ?>							
 								<?= Yii::t('holes_view', 'HOLE_PROSECUTOR_FORM_PREFACE') ?>
