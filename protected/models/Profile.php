@@ -43,7 +43,7 @@ class Profile extends CActiveRecord
 		return array(
 			array('ug_id', 'length', 'max'=>20),
 			array('birthday, request_signature', 'length', 'max'=>120),
-			array('site, avatar, request_from', 'length', 'max'=>255),
+			array('site, avatar, request_from, request_address', 'length', 'max'=>255),
 			array('aboutme', 'length'),
 			array('site', 'url','allowEmpty'=>true),
 			array('image', 'file', 'types'=>'jpeg, jpg, gif, png', 'allowEmpty' => true),
@@ -117,6 +117,7 @@ class Profile extends CActiveRecord
 			'aboutme'=>'Обо мне',
 			'request_from'=>'Фамилия, имя и отчество в родительном падеже (для подстановки в заявления)',
 			'request_signature'=>'Подпись (фамилия в именительном падеже и инициалы)',
+			'request_address'=>'Почтовый адрес для подстановки в заявления'
 		);
 	}
 
