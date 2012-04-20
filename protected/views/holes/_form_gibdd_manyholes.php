@@ -11,6 +11,7 @@
 					$model->to=$gibdd ? $gibdd->post_dative.' '.$gibdd->fio_dative : '';
 					$model->from=$usermodel->relProfile->request_from ? $usermodel->relProfile->request_from : $usermodel->last_name.' '.$usermodel->name.' '.$usermodel->second_name;
 					$model->signature=$usermodel->relProfile->request_signature ? $usermodel->relProfile->request_signature : $usermodel->last_name.' '.substr($usermodel->name, 0, 2).($usermodel->name ? '.' : '').' '.substr($usermodel->second_name, 0, 2).($usermodel->second_name ? '.' : '');
+					$model->postaddress=$usermodel->relProfile->request_address ? $usermodel->relProfile->request_address : '';
 					?>					
 						<h2><?= Yii::t('holes_view', 'HOLE_REQUEST_FORM') ?></h2>
 						<table>
