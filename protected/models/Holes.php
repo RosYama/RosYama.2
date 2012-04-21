@@ -47,7 +47,7 @@ class Holes extends CActiveRecord
 	public $type_alias;
 	public $showUserHoles;
 	public $username;
-
+	public $selecledList;
 	/**
 	 * @return string the associated database table name
 	 */
@@ -598,8 +598,11 @@ class Holes extends CActiveRecord
 		$criteria->compare('t.STATE',$this->STATE,true);	
 		$criteria->compare('t.TYPE_ID',$this->TYPE_ID,false);
 		$criteria->compare('type.alias',$this->type_alias,true);	
-		//
-		//$criteria->addCondition('t.USER_ID='.$userid);
+		
+		if ($this->selecledList){
+			$criteria->join='INNER JOIN {{user_selected_lists_holes_xref}} ON {{user_selected_lists_holes_xref}}.hole_id=t.id AND {{user_selected_lists_holes_xref}}.list_id='.$this->selecledList;
+		}
+		
 	
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

@@ -31,7 +31,7 @@ class HolesController extends Controller
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('add','update', 'personal','personalDelete','request','requestForm','sent','notsent','gibddreply', 'fix', 'defix', 'prosecutorsent', 'prosecutornotsent','delanswerfile','myarea', 'territorialGibdd', 'delpicture','selectHoles','sentMany','review'),
+				'actions'=>array('add','update', 'personal','personalDelete','request','requestForm','sent','notsent','gibddreply', 'fix', 'defix', 'prosecutorsent', 'prosecutornotsent','delanswerfile','myarea', 'territorialGibdd', 'delpicture','selectHoles','sentMany','review', 'selected'),
 				'users'=>array('@'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -579,7 +579,7 @@ class HolesController extends Controller
 		if($count) Yii::app()->user->setFlash('user', 'Успешное изменение статуса ям: <br/>'.implode('<br/>',$links).'<br/><br/><br/>');
 		else Yii::app()->user->setFlash('user', 'Произошла ошибка! Ни одной ямы не изменено');
 		if(!isset($_GET['ajax']))
-			$this->redirect(array('personal'));
+			$this->redirect(isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : array('personal'));
 	}		
 	
 	public function actionProsecutorsent($id)
@@ -697,6 +697,57 @@ class HolesController extends Controller
 
 		}
 		$this->renderPartial('_selected', Array('gibdds'=>$gibdds,'user'=>Yii::app()->user->userModel));
+		
+		//print_r(Yii::app()->user->getState('selectedHoles'));
+	}	
+	
+	public function actionSelected($id)
+	{
+		//$this->layout='//layouts/header_user';
+		
+		$user=Yii::app()->user;
+		$list=UserSelectedLists::model()->findByPk((int)$id);
+		
+		if(!$list || $list->user_id!=$user->id)	
+			throw new CHttpException(403,'Доступ запрещен.');
+			
+		if (isset($_POST['gibdd_change_id']) && $_POST['gibdd_change_id']){
+			$newgibdd=GibddHeads::model()->findByPk((int)$_POST['gibdd_change_id']);
+			if ($newgibdd && $newgibdd->subject_id==$list->gibdd->subject_id){
+				foreach ($list->holes as $hole){
+					$hole->gibdd_id=$newgibdd->id;
+					$hole->update();
+				}
+				$list->gibdd_id=$newgibdd->id;
+				$list->update();
+				$this->refresh();
+			}
+		}
+			
+			
+		$model=new Holes('search');
+		$model->unsetAttributes();
+		$model->showUserHoles=3;
+		if(isset($_POST['Holes']) || isset($_GET['Holes']))
+			$model->attributes=isset($_POST['Holes']) ? $_POST['Holes'] : $_GET['Holes'];
+		
+		$model->selecledList=$list->id;
+		
+		
+		$cs=Yii::app()->getClientScript();
+        $cs->registerCssFile('/css/holes_list.css');        
+        $cs->registerCssFile('/css/hole_view.css');
+        $cs->registerScriptFile(CHtml::asset($this->viewPath.DIRECTORY_SEPARATOR.'js'.DIRECTORY_SEPARATOR.'holes_selector.js'));
+		$cs->registerScriptFile('http://www.vertstudios.com/vertlib.min.js');        
+        $cs->registerScriptFile(CHtml::asset($this->viewPath.DIRECTORY_SEPARATOR.'js'.DIRECTORY_SEPARATOR.'StickyScroller'.DIRECTORY_SEPARATOR.'StickyScroller.min.js'));
+		$cs->registerScriptFile(CHtml::asset($this->viewPath.DIRECTORY_SEPARATOR.'js'.DIRECTORY_SEPARATOR.'StickyScroller'.DIRECTORY_SEPARATOR.'GetSet.js'));
+		$holes=Array();
+		$all_holes_count=0;		
+		
+			
+		$this->render('selected', Array('model'=>$model, 'list'=>$list,'user'=>Yii::app()->user));
+		
+		
 		
 		//print_r(Yii::app()->user->getState('selectedHoles'));
 	}	

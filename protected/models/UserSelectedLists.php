@@ -54,6 +54,8 @@ class UserSelectedLists extends CActiveRecord
 		return array(
 		'holes'=>array(self::MANY_MANY, 'Holes',
                '{{user_selected_lists_holes_xref}}(list_id, hole_id)'),
+        'gibdd'=>array(self::BELONGS_TO, 'GibddHeads', 'gibdd_id'),
+        
 		);
 	}
 	
