@@ -26,6 +26,9 @@ $this->breadcrumbs=array(
 					'CHtml::link($data->username, Yii::app()->baseUrl ."/userGroups?u=".$data->id)' : '$data->username',
 				'type'=>'raw',
 			),
+			'name',
+			'second_name',
+			'last_name',
 			Array(
 			'name'=>'group_name',
 			'filter'=>CHtml::listData( UserGroupsGroup::model()->findAll(Array('order'=>'level DESC')), 'groupname', 'groupname' ),  

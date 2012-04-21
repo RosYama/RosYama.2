@@ -171,7 +171,7 @@ class UserGroupsUser extends CActiveRecord
 				'message' => 'Пароли не совпадают'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, group_name, group_id, username, home, status', 'safe', 'on'=>'search'),
+			array('id, group_name, group_id, username, home, status, name, second_name, last_name', 'safe', 'on'=>'search'),
 		);
 
 		if (UserGroupsConfiguration::findRule('simple_password_reset') === false)
@@ -442,6 +442,9 @@ class UserGroupsUser extends CActiveRecord
 		$criteria->compare('id',$this->id,true);
 		$criteria->compare('group_id',$this->group_id,true);
 		$criteria->compare('username',$this->username,true);
+		$criteria->compare('name',$this->name,true);
+		$criteria->compare('second_name',$this->second_name,true);
+		$criteria->compare('last_name',$this->last_name,true);
 		$criteria->compare('email',$this->email,true);
 		$criteria->compare('home',$this->home,true);
 		// set the default to status active unless the person loading the view has
