@@ -52,7 +52,7 @@ class GibddHeads extends CActiveRecord
 			array('post, post_dative, fio, fio_dative, gibdd_name, tel_degurn, tel_dover, url', 'length', 'max'=>255),
 			array('contacts, str_subject', 'length'),
 			array('lat, lng', 'numerical'),
-			array('url', 'url','allowEmpty'=>true),
+			array('url, url_priemnaya', 'url','allowEmpty'=>true),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
 			array('id, name, subject_id, post, post_dative, fio, fio_dative, gibdd_name, contacts, address, tel_degurn, tel_dover, url, lat, lng, is_regional, moderated', 'safe', 'on'=>'search'),
@@ -113,6 +113,7 @@ class GibddHeads extends CActiveRecord
 			'url' => 'Сайт',
 			'lat' => 'Широта',
 			'lng' => 'Долгота',
+			'url_priemnaya'=>'Интернет-приемная',
 		);
 	}
 

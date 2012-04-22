@@ -14,7 +14,7 @@
 	<? endif;*/ ?>
 
 	<!-- левая колоночка -->
-	<div class="lCol">
+	<div class="lCol" <?php if ($model->is_regional) echo 'style="width:100%"'?>>
 
 	
 		<div class="f">
@@ -78,7 +78,22 @@
 			<?php echo $form->textField($model,'tel_dover',array('class'=>'textInput')); ?>
 			<?php echo $form->error($model,'tel_dover'); ?>
 			<em class="hint">Пример: (495) 624-31-17</em>
+		</div>
+		
+		<?php if ($model->is_regional) : ?>	
+		<div class="f">
+			<?php echo $form->labelEx($model,'url'); ?>
+			<?php echo $form->textField($model,'url',array('class'=>'textInput')); ?>
+			<?php echo $form->error($model,'url'); ?>
+			<em class="hint">Пример: http://www.site.ru/page.html</em>
 		</div>		
+		<?php endif; ?>	
+		<div class="f">
+			<?php echo $form->labelEx($model,'url_priemnaya'); ?>
+			<?php echo $form->textField($model,'url_priemnaya',array('class'=>'textInput')); ?>
+			<?php echo $form->error($model,'url_priemnaya'); ?>
+			<em class="hint">Пример: http://www.site.ru/page.html</em>
+		</div>
 	
 		
 		<?php echo $form->hiddenField($model,'lat'); ?>
@@ -86,7 +101,7 @@
 		<?php echo $form->hiddenField($model,'str_subject'); ?>
 	</div>
 	<!-- /левая колоночка -->
-	
+<?php if (!$model->is_regional) : ?>	
 	<!-- правая колоночка -->
 	<div class="rCol"> 
 	<div class="f">
@@ -129,6 +144,7 @@ EOD
 		
 	</div>
 	<!-- /правая колоночка -->
+<?php endif; ?>		
 	<div class="addSubmit">
 		<div class="container">
 			<p></p>
