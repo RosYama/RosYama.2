@@ -84,7 +84,7 @@ class Holes extends CActiveRecord
 			array('LATITUDE, LONGITUDE', 'numerical'),
 			array('USER_ID, STATE, DATE_CREATED, DATE_SENT, DATE_STATUS, ADR_SUBJECTRF, DATE_SENT_PROSECUTOR', 'length', 'max'=>10),
 			array('ADR_CITY', 'length', 'max'=>50),
-			array('STR_SUBJECTRF, username', 'length'),
+			array('STR_SUBJECTRF, username, description_locality, description_size', 'length'),
 			array('COMMENT1, COMMENT2, COMMENT_GIBDD_REPLY, deletepict, upploadedPictures, request_gibdd, showUserHoles', 'safe'),	
 			array('upploadedPictures', 'file', 'types'=>'jpg, jpeg, png, gif','maxFiles'=>10, 'allowEmpty'=>true, 'on' => 'update, import, fix'),
 			array('upploadedPictures', 'file', 'types'=>'jpg, jpeg, png, gif','maxFiles'=>10, 'allowEmpty'=>false, 'on' => 'insert'),
@@ -561,7 +561,9 @@ class Holes extends CActiveRecord
 			'DATE_SENT_PROSECUTOR' => 'Date Sent Prosecutor',
 			'deletepict'=>'Удалить фотографию?',
 			'replуfiles'=>'Необходимо добавить отсканированный ответ из ГИБДД',
-			'upploadedPictures'=>$this->scenario=='fix' ? 'Желательно добавить фотографии исправленного дефекта' : 'Нужно загрузить фотографии'
+			'upploadedPictures'=>$this->scenario=='fix' ? 'Желательно добавить фотографии исправленного дефекта' : 'Нужно загрузить фотографии',
+			'description_size'=>'Описание дефекта (размеры и прочая информация)',
+			'description_locality'=>'Подробное описание расположения дефекта на местности',
 		);
 	}
 

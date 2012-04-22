@@ -43,11 +43,24 @@
 		</div>
 		
 		<!-- камент -->
+		
+		<div class="f">
+			<?php echo $form->labelEx($model,'description_size'); ?>
+			<?php echo $form->textArea($model,'description_size',Array('rows'=>5)); ?>
+			<?php echo $form->error($model,'description_size'); ?>
+		</div>
+		<div class="f">
+			<?php echo $form->labelEx($model,'description_locality'); ?>
+			<?php echo $form->textArea($model,'description_locality',Array('rows'=>8)); ?>
+			<?php echo $form->error($model,'description_locality'); ?>
+		</div>
+		
 		<div class="f">
 			<?php echo $form->labelEx($model,'COMMENT1'); ?>
-			<?php echo $form->textArea($model,'COMMENT1'); ?>
+			<?php echo $form->textArea($model,'COMMENT1',Array('class'=>'big')); ?>
 			<?php echo $form->error($model,'COMMENT1'); ?>
 		</div>
+
 		<?php echo $form->hiddenField($model,'LATITUDE'); ?>
 		<?php echo $form->hiddenField($model,'LONGITUDE'); ?>
 		<?php echo $form->hiddenField($model,'STR_SUBJECTRF'); ?>
