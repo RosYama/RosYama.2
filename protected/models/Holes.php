@@ -597,6 +597,7 @@ class Holes extends CActiveRecord
 			}		
 		$criteria->compare('t.STATE',$this->STATE,true);	
 		$criteria->compare('t.TYPE_ID',$this->TYPE_ID,false);
+		$criteria->compare('t.gibdd_id',$this->gibdd_id,false);
 		$criteria->compare('type.alias',$this->type_alias,true);	
 		
 		if ($this->selecledList){
@@ -644,7 +645,8 @@ class Holes extends CActiveRecord
 			}		
 		$criteria->compare('t.STATE',$this->STATE,true);	
 		$criteria->compare('t.TYPE_ID',$this->TYPE_ID,false);
-		$criteria->compare('type.alias',$this->type_alias,true);	
+		$criteria->compare('type.alias',$this->type_alias,true);
+		$criteria->compare('t.gibdd_id',$this->gibdd_id,false);
 		//
 		//$criteria->addCondition('t.USER_ID='.$userid);
 	

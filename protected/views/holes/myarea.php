@@ -83,6 +83,7 @@ $this->pageTitle=Yii::app()->name . ' :: Мой участок';
 			<div style="text-align:right;">
 			<?php echo CHtml::checkBox('selectAll', false, Array('id'=>'selectAll','class'=>'state_check')); ?><?php echo CHtml::label('Выбрать все', 'selectAll'); ?>
 			</div>
+			<?php if ($dataProvider->keys) echo $form->dropDownList($model, 'gibdd_id', CHtml::listData(GibddHeads::model()->with(Array('holes'=>Array('select'=>'ID, gibdd_id')))->findAll(Array('condition'=>'holes.ID IN ('.implode(', ',$dataProvider->keys).')','order'=>'t.name')), 'id', 'gibdd_name' ), array('prompt'=>'Все ГИБДД')); ?>
 			
 	<?php $this->endWidget(); ?>		
 			</p>
@@ -90,7 +91,7 @@ $this->pageTitle=Yii::app()->name . ' :: Мой участок';
 <?php $this->widget('zii.widgets.CListView', array(
 	'id'=>'holes_list',
 	'ajaxUpdate'=>true,
-	'dataProvider'=>$model->areaSearch($user),
+	'dataProvider'=>$dataProvider,
 	'itemView'=>'_view',
 	'itemsTagName'=>'ul',
 	'cssFile'=>'/css/holes_list.css',
