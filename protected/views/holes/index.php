@@ -77,6 +77,7 @@ $all_elements=implode(',',$dataProvider->keys);
 					{
 						$('#premoderate_' + id[key]).fadeOut()
 					}
+					window.location.reload();
 				}
 			}
 		)

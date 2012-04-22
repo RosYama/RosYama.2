@@ -553,7 +553,8 @@ class HolesController extends Controller
 				$model->PREMODERATED=1;
 				if ($model->update()) $ok++;
 				}
-			if ($ok==count($holes))  echo 'ok';
+			if (isset($_GET['ajax']) && $ok==count($holes))  echo 'ok';
+			else $this->redirect(isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : array('index'));
 		}
 	}
 	
