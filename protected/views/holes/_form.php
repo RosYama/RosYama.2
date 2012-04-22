@@ -15,6 +15,7 @@
 
 	<!-- левая колоночка -->
 	<div class="lCol">
+		<div class="hiddenfields" <?php if (!$model->TYPE_ID) echo 'style="display:none;"';?> >
 		<!-- тип дефекта -->
 		<div class="f">
 			<?php echo $form->labelEx($model,'TYPE_ID'); ?>
@@ -22,7 +23,7 @@
 			<?php echo $form->error($model,'TYPE_ID'); ?>
 		</div>
 		
-		<div class="hiddenfields" <?php if (!$model->TYPE_ID) echo 'style="display:none;"';?> >
+
 		<!-- адрес -->
 		<div class="f">
 			<?php echo $form->labelEx($model,'ADDRESS'); ?>
@@ -35,8 +36,6 @@
 		<?php echo $form->labelEx($model,'gibdd_id'); ?>
 		<?php echo $form->dropDownList($model, 'gibdd_id', CHtml::listData( $model->territorialGibdd, 'id', 'gibdd_name' ));?>
 		<?php echo $form->error($model,'gibdd_id'); ?>
-		</div>
-		
 		</div>
 		
 		<!-- фотки -->
@@ -68,6 +67,7 @@
 		<?php echo $form->hiddenField($model,'LONGITUDE'); ?>
 		<?php echo $form->hiddenField($model,'STR_SUBJECTRF'); ?>
 		<?php echo $form->hiddenField($model,'ADR_CITY'); ?>
+		</div>
 	</div>
 	<!-- /левая колоночка -->
 	
@@ -150,14 +150,17 @@ EOD
 		<? endif;  ?>
 	</div>
 	<!-- /правая колоночка -->
-	<div class="addSubmit">
-		<div class="container">
-			<p>После нажатия на кнопку «Отправить» вы можете создать обращение о дефекте в виде pdf-документа, которое можно распечатать и отправить в ближайшее отделение ГИБДД</p>
-			<div class="btn" onclick="$(this).parents('form').submit();">
-				<a class="addFact"><i class="text">Отправить</i><i class="arrow"></i></a>
+	<div class="hiddenfields" <?php if (!$model->TYPE_ID) echo 'style="display:none;"';?> >
+	
+		<div class="addSubmit">
+			<div class="container">
+				<p>После нажатия на кнопку «Отправить» вы можете создать обращение о дефекте в виде pdf-документа, которое можно распечатать и отправить в ближайшее отделение ГИБДД</p>
+				<div class="btn" onclick="$(this).parents('form').submit();">
+					<a class="addFact"><i class="text">Отправить</i><i class="arrow"></i></a>
+				</div>
 			</div>
 		</div>
-	</div>
+	</div>	
 <?php $this->endWidget(); ?>
 
 </div><!-- form -->

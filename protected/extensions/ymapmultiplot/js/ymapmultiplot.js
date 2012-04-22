@@ -625,7 +625,7 @@ function geocodeOnSetCoordValue(ev)
 													 //jQuery("#gibdd_form").html(html)
 													 }});
 		}
-		$(".hiddenfields").show('slow');
+		$(".hiddenfields").animate({opacity: 'show'}, 'slow');
 		
 	});
 }
