@@ -22,6 +22,7 @@
 			<?php echo $form->error($model,'TYPE_ID'); ?>
 		</div>
 		
+		<div class="hiddenfields" <?php if (!$model->TYPE_ID) echo 'style="display:none;"';?> >
 		<!-- адрес -->
 		<div class="f">
 			<?php echo $form->labelEx($model,'ADDRESS'); ?>
@@ -34,6 +35,8 @@
 		<?php echo $form->labelEx($model,'gibdd_id'); ?>
 		<?php echo $form->dropDownList($model, 'gibdd_id', CHtml::listData( $model->territorialGibdd, 'id', 'gibdd_name' ));?>
 		<?php echo $form->error($model,'gibdd_id'); ?>
+		</div>
+		
 		</div>
 		
 		<!-- фотки -->
@@ -71,10 +74,7 @@
 	<!-- правая колоночка -->
 	<div class="rCol"> 
 	<div class="f">
-	<p class="tip">
-Поставьте метку на карте двойным щелчком мыши
-<span class="required">*</span>
-</p>
+
 		<div class="bx-yandex-search-layout" style="padding-bottom: 0px;">
 			<div class="bx-yandex-search-form" style="padding-bottom: 0px;">				
 					<p>Введите адрес места для быстрого поиска</p>
@@ -84,9 +84,15 @@
 			</div>		
 			<div class="bx-yandex-search-results" id="results_MAP_DzDvWLBsil"></div>
 		</div>	
+			
+			<p><strong>
+Поставьте метку на карте двойным щелчком мыши
+<span class="required">*</span>
+</strong>
+</p>
+
 			<span id="recognized_address_str" title="Субъект РФ и населённый пункт"></span>
-			<span id="other_address_str"></span>				
-		
+			<span id="other_address_str"></span>	
 		
 		<div class="bx-yandex-view-layout">
 			<div class="bx-yandex-view-map">
