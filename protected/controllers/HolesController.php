@@ -666,7 +666,8 @@ class HolesController extends Controller
 			
 		$this->render('personal',array(
 			'model'=>$model,
-			'user'=>$user
+			'user'=>$user,
+			'dataProvider'=>$model->userSearch(),
 		));
 	}
 	
@@ -782,7 +783,8 @@ class HolesController extends Controller
 		$this->render('myarea',array(
 			'model'=>$model,
 			'user'=>$user,
-			'area'=>$area
+			'area'=>$area,
+			'dataProvider'=>$model->areaSearch($user),
 		));
 	}		
 	
