@@ -73,19 +73,19 @@ $this->widget('application.extensions.fancybox.EFancyBox', array(
 			<? if(!Yii::app()->user->isGuest): ?>
 				<? if(Yii::app()->user->IsAdmin) : ?>
 					<p>
-						<font class="errortext">
+						<div class="errortext">
 						Вы обладаете административными полномочиями
 						<br/>
-						</font>
+						</div>
 					</p>
 				<? endif; ?>
 				
 				<?php if(!$hole->PREMODERATED) : ?>
 				<p>
-						<font class="errortext">
+						<div class="errortext">
 						<?php echo  Yii::t('holes_view', 'PREMODRATION_WARNING');?>
 						<br/>
-						</font>
+						</div>
 				</p>
 				<? endif; ?>
 				
@@ -97,8 +97,8 @@ $this->widget('application.extensions.fancybox.EFancyBox', array(
 						?>
 						<? if($hole->IsUserHole || Yii::app()->user->IsAdmin): ?>
 						<div class="edit">
-							<?php echo CHtml::link(Yii::t('holes_view', 'HOLE_CART_ADMIN_TEXT_2'), array('update', 'id'=>$hole->ID)); ?>								
-							<?php echo CHtml::link(Yii::t('holes_view', 'HOLE_CART_ADMIN_TEXT_10'), array('personalDelete', 'id'=>$hole->ID), array('onclick'=>'return confirm("'.Yii::t('holes_view', 'HOLE_CART_ADMIN_TEXT_11').'");')); ?>							
+							<?php echo CHtml::link(Yii::t('holes_view', 'HOLE_CART_ADMIN_TEXT_2'), array('update', 'id'=>$hole->ID), array('class'=>'profileBtn')); ?>
+							<?php echo CHtml::link(Yii::t('holes_view', 'HOLE_CART_ADMIN_TEXT_10'), array('personalDelete', 'id'=>$hole->ID), array('class'=>'profileBtn', 'onclick'=>'return confirm("'.Yii::t('holes_view', 'HOLE_CART_ADMIN_TEXT_11').'");')); ?>
 						</div>
 						<? endif; ?>
 						<div class="progress">
@@ -113,7 +113,11 @@ $this->widget('application.extensions.fancybox.EFancyBox', array(
 							</div>
 							<div class="rc">
 								Также можно отправить:<br />
-								<span><ins>&mdash;</ins>с&nbsp;официального сайта <a href="http://www.gibdd.ru/letter" target="_blank">ГИБДД&nbsp;МВД&nbsp;России</a></span>
+								<span><ins>&mdash;</ins>с&nbsp;официального сайта <a href="http://www.gibdd.ru/letter" target="_blank">ГИБДД&nbsp;ГУ&nbsp;МВД&nbsp;России</a></span>
+								<? if($hole->ADR_CITY == 'Санкт-Петербург'): ?>
+									<span><ins>&mdash;</ins>с&nbsp;официального сайта <a href="http://78.gibdd.ru/web/guest/requests" target="_blank">УГИБДД&nbsp;ГУ&nbsp;МВД&nbsp;России&nbsp;<br />по&nbsp;г.&nbsp;СПб&nbsp;и&nbsp;ЛО</a>
+								<? endif; ?>
+								</span>
 							</div>
 						</div>
 						<?
@@ -323,9 +327,34 @@ $this->widget('application.extensions.fancybox.EFancyBox', array(
 			</div>
 			<div class="share">
 				<span>Поделиться</span>
-				<a href="http://www.facebook.com/sharer.php?u=<?=Yii::app()->request->hostInfo?>/<?=Yii::app()->request->pathInfo?>" class="fb" target="_blank">Facebook</a>
-				<a href="http://vkontakte.ru/share.php?url=<?=Yii::app()->request->hostInfo?>/<?=Yii::app()->request->pathInfo?>" class="vk" target="_blank">VK</a>
-				<a href="http://twitter.com/share" class="twitter-share-button" data-text="Обнаружен дефект на дороге по адресу <?= CHtml::encode($hole->ADDRESS) ?>" data-count="none">Tweet</a><script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
+				<script type="text/javascript" src="http://yandex.st/share/share.js" charset="utf-8"></script>
+				<div id="ya_share1"></div>
+<script>
+new Ya.share({
+        element: 'ya_share1',
+            elementStyle: {
+                'type': 'none',
+                'border': true,
+                'quickServices': ['twitter', '|', 'vkontakte', 'facebook', '|', 'yaru', 'odnoklassniki', 'moimir']
+            },
+            serviceSpecific: {
+                twitter: {
+                    title: 'Обнаружен дефект на дороге по адресу: <?= CHtml::encode($hole->ADDRESS) ?>'
+               },
+		facebook: {
+                    title: 'Обнаружен дефект на дороге по адресу: <?= CHtml::encode($hole->ADDRESS) ?>'
+		},
+		moimir: {
+                    title: 'Обнаружен дефект на дороге по адресу: <?= CHtml::encode($hole->ADDRESS) ?>'
+		},
+		odnoklassniki: {
+                    title: 'Обнаружен дефект на дороге по адресу: <?= CHtml::encode($hole->ADDRESS) ?>'
+		}
+
+        }
+});
+
+</script>
 			</div>
 		</div>
 	</div> 

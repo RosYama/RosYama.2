@@ -541,16 +541,31 @@ div.submit input {font: normal 1em "Trebuchet MS", Arial, sans-serif; margin-rig
 		font-size: 1.2em;
 		line-height: 1.67em;
 		padding-top: 55px;
+		display: table;
 	}
-	
-		.footer .copy {
-			float: left;
-			margin-right: 30px;
-			width: 215px;
-		}
-		
+
+	.footer .left_footer {
+		text-align: left;
+		padding-left: 10px;
+		width: 25%;
+		display: table-cell;
+	}
+
+	.footer .center_footer {
+		width: 50%;
+		display: table-cell;
+		text-align: center;
+	}
+
+	.footer .right_footer {
+		text-align: right;
+		padding-right: 10px;
+		width: 25%;
+		display: table-cell;
+	}
+
 		.footer .collection {
-			float: left;
+
 		}
 		
 			.footer .collection strong {
@@ -568,16 +583,13 @@ div.submit input {font: normal 1em "Trebuchet MS", Arial, sans-serif; margin-rig
 			}
 			
 			.footer .friends {
-				margin-top: 80px;
-			}
-			
-			.autochmo {
-				float: right;
+				margin-top: 50px;
+				margin-bottom: 30px;
 			}
 			
 			.autochmo a {
 				background: url("/images/chmo.gif") no-repeat scroll left center transparent;
-				left: -20px;
+
 				padding-left: 20px;
 				position: relative;
 			}

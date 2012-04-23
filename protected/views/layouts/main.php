@@ -11,6 +11,7 @@
 <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/styles.css" />
 <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/template_styles.css" />
 <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/form.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/flags.css" />
 <!--[if lte IE 7]><link rel="stylesheet" href="/css/ie.css" type="text/css" /><![endif]-->
 
 
@@ -110,18 +111,27 @@
 		<?php echo $content; ?>
 
 	<div class="footer">
+
 		<div class="container">
-			<p class="autochmo"><a target="_blank" href="http://autochmo.ru/" title="Доска позора водителей &aring;вточмо">&aring;utochmo</a><br>Доска позора водителей</p>
-			<p class="copy">&copy; <a href="http://navalny.ru/">Алексей Навальный</a>, 2011<br />
-			<a href="mailto:rossyama@gmail.com">rossyama@gmail.com</a><br />
-			<br/>Разработка прототипа и дизайна - <a href="http://greensight.ru">Greensight</a>.
+		<div class="left_footer">
+			&copy; <a href="http://navalny.ru/" target="_blank">Алексей Навальный</a>, 2011-2012
+			<br /><a href="mailto:rossyama@gmail.com">rossyama@gmail.com</a>
 			<br />
-			<br/>Разработано в <a href="http://pixelsmedia.ru">Pixelsmedia</a><br/>Powered by Yii Framework.
-			<br /></p>
+			<br/>Разработано в <a href="http://pixelsmedia.ru" target="_blank">Pixelsmedia</a>
+			<br/>Powered by <a href="http://www.yiiframework.com/" target="_blank">Yii Framework</a>
+		</div>
+		<div class="center_footer">
 			<?php if($this->beginCache('countHoles', array('duration'=>3600))) { ?>
 			<?php $this->widget('application.widgets.collection.collectionWidget'); ?>			
 			<?php $this->endCache(); } ?>
-			<p class="friends">Чиним ямы <a href="http://ukryama.com/">в Украине</a>, <a href="http://belyama.by/">Беларуси</a> и <a href="http://kazyama.kz/">Казахстане</a></p>
+
+			<p class="friends">Чиним ямы в <i class="flag-UA"></i> <a href="http://ukryama.com/">Украине</a>, <i class="flag-BY"></i> <a href="http://belyama.by/">Беларуси</a> и <i class="flag-KZ"></i> <a href="http://kazyama.kz/">Казахстане</a></p>
+		</div>
+		<div class="right_footer">
+			<p class="autochmo"><a target="_blank" href="http://autochmo.ru/" title="Доска позора водителей &aring;вточмо">&aring;utochmo</a><br>Доска позора водителей</p>
+			Разработка прототипа и дизайна - <a href="http://greensight.ru">Greensight</a>
+		</div>
+
 		</div>
 	</div>
 	

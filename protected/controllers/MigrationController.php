@@ -149,6 +149,21 @@ class MigrationController extends Controller
 		
 	}
 
+	public function createUploadFolders()
+	{
+		if (!is_dir($_SERVER['DOCUMENT_ROOT'].'/upload/'))
+			mkdir($_SERVER['DOCUMENT_ROOT'].'/upload//');
+		if (!is_dir($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/'))
+			mkdir($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/');
+		if (!is_dir($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/medium/'))
+			mkdir($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/medium/');
+		if (!is_dir($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/original/'))
+			mkdir($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/original/');
+		if (!is_dir($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/small/'))
+			mkdir($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/small/');
+
+		echo "Созданы поддиректории в upload.";
+	}
 	
 	public function actionImportHoles()
 	{
