@@ -40,7 +40,7 @@ $this->pageTitle=Yii::app()->name . ' :: Мой участок';
 
 <div class="lCol">
 
-<?php $this->widget('application.widgets.userAreaMap.userAreaMapWidget',Array('data'=>Array('area'=>$area))); ?>
+<?php $this->widget('application.widgets.userAreaMap.userAreaMapWidget',Array('data'=>Array('area'=>$area),'model'=>$model)); ?>  
 
 <?php if ($user->userModel->areaNeighbors) : ?>
 <div id="area_neighbors">
