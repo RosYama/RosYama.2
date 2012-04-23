@@ -25,7 +25,7 @@ div.lCol .f textarea.big { height: 160px; border-width: 1px; font-size: normal; 
 div.rCol .button { float: right; margin-top: 15px; }
 .bx-yandex-search-form .textInput {width: 350px;}
 .bx-yandex-search-form p {margin-bottom: 0.34em}
-.bx-yandex-search-results {margin-bottom: 2em}
+.bx-yandex-search-results {margin-bottom: 0px;}
 .f label { display: block; margin-bottom: 4px; }
 .f .tip { float: right; width: 240px;}
 hr { margin-left: -230px; border-left: none; border-bottom-color: white; }

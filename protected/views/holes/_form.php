@@ -15,6 +15,7 @@
 
 	<!-- левая колоночка -->
 	<div class="lCol">
+		<div class="hiddenfields" <?php if (!$model->TYPE_ID) echo 'style="display:none;"';?> >
 		<!-- тип дефекта -->
 		<div class="f">
 			<?php echo $form->labelEx($model,'TYPE_ID'); ?>
@@ -22,6 +23,7 @@
 			<?php echo $form->error($model,'TYPE_ID'); ?>
 		</div>
 		
+
 		<!-- адрес -->
 		<div class="f">
 			<?php echo $form->labelEx($model,'ADDRESS'); ?>
@@ -65,16 +67,14 @@
 		<?php echo $form->hiddenField($model,'LONGITUDE'); ?>
 		<?php echo $form->hiddenField($model,'STR_SUBJECTRF'); ?>
 		<?php echo $form->hiddenField($model,'ADR_CITY'); ?>
+		</div>
 	</div>
 	<!-- /левая колоночка -->
 	
 	<!-- правая колоночка -->
 	<div class="rCol"> 
 	<div class="f">
-	<p class="tip">
-Поставьте метку на карте двойным щелчком мыши
-<span class="required">*</span>
-</p>
+
 		<div class="bx-yandex-search-layout" style="padding-bottom: 0px;">
 			<div class="bx-yandex-search-form" style="padding-bottom: 0px;">				
 					<p>Введите адрес места для быстрого поиска</p>
@@ -84,9 +84,15 @@
 			</div>		
 			<div class="bx-yandex-search-results" id="results_MAP_DzDvWLBsil"></div>
 		</div>	
+			
+			<p><strong>
+Поставьте метку на карте двойным щелчком мыши
+<span class="required">*</span>
+</strong>
+</p>
+
 			<span id="recognized_address_str" title="Субъект РФ и населённый пункт"></span>
-			<span id="other_address_str"></span>				
-		
+			<span id="other_address_str"></span>	
 		
 		<div class="bx-yandex-view-layout">
 			<div class="bx-yandex-view-map">
@@ -144,14 +150,17 @@ EOD
 		<? endif;  ?>
 	</div>
 	<!-- /правая колоночка -->
-	<div class="addSubmit">
-		<div class="container">
-			<p>После нажатия на кнопку «Отправить» вы можете создать обращение о дефекте в виде pdf-документа, которое можно распечатать и отправить в ближайшее отделение ГИБДД</p>
-			<div class="btn" onclick="$(this).parents('form').submit();">
-				<a class="addFact"><i class="text">Отправить</i><i class="arrow"></i></a>
+	<div class="hiddenfields" <?php if (!$model->TYPE_ID) echo 'style="display:none;"';?> >
+	
+		<div class="addSubmit">
+			<div class="container">
+				<p>После нажатия на кнопку «Отправить» вы можете создать обращение о дефекте в виде pdf-документа, которое можно распечатать и отправить в ближайшее отделение ГИБДД</p>
+				<div class="btn" onclick="$(this).parents('form').submit();">
+					<a class="addFact"><i class="text">Отправить</i><i class="arrow"></i></a>
+				</div>
 			</div>
 		</div>
-	</div>
+	</div>	
 <?php $this->endWidget(); ?>
 
 </div><!-- form -->
