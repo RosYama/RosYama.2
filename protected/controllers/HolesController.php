@@ -823,12 +823,7 @@ class HolesController extends Controller
 		if (isset ($_GET['exclude_id']) && $_GET['exclude_id']) $criteria->addCondition('ID != '.(int)$_GET['exclude_id']); 
 		if (!Yii::app()->user->isModer) $criteria->compare('PREMODERATED',1);
 	
-		/// Фильтрация по состоянию ямы
-		if(isset($_GET['Holes']['STATE']) && $_GET['Holes']['STATE'])
-		{
-			$criteria->addInCondition('STATE', $_GET['Holes']['STATE']);
-		}
-		
+
 		/// Фильтрация по типу ямы
 		if(isset($_GET['Holes']['type']) && $_GET['Holes']['type'])
 		{
@@ -836,6 +831,13 @@ class HolesController extends Controller
 		}
 		
 		$criteria->with=Array('type');
+		
+		if(isset($_GET['Holes']['STATE']))
+			$criteria->compare('t.STATE',$_GET['Holes']['STATE'],true);	
+		if(isset($_GET['Holes']['TYPE_ID']))	
+			$criteria->compare('t.TYPE_ID',$_GET['Holes']['TYPE_ID'],false);
+		if(isset($_GET['Holes']['gibdd_id']))
+			$criteria->compare('t.gibdd_id',$_GET['Holes']['gibdd_id'],false);
 		
 		$markers = Holes::model()->findAll($criteria);	
 		
