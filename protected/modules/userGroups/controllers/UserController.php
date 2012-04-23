@@ -495,6 +495,7 @@ class UserController extends Controller
 							//print_r ($model->errors); die(); 
 							Yii::app()->user->setFlash('success', Yii::t('userGroupsModule.general','An Error Occurred. Please try later.'));
 							}
+						Yii::app()->user->logout();	
 						$this->redirect(Array ('/userGroups/'));
 					}
 				}
