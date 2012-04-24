@@ -31,7 +31,7 @@ class SpravController extends Controller
 				'users'=>array('*'),
 			),		
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('add','update','delete', 'moderate'),
+				'actions'=>array('add','update','delete', 'moderate', 'updateprosecutor'),
 				'users'=>array('@'),
 			),
 			array('deny',  // deny all users
@@ -332,6 +332,8 @@ class SpravController extends Controller
 		if (Yii::app()->user->id!=$model->author_id && Yii::app()->user->level <= 50)
 			throw new CHttpException(403,'Доступ запрещен.');
 		
+		if ($model->is_regional && Yii::app()->user->level <= 90)
+			throw new CHttpException(403,'Доступ запрещен.');
 		
 		$cs=Yii::app()->getClientScript();
         $cs->registerCssFile('/css/add_form.css');
@@ -356,6 +358,29 @@ class SpravController extends Controller
 			'model'=>$model,			
 		));
 	}
+	
+public function actionUpdateprosecutor($id)
+	{
+	
+		$model=$this->loadProsecutorModel($id);
+		
+		if (Yii::app()->user->level <= 90)
+			throw new CHttpException(403,'Доступ запрещен.');
+		
+		$cs=Yii::app()->getClientScript();
+        $cs->registerCssFile('/css/add_form.css');
+
+		if(isset($_POST['Prosecutors']))
+		{
+			$model->attributes=$_POST['Prosecutors'];			
+			if($model->save())
+				$this->redirect(array('view','id'=>$model->subject_id));
+		}		
+
+		$this->render('update_prosecutor',array(
+			'model'=>$model,			
+		));
+	}	
 	
 	public function actionModerate($id)
 	{	
@@ -398,6 +423,14 @@ class SpravController extends Controller
 	public function loadGibddModel($id)
 	{
 		$model=GibddHeads::model()->findByPk($id);
+		if($model===null)
+			throw new CHttpException(404,'The requested page does not exist.');
+		return $model;
+	}
+	
+	public function loadProsecutorModel($id)
+	{
+		$model=Prosecutors::model()->findByPk($id);
 		if($model===null)
 			throw new CHttpException(404,'The requested page does not exist.');
 		return $model;

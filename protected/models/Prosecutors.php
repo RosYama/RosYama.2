@@ -40,6 +40,7 @@ class Prosecutors extends CActiveRecord
 			array('name, subject_id, preview_text, gibdd_name', 'required'),
 			array('subject_id', 'numerical', 'integerOnly'=>true),
 			array('name, gibdd_name', 'length', 'max'=>255),
+			array('url_priemnaya', 'url','allowEmpty'=>true),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
 			array('id, name, subject_id, preview_text, gibdd_name', 'safe', 'on'=>'search'),
@@ -64,10 +65,11 @@ class Prosecutors extends CActiveRecord
 	{
 		return array(
 			'id' => 'ID',
-			'name' => 'Name',
+			'name' => 'Расширенное название для вставки в заявление',
 			'subject_id' => 'Subject',
-			'preview_text' => 'Preview Text',
-			'gibdd_name' => 'Gibdd Name',
+			'preview_text' => 'Описание',
+			'gibdd_name' => 'Название',
+			'url_priemnaya'=>'Интернет-приемная',
 		);
 	}
 
