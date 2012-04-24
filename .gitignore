@@ -7,3 +7,5 @@ bugs
 /bugs/*
 /protected/runtime/*
 protected/runtime/*
+
+protected/runtime/application.log

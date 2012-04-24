@@ -838,6 +838,18 @@ class HolesController extends Controller
 			$criteria->compare('t.TYPE_ID',$_GET['Holes']['TYPE_ID'],false);
 		if(isset($_GET['Holes']['gibdd_id']))
 			$criteria->compare('t.gibdd_id',$_GET['Holes']['gibdd_id'],false);
+			
+		$userid=Yii::app()->user->id;
+		if (isset($_GET['Holes']['showUserHoles'])) $showUserHoles=$_GET['Holes']['showUserHoles'];
+		else $showUserHoles=0; 
+		
+		if ($showUserHoles==1) $criteria->compare('t.USER_ID',$userid,false);
+		elseif ($showUserHoles==2) {
+			$criteria->with=Array('type', 'requests');
+			$criteria->addCondition('t.USER_ID!='.$userid);
+			$criteria->compare('requests.user_id',$userid,true);
+			$criteria->together=true;
+			}	
 		
 		$markers = Holes::model()->findAll($criteria);	
 		

@@ -36,10 +36,12 @@ class userAreaMapWidget extends CWidget {
         	$strparams=Array();
         	
         	$model=$this->model;
-        	foreach ($model->attributes as $key=>$val){
-        		$strparams[]='Holes['.$key.']='.$val;	
+        	if ($model) {
+				foreach ($model->attributes as $key=>$val){
+					$strparams[]='Holes['.$key.']='.$val;	
+				}
+				if ($model->showUserHoles) $strparams[]='Holes[showUserHoles]='.$model->showUserHoles;
         	}
-        
         	$params=implode('&',$strparams);
         	
         	$this->data['params']=$params;
