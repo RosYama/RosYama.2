@@ -91,6 +91,21 @@ class GibddHeads extends CActiveRecord
 			
 		return true;
 	}
+	
+	public function BeforeSave(){
+				parent::beforeSave();
+				if (!$this->is_regional && ($this->lat==0 || $this->lng==0)) {
+					$this->addError('lat','Поставьте точку на карте двойным кликом'); 
+					return false;
+					}
+				echo $this->lat;	
+				if (!$this->is_regional && !$this->subject_id) {
+					$this->addError('subject_id', 'Не определен субъект РФ');  	
+					return false;
+					}					
+				
+				return true;
+	}
 
 	/**
 	 * @return array customized attribute labels (name=>label)
