@@ -48,6 +48,7 @@ class Holes extends CActiveRecord
 	public $showUserHoles;
 	public $username;
 	public $selecledList;
+	public $keys=Array();
 	/**
 	 * @return string the associated database table name
 	 */
@@ -597,7 +598,13 @@ class Holes extends CActiveRecord
 			$criteria->addCondition('t.USER_ID!='.$userid);
 			$criteria->compare('requests.user_id',$userid,true);
 			$criteria->together=true;
-			}		
+			}
+			
+		//Вытаскиваем все Айдишники для селектора фильтра по ГИБДД	
+		$tmpcriteria=clone $criteria;
+		$tmpcriteria->select='ID';
+		$this->keys=CHtml::listData($this->findAll($tmpcriteria),'ID','ID');	
+		
 		$criteria->compare('t.STATE',$this->STATE,true);	
 		$criteria->compare('t.TYPE_ID',$this->TYPE_ID,false);
 		$criteria->compare('t.gibdd_id',$this->gibdd_id,false);
@@ -629,23 +636,33 @@ class Holes extends CActiveRecord
 		$userid=$user->id;
 		
 		$criteria=new CDbCriteria;
-		$criteria->with=Array('type','pictures_fresh');
-		$criteria->compare('t.ID',$this->ID,false);
-
+		$criteria->with=Array('type','pictures_fresh');		
+		
 		foreach ($area as $shape){
 			$criteria->addCondition('LATITUDE >= '.$shape->points[0]->lat
 			.' AND LATITUDE <= '.$shape->points[2]->lat
 			.' AND LONGITUDE >= '.$shape->points[0]->lng
 			.' AND LONGITUDE <= '.$shape->points[2]->lng, 'OR');
-			}
-
+			}	
+		
+		//Вытаскиваем все Айдишники для селектора фильтра по ГИБДД	
+		$tmpcriteria=clone $criteria;
+		$tmpcriteria->with=Array();
+		$tmpcriteria->select='ID';
+		$this->keys=CHtml::listData($this->findAll($tmpcriteria),'ID','ID');		
+		
 		if ($this->showUserHoles==1) $criteria->compare('t.USER_ID',$userid,false);
 		elseif ($this->showUserHoles==2) {
 			$criteria->with=Array('type','pictures_fresh','requests');
 			$criteria->addCondition('t.USER_ID!='.$userid);
 			$criteria->compare('requests.user_id',$userid,true);
 			$criteria->together=true;
-			}		
+			}			
+			
+		$criteria->compare('t.ID',$this->ID,false);			
+			
+
+		
 		$criteria->compare('t.STATE',$this->STATE,true);	
 		$criteria->compare('t.TYPE_ID',$this->TYPE_ID,false);
 		$criteria->compare('type.alias',$this->type_alias,true);
