@@ -555,6 +555,12 @@ class UserGroupsUser extends CActiveRecord
 	 */
 	public function afterFind()
 	{
+		if (!$this->relProfile){
+			$this->relProfile=new Profile;
+			$this->relProfile->ug_id=$this->id;
+			$this->relProfile->save();
+		}
+	
 		// retrieve the group name
 		$this->group_name = $this->relUserGroupsGroup->groupname;
 		// retrieve the user access permission's arra
