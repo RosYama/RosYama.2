@@ -563,7 +563,7 @@ class Holes extends CActiveRecord
 			'DATE_SENT_PROSECUTOR' => 'Date Sent Prosecutor',
 			'deletepict'=>'Удалить фотографию?',
 			'replуfiles'=>'Необходимо добавить отсканированный ответ из ГИБДД',
-			'upploadedPictures'=>$this->scenario=='fix' ? 'Желательно добавить фотографии исправленного дефекта' : 'Нужно загрузить фотографии',
+			'upploadedPictures'=>$this->scenario=='fix' ? 'Желательно добавить фотографии исправленного дефекта' : 'Нужно загрузить фотографии (не больше 10 штук)',
 			'description_size'=>'Описание дефекта (размеры и прочая информация)',
 			'description_locality'=>'Подробное описание расположения дефекта на местности',
 		);

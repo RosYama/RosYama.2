@@ -54,7 +54,7 @@ class PictureFiles extends CFormModel
 	public function attributeLabels()
 	{
 		return array(
-			'files' => 'Нужно загрузить фотографии',
+			'files' => 'Нужно загрузить фотографии (не больше 10 штук)',
 
 		);
 	}
