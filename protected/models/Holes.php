@@ -611,7 +611,9 @@ class Holes extends CActiveRecord
 		$criteria->compare('type.alias',$this->type_alias,true);	
 		
 		if ($this->selecledList){
-			$criteria->join='INNER JOIN {{user_selected_lists_holes_xref}} ON {{user_selected_lists_holes_xref}}.hole_id=t.id AND {{user_selected_lists_holes_xref}}.list_id='.$this->selecledList;
+			$criteria->with[]='selected_lists';
+			$criteria->compare('selected_lists.id',$this->selecledList,false);
+			$criteria->together=true;
 		}
 		
 	
