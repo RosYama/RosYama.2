@@ -601,9 +601,11 @@ class Holes extends CActiveRecord
 			}
 			
 		//Вытаскиваем все Айдишники для селектора фильтра по ГИБДД	
-		$tmpcriteria=clone $criteria;
-		$tmpcriteria->select='ID';
-		$this->keys=CHtml::listData($this->findAll($tmpcriteria),'ID','ID');	
+		if (!$this->selecledList){
+			$tmpcriteria=clone $criteria;
+			$tmpcriteria->select='ID';
+			$this->keys=CHtml::listData($this->findAll($tmpcriteria),'ID','ID');	
+		}
 		
 		$criteria->compare('t.STATE',$this->STATE,true);	
 		$criteria->compare('t.TYPE_ID',$this->TYPE_ID,false);
