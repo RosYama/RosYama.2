@@ -240,7 +240,7 @@ EOD
     <tr><td style="padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px"> <b> 
       <p>Сбор средств на развитие РосЯмы:</p>
         <p>Яндекс-деньги: 41001550415485</p>
-        <p><a href="/page/donations">Подробнее</a></p>
+        <p><a href="/page/donations/">Подробнее</a></p>
       </b>
     </td></tr>
   </tbody>
