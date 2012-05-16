@@ -1,5 +1,5 @@
 <?
-$this->pageTitle=Yii::app()->name . ' - FAQ';
+$this->pageTitle=Yii::app()->name . ' - Пожертвования';
 $this->layout='//layouts/header_default_without_add';
 ?>
 <div class="lCol">
