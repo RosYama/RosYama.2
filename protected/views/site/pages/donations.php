@@ -10,7 +10,9 @@ $this->layout='//layouts/header_default_without_add';
 <div class="rCol">
 <p><b>Деньги в поддержку РосЯмы можно перечислять сюда:</b></p>
 
-<p><b>Яндекс.Деньги</b> кошелёк № 41001550415485</p>
+<p><b>Яндекс.Деньги</b> <a href="http://yaudit.org/yaudit/41001550415485">кошелёк № 41001550415485</a></p>
+
+<p>Посмотреть отчёт о приходах-расходах Яндекс-кошелька: <a href="http://yaudit.org/yaudit/41001550415485">http://yaudit.org/yaudit/41001550415485</a></p>
 
 <p><b>PayPal</b> fezeev@gmail.com</p>
 
