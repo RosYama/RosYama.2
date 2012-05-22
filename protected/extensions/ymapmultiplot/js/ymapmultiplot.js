@@ -523,11 +523,10 @@ function setCoordValue(map, ev)
 
 function geocodeOnSetCoordValue(ev)
 {
-	var geocoder = new YMaps.Geocoder(coordpoint.getGeoPoint());
+	var geocoder = new YMaps.Geocoder(coordpoint.getGeoPoint(), {results: 1});
 	YMaps.Events.observe(geocoder, geocoder.Events.Load, function () {
 		if(this.length())
 		{
-			
 			var geo_text = this.get(0).text.split(',');
 			var subjectrf;
 			var city;

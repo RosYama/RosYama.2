@@ -96,6 +96,7 @@ class RfSubjects extends CActiveRecord
 
 		$subject_name = trim($subject_name, " \n\t");	
 		if ($subject_name=='республика Чувашская') $subject_name='Чувашская республика';
+		if ($subject_name=='республика Удмуртская') $subject_name='Удмуртская республика';
 
 		$subjects=$this->findAll();
 		$_RF_SUBJECTS=CHtml::listData($subjects, 'id','name');
