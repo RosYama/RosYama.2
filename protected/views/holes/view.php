@@ -73,19 +73,19 @@ $this->widget('application.extensions.fancybox.EFancyBox', array(
 			<? if(!Yii::app()->user->isGuest): ?>
 				<? if(Yii::app()->user->IsAdmin) : ?>
 					<p>
-						<font class="errortext">
+						<div class="errortext">
 						Вы обладаете административными полномочиями
 						<br/>
-						</font>
+						</div>
 					</p>
 				<? endif; ?>
 				
 				<?php if(!$hole->PREMODERATED) : ?>
 				<p>
-						<font class="errortext">
+						<div class="errortext">
 						<?php echo  Yii::t('holes_view', 'PREMODRATION_WARNING');?>
 						<br/>
-						</font>
+						</div>
 				</p>
 				<? endif; ?>
 				
@@ -97,8 +97,8 @@ $this->widget('application.extensions.fancybox.EFancyBox', array(
 						?>
 						<? if($hole->IsUserHole || Yii::app()->user->IsAdmin): ?>
 						<div class="edit">
-							<?php echo CHtml::link(Yii::t('holes_view', 'HOLE_CART_ADMIN_TEXT_2'), array('update', 'id'=>$hole->ID)); ?>								
-							<?php echo CHtml::link(Yii::t('holes_view', 'HOLE_CART_ADMIN_TEXT_10'), array('personalDelete', 'id'=>$hole->ID), array('onclick'=>'return confirm("'.Yii::t('holes_view', 'HOLE_CART_ADMIN_TEXT_11').'");')); ?>							
+							<?php echo CHtml::link(Yii::t('holes_view', 'HOLE_CART_ADMIN_TEXT_2'), array('update', 'id'=>$hole->ID), array('class'=>'profileBtn')); ?>
+							<?php echo CHtml::link(Yii::t('holes_view', 'HOLE_CART_ADMIN_TEXT_10'), array('personalDelete', 'id'=>$hole->ID), , array('class'=>'profileBtn', 'onclick'=>'return confirm("'.Yii::t('holes_view', 'HOLE_CART_ADMIN_TEXT_11').'");')); ?>
 						</div>
 						<? endif; ?>
 						<div class="progress">
