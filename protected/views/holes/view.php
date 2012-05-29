@@ -98,7 +98,7 @@ $this->widget('application.extensions.fancybox.EFancyBox', array(
 						<? if($hole->IsUserHole || Yii::app()->user->IsAdmin): ?>
 						<div class="edit">
 							<?php echo CHtml::link(Yii::t('holes_view', 'HOLE_CART_ADMIN_TEXT_2'), array('update', 'id'=>$hole->ID), array('class'=>'profileBtn')); ?>
-							<?php echo CHtml::link(Yii::t('holes_view', 'HOLE_CART_ADMIN_TEXT_10'), array('personalDelete', 'id'=>$hole->ID), , array('class'=>'profileBtn', 'onclick'=>'return confirm("'.Yii::t('holes_view', 'HOLE_CART_ADMIN_TEXT_11').'");')); ?>
+							<?php echo CHtml::link(Yii::t('holes_view', 'HOLE_CART_ADMIN_TEXT_10'), array('personalDelete', 'id'=>$hole->ID), array('class'=>'profileBtn', 'onclick'=>'return confirm("'.Yii::t('holes_view', 'HOLE_CART_ADMIN_TEXT_11').'");')); ?>
 						</div>
 						<? endif; ?>
 						<div class="progress">
