@@ -323,9 +323,34 @@ $this->widget('application.extensions.fancybox.EFancyBox', array(
 			</div>
 			<div class="share">
 				<span>Поделиться</span>
-				<a href="http://www.facebook.com/sharer.php?u=<?=Yii::app()->request->hostInfo?>/<?=Yii::app()->request->pathInfo?>" class="fb" target="_blank">Facebook</a>
-				<a href="http://vkontakte.ru/share.php?url=<?=Yii::app()->request->hostInfo?>/<?=Yii::app()->request->pathInfo?>" class="vk" target="_blank">VK</a>
-				<a href="http://twitter.com/share" class="twitter-share-button" data-text="Обнаружен дефект на дороге по адресу <?= CHtml::encode($hole->ADDRESS) ?>" data-count="none">Tweet</a><script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
+
+				<script type="text/javascript" src="http://yandex.st/share/share.js" charset="utf-8"></script>
+				<div id="ya_share1"></div>
+<script>
+new Ya.share({
+	element: 'ya_share1',
+		elementStyle: {
+			'type': 'none',
+			'border': true,
+			'quickServices': ['twitter', '|', 'vkontakte', 'facebook', '|', 'yaru', 'odnoklassniki', 'moimir']
+		},
+		serviceSpecific: {
+			twitter: {
+				title: 'Обнаружен дефект на дороге по адресу: <?= CHtml::encode($hole->ADDRESS) ?>'
+			},
+			facebook: {
+				title: 'Обнаружен дефект на дороге по адресу: <?= CHtml::encode($hole->ADDRESS) ?>'
+			},
+			moimir: {
+				title: 'Обнаружен дефект на дороге по адресу: <?= CHtml::encode($hole->ADDRESS) ?>'
+			},
+			odnoklassniki: {
+				title: 'Обнаружен дефект на дороге по адресу: <?= CHtml::encode($hole->ADDRESS) ?>'
+			}
+		}
+});
+</script>
+
 			</div>
 		</div>
 	</div> 
