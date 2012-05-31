@@ -48,8 +48,8 @@ $this->widget('application.extensions.fancybox.EFancyBox', array(
 							</div>
 						<? endif; ?>	
 					<? endif; ?>
-					<? if($hole->STATE == 'fixed' && $hole->DATE_STATUS): ?>
-						<?= CHtml::encode(Y::dateFromTime($hole->DATE_STATUS))?> отмечен факт исправления дефекта
+					<? if($hole->STATE == 'fixed' && ($hole->fixeds || $hole->DATE_STATUS)): ?>
+						<?= CHtml::encode(Y::dateFromTime($hole->fixeds ? $hole->fixeds[0]->date_fix : $hole->DATE_STATUS))?> отмечен факт исправления дефекта
 					<? endif; ?>
 				</span>
 			</p>

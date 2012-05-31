@@ -53,9 +53,20 @@ class ArchiveHolesCron extends UGCronJob {
 	 */
 	protected function getCriteria()
 	{
+		$filters=HoleArchiveFilters::model()->findAll();		
 		$criteria = new CDbCriteria;
-		$criteria->compare('archive',0);
-		$criteria->addCondition('DATE_STATUS < '.(time()-60*60*24*30*12).' OR (STATE="fixed" AND DATE_STATUS < '.(time()-60*60*24*30*3).')');
+		if ($filters){			
+			foreach ($filters as $filter){
+				$condArr=Array();
+				if ($filter->time_to) $condArr[]='DATE_STATUS < '.(time()-$filter->time_to);
+				if ($filter->type_id) $condArr[]='TYPE_ID = '.$filter->type_id;
+				if ($filter->status) $condArr[]='STATE = "'.$filter->status.'"';
+				$condStr=implode(' AND ', $condArr);
+				$criteria->addCondition($condStr,'OR');				
+				}
+		}
+		else $criteria->compare('ID',0);
+		$criteria->compare('archive',0);		
 		return $criteria;
 	}
 	

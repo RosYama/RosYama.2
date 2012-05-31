@@ -115,7 +115,7 @@ class Holes extends CActiveRecord
 			'request_prosecutor'=>array(self::HAS_ONE, 'HoleRequests', 'hole_id', 'condition'=>'request_prosecutor.type="prosecutor" AND user_id='.Yii::app()->user->id),
 			'requests_gibdd'=>array(self::HAS_MANY, 'HoleRequests', 'hole_id', 'condition'=>'requests_gibdd.type="gibdd"','order'=>'requests_gibdd.date_sent ASC'),
 			'requests_prosecutor'=>array(self::HAS_MANY, 'HoleRequests', 'hole_id', 'condition'=>'requests_prosecutor.type="prosecutor"','order'=>'date_sent ASC'),
-			'fixeds'=>array(self::HAS_MANY, 'HoleFixeds', 'hole_id','order'=>'fixeds.date_fix DESC'),
+			'fixeds'=>array(self::HAS_MANY, 'HoleFixeds', 'hole_id','order'=>'fixeds.date_fix ASC'),
 			'user_fix'=>array(self::HAS_ONE, 'HoleFixeds', 'hole_id', 'condition'=>'user_fix.user_id='.Yii::app()->user->id),
 			'type'=>array(self::BELONGS_TO, 'HoleTypes', 'TYPE_ID'),
 			'user'=>array(self::BELONGS_TO, 'UserGroupsUser', 'USER_ID'),		
@@ -407,9 +407,9 @@ class Holes extends CActiveRecord
 					return false;
 				}
 		else {			
-			if ($this->user_fix) $this->user_fix->delete();			
-			if (count ($this->fixeds) == 0) {
-					$this->DATE_STATUS=time();
+			if ($this->user_fix) $this->user_fix->delete();	
+			$this->DATE_STATUS=time();
+			if (count ($this->fixeds) == 0) {					
 					if($this->STATE == 'fresh')  
 					{
 						if (!$this->DATE_SENT) {
@@ -553,7 +553,7 @@ class Holes extends CActiveRecord
 			'STATE' => 'Статус',
 			'DATE_CREATED' => 'Дата создания',
 			'DATE_SENT' => 'Дата отправки в ГИБДД',
-			'DATE_STATUS' => 'Date Status',
+			'DATE_STATUS' => 'Дата изменения',
 			'COMMENT1' => 'Комментарии',
 			'COMMENT2' => 'Комментарии',
 			'TYPE_ID' => 'Тип дефекта',
@@ -752,7 +752,11 @@ class Holes extends CActiveRecord
 			$criteria->addCondition('t.DATE_CREATED >='.$DATE_CREATED.' AND t.DATE_CREATED <='.($DATE_CREATED+86400));
 			}		
 		$criteria->compare('t.DATE_SENT',$this->DATE_SENT,true);
-		$criteria->compare('t.DATE_STATUS',$this->DATE_STATUS,true);
+		if ($this->DATE_STATUS) {
+			$DATE_STATUS=CDateTimeParser::parse($this->DATE_STATUS, 'dd.MM.yyyy');
+			$criteria->addCondition('t.DATE_STATUS <='.$DATE_STATUS);
+			
+			}
 		$criteria->compare('t.COMMENT1',$this->COMMENT1,true);
 		$criteria->compare('t.COMMENT2',$this->COMMENT2,true);
 		$criteria->compare('t.TYPE_ID',$this->TYPE_ID,false);

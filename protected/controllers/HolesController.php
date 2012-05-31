@@ -262,7 +262,7 @@ class HolesController extends Controller
 						if ($model->STATE=="inprogress" || $model->STATE=="achtung")
 							$model->STATE='gibddre';
 						$model->GIBDD_REPLY_RECEIVED=1;
-						if (!$model->DATE_STATUS) $model->DATE_STATUS=time();
+						$model->DATE_STATUS=time();
 						if ($model->update()){					
 							if ($count==0) $firstAnswermodel=$answer;
 							$count++;

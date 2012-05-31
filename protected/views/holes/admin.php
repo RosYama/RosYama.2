@@ -59,9 +59,11 @@ $this->widget('zii.widgets.grid.CGridView', array(
 	'id'=>'holes-grid',
 	'dataProvider'=>$model->searchInAdmin(),
 	'filter'=>$model,
+	//'ajaxUpdate'=>false,
 	'selectableRows'=>2,
 	'afterAjaxUpdate'=>"function(id, data) {
         jQuery('#date_created').datepicker({'dateFormat':'dd.mm.yy'});
+        jQuery('#date_status').datepicker({'dateFormat':'dd.mm.yy'});
     }",
     'summaryText'=>'<table width="100%"><tr><td style="text-align: left;">'.$actionbuttons.'</td><td style="text-align: right;">Элементы {start}—{end} из {count}.</tr></table>',
 	'columns'=>array(
@@ -105,7 +107,21 @@ $this->widget('zii.widgets.grid.CGridView', array(
                         'dateFormat'=> 'dd.mm.yy',
                     )
                 ),  true),
-        ),       
+        ),  
+        
+        array(       
+            'name'=>'DATE_STATUS',
+            'value'=>'date("d.m.Y H:i", $data->DATE_STATUS)',
+            'filter'=> $this->widget('zii.widgets.jui.CJuiDatePicker',array(
+                    'model'=>$model, //Model object
+                    'language'=>'',
+                    'attribute'=>'DATE_STATUS', //attribute name
+                    'htmlOptions'=>array('class'=>'input date', 'id'=>'date_status'),
+                    'options'=>array(
+                        'dateFormat'=> 'dd.mm.yy',
+                    )
+                ),  true),
+        ), 
        
 		'ADDRESS',
 		array(       
