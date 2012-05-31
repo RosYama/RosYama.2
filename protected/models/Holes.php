@@ -513,6 +513,7 @@ class Holes extends CActiveRecord
 	
 	public function BeforeSave(){
 				parent::beforeSave();
+				$this->DATE_STATUS = time();
 				$this->ADR_CITY=trim($this->ADR_CITY);
 					if ($this->scenario=='fix'){
 						$fixmodel=new HoleFixeds;
