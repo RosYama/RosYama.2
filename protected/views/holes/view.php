@@ -19,7 +19,7 @@ $this->widget('application.extensions.fancybox.EFancyBox', array(
 	<div class="h">
 		<div class="info">
 			<p><span class="date"><?php echo CHtml::encode(Y::dateFromTime($hole->DATE_CREATED)); ?></span><?php echo CHtml::link(CHtml::encode($hole->user->getParam('showFullname') ? $hole->user->Fullname : $hole->user->username), array('/profile/view', 'id'=>$hole->user->id),array('class'=>""));?></p>
-			<p class="type type_<?= $hole->type->alias ?>"><?= $hole->type->name; ?></p>
+			<p class="type type_<?= $hole->type->alias ?>"><?= $hole->type->name; ?><?php if ($hole->archive) echo ' (в архиве)';?></p>
 			<p class="address"><?= CHtml::encode($hole->ADDRESS) ?></p>
 			<p class="status">
 				<span class="bull <?= $hole->STATE ?>">&bull;</span>
@@ -48,8 +48,8 @@ $this->widget('application.extensions.fancybox.EFancyBox', array(
 							</div>
 						<? endif; ?>	
 					<? endif; ?>
-					<? if($hole->STATE == 'fixed' && $hole->DATE_STATUS): ?>
-						<?= CHtml::encode(Y::dateFromTime($hole->DATE_STATUS))?> отмечен факт исправления дефекта
+					<? if($hole->STATE == 'fixed' && ($hole->fixeds || $hole->DATE_STATUS)): ?>
+						<?= CHtml::encode(Y::dateFromTime($hole->fixeds ? $hole->fixeds[0]->date_fix : $hole->DATE_STATUS))?> отмечен факт исправления дефекта
 					<? endif; ?>
 				</span>
 			</p>

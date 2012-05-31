@@ -121,6 +121,15 @@
 		<?php echo $form->error($miscModel->relProfile,'request_address'); ?>  
 		</td>
 		</tr>
+		<tr>
+		<td colspan="3">		
+		<div class="chekboxes">
+			<?php echo $form->checkBox($miscModel->relProfile,'show_archive_holes',Array('class'=>'filter_checkbox')); ?>	
+			<?php echo $form->labelEx($miscModel->relProfile,'show_archive_holes',Array('label'=>'Показывать архивные ямы в "Моих ямах" и на "Моем участке"', 'class'=>'archive')); ?>
+			<?php echo $form->error($miscModel->relProfile,'show_archive_holes'); ?>  
+		</div>
+		</td>
+		</tr>
 	</tbody>
 </table>	
 <div class="row buttons">

@@ -262,7 +262,7 @@ class HolesController extends Controller
 						if ($model->STATE=="inprogress" || $model->STATE=="achtung")
 							$model->STATE='gibddre';
 						$model->GIBDD_REPLY_RECEIVED=1;
-						if (!$model->DATE_STATUS) $model->DATE_STATUS=time();
+						$model->DATE_STATUS=time();
 						if ($model->update()){					
 							if ($count==0) $firstAnswermodel=$answer;
 							$count++;
@@ -786,7 +786,7 @@ class HolesController extends Controller
 			'area'=>$area,
 			'dataProvider'=>$model->areaSearch($user),
 		));
-	}		
+	}
 	
 	public function actionMap()
 	{
@@ -838,6 +838,8 @@ class HolesController extends Controller
 			$criteria->compare('t.TYPE_ID',$_GET['Holes']['TYPE_ID'],false);
 		if(isset($_GET['Holes']['gibdd_id']))
 			$criteria->compare('t.gibdd_id',$_GET['Holes']['gibdd_id'],false);
+		if(isset($_GET['Holes']['archive']))
+			$criteria->compare('t.archive',Array($_GET['Holes']['archive'],0),false);
 			
 		$userid=Yii::app()->user->id;
 		if (isset($_GET['Holes']['showUserHoles'])) $showUserHoles=$_GET['Holes']['showUserHoles'];
@@ -977,6 +979,27 @@ class HolesController extends Controller
 				}
 			}
 		}
+		
+		if ($_POST['submit_mult']=='В архив'){
+			foreach ( $_POST['itemsSelected'] as $id){
+				$model=Holes::model()->findByPk((int)$id);
+				if ($model) {
+				$model->archive=1;
+				$model->update();
+				}
+			}
+		}
+		
+		if ($_POST['submit_mult']=='Вытащить из архива'){
+			foreach ( $_POST['itemsSelected'] as $id){
+				$model=Holes::model()->findByPk((int)$id);
+				if ($model) {
+				$model->archive=0;
+				$model->update();
+				}
+			}
+		}
+		
     }
 		if (!isset($_GET['ajax'])) $this->redirect($_SERVER['HTTP_REFERER']);
 	}	

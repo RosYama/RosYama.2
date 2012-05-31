@@ -38,7 +38,12 @@ function GetCheckNull()
 <input id="MAPLAT" name="MAPLAT" type="hidden" value="" />
 <input id="MAPZOOM" name="MAPZOOM" type="hidden" value="" />
 
-
+<div class="clear"></div>
+<br />
+<div class="chekboxes" style="float:right;">
+<?php echo $form->checkBox($model,"archive",Array('class'=>'filter_checkbox')); ?>	
+<?php echo $form->labelEx($model,'archive',Array('label'=>'Показывать ямы из архива', 'class'=>'archive')); ?>
+</div>
 
 </div>
 <div class="submit"><input type="submit" name="button" id="button" value="Показать" /><input type="reset" name="reset" id="reset_button" value="Сбросить" type="button" /></div>

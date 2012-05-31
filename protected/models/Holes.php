@@ -82,7 +82,7 @@ class Holes extends CActiveRecord
 		return array(
 			array('USER_ID, ADDRESS, DATE_CREATED, TYPE_ID, gibdd_id', 'required'),
 			array('LATITUDE, LONGITUDE', 'required', 'message' => 'Поставьте метку на карте двойным щелчком мыши!'),	
-			array('GIBDD_REPLY_RECEIVED, PREMODERATED, TYPE_ID, NOT_PREMODERATED', 'numerical', 'integerOnly'=>true),
+			array('GIBDD_REPLY_RECEIVED, PREMODERATED, TYPE_ID, NOT_PREMODERATED, archive', 'numerical', 'integerOnly'=>true),
 			array('LATITUDE, LONGITUDE', 'numerical'),
 			array('USER_ID, STATE, DATE_CREATED, DATE_SENT, DATE_STATUS, ADR_SUBJECTRF, DATE_SENT_PROSECUTOR', 'length', 'max'=>10),
 			array('ADR_CITY', 'length', 'max'=>50),
@@ -115,7 +115,7 @@ class Holes extends CActiveRecord
 			'request_prosecutor'=>array(self::HAS_ONE, 'HoleRequests', 'hole_id', 'condition'=>'request_prosecutor.type="prosecutor" AND user_id='.Yii::app()->user->id),
 			'requests_gibdd'=>array(self::HAS_MANY, 'HoleRequests', 'hole_id', 'condition'=>'requests_gibdd.type="gibdd"','order'=>'requests_gibdd.date_sent ASC'),
 			'requests_prosecutor'=>array(self::HAS_MANY, 'HoleRequests', 'hole_id', 'condition'=>'requests_prosecutor.type="prosecutor"','order'=>'date_sent ASC'),
-			'fixeds'=>array(self::HAS_MANY, 'HoleFixeds', 'hole_id','order'=>'fixeds.date_fix DESC'),
+			'fixeds'=>array(self::HAS_MANY, 'HoleFixeds', 'hole_id','order'=>'fixeds.date_fix ASC'),
 			'user_fix'=>array(self::HAS_ONE, 'HoleFixeds', 'hole_id', 'condition'=>'user_fix.user_id='.Yii::app()->user->id),
 			'type'=>array(self::BELONGS_TO, 'HoleTypes', 'TYPE_ID'),
 			'user'=>array(self::BELONGS_TO, 'UserGroupsUser', 'USER_ID'),		
@@ -356,6 +356,7 @@ class Holes extends CActiveRecord
 	$this->DATE_STATUS= time();
 	$this->DATE_SENT_PROSECUTOR = time();
 	$this->STATE='prosecutor';
+	$this->archive=0;
 	$this->update();
 	return true;
 	}
@@ -368,6 +369,7 @@ class Holes extends CActiveRecord
 						$this->DATE_STATUS= time();
 						$this->DATE_SENT_PROSECUTOR = null;
 						$this->STATE='achtung';
+						$this->archive=0;
 						$this->update();
 					}
 		return true;			
@@ -405,9 +407,9 @@ class Holes extends CActiveRecord
 					return false;
 				}
 		else {			
-			if ($this->user_fix) $this->user_fix->delete();			
-			if (count ($this->fixeds) == 0) {
-					$this->DATE_STATUS=time();
+			if ($this->user_fix) $this->user_fix->delete();	
+			$this->DATE_STATUS=time();
+			if (count ($this->fixeds) == 0) {					
 					if($this->STATE == 'fresh')  
 					{
 						if (!$this->DATE_SENT) {
@@ -440,7 +442,7 @@ class Holes extends CActiveRecord
 						}
 					}
 				}
-				
+			$this->archive=0;	
 			if ($this->update()) return true;
 			else return false;
 		}	
@@ -462,6 +464,7 @@ class Holes extends CActiveRecord
 				else {
 					$this->DATE_SENT = $this->requests_gibdd[0]->date_sent;
 				}	
+			$this->archive=0;	
 			if ($this->update()) return true;
 			else return false;
 	}		
@@ -550,7 +553,7 @@ class Holes extends CActiveRecord
 			'STATE' => 'Статус',
 			'DATE_CREATED' => 'Дата создания',
 			'DATE_SENT' => 'Дата отправки в ГИБДД',
-			'DATE_STATUS' => 'Date Status',
+			'DATE_STATUS' => 'Дата изменения',
 			'COMMENT1' => 'Комментарии',
 			'COMMENT2' => 'Комментарии',
 			'TYPE_ID' => 'Тип дефекта',
@@ -566,6 +569,7 @@ class Holes extends CActiveRecord
 			'upploadedPictures'=>$this->scenario=='fix' ? 'Желательно добавить фотографии исправленного дефекта' : 'Нужно загрузить фотографии (не больше 10 штук)',
 			'description_size'=>'Описание дефекта (размеры и прочая информация)',
 			'description_locality'=>'Подробное описание расположения дефекта на местности',
+			'archive'=>'Архив',
 		);
 	}
 
@@ -587,7 +591,8 @@ class Holes extends CActiveRecord
 	{
 		// Warning: Please modify the following code to remove attributes that
 		// should not be searched.
-		$userid=Yii::app()->user->id;
+		$user=Yii::app()->user;
+		$userid=$user->id;
 		$criteria=new CDbCriteria;
 		//$criteria->with=Array('pictures_fresh','pictures_fixed');
 		$criteria->with=Array('type','pictures_fresh');
@@ -611,6 +616,8 @@ class Holes extends CActiveRecord
 		$criteria->compare('t.TYPE_ID',$this->TYPE_ID,false);
 		$criteria->compare('t.gibdd_id',$this->gibdd_id,false);
 		$criteria->compare('type.alias',$this->type_alias,true);	
+		
+		if (!$user->userModel->relProfile->show_archive_holes) $criteria->compare('t.archive',0,false);
 		
 		if ($this->selecledList)
 			$criteria->join='INNER JOIN {{user_selected_lists_holes_xref}} ON {{user_selected_lists_holes_xref}}.hole_id=t.id AND {{user_selected_lists_holes_xref}}.list_id='.$this->selecledList;
@@ -662,7 +669,7 @@ class Holes extends CActiveRecord
 			
 		$criteria->compare('t.ID',$this->ID,false);			
 			
-
+		if (!$user->userModel->relProfile->show_archive_holes) $criteria->compare('t.archive',0,false);
 		
 		$criteria->compare('t.STATE',$this->STATE,true);	
 		$criteria->compare('t.TYPE_ID',$this->TYPE_ID,false);
@@ -710,6 +717,7 @@ class Holes extends CActiveRecord
 		$criteria->compare('t.COMMENT_GIBDD_REPLY',$this->COMMENT_GIBDD_REPLY,true);
 		$criteria->compare('t.GIBDD_REPLY_RECEIVED',$this->GIBDD_REPLY_RECEIVED);
 		if ($this->NOT_PREMODERATED) $criteria->compare('PREMODERATED',0);
+		$criteria->compare('archive',$this->archive ? $this->archive : 0);
 		if (!Yii::app()->user->isModer) $criteria->compare('PREMODERATED',$this->PREMODERATED,true);
 		$criteria->compare('DATE_SENT_PROSECUTOR',$this->DATE_SENT_PROSECUTOR,true);
 		//$criteria->together=true;
@@ -744,7 +752,11 @@ class Holes extends CActiveRecord
 			$criteria->addCondition('t.DATE_CREATED >='.$DATE_CREATED.' AND t.DATE_CREATED <='.($DATE_CREATED+86400));
 			}		
 		$criteria->compare('t.DATE_SENT',$this->DATE_SENT,true);
-		$criteria->compare('t.DATE_STATUS',$this->DATE_STATUS,true);
+		if ($this->DATE_STATUS) {
+			$DATE_STATUS=CDateTimeParser::parse($this->DATE_STATUS, 'dd.MM.yyyy');
+			$criteria->addCondition('t.DATE_STATUS <='.$DATE_STATUS);
+			
+			}
 		$criteria->compare('t.COMMENT1',$this->COMMENT1,true);
 		$criteria->compare('t.COMMENT2',$this->COMMENT2,true);
 		$criteria->compare('t.TYPE_ID',$this->TYPE_ID,false);
@@ -755,6 +767,7 @@ class Holes extends CActiveRecord
 		$criteria->compare('t.COMMENT_GIBDD_REPLY',$this->COMMENT_GIBDD_REPLY,true);
 		$criteria->compare('t.GIBDD_REPLY_RECEIVED',$this->GIBDD_REPLY_RECEIVED);
 		$criteria->compare('t.PREMODERATED',$this->PREMODERATED,true);
+		$criteria->compare('t.archive',$this->archive,true);
 		$criteria->compare('t.DATE_SENT_PROSECUTOR',$this->DATE_SENT_PROSECUTOR,true);
 		$criteria->together=true;
 	
@@ -767,5 +780,14 @@ class Holes extends CActiveRecord
 			    'defaultOrder'=>'t.DATE_CREATED DESC',
 				)
 		));
-	}	
+	}		
+	
+	public function getArchiveSearchLink()
+	{
+		$arr=Array('/holes/index');
+		foreach($this->attributes as $key=>$val)
+			$arr["Holes[$key]"]=$val;
+		$arr["Holes[archive]"]=1;   
+		return $arr;	
+	}
 }

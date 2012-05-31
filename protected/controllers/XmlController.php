@@ -65,6 +65,7 @@ class XmlController extends Controller
 		if (Yii::app()->request->getParam('filter_city')) $model->ADR_CITY=Yii::app()->request->getParam('filter_city');
 		if (Yii::app()->request->getParam('filter_status')) $model->STATE=Yii::app()->request->getParam('filter_status');
 		if (Yii::app()->request->getParam('filter_type')) $model->type_alias=Yii::app()->request->getParam('filter_type');
+		if (Yii::app()->request->getParam('archive')) $model->archive=Yii::app()->request->getParam('archive');
 		$page=Yii::app()->request->getParam('page');
 		if (!$model->limit) $model->limit=30;
 		$offset=Yii::app()->request->getParam('offset');
@@ -81,6 +82,7 @@ class XmlController extends Controller
 		$tags[]=CHtml::closeTag('sort');
 		$tags[]=CHtml::tag('filter', array (), false, false);
 			$tags[]=CHtml::tag('item', array ('code'=>'PREMODERATED'), CHtml::encode($model->PREMODERATED), true);
+			$tags[]=CHtml::tag('item', array ('code'=>'archive'), CHtml::encode($model->archive), true);
 			$tags[]=CHtml::tag('item', array ('code'=>'filter_rf_subject_id'), CHtml::encode($model->ADR_SUBJECTRF), true);
 			$tags[]=CHtml::tag('item', array ('code'=>'filter_city'), CHtml::encode($model->ADR_CITY), true);
 			$tags[]=CHtml::tag('item', array ('code'=>'filter_status'), CHtml::encode($model->STATE), true);
@@ -95,6 +97,7 @@ class XmlController extends Controller
 			foreach ($data->data as $hole){
 				$tags[]=CHtml::tag('hole', array ('id'=>$hole->ID), false, false);
 					$tags[]=CHtml::tag('id', array (), CHtml::encode($hole->ID), true);
+					$tags[]=CHtml::tag('archive', array (), CHtml::encode($hole->archive), true);
 					$tags[]=CHtml::tag('username', array ('full'=>$hole->user->Fullname), false, false);
 						$tags[]=CHtml::tag('name', array (), CHtml::encode($hole->user->name), true);
 						$tags[]=CHtml::tag('secondname', array (), CHtml::encode($hole->user->second_name), true);

@@ -41,6 +41,7 @@
 						array('label'=>'Ямы', 'url'=>array('/holes/admin'), 'linkOptions'=>array('class'=>'profileBtn'), 'visible'=>$this->user->groupName=='root'),
 						array('label'=>'Типы ям', 'url'=>array('/holeTypes/index'), 'linkOptions'=>array('class'=>'profileBtn')),
 						array('label'=>'Результаты запроса в ГИБДД (анкета)', 'url'=>array('/holeAnswerResults/index'), 'linkOptions'=>array('class'=>'profileBtn')),
+						array('label'=>'Правила авто-архивации ям', 'url'=>array('/holeArchiveFilters/admin'), 'linkOptions'=>array('class'=>'profileBtn')),
 					),
 				'htmlOptions'=>array('class'=>'operations'),
 			));			
