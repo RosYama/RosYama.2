@@ -397,7 +397,8 @@ class UserGroupsUser extends CActiveRecord
 			'readable_home' => 'Домашняя страница',
 			'captcha' => 'Введите слово на картинке',
 			'rememberMe' => 'Запомнить меня на этом компьютере',
-			'params'=>'Другим пользователям :'
+			'params'=>'Другим пользователям :',
+			'activation_code'=>'Код активации'
 		);
 	}
 	
