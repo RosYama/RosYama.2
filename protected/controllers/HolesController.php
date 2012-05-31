@@ -27,7 +27,7 @@ class HolesController extends Controller
 	{
 		return array(
 			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('index','view', 'findSubject', 'findCity', 'map', 'ajaxMap'),
+				'actions'=>array('index','view', 'findSubject', 'findCity', 'map', 'flushcashe'),
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
@@ -47,6 +47,13 @@ class HolesController extends Controller
 			),
 		);
 	}
+	
+	public function actionFlushcashe()
+	{
+		Yii::app()->cache->flush();
+		Yii::app()->user->setFlash('user','Кеш чист!');
+		$this->redirect(Array('personal'));
+	}	
 	
 	public function actionFindSubject()
 	{
