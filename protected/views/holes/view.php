@@ -19,7 +19,7 @@ $this->widget('application.extensions.fancybox.EFancyBox', array(
 	<div class="h">
 		<div class="info">
 			<p><span class="date"><?php echo CHtml::encode(Y::dateFromTime($hole->DATE_CREATED)); ?></span><?php echo CHtml::link(CHtml::encode($hole->user->getParam('showFullname') ? $hole->user->Fullname : $hole->user->username), array('/profile/view', 'id'=>$hole->user->id),array('class'=>""));?></p>
-			<p class="type type_<?= $hole->type->alias ?>"><?= $hole->type->name; ?></p>
+			<p class="type type_<?= $hole->type->alias ?>"><?= $hole->type->name; ?><?php if ($hole->archive) echo ' (в архиве)';?></p>
 			<p class="address"><?= CHtml::encode($hole->ADDRESS) ?></p>
 			<p class="status">
 				<span class="bull <?= $hole->STATE ?>">&bull;</span>

@@ -404,6 +404,10 @@ ul.usermenu li.active .profileBtn{background: #f88100;}
 		margin-bottom: 10px;
 		height: 26px;
 	}
+	.filterType label.archive {
+		margin-bottom: 0px;
+		height: 10px;
+	}
 	
 	.filterType .col1 {width:112px}
 	.filterType .col2 {width:124px}
@@ -962,4 +966,5 @@ color: rgb(0, 128, 0);
 	height: 40px;
 	background: transparent url(/images/ajaxload.gif) center center no-repeat;
 	} 
+.clear{clear: both;}	
 

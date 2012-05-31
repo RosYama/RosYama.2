@@ -40,12 +40,17 @@ or <b>=</b>) at the beginning of each of your search values to specify how the c
 echo CHtml::beginForm($this->createUrl("itemsSelected"),'post');
 $actionbuttons='
 <i>С отмеченными:</i>
-<button class="mult_submit" type="submit" name="submit_mult" value="Отмодерировать" title="Отмодерировать">
+<button class="mult_submit" name="submit_mult" value="Отмодерировать" title="Отмодерировать">
 <img src="/images/b_usrcheck.png" title="Отмодерировать" alt="Отмодерировать" class="icon" width="16" height="16" /></button>
-<button class="mult_submit" type="submit" name="submit_mult" value="Демодерировать" title="Демодерировать">
+<button class="mult_submit" name="submit_mult" value="Демодерировать" title="Демодерировать">
 <img src="/images/b_usrdrop.png" title="Демодерировать" alt="Демодерировать" class="icon" width="16" height="16" /></button>
-<button class="mult_submit" type="submit" name="submit_mult" value="Удалить" title="Удалить" onclick="return confirm(\'Вы уверены, что хотите удалить выбранные элементы?\');" 	>
+<button class="mult_submit" name="submit_mult" value="В архив" title="В архив">
+<img src="/images/b_archive.png" title="В архив" alt="В архив" class="icon" width="16" height="16" /></button>
+<button class="mult_submit" name="submit_mult" value="Вытащить из архива" title="Вытащить из архива">
+<img src="/images/b_dearchive.png" title="Вытащить из архива" alt="Вытащить из архива" class="icon" width="16" height="16" /></button>
+<button class="mult_submit" name="submit_mult" value="Удалить" title="Удалить" onclick="return confirm(\'Вы уверены, что хотите удалить выбранные элементы?\');" 	>
 <img src="/images/b_drop.png" title="Удалить" alt="Удалить" class="icon" width="16" height="16" /></button>
+
 ';
 
 ?>
@@ -108,6 +113,12 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'type'=>'raw',
             'filter'=>Array(1=>"да",0=>"нет"),
             'value'=>'$data->modering',
+        ),
+        array(       
+            'name'=>'archive',
+            'type'=>'boolean',
+            'filter'=>Array(1=>"да",0=>"нет"),
+            'value'=>'$data->archive',
         ),
 		/*
 		array(       
