@@ -246,7 +246,7 @@ class Comment extends CActiveRecord {
         $criteria = new CDbCriteria;
         $criteria->compare('owner_name', $this->owner_name);
         $criteria->compare('owner_id', $this->owner_id);
-        $criteria->compare('t.status', '<>'.self::STATUS_DELETED);
+        //$criteria->compare('t.status', '<>'.self::STATUS_DELETED);
         $criteria->order = 'parent_comment_id, create_time ';
         if($this->config['orderComments'] === 'ASC' || $this->config['orderComments'] === 'DESC')
             $criteria->order .= $this->config['orderComments'];

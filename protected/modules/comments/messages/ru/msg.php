@@ -9,7 +9,7 @@ return array(
     'delete'=>'удалить',
     'approve'=>'утвердить',
     'Approve'=>'Утвердить',
-    'You cannot add a new comment'=>'Вы не можете оставлять комментарии',
+    'You cannot add a new comment'=>'Aвторизуйся и напиши комментарий',
     'No comments'=>'Нет комментариев',
     'Please enter the letters as they are shown in the image above.<br/>Letters are not case-sensitive.'=>'Пожалуйста, введите цифры, указанные на картинке',
     'User Name'=>'Имя пользователя',
@@ -34,5 +34,6 @@ return array(
     'Approved'=>'Утвержден',
     'Deleted'=>'Удален',
     'Link'=>'Ссылка',
+    'Comment deleted'=>'Комментарий удален'
 );
 ?>

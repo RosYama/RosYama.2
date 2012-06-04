@@ -2,6 +2,7 @@
     <ul class="comments-list">
         <?php foreach($comments as $comment):?>
             <li id="comment-<?php echo $comment->comment_id; ?>">
+            	<?php if ($comment->status!=$comment::STATUS_DELETED) : ?>
             	<div class="comment-avatar">
             	<?php if($comment->user->relProfile && $comment->user->relProfile->avatar) echo CHtml::image($comment->user->relProfile->avatar_folder.'/'.$comment->user->relProfile->avatar); 
             			else echo CHtml::image('/images/userpic-user.png');
@@ -33,10 +34,16 @@
                     }
                 ?>
                 </div>
+                
+             <?php else : ?>
+ 			  	<div class="comment-header">
+ 			  		<?php echo Yii::t('CommentsModule.msg', 'Comment deleted'); ?>
+ 			  	</div>
+              <?php endif; ?> 
+                
                 <div class="clear"></div>
                 <?php if(count($comment->childs) > 0 && $this->allowSubcommenting === true) $this->render('ECommentsWidgetComments', array('comments' => $comment->childs));?>
-
-                
+ 
             </li>
         <?php endforeach;?>
     </ul>

@@ -19,7 +19,7 @@
     }
     else 
     {
-        echo '<strong>'.Yii::t('CommentsModule.msg', 'You cannot add a new comment').'</strong>';
+        echo '<strong>'.CHtml::link(Yii::t('CommentsModule.msg', 'You cannot add a new comment'), array('review','id'=>$this->model->ID),array('class'=>"declarationBtn")).'</strong>';
     }
 ?>
 </div>
