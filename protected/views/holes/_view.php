@@ -10,7 +10,7 @@
 				<div class="del"><a title="Удалить дефект" href="#" onclick="ShowDelForm(this, '<?php echo $data->ID ?>'); return false;"><img src="/images/st1234/icondel.gif"></a></div>
 			<?php endif; ?>
 			<div class="properties">
-				<p class="date"><?php echo CHtml::encode(Y::dateFromTime($data->DATE_CREATED)); ?></p>
+				<p class="date"><?php echo CHtml::encode(Y::dateFromTime($data->DATE_CREATED)); ?><?php if ($data->comments_cnt) echo CHtml::link('<span class="commentsHot">'.$data->comments_cnt.'</span>', array('view', 'id'=>$data->ID, '#'=>'comments'), Array('title'=>'Комментарии')); ?></p>
 				<div class="service"><?php echo CHtml::encode($data->ADDRESS); ?><i></i></div>
 				<div class="social">
 					<img src="/images/st1234/<?php echo CHtml::encode($data->type->alias); ?>.png" title="<?php echo CHtml::encode($data->type->name); ?>">
