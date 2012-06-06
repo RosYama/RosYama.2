@@ -123,6 +123,7 @@ class Holes extends CActiveRecord
 			'selected_lists'=>array(self::MANY_MANY, 'UserSelectedLists',
                '{{user_selected_lists_holes_xref}}(hole_id,list_id)'),
             'comments_cnt'=> array(self::STAT, 'Comment', 'owner_id', 'condition'=>'owner_name="Holes" AND status < 2'),   
+            'comments'=> array(self::HAS_MANY, 'Comment', 'owner_id', 'condition'=>'owner_name="Holes"'), 
 		);
 	}
 	
@@ -505,6 +506,9 @@ class Holes extends CActiveRecord
 				
 				//Потом все отметки об исправленности
 				foreach ($this->fixeds as $fixed) $fixed->delete();
+				
+				//Потом все комментарии к яме
+				foreach ($this->comments as $comment) $comment->delete();
 				
 				$this->selected_lists=Array();
 				$this->update();
