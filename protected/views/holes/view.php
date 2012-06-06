@@ -466,6 +466,10 @@ new Ya.share({
 				<? endif; ?>
 			</div>
 		<? endif; ?>
+		<br/>
+		<?php  $this->widget('comments.widgets.ECommentsListWidget', array(
+				'model' => $hole,
+			));  ?>
 	</div>
 </div>
 </div>

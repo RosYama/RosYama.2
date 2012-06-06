@@ -122,6 +122,8 @@ class Holes extends CActiveRecord
 			'gibdd'=>array(self::BELONGS_TO, 'GibddHeads', 'gibdd_id'),
 			'selected_lists'=>array(self::MANY_MANY, 'UserSelectedLists',
                '{{user_selected_lists_holes_xref}}(hole_id,list_id)'),
+            'comments_cnt'=> array(self::STAT, 'Comment', 'owner_id', 'condition'=>'owner_name="Holes" AND status < 2'),   
+            'comments'=> array(self::HAS_MANY, 'Comment', 'owner_id', 'condition'=>'owner_name="Holes"'), 
 		);
 	}
 	
@@ -505,6 +507,9 @@ class Holes extends CActiveRecord
 				//Потом все отметки об исправленности
 				foreach ($this->fixeds as $fixed) $fixed->delete();
 				
+				//Потом все комментарии к яме
+				foreach ($this->comments as $comment) $comment->delete();
+				
 				$this->selected_lists=Array();
 				$this->update();
 	
@@ -535,6 +540,22 @@ class Holes extends CActiveRecord
 	public function getIsUserHole(){				
 				if ($this->USER_ID==Yii::app()->user->id) return true;
 				else return false;
+	}	
+	
+	public function newCommentInHole($comment){				
+		if($this->user->email && $this->user->id!=$comment->user->id){
+			$headers = "MIME-Version: 1.0\r\nFrom: \"Rosyama\" <".Yii::app()->params['adminEmail'].">\r\nReply-To: ".Yii::app()->params['adminEmail']."\r\nContent-Type: text/html; charset=utf-8";
+			Yii::app()->request->baseUrl='http://'.$_SERVER['HTTP_HOST'];
+			$mailbody=Yii::app()->controller->renderPartial('//ugmail/newComment', Array(
+						'hole'=>$this,
+						'comment'=>$comment,
+						'user'=>$this->user,
+						),true);
+			if (mail($this->user->email,"=?utf-8?B?" . base64_encode('Новый комментарий к Вашей яме') . "?=",$mailbody,$headers)){
+							return true;
+						}		
+			}	
+			return false;
 	}	
 	
 	public function getmodering(){
@@ -602,7 +623,7 @@ class Holes extends CActiveRecord
 		$userid=$user->id;
 		$criteria=new CDbCriteria;
 		//$criteria->with=Array('pictures_fresh','pictures_fixed');
-		$criteria->with=Array('type','pictures_fresh');
+		$criteria->with=Array('type','pictures_fresh', 'comments_cnt');
 		$criteria->compare('t.ID',$this->ID,false);
 		if (!$this->showUserHoles || $this->showUserHoles==1) $criteria->compare('t.USER_ID',$userid,false);
 		elseif ($this->showUserHoles==2) {
@@ -651,7 +672,7 @@ class Holes extends CActiveRecord
 		$userid=$user->id;
 		
 		$criteria=new CDbCriteria;
-		$criteria->with=Array('type','pictures_fresh');		
+		$criteria->with=Array('type','pictures_fresh', 'comments_cnt');		
 		
 		foreach ($area as $shape){
 			$criteria->addCondition('LATITUDE >= '.$shape->points[0]->lat
@@ -705,7 +726,7 @@ class Holes extends CActiveRecord
 
 		$criteria=new CDbCriteria;
 		//$criteria->with=Array('pictures_fresh','pictures_fixed');
-		$criteria->with=Array('type','pictures_fresh');
+		$criteria->with=Array('type','pictures_fresh', 'comments_cnt');
 		$criteria->compare('t.ID',$this->ID,false);
 		$criteria->compare('t.USER_ID',$this->USER_ID,false);
 		$criteria->compare('t.LATITUDE',$this->LATITUDE);

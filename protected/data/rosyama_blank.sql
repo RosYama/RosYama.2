@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: localhost
--- Время создания: Июн 01 2012 г., 01:02
+-- Время создания: Июн 04 2012 г., 13:47
 -- Версия сервера: 5.5.9
 -- Версия PHP: 5.3.5
 
@@ -18,6 +18,33 @@ SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 --
 -- База данных: `rosyama_blank`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `yii_comments`
+--
+
+CREATE TABLE IF NOT EXISTS `yii_comments` (
+  `owner_name` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `owner_id` int(12) NOT NULL,
+  `comment_id` int(12) NOT NULL AUTO_INCREMENT,
+  `parent_comment_id` int(12) DEFAULT NULL,
+  `creator_id` int(12) DEFAULT NULL,
+  `user_name` varchar(128) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `user_email` varchar(128) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `comment_text` text COLLATE utf8_unicode_ci,
+  `create_time` int(11) DEFAULT NULL,
+  `update_time` int(11) DEFAULT NULL,
+  `status` int(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`comment_id`),
+  KEY `owner_name` (`owner_name`,`owner_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+
+--
+-- Дамп данных таблицы `yii_comments`
+--
+
 
 -- --------------------------------------------------------
 

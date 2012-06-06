@@ -20,7 +20,9 @@
 			));?>
 		</div>							
 	<div class="photo">
-		<?php if($this->user->userModel->relProfile && $this->user->userModel->relProfile->avatar) echo CHtml::image($this->user->userModel->relProfile->avatar_folder.'/'.$this->user->userModel->relProfile->avatar); ?>
+		<?php if($this->user->userModel->relProfile && $this->user->userModel->relProfile->avatar) echo CHtml::image($this->user->userModel->relProfile->avatar_folder.'/'.$this->user->userModel->relProfile->avatar); 
+			else echo CHtml::image('/images/userpic-user.png');
+		?>
 	</div>
 	<div class="info">		 
 		<h1><?php echo $this->user->fullName; ?></h1>
@@ -32,16 +34,17 @@
 		<?php echo Y::declOfNum($this->user->usermodel->holes_cnt, array('дефект', 'дефекта', 'дефектов')); ?> / <?php echo Y::declOfNum($this->user->usermodel->holes_fixed_cnt, array('отремонтирован', 'отремонтировано', 'отремонтировано')); ?>		
 		
 	</div>
-	<?php if ($this->user->isAdmin) {
+	<?php if ($this->user->level > 80) {
 	echo '<br/>';
 	$this->widget('zii.widgets.CMenu', array(
 				'items'=>Array(
-						array('label'=>'Новости', 'url'=>array('/news/admin'), 'linkOptions'=>array('class'=>'profileBtn')),
-						array('label'=>'Пользователи', 'url'=>array('/userGroups/'), 'linkOptions'=>array('class'=>'profileBtn')),
+						array('label'=>'Управление комментариями', 'url'=>array('/comments/comment/admin'), 'linkOptions'=>array('class'=>'profileBtn')),
+						array('label'=>'Новости', 'url'=>array('/news/admin'), 'linkOptions'=>array('class'=>'profileBtn'), 'visible'=>$this->user->isAdmin),
+						array('label'=>'Пользователи', 'url'=>array('/userGroups/'), 'linkOptions'=>array('class'=>'profileBtn'), 'visible'=>$this->user->isAdmin),
 						array('label'=>'Ямы', 'url'=>array('/holes/admin'), 'linkOptions'=>array('class'=>'profileBtn'), 'visible'=>$this->user->groupName=='root'),
-						array('label'=>'Типы ям', 'url'=>array('/holeTypes/index'), 'linkOptions'=>array('class'=>'profileBtn')),
-						array('label'=>'Результаты запроса в ГИБДД (анкета)', 'url'=>array('/holeAnswerResults/index'), 'linkOptions'=>array('class'=>'profileBtn')),
-						array('label'=>'Правила авто-архивации ям', 'url'=>array('/holeArchiveFilters/admin'), 'linkOptions'=>array('class'=>'profileBtn')),
+						array('label'=>'Типы ям', 'url'=>array('/holeTypes/index'), 'linkOptions'=>array('class'=>'profileBtn'), 'visible'=>$this->user->isAdmin),
+						array('label'=>'Результаты запроса в ГИБДД (анкета)', 'url'=>array('/holeAnswerResults/index'), 'linkOptions'=>array('class'=>'profileBtn'), 'visible'=>$this->user->isAdmin),
+						array('label'=>'Правила авто-архивации ям', 'url'=>array('/holeArchiveFilters/admin'), 'linkOptions'=>array('class'=>'profileBtn'), 'visible'=>$this->user->isAdmin),						
 					),
 				'htmlOptions'=>array('class'=>'operations'),
 			));			
