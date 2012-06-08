@@ -414,5 +414,20 @@ class Comment extends CActiveRecord {
             $this->status = self::STATUS_APPROWED;
         return parent::beforeSave();
     }
+    
+    public function afterSave() {
+		if ($this->parent && $this->parent->user->email && $this->parent->user->id != $this->user->id){
+			$headers = "MIME-Version: 1.0\r\nFrom: \"Rosyama\" <".Yii::app()->params['adminEmail'].">\r\nReply-To: ".Yii::app()->params['adminEmail']."\r\nContent-Type: text/html; charset=utf-8";
+			Yii::app()->request->baseUrl='http://'.$_SERVER['HTTP_HOST'];
+			$mailbody=Yii::app()->controller->renderPartial('//ugmail/reply2Comment', Array(
+						'hole'=>$this->ownerModel,
+						'comment'=>$this,
+						'user'=>$this->parent->user,						
+						),true);
+			mail($this->parent->user->email,"=?utf-8?B?" . base64_encode('Ответ на ваш комментарий') . "?=",$mailbody,$headers);		
+			}				
+		
+        return parent::afterSave();
+    }    
 
 }
