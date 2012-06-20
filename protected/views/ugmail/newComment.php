@@ -6,4 +6,4 @@
 
 
 -----<br/>
-<?php echo CHtml::link('РосЯма', array('/holes/index'));?>
+<?php echo CHtml::link($this->createUrl('РосЯма', array('/holes/index')), array('/holes/index'));?>
