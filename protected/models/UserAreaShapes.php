@@ -9,7 +9,7 @@
  */
 class UserAreaShapes extends CActiveRecord
 {
-	public $countPoints=4;
+	public $countPoints=10;
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @return UserAreaShapes the static model class
@@ -54,6 +54,31 @@ class UserAreaShapes extends CActiveRecord
 		'points'=> array(self::HAS_MANY, 'UserAreaShapePoints', 'shape_id','order'=>'points.point_num'),
 		);
 	}
+	
+	private $_corners;
+	public function getCorners()
+	{
+		if (!$this->_corners){
+				$arr=Array();
+				if ($this->points) {
+					$left=$this->points[0]->lng;
+					$right=$this->points[0]->lng;
+					$top=$this->points[0]->lat;
+					$bottom=$this->points[0]->lat;
+					
+					foreach ($this->points as $point){
+						if ($point->lng < $left) $left=$point->lng;
+						if ($point->lng > $right) $right=$point->lng;
+						if ($point->lat > $top) $top=$point->lat;
+						if ($point->lat < $bottom) $bottom=$point->lat;
+					}
+					$arr=Array('left'=>$left, 'right'=>$right, 'top'=>$top, 'bottom'=>$bottom);
+				}		
+			$this->_corners = $arr;
+			}
+		return $this->_corners;
+	}
+	
 
 	/**
 	 * @return array customized attribute labels (name=>label)

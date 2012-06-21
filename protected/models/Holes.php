@@ -48,6 +48,7 @@ class Holes extends CActiveRecord
 	public $showUserHoles;
 	public $username;
 	public $selecledList;
+	public $polygonIds;
 	public $keys=Array();
 	/**
 	 * @return string the associated database table name
@@ -662,24 +663,60 @@ class Holes extends CActiveRecord
 		));
 	}	
 	
+	public function inPolygon($polygon, $point){
+			$i=0;
+			$j=count ($polygon->points)-1;			
+			$c = 0;
+			$points=$polygon->points;
+			for ($i=0; $i<count($polygon->points); $j=$i++){
+				if (((($points[$i]->lat <= $point->LATITUDE) && ($point->LATITUDE < $points[$j]->lat)) || (($points[$j]->lat <= $point->LATITUDE) && ($point->LATITUDE < $points[$i]->lat))) && 
+						 ($point->LONGITUDE > ($points[$j]->lng - $points[$i]->lng) * ($point->LATITUDE - $points[$i]->lat) / ($points[$j]->lat - $points[$i]->lat) + $points[$i]->lng)
+						 ) {
+						 $c = !$c;
+					 }	
+					 
+				}
+				
+		return $c;
+	}
+	
+	public function findPkeysInAreaByUser($userModel)
+	{
+	
+		$area=$userModel->hole_area;		
+
+		//Вытаскиваем айдишники ям в полигонах		
+		$polygonHolesIds=Array();
+		foreach ($area as $shape){
+			$polygonCriteria=new CDbCriteria;
+			$cond='LONGITUDE >= '.$shape->corners['left']
+			.' AND LONGITUDE <= '.$shape->corners['right']
+			.' AND LATITUDE >= '.$shape->corners['bottom']
+			.' AND LATITUDE <= '.$shape->corners['top'];		
+			
+			$polygonCriteria->addCondition($cond);					
+			
+			$polygonCriteria->select='ID, LATITUDE, LONGITUDE';
+			$polygonHoles=$this->findAll($polygonCriteria);
+			foreach ($polygonHoles as $item)
+					if ($this->inPolygon($shape, $item)) $polygonHolesIds[]=$item->ID;			
+			}	
+		
+		return $polygonHolesIds;
+	
+	}
+	
+	
 	public function areaSearch($user)
 	{
 		// Warning: Please modify the following code to remove attributes that
-		// should not be searched.
-		
-		$area=$user->userModel->hole_area;
-		
-		$userid=$user->id;
+		// should not be searched.		
+
+		$userid=$user->id;		
 		
 		$criteria=new CDbCriteria;
 		$criteria->with=Array('type','pictures_fresh', 'comments_cnt');		
 		
-		foreach ($area as $shape){
-			$criteria->addCondition('LATITUDE >= '.$shape->points[0]->lat
-			.' AND LATITUDE <= '.$shape->points[2]->lat
-			.' AND LONGITUDE >= '.$shape->points[0]->lng
-			.' AND LONGITUDE <= '.$shape->points[2]->lng, 'OR');
-			}	
 		
 		//Вытаскиваем все Айдишники для селектора фильтра по ГИБДД	
 		$tmpcriteria=clone $criteria;
@@ -694,8 +731,8 @@ class Holes extends CActiveRecord
 			$criteria->compare('requests.user_id',$userid,true);
 			$criteria->together=true;
 			}			
-			
-		$criteria->compare('t.ID',$this->ID,false);			
+		$polygonHolesIds=$this->findPkeysInAreaByUser($user->userModel);
+		if ($polygonHolesIds) $criteria->compare('t.ID',$polygonHolesIds,false);			
 			
 		if (!$user->userModel->relProfile->show_archive_holes) $criteria->compare('t.archive',0,false);
 		
@@ -706,7 +743,7 @@ class Holes extends CActiveRecord
 		//
 		//$criteria->addCondition('t.USER_ID='.$userid);
 	
-		return new CActiveDataProvider($this, array(
+		$provider=new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
 			'pagination'=>array(
 				        'pageSize'=>$this->limit ? $this->limit : 12,				        
@@ -714,9 +751,10 @@ class Holes extends CActiveRecord
 			'sort'=>array(
 			    'defaultOrder'=>'t.DATE_CREATED DESC',
 				)
-		));
-	}	
-	
+		));		
+
+		return $provider;
+	}		
 	
 	
 	public function search()

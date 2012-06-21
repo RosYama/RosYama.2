@@ -10,7 +10,9 @@
 	<div class="lCol">
 		<div id="point_fields">
 		<?php foreach ($model->hole_area as $i=>$shape) : ?>
-			<?php $this->renderPartial('_area_point_fields',array('shape'=>$shape, 'i'=>$shape->ordering, 'form'=>$form)); ?>
+			<div id="shape_container<?php echo $shape->ordering; ?>">
+				<?php $this->renderPartial('_area_point_fields',array('shape'=>$shape, 'i'=>$shape->ordering, 'form'=>$form)); ?>
+			</div>
 		<?php endforeach; ?>
 		</div>
 	</div>
@@ -56,9 +58,13 @@
         function addPolygon(ind){
         			var startpoints=new Array;
 					if ($('#UserAreaShapePoints_'+ind+'_0_lat').val()){
-						for (i=0;i<4;i++){
-						startpoints[i]=new YMaps.GeoPoint($('#UserAreaShapePoints_'+ind+'_'+i+'_lng').val(),$('#UserAreaShapePoints_'+ind+'_'+i+'_lat').val());
-						} 
+						i=0;
+						$('#shape_container'+ind).find('.shape_point').each(function() {
+							if ($(this).children('.point_lng').val()) {
+								startpoints[i]=new YMaps.GeoPoint($(this).children('.point_lng').val(),$(this).children('.point_lat').val());
+								i++;
+							}	
+						});
 	
 						if (startpoints) {
 							bounds = new YMaps.GeoCollectionBounds(startpoints);
@@ -116,19 +122,11 @@
 					map.addOverlay(polygons[ind]);
 					
 					polygons[ind].setEditingOptions({
-						drawing: false,
-						maxPoints: 4,
-						dragging:true,
-						onClick: function (polygon, pointIndex, coordPath) {
-						return false;
-						},
-						onDblClick: function (polygon, pointIndex, coordPath) {						
-						return false;
-						},
-						menuManager: function (index, menuItems) {
-							return false;
-						},
-						onPointDragging: function (points, index) {                
+						drawing: true,
+						maxPoints: 10,
+						dragging:true,					
+						
+						/*onPointDragging: function (points, index) {                
 						if (index==1) {
 							var point1 = points[2].setY(points[1].getY()),
 								point2 = points[0].setX(points[1].getX());
@@ -154,7 +152,7 @@
 							polygons[ind].splicePoints(1, 1, map.converter.mapPixelsToCoordinates(point2));
 						}						
 						return points[index];						
-						}
+						}*/
 					});
 					
 				    polygons[ind].startEditing();
@@ -211,7 +209,7 @@
 					$('#UserAreaShapePoints_'+ind+'_'+i+'_lng').val(points[i].getX());
 					}          
             }	
-            
+            return false;
             }
 				
 EOD
