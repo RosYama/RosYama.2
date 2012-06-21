@@ -5,11 +5,11 @@
 	'htmlOptions'=>Array ('enctype'=>'multipart/form-data'),
 )); ?>
 <?php echo $form->errorSummary($model); ?>
-
+<?php echo $form->hiddenField($model,"id"); ?>
 	<!-- левая колоночка -->
 	<div class="lCol">
 		<div id="point_fields">
-		<?php foreach ($model->hole_area as $i=>$shape) : ?>
+		<?php foreach ($model->hole_area as $i=>$shape) : ?>			
 			<div id="shape_container<?php echo $shape->ordering; ?>">
 				<?php $this->renderPartial('_area_point_fields',array('shape'=>$shape, 'i'=>$shape->ordering, 'form'=>$form)); ?>
 			</div>
@@ -123,7 +123,7 @@
 					
 					polygons[ind].setEditingOptions({
 						drawing: true,
-						maxPoints: 1000000,
+						maxPoints: 1000,
 						dragging:true,					
 						
 						/*onPointDragging: function (points, index) {                
@@ -165,7 +165,7 @@
 							{
 								//alert(obj.id);
 								map.removeOverlay(obj);
-								$(".shape_"+obj.id).remove();
+								$("#shape_container"+obj.id).remove();
 								
 							}
 						)
