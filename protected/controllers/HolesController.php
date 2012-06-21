@@ -830,9 +830,18 @@ class HolesController extends Controller
 			if (isset ($_GET['top'])) $criteria->addCondition('LATITUDE < '.abs((float)$_GET['top']));	
 		}
 		else {
-			$usr=UserGroupsUser::model()->findByPk((int)$_GET['user_id']);
-			$holeids=Holes::model()->findPkeysInAreaByUser($usr);
-			if ($holeids) $criteria->compare('t.ID',$holeids,false);
+			$usr=UserGroupsUser::model()->findByPk((int)$_GET['user_id']);			
+			$area=$usr->hole_area;		
+			foreach ($area as $shape){
+				$cond='LONGITUDE >= '.$shape->corners['left']
+				.' AND LONGITUDE <= '.$shape->corners['right']
+				.' AND LATITUDE >= '.$shape->corners['bottom']
+				.' AND LATITUDE <= '.$shape->corners['top'];					
+				$criteria->addCondition($cond,'OR');			
+				}		
+		
+			$notPolygonHolesIds=Holes::model()->findPkeysNotInAreaByUser($usr);
+			if ($notPolygonHolesIds) $criteria->addNotInCondition('t.ID',$notPolygonHolesIds);	
 		}
 		
 		if (isset ($_GET['exclude_id']) && $_GET['exclude_id']) $criteria->addCondition('ID != '.(int)$_GET['exclude_id']); 

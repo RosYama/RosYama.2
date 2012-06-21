@@ -706,6 +706,35 @@ class Holes extends CActiveRecord
 	
 	}
 	
+	public function findPkeysNotInAreaByUser($userModel)
+	{
+	
+		$area=$userModel->hole_area;		
+		
+		//Вытаскиваем айдишники ям не в полигонах		
+		$polygonHolesIds=Array();
+		foreach ($area as $i=>$shape){
+			$polygonCriteria=new CDbCriteria;
+			$cond='LONGITUDE >= '.$shape->corners['left']
+			.' AND LONGITUDE <= '.$shape->corners['right']
+			.' AND LATITUDE >= '.$shape->corners['bottom']
+			.' AND LATITUDE <= '.$shape->corners['top'];		
+			
+			$polygonCriteria->addCondition($cond);					
+			
+			$polygonCriteria->select='ID, LATITUDE, LONGITUDE';
+			$polygonHoles=$this->findAll($polygonCriteria);
+			foreach ($polygonHoles as $item){
+					$inPolygon=$this->inPolygon($shape, $item);
+					if (!$inPolygon) $polygonHolesIds[$item->ID]=$item->ID;
+					else unset ($polygonHolesIds[$item->ID]);
+						
+			}	
+		}			
+		return $polygonHolesIds;
+	
+	}	
+	
 	
 	public function areaSearch($user)
 	{
@@ -717,6 +746,19 @@ class Holes extends CActiveRecord
 		$criteria=new CDbCriteria;
 		$criteria->with=Array('type','pictures_fresh', 'comments_cnt');		
 		
+		$area=$user->userModel->hole_area;
+		
+		foreach ($area as $shape){
+			$cond='LONGITUDE >= '.$shape->corners['left']
+			.' AND LONGITUDE <= '.$shape->corners['right']
+			.' AND LATITUDE >= '.$shape->corners['bottom']
+			.' AND LATITUDE <= '.$shape->corners['top'];					
+			$criteria->addCondition($cond,'OR');			
+			}
+		
+		
+		$notPolygonHolesIds=$this->findPkeysNotInAreaByUser($user->userModel);
+		if ($notPolygonHolesIds) $criteria->addNotInCondition('t.ID',$notPolygonHolesIds);	
 		
 		//Вытаскиваем все Айдишники для селектора фильтра по ГИБДД	
 		$tmpcriteria=clone $criteria;
@@ -731,8 +773,7 @@ class Holes extends CActiveRecord
 			$criteria->compare('requests.user_id',$userid,true);
 			$criteria->together=true;
 			}			
-		$polygonHolesIds=$this->findPkeysInAreaByUser($user->userModel);
-		if ($polygonHolesIds) $criteria->compare('t.ID',$polygonHolesIds,false);			
+		
 			
 		if (!$user->userModel->relProfile->show_archive_holes) $criteria->compare('t.archive',0,false);
 		
