@@ -123,7 +123,7 @@
 					
 					polygons[ind].setEditingOptions({
 						drawing: true,
-						maxPoints: 10,
+						maxPoints: 1000000,
 						dragging:true,					
 						
 						/*onPointDragging: function (points, index) {                
