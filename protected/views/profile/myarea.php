@@ -26,7 +26,7 @@
 	<?php endif; ?>
 		<div class="bx-yandex-view-layout">
 			<div class="bx-yandex-view-map">
-			<p><a href="#" id="add_shape">Добавить прямоугольник</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Для удаления прямоугольника кликните по нему 2 раза</p>
+			<p><a href="#" id="add_shape">Добавить многоугольник</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Для удаления многоугольника кликните по нему 2 раза</p>
 			<div id="ymapcontainer" class="ymapcontainer"></div>
 			<?php Yii::app()->clientScript->registerScript('add_shape','
 			function reorder(){
@@ -73,10 +73,12 @@
 
 					}						
 					if (startpoints.length==0 && ind > 1) {
-							startpoints=[new YMaps.GeoPoint(map.getCenter().getX()-0.05,map.getCenter().getY()-0.05),
-									  new YMaps.GeoPoint(map.getCenter().getX()-0.05,map.getCenter().getY()+0.05),
-									  new YMaps.GeoPoint(map.getCenter().getX()+0.05,map.getCenter().getY()+0.05),
-									  new YMaps.GeoPoint(map.getCenter().getX()+0.05,map.getCenter().getY()-0.05)];		
+							var mapBounds = map.getBounds();
+							startpoints=[new YMaps.GeoPoint(mapBounds.getLeft()+0.2,mapBounds.getTop()-0.2),
+									  new YMaps.GeoPoint(mapBounds.getRight()-0.2,mapBounds.getTop()-0.2),
+									  new YMaps.GeoPoint(mapBounds.getRight()-0.2,mapBounds.getBottom()+0.2),
+									  new YMaps.GeoPoint(mapBounds.getLeft()+0.2,mapBounds.getBottom()+0.2),
+									  ];		
 						}
 					else if (startpoints.length==0 && ind <= 1){
 						if (YMaps.location) {
@@ -123,7 +125,7 @@
 					
 					polygons[ind].setEditingOptions({
 						drawing: true,
-						maxPoints: 1000,
+						maxPoints: 100,
 						dragging:true,					
 						
 						/*onPointDragging: function (points, index) {                

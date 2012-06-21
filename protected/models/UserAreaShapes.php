@@ -10,7 +10,7 @@
 class UserAreaShapes extends CActiveRecord
 {
 	public $saveShapes;
-	public $countPoints=1000;
+	public $countPoints=100;
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @return UserAreaShapes the static model class
