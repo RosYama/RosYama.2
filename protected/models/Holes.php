@@ -195,7 +195,7 @@ class Holes extends CActiveRecord
 		if (!$this->subject) return Array();
 		$longitude=$this->LONGITUDE;
 		$latitude=$this->LATITUDE;		
-		$numerator = 'POW(COS(RADIANS(lat)) * SIN(ABS(RADIANS('.$longitude.')-RADIANS(lng))),2)';		
+		/* $numerator = 'POW(COS(RADIANS(lat)) * SIN(ABS(RADIANS('.$longitude.')-RADIANS(lng))),2)';		
 		$numerator .= ' + POW(
 		COS(RADIANS('.$latitude.')) * SIN(RADIANS(lat)) - SIN(RADIANS('.$latitude.'))
 		* COS(RADIANS(lat))*COS(ABS(RADIANS('.$longitude.')-RADIANS(lng)))
@@ -215,7 +215,29 @@ class Holes extends CActiveRecord
 		$criteria->having='ABS(distance) < 1000';
 		$criteria->limit=5;
 		$gibdds=GibddHeads::model()->findAll($criteria);
-		if ($this->subject) array_unshift ($gibdds, $this->subject->gibdd);
+		if ($this->subject) array_unshift ($gibdds, $this->subject->gibdd);*/
+		
+		
+		$gibdds=GibddHeads::model()->with('areaPoints')->findAll(Array('order'=>'t.level DESC, t.subject_id DESC'));
+		
+		$regionalGibdds=Array();
+		$regkey=0;
+		foreach ($gibdds as $i=>$gibdd){
+			if (!$this->inPolygon($gibdd, $this, 'areaPoints')) unset ($gibdds[$i]);
+			else if ($gibdd->level==1) {$regionalGibdds[$i]=$gibdd; $regkey=$i;}
+		}
+		
+		if ($regionalGibdds){			
+			if (count($regionalGibdds) > 1){
+				$mindist=sqrt(pow($regionalGibdds[$regkey]->areaPoints[0]->lat - $this->LATITUDE, 2) + pow($regionalGibdds[$regkey]->areaPoints[0]->lng - $this->LONGITUDE, 2));
+				foreach ($regionalGibdds as $i=>$gibdd){
+						$dist=sqrt(pow($gibdd->areaPoints[0]->lat - $this->LATITUDE, 2) + pow($gibdd->areaPoints[0]->lng - $this->LONGITUDE, 2));
+						if ($dist <= $mindist) $mindist=$dist;
+						else unset($gibdds[$i]);
+					}
+			}	
+		}	
+		
 		return $gibdds;
 	}
 		
@@ -663,12 +685,12 @@ class Holes extends CActiveRecord
 		));
 	}	
 	
-	public function inPolygon($polygon, $point){
+	public function inPolygon($polygon, $point, $relname='points'){
 			$i=0;
-			$j=count ($polygon->points)-1;			
+			$j=count ($polygon->$relname)-1;			
 			$c = 0;
-			$points=$polygon->points;
-			for ($i=0; $i<count($polygon->points); $j=$i++){
+			$points=$polygon->$relname;
+			for ($i=0; $i<count($polygon->$relname); $j=$i++){
 				if (((($points[$i]->lat <= $point->LATITUDE) && ($point->LATITUDE < $points[$j]->lat)) || (($points[$j]->lat <= $point->LATITUDE) && ($point->LATITUDE < $points[$i]->lat))) && 
 						 ($point->LONGITUDE > ($points[$j]->lng - $points[$i]->lng) * ($point->LATITUDE - $points[$i]->lat) / ($points[$j]->lat - $points[$i]->lat) + $points[$i]->lng)
 						 ) {

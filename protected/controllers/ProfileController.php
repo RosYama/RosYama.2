@@ -23,6 +23,11 @@ class ProfileController extends Controller
 				#'ajax'=>false,
 				'users'=>array('@'),
 			),
+			array('allow',  // just guest can perform 'activate' and 'login' actions
+				'actions'=>array('MyareaJsonView'),
+				'users'=>array('*'),
+			),
+			
 			array('deny',  // deny all users
 				'users'=>array('*'),
 			),
@@ -159,6 +164,23 @@ class ProfileController extends Controller
 			}        
       	$this->render('myarea',array('model'=>$model));
 	}
+	
+	
+	public function actionMyareaJsonView($user_id=0)
+	{
+		if (!$user_id) $user_id=Yii::app()->user->id;
+        $model=$this->loadModel((int)$user_id);
+        $pointsArr=Array();
+        foreach ($model->hole_area as $ind=>$shape) {
+				foreach ($shape->points as $i=>$point) {
+					$pointsArr[$ind][]=Array('lat'=>$point->lat, 'lng'=>$point->lng);
+				} 
+			}
+		echo $_GET['jsoncallback'].'({"area": '.CJSON::encode($pointsArr).'})';
+		
+		Yii::app()->end();		
+
+	}	
 	
 	public function actionMyareaAddshape()
 	{		

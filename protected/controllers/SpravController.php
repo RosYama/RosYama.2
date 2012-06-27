@@ -27,7 +27,7 @@ class SpravController extends Controller
 	{
 		return array(
 			array('allow',
-				'actions'=>array('index','view','fill_gibdd_reference', 'fill_prosecutor_reference','local'),
+				'actions'=>array('index','view','fill_gibdd_reference', 'fill_prosecutor_reference','local', 'jsonGibddMap'),
 				'users'=>array('*'),
 			),		
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
@@ -191,9 +191,11 @@ class SpravController extends Controller
 		foreach($_regions as &$r)
 		{			
 			$model=GibddHeads::model()->find('subject_id='.(int)$r['subject_id'].' AND is_regional=1');
-			if (!$model) $model=new GibddHeads;		
+			if (!$model) $model=new GibddHeads;	
+			$model->scenario='fill';
 			$model->attributes=$r;
 			$model->is_regional=1;
+			$model->level=1;
 			$model->moderated=1;
 			$model->save();
 		}
@@ -292,7 +294,29 @@ class SpravController extends Controller
 		));
 	}
 	
-	public function actionAdd()
+	public function actionJsonGibddMap()
+	{
+		$model=GibddHeads::model()->findAll('lat > 0 AND lng > 0');
+		$gibds=Array();
+		foreach ($model as $item) {
+			$points=Array();
+			if ($item->areaPoints)
+				foreach ($item->areaPoints as $point)
+					$points[]=Array('lat'=>$point->lat, 'lng'=>$point->lng);
+			
+			$descr=$this->renderPartial('_view_gibdd', array('data'=>$item), true);
+			
+			$gibds[]=Array('lat'=>$item->lat, 'lng'=>$item->lng, 'name'=>$item->name, 'id'=>$item->id, 'descr'=>$descr.($points ? CHtml::link('Показать границу наблюдения', '#', Array('class'=>'show_gibdd_area', 'gibddid'=>$item->id)) : '' ),
+			'points'=>$points,
+			);
+		}
+		echo $_GET['jsoncallback'].'({"gibdds": '.CJSON::encode($gibds).'})';
+		
+		Yii::app()->end();		
+		
+	}	
+	
+	public function actionAdd($subject_id)
 	{
 		$model=new GibddHeads;
 
@@ -304,23 +328,32 @@ class SpravController extends Controller
         $cs->registerScriptFile('http://api-maps.yandex.ru/1.1/index.xml?key='.$this->mapkey);
         $jsFile = CHtml::asset($this->viewPath.DIRECTORY_SEPARATOR.'js'.DIRECTORY_SEPARATOR.'ymap.js');
         $cs->registerScriptFile($jsFile);     
-
+		
+		$subj=RfSubjects::model()->findByPk((int)$subject_id);
+		if($subj) $model->subject_id=$subj->id;
+		
 		if(isset($_POST['GibddHeads']))
 		{
 			$model->attributes=$_POST['GibddHeads'];
 			$model->author_id=Yii::app()->user->id;	
-			$model->created=time();
-			$subj=RfSubjects::model()->SearchID(trim($model->str_subject));
-			if($subj) $model->subject_id=$subj;
-			else $model->subject_id=0;
+			$model->created=time();			
+			
+			if ($model->str_subject){
+				$subj=RfSubjects::model()->SearchID(trim($model->str_subject));
+				if($subj) $model->subject_id=$subj;
+				else $model->subject_id=0;
+			}
+			
 			if (Yii::app()->user->level > 50) $model->moderated=1;
 			else $model->moderated=0;
+			if ($model->level < 2) $model->level=2;
 			if($model->save())
 				$this->redirect(array('local','id'=>$model->id));
 		}		
 
 		$this->render('add',array(
-			'model'=>$model,			
+			'model'=>$model,
+			'subject'=>$subj,
 		));
 	}	
 	
@@ -343,13 +376,14 @@ class SpravController extends Controller
 
 		if(isset($_POST['GibddHeads']))
 		{
-			$model->attributes=$_POST['GibddHeads'];
+			$model->attributes=$_POST['GibddHeads'];			
 			$model->modified=time();
 			if ($model->str_subject){
 				$subj=RfSubjects::model()->SearchID(trim($model->str_subject));
 				if($subj) $model->subject_id=$subj;
 				else $model->subject_id=0;
 			}
+			if ($model->level < 2 && !$model->is_regional) $model->level=2; 
 			if($model->save())
 				$this->redirect(array('local','id'=>$model->id));
 		}		

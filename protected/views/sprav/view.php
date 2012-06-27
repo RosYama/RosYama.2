@@ -23,7 +23,7 @@ $this->title=CHtml::link('Справочник ГИБДД', Array('index')).' > 
 
 <?php if (!Yii::app()->user->isGuest) : ?>
 <br/><br/><br/>
-<?php echo CHtml::link('Добавить территориальный отдел ГИБДД', array('add'), array('class'=>'')); ?>
+<?php echo CHtml::link('Добавить территориальный отдел ГИБДД', array('add', 'subject_id'=>$model->id), array('class'=>'')); ?>
 <?php endif; ?>
 <?php if ($model->gibdd_local) : ?>
 <br/><br/>

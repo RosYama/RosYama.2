@@ -1,6 +1,6 @@
 <div class="form">
 <?php $form=$this->beginWidget('CActiveForm', array(
-	'id'=>'holes-form',
+	'id'=>'gibdd-form',
 	'enableAjaxValidation'=>false,
 	'htmlOptions'=>Array ('enctype'=>'multipart/form-data'),
 )); ?>
@@ -14,8 +14,13 @@
 	<? endif;*/ ?>
 
 	<!-- левая колоночка -->
-	<div class="lCol" <?php if ($model->is_regional) echo 'style="width:100%"'?>>
+	<div class="lCol">
 
+		<div class="f">
+		<?php echo $form->labelEx($model,'level'); ?>
+		<?php echo $form->dropDownList($model, 'level', $model->userlevelNames);?>
+		<?php echo $form->error($model,'level'); ?>
+		</div>
 	
 		<div class="f">
 			<?php echo $form->labelEx($model,'name'); ?>
@@ -101,10 +106,10 @@
 		<?php echo $form->hiddenField($model,'str_subject'); ?>
 	</div>
 	<!-- /левая колоночка -->
-<?php if (!$model->is_regional) : ?>	
 	<!-- правая колоночка -->
 	<div class="rCol"> 
 	<div class="f">
+	<?php if (!$model->is_regional) : ?>	
 	<p class="tip">
 Поставьте метку на карте двойным щелчком мыши
 <span class="required">*</span>
@@ -120,20 +125,87 @@
 		</div>	
 			<span id="recognized_address_str" title="Субъект РФ и населённый пункт"></span>
 			<span id="other_address_str"></span>				
-		
+		<?php endif; ?>	
 		
 		<div class="bx-yandex-view-layout">
 			<div class="bx-yandex-view-map">
-		<?php if ($model->isNewRecord) $maptype='add'; else $maptype='update'; ?>
-		<?php Yii::app()->clientScript->registerScript('initmap',<<<EOD
+		<?php if ($model->isNewRecord) $maptype='add'; else $maptype='update'; 
+		if ($model->is_regional) { if ($model->areaPoints) $maptype='update_regional_areaExtend'; else $maptype='update_regional'; }
+		?>
+		<?php Yii::app()->clientScript->registerScript('initmap',"
+		
+		var polygon;		
+		function setPolygon(map, center){
+		
+					var bounds = new Array();
+					
+					startpoints=[".($model->areaPoints ? $model->JsAreaPoints : 'new YMaps.GeoPoint(center.getX()-0.00,center.getY()-0.06),
+											  new YMaps.GeoPoint(center.getX()-0.06,center.getY()+0.00),
+											  new YMaps.GeoPoint(center.getX()+0.00,center.getY()+0.06),
+											  new YMaps.GeoPoint(center.getX()+0.06,center.getY()+0.00)')."];
+					
+					for (ii=0;ii<startpoints.length;ii++){
+						bounds.push(startpoints[ii]);
+					}
+					map.setBounds (new YMaps.GeoCollectionBounds(bounds));	
+					
+					var style = new YMaps.Style('default#greenPoint');
+					style.polygonStyle = new YMaps.PolygonStyle();
+					style.polygonStyle.fill = true;
+					style.polygonStyle.outline = true;
+					style.polygonStyle.strokeWidth = 4;
+					style.polygonStyle.strokeColor = 'ff000070'; 
+					style.polygonStyle.fillColor = '1370AA55';
+					    
+					polygon = new YMaps.Polygon(startpoints, {
+										style: style,
+										hasHint: 0,
+										hasBalloon: 0,										
+									});
+		
+					
+					map.addOverlay(polygon);
+					
+					polygon.setEditingOptions({
+						drawing: true,
+						maxPoints: 100000,
+						dragging:true,	
+						
+					});
+					
+				    polygon.startEditing();		
+				    
+				return polygon;    
+		}
+		
 		if (window.attachEvent) // IE
-			window.attachEvent("onload", function(){init_MAP_DzDvWLBsil(null,'{$maptype}')});
+			window.attachEvent('onload', function(){init_MAP_DzDvWLBsil(null,'{$maptype}');});
 		else if (window.addEventListener) // Gecko / W3C
-			window.addEventListener('load', function(){init_MAP_DzDvWLBsil(null,'{$maptype}')}, false);
+			window.addEventListener('load', function(){init_MAP_DzDvWLBsil(null,'{$maptype}'); }, false);
 		else
-			window.onload = function(){init_MAP_DzDvWLBsil(null,'{$maptype}')};
-EOD
+			window.onload = function(){init_MAP_DzDvWLBsil(null,'{$maptype}'); };
+
+			
+"
 ,CClientScript::POS_HEAD);
+?>
+<?php Yii::app()->clientScript->registerScript('savegibdd',<<<EOD
+		
+		
+		$('#gibdd-form').submit(function() {
+			if (!polygon) return false;
+			
+			var points=polygon.getPoints();
+				for (i=0;i<points.length;i++){
+					$(this).append('<input type="hidden" name="GibddAreaPoints['+i+'][lat]" value="'+points[i].getY()+'" /><input type="hidden" name="GibddAreaPoints['+i+'][lng]" value="'+points[i].getX()+'" />');
+				}
+				
+			return true;
+		});		
+
+			
+EOD
+,CClientScript::POS_READY);
 ?>
 <div id="BX_YMAP_MAP_DzDvWLBsil" style="width:100%; height:400px;" class="bx-yandex-map">загрузка карты...</div>		
 			</div>
@@ -143,8 +215,7 @@ EOD
 	</div>
 		
 	</div>
-	<!-- /правая колоночка -->
-<?php endif; ?>		
+	<!-- /правая колоночка -->	
 	<div class="addSubmit">
 		<div class="container">
 			<p></p>

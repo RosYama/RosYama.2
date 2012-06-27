@@ -152,13 +152,21 @@ class HolesController extends Controller
 			$model->attributes=$_POST['Holes'];
 			$model->USER_ID=Yii::app()->user->id;	
 			$model->DATE_CREATED=time();
-			$subj=RfSubjects::model()->SearchID(trim($model->STR_SUBJECTRF));
-			if($subj) $model->ADR_SUBJECTRF=$subj;
-			else $model->ADR_SUBJECTRF=0;
+			
 			$model->ADR_CITY=trim($model->ADR_CITY);
 			
 			if (Yii::app()->user->level > 50) $model->PREMODERATED=1;
 			else $model->PREMODERATED=0;
+			
+			if ($model->gibdd_id){
+				$subj=$model->gibdd->subject->id;
+				if($subj) $model->ADR_SUBJECTRF=$subj;
+			}
+			else {
+				$subj=RfSubjects::model()->SearchID(trim($model->STR_SUBJECTRF));
+				if($subj) $model->ADR_SUBJECTRF=$subj;
+				else $model->ADR_SUBJECTRF=0;
+			}
 			
 			if($model->save() && $model->savePictures())
 				$this->redirect(array('view','id'=>$model->ID));
@@ -222,10 +230,16 @@ class HolesController extends Controller
 		if(isset($_POST['Holes']))
 		{
 			$model->attributes=$_POST['Holes'];
-			if ($model->STR_SUBJECTRF){
+
+			if ($model->gibdd_id){
+				$subj=$model->gibdd->subject->id;
+				if($subj) $model->ADR_SUBJECTRF=$subj;
+			}
+			else if ($model->STR_SUBJECTRF){
 				$subj=RfSubjects::model()->SearchID(trim($model->STR_SUBJECTRF));
 				if($subj) $model->ADR_SUBJECTRF=$subj;
 			}
+			
 			if($model->save() && $model->savePictures())
 				$this->redirect(array('view','id'=>$model->ID));
 		}
@@ -795,10 +809,19 @@ class HolesController extends Controller
 		));
 	}
 	
-	public function actionMap()
+	public function actionMap($userid=null)
 	{
 		//$this->layout='//layouts/header_default';
-	
+		
+		if ($userid) {
+			$usermodel=$this->loadUserModel($userid);
+			if (!$usermodel->getParam('showMyarea'))
+				throw new CHttpException(403,'Доступ запрещен.');
+			if (!$usermodel->hole_area)
+				throw new CHttpException(404,'Зона наблюдения пользователя не определена');	
+			}
+		else $usermodel=null;
+		
 		$model=new Holes('search');
 		$model->unsetAttributes();  // clear any default values
 		if(isset($_POST['Holes']))
@@ -808,6 +831,7 @@ class HolesController extends Controller
 		$this->render('map',array(
 			'model'=>$model,
 			'types'=>HoleTypes::model()->findAll(Array('condition'=>'t.published=1', 'order'=>'ordering')),
+			'usermodel'=>$usermodel,
 		));
 	}
 	
@@ -1039,6 +1063,17 @@ class HolesController extends Controller
 			throw new CHttpException(404,'The requested page does not exist.');
 		return $model;
 	}
+	
+	public function loadUserModel($id, $scenario = false)
+	{
+		$model=UserGroupsUser::model()->findByPk((int)$id);
+		//if($model===null || ($model->relUserGroupsGroup->level > Yii::app()->user->level && !UserGroupsConfiguration::findRule('public_profiles')))
+		if($model===null)
+			throw new CHttpException(404,'The requested page does not exist.');
+		if ($scenario)
+			$model->setScenario($scenario);
+		return $model;
+	}	
 	
 	//Лоадинг модели для пользовательских изменений
 	public function loadChangeModel($id)

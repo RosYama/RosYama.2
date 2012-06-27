@@ -299,13 +299,24 @@ function init_MAP_DzDvWLBsil(context, type)
 							window.BX_SetPlacemarks_MAP_DzDvWLBsil(map);
 					}
 	
-	map.disableDblClickZoom();
+	if (type=="add" || type=="update") {
+	map.disableDblClickZoom();	
 	YMaps.Events.observe(map, map.Events.DblClick, setCoordValue);	
+	}
 	if (type=="update") {	
 	setCoordValue(map);
 	center = new YMaps.GeoPoint($('#GibddHeads_lng').val(), $('#GibddHeads_lat').val());
 	map.setCenter(center, zoom, context.YMaps.MapType.MAP);	
 	}
+	if (type=="update_regional" || type=="update_regional_areaExtend" ){
+	//polygon=setPolygon(map, new YMaps.GeoPoint(lat, lon));
+	map.disableDblClickZoom();	
+	YMaps.Events.observe(map, map.Events.DblClick, function(map, ev){
+		if (!polygon) polygon=setPolygon(map, new YMaps.GeoPoint(ev.getCoordPoint().getX(), ev.getCoordPoint().getY()));
+	});	
+	if (!polygon && type=="update_regional_areaExtend") polygon=setPolygon(map, new YMaps.GeoPoint(0, 0));
+	}
+	return map;
 }      
 
 
@@ -336,6 +347,10 @@ function setCoordValue(map, ev)
 	var lon = $('#GibddHeads_lat').val();
 	var lat = $('#GibddHeads_lng').val();
 	coordpoint = new YMaps.Placemark(new YMaps.GeoPoint(lat, lon), { style: 'default#violetPoint', draggable: true, hasBalloon: false, hideIcon: false });
+	
+	polygon=setPolygon(map, new YMaps.GeoPoint(lat, lon));
+	
+	
 	YMaps.Events.observe(coordpoint, coordpoint.Events.DragEnd, function (obj) {
 		$('#GibddHeads_lat').val(obj.getCoordPoint().getY());
 		$('#GibddHeads_lng').val(obj.getCoordPoint().getX());

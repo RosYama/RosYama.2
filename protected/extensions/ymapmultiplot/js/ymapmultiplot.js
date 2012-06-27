@@ -296,18 +296,16 @@ function init_MAP_DzDvWLBsil(context, type)
 	context.YMaps.Events.observe(map, map.Events.MoveEnd, function() { onMapUpdate(map); } );
 	
 	jQuery('#map-form input').live('change',function() {
-			PlaceMarks=new Array();
 			GetPlacemarks(map);
 		});
 		
 	jQuery('#reset_button').live('click',function() {
 			jQuery('#map-form input').attr('checked', false);
-			PlaceMarks=new Array();
 			GetPlacemarks(map);
 		});	
 	
 	jQuery('#map-form').live('submit',function() {
-			PlaceMarks=new Array();
+
 			GetPlacemarks(map);
 			return false;
 		});
@@ -353,9 +351,196 @@ function init_MAP_DzDvWLBsil(context, type)
 	if (type=="updatehole") {	
 	setCoordValue(map);
 	}
+	if (type=="userarea") getUserArea(map);
+	
 	GetPlacemarks(map);	
+	GetGibbds(map);
+	
+	$('#myarea_check_inp').live('click',function() {			
+			
+			if ($(this).attr('checked')!=undefined) {
+				getMyArea(map);
+			}
+			else {
+				for (var i in myareaPolygons) {
+					map.removeOverlay(myareaPolygons[i]);
+					delete (myareaPolygons[i]);
+				}
+			}
+			
+			
+		});	
+		
 }
-      
+
+var PlaceMarks=new Array;
+var clusters=new Array;
+var gibdds=new Array;
+var gibddsPolygons=new Array;
+var myareaPolygons=new Array;
+var userareaPolygons=new Array;
+
+function GetGibbds(map){
+		//Подгружаем отделы ГИБДД
+	
+	var addr='/sprav/jsonGibddMap/?jsoncallback=?';
+	var s = new YMaps.Style();
+	s.iconStyle = new YMaps.IconStyle();
+	s.iconStyle.href = "/images/st1234/police_icon.png";
+	s.iconStyle.size = new YMaps.Point(28, 30);
+	s.iconStyle.offset = new YMaps.Point(-14, -30);		
+
+					
+	var style = new YMaps.Style('default#greenPoint');
+	style.polygonStyle = new YMaps.PolygonStyle();
+	style.polygonStyle.fill = true;
+	style.polygonStyle.outline = true;
+	style.polygonStyle.strokeWidth = 1;
+	style.polygonStyle.strokeColor = 'ff000030'; 
+	style.polygonStyle.fillColor = '1370AA30';					    
+
+	
+		jQuery.getJSON(addr, function(data) {		
+			for (i=0;i<data.gibdds.length;i++){			
+				gibdds[data.gibdds[i].id] = new YMaps.Placemark(new YMaps.GeoPoint(data.gibdds[i].lng, data.gibdds[i].lat), { hasHint: true, hideIcon: true, hasBalloon: true, style: s });
+				//alert (data.gibdds[i].name);
+				gibdds[data.gibdds[i].id].alt=data.gibdds[i].name;
+				gibdds[data.gibdds[i].id].description=data.gibdds[i].descr;
+				map.addOverlay(gibdds[data.gibdds[i].id]);	
+				
+				YMaps.Events.observe(gibdds[data.gibdds[i].id], gibdds[data.gibdds[i].id].Events.BalloonOpen, function (obj) {
+					
+					$(".show_gibdd_area").click(function() {
+						var id=parseInt($(this).attr('gibddid'));
+						map.addOverlay(gibddsPolygons[id]);
+						return false;
+					});
+					
+				});
+
+				var startpoints=new Array();				
+
+				for (ii=0;ii<data.gibdds[i].points.length;ii++){
+					startpoints[ii]=new YMaps.GeoPoint(data.gibdds[i].points[ii].lng,data.gibdds[i].points[ii].lat);
+				}
+				
+				gibddsPolygons[data.gibdds[i].id] = new YMaps.Polygon(startpoints, {
+					style: style,
+					hasHint: 0,
+					hasBalloon: 0,										
+				});
+		
+					
+				//map.addOverlay(gibddsPolygons[data.gibdds[i].id]);
+				
+			}			
+			
+		});
+	
+	$('#ibdd_check_inp').live('click',function() {			
+			
+			if ($(this).attr('checked')!=undefined) {
+				for (var i in gibddsPolygons) {
+					map.addOverlay(gibddsPolygons[i]);
+				}
+			}
+			else {
+				for (var i in gibddsPolygons) {
+					map.removeOverlay(gibddsPolygons[i]);
+				}
+			}
+			
+			
+		});		
+
+}
+
+function getMyArea(map){
+	var addr='/profile/myareaJsonView/?jsoncallback=?';
+	
+	var style = new YMaps.Style('default#greenPoint');
+	style.polygonStyle = new YMaps.PolygonStyle();
+	style.polygonStyle.fill = true;
+	style.polygonStyle.outline = true;
+	style.polygonStyle.strokeWidth = 1;
+	style.polygonStyle.strokeColor = 'ff000030'; 
+	style.polygonStyle.fillColor = 'ff000030';
+	
+	jQuery.getJSON(addr, function(data) {		
+			for (i=0;i<data.area.length;i++){							
+
+				var startpoints=new Array();				
+
+				for (ii=0;ii<data.area[i].length;ii++){
+					startpoints[ii]=new YMaps.GeoPoint(data.area[i][ii].lng,data.area[i][ii].lat);
+				}
+				
+				myareaPolygons[i] = new YMaps.Polygon(startpoints, {
+					style: style,
+					hasHint: 0,
+					hasBalloon: 0,										
+				});
+		
+					
+				map.addOverlay(myareaPolygons[i]);
+				
+			}			
+			
+		});
+
+}
+
+function getUserArea(map){
+	var addr='/profile/myareaJsonView/?user_id='+$('#user_id').val()+'&jsoncallback=?';	
+	//alert(addr);
+	var style = new YMaps.Style('default#greenPoint');
+	style.polygonStyle = new YMaps.PolygonStyle();
+	style.polygonStyle.fill = true;
+	style.polygonStyle.outline = true;
+	style.polygonStyle.strokeWidth = 1;
+	style.polygonStyle.strokeColor = 'ff000030'; 
+	style.polygonStyle.fillColor = '0ff00050';
+	var bounds = new Array();
+	
+	jQuery.getJSON(addr, function(data) {		
+			for (i=0;i<data.area.length;i++){							
+
+				var startpoints=new Array();				
+
+				for (ii=0;ii<data.area[i].length;ii++){
+					startpoints[ii]=new YMaps.GeoPoint(data.area[i][ii].lng,data.area[i][ii].lat);
+					bounds.push(startpoints[ii]);
+				}
+				
+				userareaPolygons[i] = new YMaps.Polygon(startpoints, {
+					style: style,
+					hasHint: 0,
+					hasBalloon: 0,										
+				});
+		
+					
+				map.addOverlay(userareaPolygons[i]);
+				
+			}			
+			map.setBounds (new YMaps.GeoCollectionBounds(bounds));		
+		});
+
+
+}
+
+function removeHoles(map){
+	
+	//alert(PlaceMarks.length);
+	
+	for (var id in PlaceMarks) {
+		map.removeOverlay(PlaceMarks[id]);
+		delete PlaceMarks[id];
+	}
+	
+	for (var i in clusters) {
+		map.removeOverlay(clusters[i]);
+	}
+}      
 
 function SetMarker(map,id,type,lat,lng,state)
 {
@@ -379,8 +564,6 @@ function SetMarker(map,id,type,lat,lng,state)
 					}
 
 }
-
-var clusters=new Array;
 
 function SetCluster(map,count,lat,lng,i)
 {
@@ -421,11 +604,14 @@ function GetPlacemarks(map)
 		var exclude_id='';		
 		if ($('#Exclude_id').val()) exclude_id='&exclude_id='+$('#Exclude_id').val();
 		var addr='/holes/ajaxMap/?bottom='+mapBounds.getBottom()+'&left='+mapBounds.getLeft()+'&top='+mapBounds.getTop()+'&'+jQuery('#map-form').serialize()+'&right='+mapBounds.getRight()+'&zoom='+map.getZoom()+exclude_id+'&jsoncallback=?';
+		if ($('#user_id').val()) addr+='&user_id='+$('#user_id').val();
 		//alert(addr);
 		jQuery.getJSON(addr, function(data) {
 			bAjaxInProgress = false;				
-			PlaceMarks=new Array;  
-			map.removeAllOverlays();
+			//PlaceMarks=new Array;  
+			//map.removeAllOverlays();
+			removeHoles(map);
+			
 			for (i=0;i<data.markers.length;i++){			
 				SetMarker(map, data.markers[i].id, data.markers[i].type, data.markers[i].lat, data.markers[i].lng, data.markers[i].state);  
 				//alert (data.markers[i].type);
