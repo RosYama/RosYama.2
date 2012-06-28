@@ -821,12 +821,29 @@ class HolesController extends Controller
 		
 		if ($ZOOM < 3) { $_GET['left']=-190; $_GET['right']=190;}
 
-		if (!isset ($_GET['bottom']) || !isset ($_GET['left']) || !isset ($_GET['right']) || !isset ($_GET['top'])) Yii::app()->end();
+		if ((!isset ($_GET['bottom']) || !isset ($_GET['left']) || !isset ($_GET['right']) || !isset ($_GET['top'])) && !isset($_GET['user_id'])) Yii::app()->end();
 		
-		if (isset ($_GET['bottom'])) $criteria->addCondition('LATITUDE > '.(float)$_GET['bottom']);
-		if (isset ($_GET['left'])) $criteria->addCondition('LONGITUDE > '.(float)$_GET['left']);	 	
-		if (isset ($_GET['right'])) $criteria->addCondition('LONGITUDE < '.abs((float)$_GET['right']));		
-		if (isset ($_GET['top'])) $criteria->addCondition('LATITUDE < '.abs((float)$_GET['top']));		
+		if  (!isset($_GET['user_id'])){
+			if (isset ($_GET['bottom'])) $criteria->addCondition('LATITUDE > '.(float)$_GET['bottom']);
+			if (isset ($_GET['left'])) $criteria->addCondition('LONGITUDE > '.(float)$_GET['left']);	 	
+			if (isset ($_GET['right'])) $criteria->addCondition('LONGITUDE < '.abs((float)$_GET['right']));		
+			if (isset ($_GET['top'])) $criteria->addCondition('LATITUDE < '.abs((float)$_GET['top']));	
+		}
+		else {
+			$usr=UserGroupsUser::model()->findByPk((int)$_GET['user_id']);			
+			$area=$usr->hole_area;		
+			foreach ($area as $shape){
+				$cond='LONGITUDE >= '.$shape->corners['left']
+				.' AND LONGITUDE <= '.$shape->corners['right']
+				.' AND LATITUDE >= '.$shape->corners['bottom']
+				.' AND LATITUDE <= '.$shape->corners['top'];					
+				$criteria->addCondition($cond,'OR');			
+				}		
+		
+			$notPolygonHolesIds=Holes::model()->findPkeysNotInAreaByUser($usr);
+			if ($notPolygonHolesIds) $criteria->addNotInCondition('t.ID',$notPolygonHolesIds);	
+		}
+		
 		if (isset ($_GET['exclude_id']) && $_GET['exclude_id']) $criteria->addCondition('ID != '.(int)$_GET['exclude_id']); 
 		if (!Yii::app()->user->isModer) $criteria->compare('PREMODERATED',1);
 	
@@ -862,7 +879,6 @@ class HolesController extends Controller
 		
 		$markers = Holes::model()->findAll($criteria);	
 		
-
 		
 		if ($ZOOM >=14) $ZOOM=30;
 				

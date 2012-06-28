@@ -121,39 +121,41 @@ class ProfileController extends Controller
         $cs->registerScriptFile('http://api-maps.yandex.ru/1.1/index.xml?key='.$this->mapkey);
         $model=$this->loadModel(Yii::app()->user->id);	
         
-        	if(isset($_POST['UserAreaShapes']))
+        	if(isset($_POST['UserAreaShapes']) || isset($_POST['UserGroupsUser']))
 			{
 				$ids=Array();
-				foreach ($_POST['UserAreaShapes'] as $i=>$shape)
-					{
-						if ($shape['id']) $ids[]=$shape['id'];	
-					}
-				if ($ids){
-				$delshapes=UserAreaShapes::model()->findAll('id NOT IN ('.implode(',',$ids).') AND ug_id='.$model->id);				
-				foreach ($delshapes as $shape) $shape->delete();
-				}
-				
-				foreach ($_POST['UserAreaShapes'] as $i=>$shape)
-					{
-						$shapemodel=$shape['id'] ? UserAreaShapes::model()->findByPk((int)$shape['id']) : new UserAreaShapes;
-						if ($shapemodel){
-							$shapemodel->ug_id=$model->id;
-							$shapemodel->ordering=$shape['ordering'];
-							if ($shapemodel->isNewRecord) $shapemodel->save();
-							$ii=0;
-							foreach ($_POST['UserAreaShapePoints'][$i] as $point)
-							{
-								if ($ii>=$shapemodel->countPoints) break;
-								$pointmodel=$point['id'] ? UserAreaShapePoints::model()->findByPk((int)$point['id']) : new UserAreaShapePoints;				
-								$pointmodel->attributes=$point;
-								$pointmodel->shape_id=$shapemodel->id;
-								$pointmodel->save();
-								$ii++;
-							}
-							if (!$shapemodel->points) $shapemodel->delete();
+				if(isset($_POST['UserAreaShapes'])){
+					foreach ($_POST['UserAreaShapes'] as $i=>$shape)
+						{
+							if (isset($shape['id']) && $shape['id']) $ids[]=$shape['id'];	
 						}
-					}	
+				}
+				if ($ids) UserAreaShapes::model()->deleteAll('id NOT IN ('.implode(',',$ids).') AND ug_id='.$model->id);				
+				else UserAreaShapes::model()->deleteAll('ug_id='.$model->id);
+				
+				if(isset($_POST['UserAreaShapes'])){
+					foreach ($_POST['UserAreaShapes'] as $i=>$shape)
+						{
+							$shapemodel=$shape['id'] ? UserAreaShapes::model()->findByPk((int)$shape['id']) : new UserAreaShapes;
+							if ($shapemodel){
+								$shapemodel->ug_id=$model->id;
+								$shapemodel->ordering=$shape['ordering'];
+								if ($shapemodel->isNewRecord) $shapemodel->save();
+								$ii=0;
+								foreach ($_POST['UserAreaShapePoints'][$i] as $point)
+								{
+									if ($ii>=$shapemodel->countPoints) break;
+									$pointmodel=$point['id'] ? UserAreaShapePoints::model()->findByPk((int)$point['id']) : new UserAreaShapePoints;				
+									$pointmodel->attributes=$point;
+									$pointmodel->shape_id=$shapemodel->id;
+									$pointmodel->save();
+									$ii++;
+								}
+								if (!$shapemodel->points) $shapemodel->delete();
+							}
+						}							
 				$this->redirect(array('/holes/myarea'));
+				}
 			}        
       	$this->render('myarea',array('model'=>$model));
 	}
