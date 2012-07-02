@@ -66,6 +66,9 @@ class XmlController extends Controller
 		if (Yii::app()->request->getParam('filter_status')) $model->STATE=Yii::app()->request->getParam('filter_status');
 		if (Yii::app()->request->getParam('filter_type')) $model->type_alias=Yii::app()->request->getParam('filter_type');
 		if (Yii::app()->request->getParam('archive')) $model->archive=Yii::app()->request->getParam('archive');
+		
+		$model->polygons=Yii::app()->request->getParam('polygons') ? Yii::app()->request->getParam('polygons') : Array();		
+		
 		$page=Yii::app()->request->getParam('page');
 		if (!$model->limit) $model->limit=30;
 		$offset=Yii::app()->request->getParam('offset');
@@ -91,6 +94,7 @@ class XmlController extends Controller
 		$tags[]=CHtml::tag('navigation', array (), false, false);
 			$tags[]=CHtml::tag('item', array ('code'=>'limit'), CHtml::encode($model->limit), true);
 			$tags[]=CHtml::tag('item', array ('code'=>'offset'), CHtml::encode($offset/$model->limit), true);
+			$tags[]=CHtml::tag('item', array ('code'=>'totalItemCount'), CHtml::encode($data->totalItemCount), true);
 		$tags[]=CHtml::closeTag('navigation');
 		}
 		$tags[]=CHtml::tag('defectslist', array (), false, false);
@@ -98,7 +102,7 @@ class XmlController extends Controller
 				$tags[]=CHtml::tag('hole', array ('id'=>$hole->ID), false, false);
 					$tags[]=CHtml::tag('id', array (), CHtml::encode($hole->ID), true);
 					$tags[]=CHtml::tag('archive', array (), CHtml::encode($hole->archive), true);
-					$tags[]=CHtml::tag('username', array ('full'=>$hole->user->Fullname), false, false);
+					$tags[]=CHtml::tag('username', array ('full'=>$hole->user->Fullname, 'user_id'=>$hole->user->id), false, false);
 						$tags[]=CHtml::tag('name', array (), CHtml::encode($hole->user->name), true);
 						$tags[]=CHtml::tag('secondname', array (), CHtml::encode($hole->user->second_name), true);
 						$tags[]=CHtml::tag('lastname', array (), CHtml::encode($hole->user->last_name), true);
@@ -255,6 +259,35 @@ class XmlController extends Controller
 	{
 		$user=$this->auth();
 		$this->actionIndex($id,$user);
+	}
+	
+	public function actionProfile($id)
+	{
+		$user=$this->auth();
+		$model=$this->loadUserModel((int)$id);
+		$tags=Array();
+		$tags[]=CHtml::tag('user', array ('id'=>$model->id), false, false);
+			$tags[]=CHtml::tag('username', array ('full'=>$model->Fullname), false, false);
+				$tags[]=CHtml::tag('name', array (), CHtml::encode($model->name), true);
+				$tags[]=CHtml::tag('secondname', array (), CHtml::encode($model->second_name), true);
+				$tags[]=CHtml::tag('lastname', array (), CHtml::encode($model->last_name), true);	
+			$tags[]=CHtml::closeTag('username'); 
+			$tags[]=CHtml::tag('area', array (), false, false);
+				if ($model->hole_area && ($model->getParam('showMyarea') || $model->id==$user->id)){				
+					foreach ($model->hole_area as $shape){
+						$tags[]=CHtml::tag('polygon', array (), false, false);
+							foreach ($shape->points as $point){
+							$tags[]=CHtml::tag('point', array (), false, false);
+								$tags[]=CHtml::tag('lat', array (), CHtml::encode($point->lat), true);
+								$tags[]=CHtml::tag('lng', array (), CHtml::encode($point->lng), true);	
+							$tags[]=CHtml::closeTag('point');	
+							}
+						$tags[]=CHtml::closeTag('polygon'); 	
+					}	
+				}
+			$tags[]=CHtml::closeTag('area');
+		$tags[]=CHtml::closeTag('user'); 
+		$this->renderXml($tags);
 	}	
 	
 	public function actionGetfileuploadlimits()
@@ -290,6 +323,9 @@ class XmlController extends Controller
 		$city       = $addressArr['city'];
 		$address    = $addressArr['address'];
 		
+
+		
+
 		if((!$subject_rf || !$city || !$address) && ($latitude && $longitude)){
 				$addressArr    = RfSubjects::model()->AddressfromLatLng($latitude, $longitude, $this->mapkey);
 					if ($addressArr) {
@@ -299,8 +335,13 @@ class XmlController extends Controller
 					}
 			}
 		
-		// ворнинги, если надо
+		if ($model->territorialGibdd) {
+			$gibdd_id=$model->territorialGibdd[0]->id;
+			$subject_rf=$model->territorialGibdd[0]->subject->id;
+		}	
+		else {		
 		if(!$subject_rf || $subject_rf==0) $this->error('CANNOT_REALISE_SUBJECTRF');
+		}
 	
 		if(!$city) $this->error('CANNOT_REALISE_CITY');
 		
@@ -371,7 +412,13 @@ class XmlController extends Controller
 						$address    = $addressArr['address'];	
 					}
 			}
-			if(!$subject_rf) $this->error('CANNOT_REALISE_SUBJECTRF');	
+			if ($model->territorialGibdd) {
+				$gibdd_id=$model->territorialGibdd[0]->id;
+				$subject_rf=$model->territorialGibdd[0]->subject->id;
+			}	
+			else {
+			if(!$subject_rf) $this->error('CANNOT_REALISE_SUBJECTRF');				
+			}
 			if(!$city) $this->error('CANNOT_REALISE_CITY');
 		}
 		
@@ -611,6 +658,20 @@ class XmlController extends Controller
 				$tags[]=CHtml::tag('gibdditem', array ('address'=>$model->gibdd->address, 'tel'=>$model->gibdd->tel_degurn), CHtml::encode($model->gibdd->gibdd_name), true);
 				$tags[]=CHtml::tag('nominative', array ('post'=>$model->gibdd->post, 'gibdd'=>$model->gibdd->gibdd_name), CHtml::encode($model->gibdd->fio), true);
 				$tags[]=CHtml::tag('nominative', array ('dative'=>$model->gibdd->post_dative), CHtml::encode($model->gibdd->fio_dative), true);
+				$tags[]=CHtml::tag('area', array (), false, false);
+				if ($model->gibdd->areas){				
+					foreach ($model->gibdd->areas as $shape){
+						$tags[]=CHtml::tag('polygon', array (), false, false);
+							foreach ($shape->points as $point){
+							$tags[]=CHtml::tag('point', array (), false, false);
+								$tags[]=CHtml::tag('lat', array (), CHtml::encode($point->lat), true);
+								$tags[]=CHtml::tag('lng', array (), CHtml::encode($point->lng), true);	
+							$tags[]=CHtml::closeTag('point');	
+							}
+						$tags[]=CHtml::closeTag('polygon'); 	
+					}	
+				}
+				$tags[]=CHtml::closeTag('area');				
 			$tags[]=CHtml::closeTag('gibdd');		
 		}
 		foreach ($model->gibdd_local as $gibdd){
@@ -618,6 +679,22 @@ class XmlController extends Controller
 				$tags[]=CHtml::tag('gibdditem', array ('address'=>$gibdd->address, 'tel'=>$gibdd->tel_degurn, 'lat'=>$gibdd->lat, 'lng'=>$gibdd->lng), CHtml::encode($gibdd->gibdd_name), true);
 				$tags[]=CHtml::tag('nominative', array ('post'=>$gibdd->post, 'gibdd'=>$gibdd->gibdd_name), CHtml::encode($gibdd->fio), true);
 				$tags[]=CHtml::tag('nominative', array ('dative'=>$gibdd->post_dative), CHtml::encode($gibdd->fio_dative), true);
+				
+				$tags[]=CHtml::tag('area', array (), false, false);
+				if ($gibdd->areas){				
+					foreach ($gibdd->areas as $shape){
+						$tags[]=CHtml::tag('polygon', array (), false, false);
+							foreach ($shape->points as $point){
+							$tags[]=CHtml::tag('point', array (), false, false);
+								$tags[]=CHtml::tag('lat', array (), CHtml::encode($point->lat), true);
+								$tags[]=CHtml::tag('lng', array (), CHtml::encode($point->lng), true);	
+							$tags[]=CHtml::closeTag('point');	
+							}
+						$tags[]=CHtml::closeTag('polygon'); 	
+					}	
+				}
+				$tags[]=CHtml::closeTag('area');	
+				
 			$tags[]=CHtml::closeTag('gibdd');		
 		}	
 		$this->renderXml($tags);		
@@ -762,6 +839,14 @@ class XmlController extends Controller
 			$this->error('UNAPPROPRIATE_METHOD');
 		return $model;
 	}
+	
+	public function loadUserModel($id)
+	{
+		$model=UserGroupsUser::model()->findByPk((int)$id);
+		if($model===null)
+			$this->error('NOT_FOUND');
+		return $model;
+	}	
 
 	/**
 	 * Performs the AJAX validation.

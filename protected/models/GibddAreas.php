@@ -1,19 +1,17 @@
 <?php
 
 /**
- * This is the model class for table "{{gibdd_area_points}}".
+ * This is the model class for table "{{gibdd_areas}}".
  *
- * The followings are the available columns in table '{{gibdd_area_points}}':
+ * The followings are the available columns in table '{{gibdd_areas}}':
+ * @property integer $id
  * @property integer $gibdd_id
- * @property integer $point_num
- * @property double $lat
- * @property double $lng
  */
-class GibddAreaPoints extends CActiveRecord
+class GibddAreas extends CActiveRecord
 {
 	/**
 	 * Returns the static model of the specified AR class.
-	 * @return GibddAreaPoints the static model class
+	 * @return GibddAreas the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{
@@ -25,7 +23,7 @@ class GibddAreaPoints extends CActiveRecord
 	 */
 	public function tableName()
 	{
-		return '{{gibdd_area_points}}';
+		return '{{gibdd_areas}}';
 	}
 
 	/**
@@ -36,12 +34,11 @@ class GibddAreaPoints extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('area_id, point_num, lat, lng', 'required'),
-			array('area_id, point_num', 'numerical', 'integerOnly'=>true),
-			array('lat, lng', 'numerical'),
+			array('gibdd_id', 'required'),
+			array('gibdd_id', 'numerical', 'integerOnly'=>true),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('area_id, point_num, lat, lng', 'safe', 'on'=>'search'),
+			array('id, gibdd_id', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -53,8 +50,26 @@ class GibddAreaPoints extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
+			'points'=>array(self::HAS_MANY, 'GibddAreaPoints', 'area_id', 'order'=>'points.point_num'),
 		);
 	}
+	
+	public function getJsAreaPoints(){
+		$arr=Array();
+		foreach ($this->points as $i=>$point){
+			$arr[]='new YMaps.GeoPoint('.$point->lng.','.$point->lat.')';			
+		}
+		return implode(', ',$arr);
+	}
+	
+	public function BeforeDelete(){
+		
+		parent::beforeDelete();
+				
+		GibddAreaPoints::model()->deleteAll('area_id='.$this->id);
+			
+		return true;
+	}	
 
 	/**
 	 * @return array customized attribute labels (name=>label)
@@ -62,10 +77,8 @@ class GibddAreaPoints extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'area_id' => 'Gibdd',
-			'point_num' => 'Point Num',
-			'lat' => 'Lat',
-			'lng' => 'Lng',
+			'id' => 'ID',
+			'gibdd_id' => 'Gibdd',
 		);
 	}
 
@@ -80,10 +93,8 @@ class GibddAreaPoints extends CActiveRecord
 
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('area_id',$this->gibdd_id);
-		$criteria->compare('point_num',$this->point_num);
-		$criteria->compare('lat',$this->lat);
-		$criteria->compare('lng',$this->lng);
+		$criteria->compare('id',$this->id);
+		$criteria->compare('gibdd_id',$this->gibdd_id);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

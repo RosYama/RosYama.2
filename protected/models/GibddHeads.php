@@ -22,6 +22,7 @@ class GibddHeads extends CActiveRecord
 {
 	public $post='Начальник';
 	public $str_subject;
+	public $mindist;
 	
 	public $levelNames=Array(
 		0=>'ГУОБДД РФ',
@@ -94,7 +95,7 @@ class GibddHeads extends CActiveRecord
 		return array(
 		'subject'=>array(self::BELONGS_TO, 'RfSubjects', 'subject_id'),
 		'holes'=>array(self::HAS_MANY, 'Holes', 'gibdd_id'),
-		'areaPoints'=>array(self::HAS_MANY, 'GibddAreaPoints', 'gibdd_id', 'order'=>'areaPoints.point_num'),
+		'areas'=>array(self::HAS_MANY, 'GibddAreas', 'gibdd_id'),
 		);
 	}
 	
@@ -107,13 +108,38 @@ class GibddHeads extends CActiveRecord
 	}
 	
 	public function BeforeDelete(){
-				
+			
+		parent::beforeDelete();
+		
 		if ($this->subject->gibdd->id == $this->id) return false;		
 		foreach ($this->holes as $hole){
 			$hole->gibdd_id=$this->subject->gibdd->id;
 			$hole->update;
 		}
+		
+		foreach ($this->areas as $item) $item->delete();
 			
+		return true;
+	}
+	
+	public function BeforeValidate(){
+		parent::beforeValidate();
+		if (isset($_POST['GibddAreaPoints']) ){
+					$areaarr=Array(); 
+					foreach ($_POST['GibddAreaPoints'] as $i=>$area){
+						$areamodel=new GibddAreas;	
+						$pointarr=Array();
+							foreach ($area as $ii=>$point){
+								$pointmodel=new GibddAreaPoints;
+								$pointmodel->attributes=$point;								
+								$pointmodel->point_num=$ii;	
+								$pointarr[]=$pointmodel;
+							}	
+						$areamodel->points=$pointarr;
+						$areaarr[]=$areamodel;						
+					}				
+				$this->areas=$areaarr;	
+				}	
 		return true;
 	}
 	
@@ -126,7 +152,7 @@ class GibddHeads extends CActiveRecord
 				if (!$this->is_regional && !$this->subject_id) {
 					$this->addError('subject_id', 'Не определен субъект РФ');  	
 					return false;
-					}					
+					}			
 				
 				return true;
 	}
@@ -135,17 +161,25 @@ class GibddHeads extends CActiveRecord
 				parent::afterSave();
 				
 				if ($this->scenario != 'fill')
-				GibddAreaPoints::model()->deleteAll('gibdd_id='.$this->id);
+				$oldareas=GibddAreas::model()->findAll('gibdd_id='.$this->id);
+				foreach ($oldareas as $item) $item->delete();
 			
-				if (isset($_POST['GibddAreaPoints']) )
-					foreach ($_POST['GibddAreaPoints'] as $i=>$point){
-						$pointmodel=new GibddAreaPoints;
-						$pointmodel->attributes=$point;
-						$pointmodel->gibdd_id=$this->id;
-						$pointmodel->point_num=$i;
-						$pointmodel->save(); 
-						}			
-				
+				if (isset($_POST['GibddAreaPoints']) ){
+					//print_r($_POST['GibddAreaPoints']); die();
+					foreach ($_POST['GibddAreaPoints'] as $i=>$area){
+						$areamodel=new GibddAreas;
+						$areamodel->gibdd_id=$this->id;
+						if ($areamodel->save()){
+							foreach ($area as $ii=>$point){
+								$pointmodel=new GibddAreaPoints;
+								$pointmodel->attributes=$point;
+								$pointmodel->area_id=$areamodel->id;
+								$pointmodel->point_num=$ii;
+								$pointmodel->save(); 
+							}		
+						}
+					}				
+				}
 				return true;
 	}	
 

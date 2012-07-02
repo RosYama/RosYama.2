@@ -15,7 +15,7 @@ if (isset($_GET['testing']) && $_GET['testing']==1){
         defined('YII_DEBUG') or define('YII_DEBUG',true);
 }
 else {
-	defined('YII_DEBUG') or define('YII_DEBUG',false);
+	defined('YII_DEBUG') or define('YII_DEBUG',true);
 }
 
 // specify how many levels of call stack should be shown in each log message

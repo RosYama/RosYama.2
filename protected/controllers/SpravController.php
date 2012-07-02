@@ -299,15 +299,17 @@ class SpravController extends Controller
 		$model=GibddHeads::model()->findAll('lat > 0 AND lng > 0');
 		$gibds=Array();
 		foreach ($model as $item) {
-			$points=Array();
-			if ($item->areaPoints)
-				foreach ($item->areaPoints as $point)
-					$points[]=Array('lat'=>$point->lat, 'lng'=>$point->lng);
+			$areas=Array();
+			if ($item->areas)
+				foreach ($item->areas as $i=>$area){
+					foreach ($area->points as $point)
+						$areas[$i][]=Array('lat'=>$point->lat, 'lng'=>$point->lng);
+				}		
 			
 			$descr=$this->renderPartial('_view_gibdd', array('data'=>$item), true);
 			
-			$gibds[]=Array('lat'=>$item->lat, 'lng'=>$item->lng, 'name'=>$item->name, 'id'=>$item->id, 'descr'=>$descr.($points ? CHtml::link('Показать границу наблюдения', '#', Array('class'=>'show_gibdd_area', 'gibddid'=>$item->id)) : '' ),
-			'points'=>$points,
+			$gibds[]=Array('lat'=>$item->lat, 'lng'=>$item->lng, 'name'=>$item->name, 'id'=>$item->id, 'descr'=>$descr.($areas ? CHtml::link('Показать границу наблюдения', '#', Array('class'=>'show_gibdd_area', 'gibddid'=>$item->id)) : '' ),
+			'areas'=>$areas, 
 			);
 		}
 		echo $_GET['jsoncallback'].'({"gibdds": '.CJSON::encode($gibds).'})';
@@ -338,11 +340,13 @@ class SpravController extends Controller
 			$model->author_id=Yii::app()->user->id;	
 			$model->created=time();			
 			
-			if ($model->str_subject){
-				$subj=RfSubjects::model()->SearchID(trim($model->str_subject));
-				if($subj) $model->subject_id=$subj;
+			if ($subj) $model->subject_id=$subj->id;
+			else if ($model->str_subject){
+				$subjct=RfSubjects::model()->SearchID(trim($model->str_subject));
+				if($subjct) $model->subject_id=$subjct;
 				else $model->subject_id=0;
 			}
+			
 			
 			if (Yii::app()->user->level > 50) $model->moderated=1;
 			else $model->moderated=0;

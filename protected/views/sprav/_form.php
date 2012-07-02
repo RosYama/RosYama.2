@@ -101,8 +101,8 @@
 		</div>
 	
 		
-		<?php echo $form->hiddenField($model,'lat'); ?>
-		<?php echo $form->hiddenField($model,'lng'); ?>
+		<?php echo $form->textField($model,'lat'); ?>
+		<?php echo $form->textField($model,'lng'); ?>
 		<?php echo $form->hiddenField($model,'str_subject'); ?>
 	</div>
 	<!-- /левая колоночка -->
@@ -129,53 +129,104 @@
 		
 		<div class="bx-yandex-view-layout">
 			<div class="bx-yandex-view-map">
-		<?php if ($model->isNewRecord) $maptype='add'; else $maptype='update'; 
-		if ($model->is_regional) { if ($model->areaPoints) $maptype='update_regional_areaExtend'; else $maptype='update_regional'; }
+		<?php if ($model->isNewRecord && $model->lat==0 && $model->lng==0) $maptype='add'; else $maptype='update'; 
+		if ($model->is_regional) { if ($model->areas) $maptype='update_regional_areaExtend'; else $maptype='update_regional'; }
+		$jsBounds='';
+		if (!$model->areas) 
+			foreach ($model->subject->gibdd->areas as $i=>$area){
+				$jsBounds.=" defbounds[".$i."]=[".$area->JsAreaPoints."];";
+			}
 		?>
-		<?php Yii::app()->clientScript->registerScript('initmap',"
+		<?php 
+		$jsPoints='';
+		if ($model->areas)			
+			foreach ($model->areas as $i=>$area){
+				$jsPoints.=" startpoints[".$i."]=[".$area->JsAreaPoints."];";
+			}
 		
-		var polygon;		
+		Yii::app()->clientScript->registerScript('initmap',"
+		
+		var polygons=new Array;	
+		var startpoints=new Array;
+		var map;
+		var defaultpoints;
+		var defbounds=new Array;
+		".$jsBounds."
+		function addPolygon(map, i , points){						
+						
+						var style = new YMaps.Style('default#greenPoint');
+						style.polygonStyle = new YMaps.PolygonStyle();
+						style.polygonStyle.fill = true;
+						style.polygonStyle.outline = true;
+						style.polygonStyle.strokeWidth = 4;
+						style.polygonStyle.strokeColor = 'ff000070'; 
+						style.polygonStyle.fillColor = '1370AA55';
+							
+						polygons[i] = new YMaps.Polygon(points, {
+											style: style,
+											hasHint: 0,
+											hasBalloon: 0,										
+										});
+			
+						polygons[i].id=i;
+						map.addOverlay(polygons[i]);
+						
+						polygons[i].setEditingOptions({
+							drawing: true,
+							maxPoints: 100000,
+							dragging:true,	
+							
+						});
+						
+						polygons[i].startEditing();	
+						
+						YMaps.Events.observe
+						(
+							polygons[i],
+							polygons[i].Events.DblClick,
+							function (obj)
+							{
+								//alert (polygons.length);
+								if (polygons.length > 1){
+									map.removeOverlay(obj);
+									//delete polygons[i]; 
+									polygons.splice (i, 1);
+									}
+								
+							}
+						)
+						
+		}
+		
 		function setPolygon(map, center){
-		
-					var bounds = new Array();
 					
-					startpoints=[".($model->areaPoints ? $model->JsAreaPoints : 'new YMaps.GeoPoint(center.getX()-0.00,center.getY()-0.06),
+					if (center.getX() !=0)
+					defaultpoints=[new YMaps.GeoPoint(center.getX()-0.00,center.getY()-0.06),
 											  new YMaps.GeoPoint(center.getX()-0.06,center.getY()+0.00),
 											  new YMaps.GeoPoint(center.getX()+0.00,center.getY()+0.06),
-											  new YMaps.GeoPoint(center.getX()+0.06,center.getY()+0.00)')."];
+											  new YMaps.GeoPoint(center.getX()+0.06,center.getY()+0.00)];
+					else 
+						defaultpoints=[new YMaps.GeoPoint(map.getCenter().getX()-0.00,map.getCenter().getY()-0.06),
+											  new YMaps.GeoPoint(map.getCenter().getX()-0.06,map.getCenter().getY()+0.00),
+											  new YMaps.GeoPoint(map.getCenter().getX()+0.00,map.getCenter().getY()+0.06),
+											  new YMaps.GeoPoint(map.getCenter().getX()+0.06,map.getCenter().getY()+0.00)];
 					
-					for (ii=0;ii<startpoints.length;ii++){
-						bounds.push(startpoints[ii]);
-					}
-					map.setBounds (new YMaps.GeoCollectionBounds(bounds));	
+					var bounds = new Array();					
+					".$jsPoints."		
 					
-					var style = new YMaps.Style('default#greenPoint');
-					style.polygonStyle = new YMaps.PolygonStyle();
-					style.polygonStyle.fill = true;
-					style.polygonStyle.outline = true;
-					style.polygonStyle.strokeWidth = 4;
-					style.polygonStyle.strokeColor = 'ff000070'; 
-					style.polygonStyle.fillColor = '1370AA55';
-					    
-					polygon = new YMaps.Polygon(startpoints, {
-										style: style,
-										hasHint: 0,
-										hasBalloon: 0,										
-									});
-		
+					if (!startpoints.length) startpoints[0]=defaultpoints;
 					
-					map.addOverlay(polygon);
-					
-					polygon.setEditingOptions({
-						drawing: true,
-						maxPoints: 100000,
-						dragging:true,	
-						
-					});
-					
-				    polygon.startEditing();		
-				    
-				return polygon;    
+					for (i in startpoints){					
+						for (ii=0;ii<startpoints[i].length;ii++){
+							bounds.push(startpoints[i][ii]);
+						}
+						map.setBounds (new YMaps.GeoCollectionBounds(bounds));
+						addPolygon(map, i , startpoints[i]);
+						//alert (i);
+							
+				    }
+				    return polygons;
+
 		}
 		
 		if (window.attachEvent) // IE
@@ -193,13 +244,14 @@
 		
 		
 		$('#gibdd-form').submit(function() {
-			if (!polygon) return false;
+			if (!polygons) return false;
 			
-			var points=polygon.getPoints();
-				for (i=0;i<points.length;i++){
-					$(this).append('<input type="hidden" name="GibddAreaPoints['+i+'][lat]" value="'+points[i].getY()+'" /><input type="hidden" name="GibddAreaPoints['+i+'][lng]" value="'+points[i].getX()+'" />');
-				}
-				
+			for (i in polygons){	
+				var points=polygons[i].getPoints();				
+					for (ii=0;ii<points.length;ii++){
+						$(this).append('<input type="hidden" name="GibddAreaPoints['+i+']['+ii+'][lat]" value="'+points[ii].getY()+'" /><input type="hidden" name="GibddAreaPoints['+i+']['+ii+'][lng]" value="'+points[ii].getX()+'" />');
+					}
+			}	
 			return true;
 		});		
 
@@ -207,6 +259,9 @@
 EOD
 ,CClientScript::POS_READY);
 ?>
+<?php if ($model->is_regional) : ?>
+<a href="#" id="newPolygon">Добавить область</a>
+<?php endif;?>
 <div id="BX_YMAP_MAP_DzDvWLBsil" style="width:100%; height:400px;" class="bx-yandex-map">загрузка карты...</div>		
 			</div>
 		</div>

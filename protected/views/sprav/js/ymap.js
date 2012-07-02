@@ -311,10 +311,34 @@ function init_MAP_DzDvWLBsil(context, type)
 	if (type=="update_regional" || type=="update_regional_areaExtend" ){
 	//polygon=setPolygon(map, new YMaps.GeoPoint(lat, lon));
 	map.disableDblClickZoom();	
-	YMaps.Events.observe(map, map.Events.DblClick, function(map, ev){
-		if (!polygon) polygon=setPolygon(map, new YMaps.GeoPoint(ev.getCoordPoint().getX(), ev.getCoordPoint().getY()));
+	/*YMaps.Events.observe(map, map.Events.DblClick, function(map, ev){		
+		if (!polygons.length) {
+			//setPolygon(map, new YMaps.GeoPoint(ev.getCoordPoint().getX(), ev.getCoordPoint().getY()));
+			}
+	});*/	
+	if (!polygons.length && type=="update_regional_areaExtend") {
+		if (startpoints.length){
+			for (i in startpoints)
+				addPolygon(map, i , startpoints[i]);
+		}
+		else polygons=setPolygon(map, new YMaps.GeoPoint(0, 0));		
+		}
+	}
+	$('#newPolygon').click(function() {	
+		var defaultpoints=[new YMaps.GeoPoint(map.getCenter().getX()-0.00,map.getCenter().getY()-0.06),
+											  new YMaps.GeoPoint(map.getCenter().getX()-0.06,map.getCenter().getY()+0.00),
+											  new YMaps.GeoPoint(map.getCenter().getX()+0.00,map.getCenter().getY()+0.06),
+											  new YMaps.GeoPoint(map.getCenter().getX()+0.06,map.getCenter().getY()+0.00)];
+		addPolygon(map, polygons.length , defaultpoints);
+	return false;
 	});	
-	if (!polygon && type=="update_regional_areaExtend") polygon=setPolygon(map, new YMaps.GeoPoint(0, 0));
+	
+	if (defbounds.length){
+	bounds=new Array();
+		for (i in defbounds)
+			for (ii in defbounds[i])
+				bounds.push(defbounds[i][ii]);		
+		map.setBounds (new YMaps.GeoCollectionBounds(bounds));
 	}
 	return map;
 }      

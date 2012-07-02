@@ -412,27 +412,28 @@ function GetGibbds(map){
 					
 					$(".show_gibdd_area").click(function() {
 						var id=parseInt($(this).attr('gibddid'));
-						map.addOverlay(gibddsPolygons[id]);
+						for (var ii in gibddsPolygons[id]) {
+							map.addOverlay(gibddsPolygons[id][ii]);
+						}	
 						return false;
 					});
 					
 				});
-
-				var startpoints=new Array();				
-
-				for (ii=0;ii<data.gibdds[i].points.length;ii++){
-					startpoints[ii]=new YMaps.GeoPoint(data.gibdds[i].points[ii].lng,data.gibdds[i].points[ii].lat);
+				gibddsPolygons[data.gibdds[i].id]=new Array();
+				for (ii=0;ii<data.gibdds[i].areas.length;ii++){				
+					var startpoints=new Array();									
+					for (iii=0;iii<data.gibdds[i].areas[ii].length;iii++){
+						startpoints[iii]=new YMaps.GeoPoint(data.gibdds[i].areas[ii][iii].lng,data.gibdds[i].areas[ii][iii].lat);
+					}					
+					gibddsPolygons[data.gibdds[i].id][ii] = new YMaps.Polygon(startpoints, {
+						style: style,
+						hasHint: 0,
+						hasBalloon: 0,										
+					});
+					
 				}
 				
-				gibddsPolygons[data.gibdds[i].id] = new YMaps.Polygon(startpoints, {
-					style: style,
-					hasHint: 0,
-					hasBalloon: 0,										
-				});
-		
-					
-				//map.addOverlay(gibddsPolygons[data.gibdds[i].id]);
-				
+				//map.addOverlay(gibddsPolygons[data.gibdds[i].id]);		
 			}			
 			
 		});
@@ -441,12 +442,16 @@ function GetGibbds(map){
 			
 			if ($(this).attr('checked')!=undefined) {
 				for (var i in gibddsPolygons) {
-					map.addOverlay(gibddsPolygons[i]);
+					for (var ii in gibddsPolygons[i]) {
+						map.addOverlay(gibddsPolygons[i][ii]);
+					}
 				}
 			}
 			else {
 				for (var i in gibddsPolygons) {
-					map.removeOverlay(gibddsPolygons[i]);
+					for (var ii in gibddsPolygons[i]) {
+						map.removeOverlay(gibddsPolygons[i][ii]);
+					}
 				}
 			}
 			
