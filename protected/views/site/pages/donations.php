@@ -42,5 +42,6 @@ $this->layout='//layouts/header_default_without_add';
 <ul>
 <li>Финансовый отчёт за 2011 год: <a href="http://fezeev.livejournal.com/50545.html">http://fezeev.livejournal.com/50545.html</a>
 <li>Финансовый отчёт за январь-май 2012 года: <a href="http://fezeev.livejournal.com/61845.html">http://fezeev.livejournal.com/61845.html</a>
+<li>Финансовый отчёт за июнь 2012 года: <a href="http://fezeev.livejournal.com/63802.html">http://fezeev.livejournal.com/63802.html</a>
 </ul>
 </div>
