@@ -193,7 +193,7 @@ class Holes extends CActiveRecord
 	const EARTH_RADIUS_KM = 6373;
 	public function getTerritorialGibdd()	
 	{	
-		if (!$this->subject) return Array();
+		//if (!$this->subject) return Array();
 		$longitude=$this->LONGITUDE;
 		$latitude=$this->LATITUDE;		
 		/* $numerator = 'POW(COS(RADIANS(lat)) * SIN(ABS(RADIANS('.$longitude.')-RADIANS(lng))),2)';		
