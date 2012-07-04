@@ -1,6 +1,46 @@
 <div class="form">
+
+	<?php if (Yii::app()->user->groupName=="root") : ?>
+	<?php Yii::app()->clientScript->registerScript('saveallregions',<<<EOD
+		
+		
+		$('#gibdd-allregions-form').submit(function() {
+			if (!allregionPolygons.length) return false;
+			
+			for (i in allregionPolygons){	
+				$(this).append('<input type="hidden" name="GibddAreaName['+i+']" value="'+allregionPolygons[i].name+'" />');
+				var points=allregionPolygons[i].getPoints();				
+					for (ii=0;ii<points.length;ii++){
+						$(this).append('<input type="hidden" name="GibddAreaPoints['+i+']['+ii+'][lat]" value="'+points[ii].getY()+'" /><input type="hidden" name="GibddAreaPoints['+i+']['+ii+'][lng]" value="'+points[ii].getX()+'" />');
+					}
+			}	
+			return true;
+		});		
+
+			
+EOD
+,CClientScript::POS_READY);
+?>
+	<div class="rCol"> 
+		<br/><a href="#" id="showAllRegions">Показать границы регионов</a>	
+		<div id="AllRegionsForm" style="display:none;">
+			<?php $form=$this->beginWidget('CActiveForm', array(
+				'id'=>'gibdd-allregions-form',
+				'enableAjaxValidation'=>false,
+				'htmlOptions'=>Array ('enctype'=>'multipart/form-data'),
+				'action'=>$this->createUrl('saveAllPolygions'),
+			)); ?>
+			<?php echo CHtml::submitButton('Сохранить границы всех областей', Array()); ?>
+			<?php $this->endWidget(); ?>
+		</div>
+
+	</div>	
+
+		
+	<?php endif; ?>
+
 <?php $form=$this->beginWidget('CActiveForm', array(
-	'id'=>'holes-form',
+	'id'=>'gibdd-form',
 	'enableAjaxValidation'=>false,
 	'htmlOptions'=>Array ('enctype'=>'multipart/form-data'),
 )); ?>
@@ -14,8 +54,13 @@
 	<? endif;*/ ?>
 
 	<!-- левая колоночка -->
-	<div class="lCol" <?php if ($model->is_regional) echo 'style="width:100%"'?>>
+	<div class="lCol">
 
+		<div class="f">
+		<?php echo $form->labelEx($model,'level'); ?>
+		<?php echo $form->dropDownList($model, 'level', $model->userlevelNames);?>
+		<?php echo $form->error($model,'level'); ?>
+		</div>
 	
 		<div class="f">
 			<?php echo $form->labelEx($model,'name'); ?>
@@ -101,10 +146,10 @@
 		<?php echo $form->hiddenField($model,'str_subject'); ?>
 	</div>
 	<!-- /левая колоночка -->
-<?php if (!$model->is_regional) : ?>	
 	<!-- правая колоночка -->
 	<div class="rCol"> 
 	<div class="f">
+	<?php if (!$model->is_regional) : ?>	
 	<p class="tip">
 Поставьте метку на карте двойным щелчком мыши
 <span class="required">*</span>
@@ -120,31 +165,153 @@
 		</div>	
 			<span id="recognized_address_str" title="Субъект РФ и населённый пункт"></span>
 			<span id="other_address_str"></span>				
-		
+		<?php endif; ?>	
 		
 		<div class="bx-yandex-view-layout">
 			<div class="bx-yandex-view-map">
-		<?php if ($model->isNewRecord) $maptype='add'; else $maptype='update'; ?>
-		<?php Yii::app()->clientScript->registerScript('initmap',<<<EOD
+		<?php if ($model->isNewRecord && $model->lat==0 && $model->lng==0) $maptype='add'; else $maptype='update'; 
+		if ($model->is_regional) { if ($model->areas) $maptype='update_regional_areaExtend'; else $maptype='update_regional'; }
+		$jsBounds='';
+		if (!$model->areas) 
+			foreach ($model->subject->gibdd->areas as $i=>$area){
+				$jsBounds.=" defbounds[".$i."]=[".$area->JsAreaPoints."];";
+			}
+		?>
+		<?php 
+		$jsPoints='';
+		if ($model->areas)			
+			foreach ($model->areas as $i=>$area){
+				$jsPoints.=" startpoints[".$i."]=[".$area->JsAreaPoints."];";
+			}
+		
+		Yii::app()->clientScript->registerScript('initmap',"
+		
+		var polygons=new Array;	
+		var startpoints=new Array;
+		var map;
+		var defaultpoints;
+		var defbounds=new Array;
+		".$jsBounds."
+		function addPolygon(map, i , points){						
+						
+						var style = new YMaps.Style('default#greenPoint');
+						style.polygonStyle = new YMaps.PolygonStyle();
+						style.polygonStyle.fill = true;
+						style.polygonStyle.outline = true;
+						style.polygonStyle.strokeWidth = 4;
+						style.polygonStyle.strokeColor = 'ff000070'; 
+						style.polygonStyle.fillColor = '1370AA55';
+							
+						polygons[i] = new YMaps.Polygon(points, {
+											style: style,
+											hasHint: 0,
+											hasBalloon: 0,										
+										});
+			
+						polygons[i].id=i;
+						map.addOverlay(polygons[i]);
+						
+						polygons[i].setEditingOptions({
+							drawing: true,
+							maxPoints: 100000,
+							dragging:true,	
+							
+						});
+						
+						polygons[i].startEditing();	
+						
+						YMaps.Events.observe
+						(
+							polygons[i],
+							polygons[i].Events.DblClick,
+							function (obj)
+							{
+								//alert (polygons.length);
+								if (polygons.length > 1){
+									map.removeOverlay(obj);
+									//delete polygons[i]; 
+									polygons.splice (i, 1);
+									}
+								
+							}
+						)
+						
+		}
+		
+		function setPolygon(map, center){
+					
+					if (center.getX() !=0)
+					defaultpoints=[new YMaps.GeoPoint(center.getX()-0.00,center.getY()-0.06),
+											  new YMaps.GeoPoint(center.getX()-0.06,center.getY()+0.00),
+											  new YMaps.GeoPoint(center.getX()+0.00,center.getY()+0.06),
+											  new YMaps.GeoPoint(center.getX()+0.06,center.getY()+0.00)];
+					else 
+						defaultpoints=[new YMaps.GeoPoint(map.getCenter().getX()-0.00,map.getCenter().getY()-0.06),
+											  new YMaps.GeoPoint(map.getCenter().getX()-0.06,map.getCenter().getY()+0.00),
+											  new YMaps.GeoPoint(map.getCenter().getX()+0.00,map.getCenter().getY()+0.06),
+											  new YMaps.GeoPoint(map.getCenter().getX()+0.06,map.getCenter().getY()+0.00)];
+					
+					var bounds = new Array();					
+					".$jsPoints."		
+					
+					if (!startpoints.length) startpoints[0]=defaultpoints;
+					
+					for (i in startpoints){					
+						for (ii=0;ii<startpoints[i].length;ii++){
+							bounds.push(startpoints[i][ii]);
+						}
+						map.setBounds (new YMaps.GeoCollectionBounds(bounds));
+						addPolygon(map, i , startpoints[i]);
+						//alert (i);
+							
+				    }
+				    return polygons;
+
+		}
+		
 		if (window.attachEvent) // IE
-			window.attachEvent("onload", function(){init_MAP_DzDvWLBsil(null,'{$maptype}')});
+			window.attachEvent('onload', function(){init_MAP_DzDvWLBsil(null,'{$maptype}');});
 		else if (window.addEventListener) // Gecko / W3C
-			window.addEventListener('load', function(){init_MAP_DzDvWLBsil(null,'{$maptype}')}, false);
+			window.addEventListener('load', function(){init_MAP_DzDvWLBsil(null,'{$maptype}'); }, false);
 		else
-			window.onload = function(){init_MAP_DzDvWLBsil(null,'{$maptype}')};
-EOD
+			window.onload = function(){init_MAP_DzDvWLBsil(null,'{$maptype}'); };
+
+			
+"
 ,CClientScript::POS_HEAD);
 ?>
+<?php Yii::app()->clientScript->registerScript('savegibdd',<<<EOD
+		
+		
+		$('#gibdd-form').submit(function() {
+			if (!polygons) return false;
+			
+			for (i in polygons){	
+				var points=polygons[i].getPoints();				
+					for (ii=0;ii<points.length;ii++){
+						$(this).append('<input type="hidden" name="GibddAreaPoints['+i+']['+ii+'][lat]" value="'+points[ii].getY()+'" /><input type="hidden" name="GibddAreaPoints['+i+']['+ii+'][lng]" value="'+points[ii].getX()+'" />');
+					}
+			}	
+			return true;
+		});		
+
+			
+EOD
+,CClientScript::POS_READY);
+?>
+<?php if ($model->is_regional) : ?>
+<a href="#" id="newPolygon">Добавить область</a>
+<?php endif;?>
 <div id="BX_YMAP_MAP_DzDvWLBsil" style="width:100%; height:400px;" class="bx-yandex-map">загрузка карты...</div>		
 			</div>
 		</div>
+		
 		<img src="/images/map_shadow.jpg" class="mapShadow" alt="" />
-
+		
 	</div>
 		
 	</div>
-	<!-- /правая колоночка -->
-<?php endif; ?>		
+	<!-- /правая колоночка -->	
 	<div class="addSubmit">
 		<div class="container">
 			<p></p>

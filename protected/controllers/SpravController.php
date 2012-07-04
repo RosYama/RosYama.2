@@ -14,7 +14,7 @@ class SpravController extends Controller
 	public function filters()
 	{
 		return array(
-			'accessControl', // perform access control for CRUD operations
+			'userGroupsAccessControl', // perform access control for CRUD operations
 		);
 	}
 
@@ -27,12 +27,16 @@ class SpravController extends Controller
 	{
 		return array(
 			array('allow',
-				'actions'=>array('index','view','fill_gibdd_reference', 'fill_prosecutor_reference','local'),
+				'actions'=>array('index','view','fill_gibdd_reference', 'fill_prosecutor_reference','local', 'jsonGibddMap'),
 				'users'=>array('*'),
 			),		
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
 				'actions'=>array('add','update','delete', 'moderate', 'updateprosecutor'),
 				'users'=>array('@'),
+			),
+			array('allow', // allow admin user to perform 'admin' and 'delete' actions
+				'actions'=>array('saveAllPolygions'),
+				'groups'=>array('root'), 
 			),
 			array('deny',  // deny all users
 				'users'=>array('*'),
@@ -52,6 +56,42 @@ class SpravController extends Controller
 		$nanoyandex_reply = substr($nanoyandex_reply, $pos);
 		$nanoyandex_reply = substr($nanoyandex_reply, 21, strpos($nanoyandex_reply, '</inflection>') - 21); // 21 = strlen('<inflection case="3">')
 		return trim($nanoyandex_reply, "\n\t ");
+	}	
+	
+	public function actionSaveAllPolygions()
+	{
+		if (isset($_POST['GibddAreaName'])){
+			foreach ($_POST['GibddAreaName'] as $i=>$region){
+				$points=$_POST['GibddAreaPoints'][$i];
+				$subjId=RfSubjects::model()->SearchID($region);
+				if ($subjId){
+				$subj=RfSubjects::model()->findByPk($subjId);
+				echo '<font color="green">Обновлено: '.$subj->name.'</font><br />';
+					if ($subj && $subj->gibdd){
+						foreach ($subj->gibdd->areas as $item) $item->delete();
+						$areamodel=new GibddAreas;
+						$areamodel->gibdd_id=$subj->gibdd->id;					
+
+						if ($points && $areamodel->save()){
+							foreach ($points as $ii=>$point){
+								if ($point['lat'] && $point['lng']){
+											$pointmodel=new GibddAreaPoints;
+											$pointmodel->lat=$point['lat'];
+											$pointmodel->lng=$point['lng'];
+											$pointmodel->area_id=$areamodel->id;
+											$pointmodel->point_num=$ii;
+											$pointmodel->save(); 
+								}
+							}
+						}
+					}
+				}
+				else echo '<font color="red">Не найдено: '.$region.'</font><br />';
+				
+			}
+		
+		}
+		
 	}	
 	
 	public function actionFill_gibdd_reference()
@@ -191,9 +231,11 @@ class SpravController extends Controller
 		foreach($_regions as &$r)
 		{			
 			$model=GibddHeads::model()->find('subject_id='.(int)$r['subject_id'].' AND is_regional=1');
-			if (!$model) $model=new GibddHeads;		
+			if (!$model) $model=new GibddHeads;	
+			$model->scenario='fill';
 			$model->attributes=$r;
 			$model->is_regional=1;
+			$model->level=1;
 			$model->moderated=1;
 			$model->save();
 		}
@@ -292,7 +334,31 @@ class SpravController extends Controller
 		));
 	}
 	
-	public function actionAdd()
+	public function actionJsonGibddMap()
+	{
+		$model=GibddHeads::model()->findAll('lat > 0 AND lng > 0');
+		$gibds=Array();
+		foreach ($model as $item) {
+			$areas=Array();
+			if ($item->areas)
+				foreach ($item->areas as $i=>$area){
+					foreach ($area->points as $point)
+						$areas[$i][]=Array('lat'=>$point->lat, 'lng'=>$point->lng);
+				}		
+			
+			$descr=$this->renderPartial('_view_gibdd', array('data'=>$item), true);
+			
+			$gibds[]=Array('lat'=>$item->lat, 'lng'=>$item->lng, 'name'=>$item->name, 'id'=>$item->id, 'descr'=>$descr.($areas ? CHtml::link('Показать границу наблюдения', '#', Array('class'=>'show_gibdd_area', 'gibddid'=>$item->id)) : '' ),
+			'areas'=>$areas, 
+			);
+		}
+		echo $_GET['jsoncallback'].'({"gibdds": '.CJSON::encode($gibds).'})';
+		
+		Yii::app()->end();		
+		
+	}	
+	
+	public function actionAdd($subject_id)
 	{
 		$model=new GibddHeads;
 
@@ -304,23 +370,34 @@ class SpravController extends Controller
         $cs->registerScriptFile('http://api-maps.yandex.ru/1.1/index.xml?key='.$this->mapkey);
         $jsFile = CHtml::asset($this->viewPath.DIRECTORY_SEPARATOR.'js'.DIRECTORY_SEPARATOR.'ymap.js');
         $cs->registerScriptFile($jsFile);     
-
+		
+		$subj=RfSubjects::model()->findByPk((int)$subject_id);
+		if($subj) $model->subject_id=$subj->id;
+		
 		if(isset($_POST['GibddHeads']))
 		{
 			$model->attributes=$_POST['GibddHeads'];
 			$model->author_id=Yii::app()->user->id;	
-			$model->created=time();
-			$subj=RfSubjects::model()->SearchID(trim($model->str_subject));
-			if($subj) $model->subject_id=$subj;
-			else $model->subject_id=0;
+			$model->created=time();			
+			
+			if ($subj) $model->subject_id=$subj->id;
+			else if ($model->str_subject){
+				$subjct=RfSubjects::model()->SearchID(trim($model->str_subject));
+				if($subjct) $model->subject_id=$subjct;
+				else $model->subject_id=0;
+			}
+			
+			
 			if (Yii::app()->user->level > 50) $model->moderated=1;
 			else $model->moderated=0;
+			if ($model->level < 2) $model->level=2;
 			if($model->save())
 				$this->redirect(array('local','id'=>$model->id));
 		}		
 
 		$this->render('add',array(
-			'model'=>$model,			
+			'model'=>$model,
+			'subject'=>$subj,
 		));
 	}	
 	
@@ -337,19 +414,20 @@ class SpravController extends Controller
 		
 		$cs=Yii::app()->getClientScript();
         $cs->registerCssFile('/css/add_form.css');
-        $cs->registerScriptFile('http://api-maps.yandex.ru/1.1/index.xml?key='.$this->mapkey);
+        $cs->registerScriptFile('http://api-maps.yandex.ru/1.1/index.xml?key='.$this->mapkey.';modules=regions');
         $jsFile = CHtml::asset($this->viewPath.DIRECTORY_SEPARATOR.'js'.DIRECTORY_SEPARATOR.'ymap.js');
         $cs->registerScriptFile($jsFile);     
 
 		if(isset($_POST['GibddHeads']))
 		{
-			$model->attributes=$_POST['GibddHeads'];
+			$model->attributes=$_POST['GibddHeads'];			
 			$model->modified=time();
 			if ($model->str_subject){
 				$subj=RfSubjects::model()->SearchID(trim($model->str_subject));
 				if($subj) $model->subject_id=$subj;
 				else $model->subject_id=0;
 			}
+			if ($model->level < 2 && !$model->is_regional) $model->level=2; 
 			if($model->save())
 				$this->redirect(array('local','id'=>$model->id));
 		}		

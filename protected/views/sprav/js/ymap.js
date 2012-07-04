@@ -241,6 +241,7 @@ var filter_state = {};
 var filter_type = {};
 var msie = YMaps.jQuery.browser.msie;
 var clusterer;
+var allregionPolygons=new Array;
 
 var opts = {
           centered: msie ? false : true, // if not IE use centered clusters
@@ -299,13 +300,112 @@ function init_MAP_DzDvWLBsil(context, type)
 							window.BX_SetPlacemarks_MAP_DzDvWLBsil(map);
 					}
 	
-	map.disableDblClickZoom();
+	if (type=="add" || type=="update") {
+	map.disableDblClickZoom();	
 	YMaps.Events.observe(map, map.Events.DblClick, setCoordValue);	
+	}
 	if (type=="update") {	
 	setCoordValue(map);
 	center = new YMaps.GeoPoint($('#GibddHeads_lng').val(), $('#GibddHeads_lat').val());
 	map.setCenter(center, zoom, context.YMaps.MapType.MAP);	
 	}
+	if (type=="update_regional" || type=="update_regional_areaExtend" ){
+	//polygon=setPolygon(map, new YMaps.GeoPoint(lat, lon));
+	map.disableDblClickZoom();	
+	/*YMaps.Events.observe(map, map.Events.DblClick, function(map, ev){		
+		if (!polygons.length) {
+			//setPolygon(map, new YMaps.GeoPoint(ev.getCoordPoint().getX(), ev.getCoordPoint().getY()));
+			}
+	});*/	
+	if (!polygons.length && type=="update_regional_areaExtend") {
+		if (startpoints.length){
+			for (i in startpoints)
+				addPolygon(map, i , startpoints[i]);
+		}
+		else polygons=setPolygon(map, new YMaps.GeoPoint(0, 0));		
+		}
+	}
+	$('#newPolygon').click(function() {	
+		var defaultpoints=[new YMaps.GeoPoint(map.getCenter().getX()-0.00,map.getCenter().getY()-0.06),
+											  new YMaps.GeoPoint(map.getCenter().getX()-0.06,map.getCenter().getY()+0.00),
+											  new YMaps.GeoPoint(map.getCenter().getX()+0.00,map.getCenter().getY()+0.06),
+											  new YMaps.GeoPoint(map.getCenter().getX()+0.06,map.getCenter().getY()+0.00)];
+		addPolygon(map, polygons.length , defaultpoints);
+	return false;
+	});	
+	
+	if (defbounds.length){
+	bounds=new Array;
+		for (i in defbounds)
+			for (ii in defbounds[i])
+				bounds.push(defbounds[i][ii]);		
+		map.setBounds (new YMaps.GeoCollectionBounds(bounds));
+	}
+	$('#showAllRegions').click(function() {	
+			for (objIndex in allregionPolygons){
+				map.removeOverlay(allregionPolygons[objIndex]);
+			}			
+			YMaps.Regions.load("ru", function (state, response) {
+				if (state == YMaps.State.SUCCESS) {
+				
+				  response.forEach(function (obj, objIndex, group) {
+					 
+				  obj.setOptions({
+					highlightRegion: false
+				  });
+				 
+				  var geoObjectOptions = {
+					hasBalloon: true,
+					hasHint: true,
+					hintOptions: {
+					   offset: new YMaps.Point(5, 5)
+					}
+				  }
+						
+				  var style = new YMaps.Style();
+				  style.polygonStyle = new YMaps.PolygonStyle();
+				  style.polygonStyle.fill = true;
+				  style.polygonStyle.outline = true;
+				  style.polygonStyle.strokeWidth = 3;
+				  style.polygonStyle.strokeColor = "ffffff88";
+				  style.polygonStyle.fillColor = "ff000055";
+						
+				  allregionPolygons[objIndex] = YMaps.Polygon.fromEncodedPoints(
+					obj.metaDataProperty.encodedShapes[0].coords,
+					obj.metaDataProperty.encodedShapes[0].levels,
+					geoObjectOptions
+				  );			
+				
+				  allregionPolygons[objIndex].name = obj.name;
+				  allregionPolygons[objIndex].description = 'tratata ' + obj.name;
+						
+				  allregionPolygons[objIndex].setStyle(style);
+				
+				  map.addOverlay(allregionPolygons[objIndex]);
+				  allregionPolygons[objIndex].startEditing();	
+				  
+				  $('#AllRegionsForm').show();
+			  });
+				
+				
+			  response.setStyle({
+				polygonStyle : {
+				  fillColor : "ffffff99",
+				  strokeColor : "000000",
+				  strokeWidth: 3
+				},
+				hasHint : false
+			  });
+			  
+			} else {
+			  alert("Во время выполнения запроса произошла ошибка: " + response.error.message)
+			}
+			
+		});
+	return false;	
+	});
+	
+	return map;
 }      
 
 
@@ -336,6 +436,10 @@ function setCoordValue(map, ev)
 	var lon = $('#GibddHeads_lat').val();
 	var lat = $('#GibddHeads_lng').val();
 	coordpoint = new YMaps.Placemark(new YMaps.GeoPoint(lat, lon), { style: 'default#violetPoint', draggable: true, hasBalloon: false, hideIcon: false });
+	
+	polygon=setPolygon(map, new YMaps.GeoPoint(lat, lon));
+	
+	
 	YMaps.Events.observe(coordpoint, coordpoint.Events.DragEnd, function (obj) {
 		$('#GibddHeads_lat').val(obj.getCoordPoint().getY());
 		$('#GibddHeads_lng').val(obj.getCoordPoint().getX());

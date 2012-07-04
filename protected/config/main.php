@@ -107,11 +107,13 @@ return array(
 			'rules'=>array(
 				  '/'=>'holes/index',
 				  '<id:\d+>'=>'holes/view',
+				  'map/<userid:\d+>/'=>'holes/map',				  
 				  'map'=>'holes/map',
 				  'page/<view:\w+>/' => 'site/page',
 				  'userGroups'=>'userGroups',
 				  'gii'=>'gii',
 				  'profile'=>'profile',
+				  'sprav/<subject_id:\d+>/add/'=>'sprav/add',
 				  'api/<id:\d+>'=>'api/index',
 				  'api/my/<id:\d+>/update'=>'api/update',
 				  'api/my/<id:\d+>/<type:[a-zA-Z0-9\_]+>'=>'api/setstate',

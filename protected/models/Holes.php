@@ -50,6 +50,7 @@ class Holes extends CActiveRecord
 	public $selecledList;
 	public $polygonIds;
 	public $keys=Array();
+	public $polygons=Array();
 	/**
 	 * @return string the associated database table name
 	 */
@@ -192,10 +193,10 @@ class Holes extends CActiveRecord
 	const EARTH_RADIUS_KM = 6373;
 	public function getTerritorialGibdd()	
 	{	
-		if (!$this->subject) return Array();
+		//if (!$this->subject) return Array();
 		$longitude=$this->LONGITUDE;
 		$latitude=$this->LATITUDE;		
-		$numerator = 'POW(COS(RADIANS(lat)) * SIN(ABS(RADIANS('.$longitude.')-RADIANS(lng))),2)';		
+		/* $numerator = 'POW(COS(RADIANS(lat)) * SIN(ABS(RADIANS('.$longitude.')-RADIANS(lng))),2)';		
 		$numerator .= ' + POW(
 		COS(RADIANS('.$latitude.')) * SIN(RADIANS(lat)) - SIN(RADIANS('.$latitude.'))
 		* COS(RADIANS(lat))*COS(ABS(RADIANS('.$longitude.')-RADIANS(lng)))
@@ -215,7 +216,45 @@ class Holes extends CActiveRecord
 		$criteria->having='ABS(distance) < 1000';
 		$criteria->limit=5;
 		$gibdds=GibddHeads::model()->findAll($criteria);
-		if ($this->subject) array_unshift ($gibdds, $this->subject->gibdd);
+		if ($this->subject) array_unshift ($gibdds, $this->subject->gibdd);*/
+		
+		
+		$gibdds=GibddHeads::model()->with('areas')->findAll(Array('order'=>'t.level DESC, t.subject_id DESC'));
+		
+		$regionalGibdds=Array();
+		$regkey=0;
+		foreach ($gibdds as $i=>$gibdd){
+			$inpolyg=false;
+			foreach ($gibdd->areas as $area){
+				$inpolyg=$this->inPolygon($area, $this, 'points');
+				if ($inpolyg) break;
+			}	
+			if (!$inpolyg) unset ($gibdds[$i]);
+			else if ($gibdd->level==1) {$regionalGibdds[$i]=$gibdd; $regkey=$i;}
+		}
+		
+		if ($regionalGibdds){			
+			if (count($regionalGibdds) > 1){				
+				foreach ($regionalGibdds as $i=>$gibdd){
+					$mindist=999999999*9999999;
+					foreach ($gibdd->areas as $area){
+						foreach ($area->points as $point){
+						$dist=sqrt(pow($point->lat - $this->LATITUDE, 2) + pow($point->lng - $this->LONGITUDE, 2));
+						if ($dist < $mindist) $mindist=$dist;
+						}
+					}
+					$regionalGibdds[$i]->mindist=$mindist;
+				}
+				
+				$mindist=$regionalGibdds[$regkey]->mindist;
+				
+				foreach ($regionalGibdds as $i=>$gibdd){						
+						if ($gibdd->mindist <= $mindist) $mindist=$gibdd->mindist;
+						else unset($gibdds[$i]);
+					}
+			}	
+		}	
+		
 		return $gibdds;
 	}
 		
@@ -663,12 +702,12 @@ class Holes extends CActiveRecord
 		));
 	}	
 	
-	public function inPolygon($polygon, $point){
+	public function inPolygon($polygon, $point, $relname='points'){
 			$i=0;
-			$j=count ($polygon->points)-1;			
+			$j=count ($polygon->$relname)-1;			
 			$c = 0;
-			$points=$polygon->points;
-			for ($i=0; $i<count($polygon->points); $j=$i++){
+			$points=$polygon->$relname;
+			for ($i=0; $i<count($polygon->$relname); $j=$i++){
 				if (((($points[$i]->lat <= $point->LATITUDE) && ($point->LATITUDE < $points[$j]->lat)) || (($points[$j]->lat <= $point->LATITUDE) && ($point->LATITUDE < $points[$i]->lat))) && 
 						 ($point->LONGITUDE > ($points[$j]->lng - $points[$i]->lng) * ($point->LATITUDE - $points[$i]->lat) / ($points[$j]->lat - $points[$i]->lat) + $points[$i]->lng)
 						 ) {
@@ -679,6 +718,23 @@ class Holes extends CActiveRecord
 				
 		return $c;
 	}
+	
+	public function inPolygonArray($polygon, $point){
+			$i=0;
+			$j=count ($polygon)-1;			
+			$c = 0;
+			$points=$polygon;
+			for ($i=0; $i<count($polygon); $j=$i++){
+				if (((($points[$i]['lat'] <= $point->LATITUDE) && ($point->LATITUDE < $points[$j]['lat'])) || (($points[$j]['lat'] <= $point->LATITUDE) && ($point->LATITUDE < $points[$i]['lat']))) && 
+						 ($point->LONGITUDE > ($points[$j]['lng'] - $points[$i]['lng']) * ($point->LATITUDE - $points[$i]['lat']) / ($points[$j]['lat'] - $points[$i]['lat']) + $points[$i]['lng'])
+						 ) {
+						 $c = !$c;
+					 }	
+					 
+				}
+				
+		return $c;
+	}	
 	
 	public function findPkeysInAreaByUser($userModel)
 	{
@@ -726,6 +782,33 @@ class Holes extends CActiveRecord
 			$polygonHoles=$this->findAll($polygonCriteria);
 			foreach ($polygonHoles as $item){
 					$inPolygon=$this->inPolygon($shape, $item);
+					if (!$inPolygon) $polygonHolesIds[$item->ID]=$item->ID;
+					else unset ($polygonHolesIds[$item->ID]);
+						
+			}	
+		}			
+		return $polygonHolesIds;
+	
+	}
+	
+	public function findPkeysNotInArea($polygons, $corners)
+	{
+	
+		//Вытаскиваем айдишники ям не в полигонах		
+		$polygonHolesIds=Array();
+		foreach ($polygons as $i=>$polygon){
+			$polygonCriteria=new CDbCriteria;
+			$cond='LONGITUDE >= '.$corners[$i]['left']
+			.' AND LONGITUDE <= '.$corners[$i]['right']
+			.' AND LATITUDE >= '.$corners[$i]['bottom']
+			.' AND LATITUDE <= '.$corners[$i]['top'];		
+			
+			$polygonCriteria->addCondition($cond);					
+			
+			$polygonCriteria->select='ID, LATITUDE, LONGITUDE';
+			$polygonHoles=$this->findAll($polygonCriteria);
+			foreach ($polygonHoles as $item){
+					$inPolygon=$this->inPolygonArray($polygon, $item);
 					if (!$inPolygon) $polygonHolesIds[$item->ID]=$item->ID;
 					else unset ($polygonHolesIds[$item->ID]);
 						
@@ -806,6 +889,37 @@ class Holes extends CActiveRecord
 		$criteria=new CDbCriteria;
 		//$criteria->with=Array('pictures_fresh','pictures_fixed');
 		$criteria->with=Array('type','pictures_fresh', 'comments_cnt');
+		
+		
+		if ($this->polygons){
+			$corners=Array();
+			foreach ($this->polygons as $i=>$polygon){
+				$corners[$i]['left']=$polygon[0]['lng'];
+				$corners[$i]['right']=$polygon[0]['lng'];
+				$corners[$i]['top']=$polygon[0]['lat'];
+				$corners[$i]['bottom']=$polygon[0]['lat'];
+				foreach ($polygon as $point){
+					if ($point['lng'] < $corners[$i]['left']) $corners[$i]['left']=$point['lng'];
+					if ($point['lng'] > $corners[$i]['right']) $corners[$i]['right']=$point['lng'];
+					if ($point['lat'] > $corners[$i]['top']) $corners[$i]['top']=$point['lat'];
+					if ($point['lat'] < $corners[$i]['bottom']) $corners[$i]['bottom']=$point['lat'];
+				}	
+			}
+			
+			foreach ($corners as $corner){
+				$cond='LONGITUDE >= '.$corner['left']
+				.' AND LONGITUDE <= '.$corner['right']
+				.' AND LATITUDE >= '.$corner['bottom']
+				.' AND LATITUDE <= '.$corner['top'];					
+				$criteria->addCondition($cond,'OR');			
+			}
+			
+			$notPolygonHolesIds=$this->findPkeysNotInArea($this->polygons, $corners);
+			if ($notPolygonHolesIds) $criteria->addNotInCondition('t.ID',$notPolygonHolesIds);				
+		
+		}
+		
+		
 		$criteria->compare('t.ID',$this->ID,false);
 		$criteria->compare('t.USER_ID',$this->USER_ID,false);
 		$criteria->compare('t.LATITUDE',$this->LATITUDE);
