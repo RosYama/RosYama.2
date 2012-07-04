@@ -14,7 +14,7 @@ class SpravController extends Controller
 	public function filters()
 	{
 		return array(
-			'accessControl', // perform access control for CRUD operations
+			'userGroupsAccessControl', // perform access control for CRUD operations
 		);
 	}
 
@@ -34,6 +34,10 @@ class SpravController extends Controller
 				'actions'=>array('add','update','delete', 'moderate', 'updateprosecutor'),
 				'users'=>array('@'),
 			),
+			array('allow', // allow admin user to perform 'admin' and 'delete' actions
+				'actions'=>array('saveAllPolygions'),
+				'groups'=>array('root'), 
+			),
 			array('deny',  // deny all users
 				'users'=>array('*'),
 			),
@@ -52,6 +56,42 @@ class SpravController extends Controller
 		$nanoyandex_reply = substr($nanoyandex_reply, $pos);
 		$nanoyandex_reply = substr($nanoyandex_reply, 21, strpos($nanoyandex_reply, '</inflection>') - 21); // 21 = strlen('<inflection case="3">')
 		return trim($nanoyandex_reply, "\n\t ");
+	}	
+	
+	public function actionSaveAllPolygions()
+	{
+		if (isset($_POST['GibddAreaName'])){
+			foreach ($_POST['GibddAreaName'] as $i=>$region){
+				$points=$_POST['GibddAreaPoints'][$i];
+				$subjId=RfSubjects::model()->SearchID($region);
+				if ($subjId){
+				$subj=RfSubjects::model()->findByPk($subjId);
+				echo '<font color="green">Обновлено: '.$subj->name.'</font><br />';
+					if ($subj && $subj->gibdd){
+						foreach ($subj->gibdd->areas as $item) $item->delete();
+						$areamodel=new GibddAreas;
+						$areamodel->gibdd_id=$subj->gibdd->id;					
+
+						if ($points && $areamodel->save()){
+							foreach ($points as $ii=>$point){
+								if ($point['lat'] && $point['lng']){
+											$pointmodel=new GibddAreaPoints;
+											$pointmodel->lat=$point['lat'];
+											$pointmodel->lng=$point['lng'];
+											$pointmodel->area_id=$areamodel->id;
+											$pointmodel->point_num=$ii;
+											$pointmodel->save(); 
+								}
+							}
+						}
+					}
+				}
+				else echo '<font color="red">Не найдено: '.$region.'</font><br />';
+				
+			}
+		
+		}
+		
 	}	
 	
 	public function actionFill_gibdd_reference()
@@ -374,7 +414,7 @@ class SpravController extends Controller
 		
 		$cs=Yii::app()->getClientScript();
         $cs->registerCssFile('/css/add_form.css');
-        $cs->registerScriptFile('http://api-maps.yandex.ru/1.1/index.xml?key='.$this->mapkey);
+        $cs->registerScriptFile('http://api-maps.yandex.ru/1.1/index.xml?key='.$this->mapkey.';modules=regions');
         $jsFile = CHtml::asset($this->viewPath.DIRECTORY_SEPARATOR.'js'.DIRECTORY_SEPARATOR.'ymap.js');
         $cs->registerScriptFile($jsFile);     
 

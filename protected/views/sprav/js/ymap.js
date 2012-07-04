@@ -241,6 +241,7 @@ var filter_state = {};
 var filter_type = {};
 var msie = YMaps.jQuery.browser.msie;
 var clusterer;
+var allregionPolygons=new Array;
 
 var opts = {
           centered: msie ? false : true, // if not IE use centered clusters
@@ -334,12 +335,76 @@ function init_MAP_DzDvWLBsil(context, type)
 	});	
 	
 	if (defbounds.length){
-	bounds=new Array();
+	bounds=new Array;
 		for (i in defbounds)
 			for (ii in defbounds[i])
 				bounds.push(defbounds[i][ii]);		
 		map.setBounds (new YMaps.GeoCollectionBounds(bounds));
 	}
+	$('#showAllRegions').click(function() {	
+			for (objIndex in allregionPolygons){
+				map.removeOverlay(allregionPolygons[objIndex]);
+			}			
+			YMaps.Regions.load("ru", function (state, response) {
+				if (state == YMaps.State.SUCCESS) {
+				
+				  response.forEach(function (obj, objIndex, group) {
+					 
+				  obj.setOptions({
+					highlightRegion: false
+				  });
+				 
+				  var geoObjectOptions = {
+					hasBalloon: true,
+					hasHint: true,
+					hintOptions: {
+					   offset: new YMaps.Point(5, 5)
+					}
+				  }
+						
+				  var style = new YMaps.Style();
+				  style.polygonStyle = new YMaps.PolygonStyle();
+				  style.polygonStyle.fill = true;
+				  style.polygonStyle.outline = true;
+				  style.polygonStyle.strokeWidth = 3;
+				  style.polygonStyle.strokeColor = "ffffff88";
+				  style.polygonStyle.fillColor = "ff000055";
+						
+				  allregionPolygons[objIndex] = YMaps.Polygon.fromEncodedPoints(
+					obj.metaDataProperty.encodedShapes[0].coords,
+					obj.metaDataProperty.encodedShapes[0].levels,
+					geoObjectOptions
+				  );			
+				
+				  allregionPolygons[objIndex].name = obj.name;
+				  allregionPolygons[objIndex].description = 'tratata ' + obj.name;
+						
+				  allregionPolygons[objIndex].setStyle(style);
+				
+				  map.addOverlay(allregionPolygons[objIndex]);
+				  allregionPolygons[objIndex].startEditing();	
+				  
+				  $('#AllRegionsForm').show();
+			  });
+				
+				
+			  response.setStyle({
+				polygonStyle : {
+				  fillColor : "ffffff99",
+				  strokeColor : "000000",
+				  strokeWidth: 3
+				},
+				hasHint : false
+			  });
+			  
+			} else {
+			  alert("Во время выполнения запроса произошла ошибка: " + response.error.message)
+			}
+			
+		});
+	return false;	
+	});
+	
 	return map;
 }      
 

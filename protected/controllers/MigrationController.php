@@ -73,6 +73,44 @@ class MigrationController extends Controller
 		else echo 'Произошла ошибка'; 
 	}
 	
+	public function actionGetRegionPolygons()
+	{
+		//Попытка грузить границы регионов из mif файла
+		die();
+		set_time_limit(0);
+		$file = file_get_contents($_SERVER['DOCUMENT_ROOT'].'/regions2010_wgs.mif');
+		preg_match_all('/REGION 1\s+(\d+)\s+([-\d\s\.]*)\s+PEN/ism', $file, $matches, PREG_SET_ORDER); 
+		echo count ($matches).'<br/>';
+		//print_r($matches);
+		
+		foreach ($matches as $i=>$match){
+			echo $match[1].'<br/>';
+			if ($match[1] && $match[2]){
+			$subj=RfSubjects::model()->find('region_num='.$match[1]);
+			if ($subj && $subj->gibdd){
+				//foreach ($subj->gibdd->areas as $item) $item->delete();
+				$areamodel=new GibddAreas;
+				$areamodel->gibdd_id=$subj->gibdd->id;
+				
+				$lines=explode("\n", $match[2]);
+				if ($lines && $areamodel->save()){
+					foreach ($lines as $ii=>$line){
+						$coord=explode(" ", $line);
+						if (isset($coord[0]) && isset($coord[1]) && $coord[0] && $coord[1]){
+									$pointmodel=new GibddAreaPoints;
+									$pointmodel->lat=$coord[1];
+									$pointmodel->lng=$coord[0];
+									$pointmodel->area_id=$areamodel->id;
+									$pointmodel->point_num=$ii;
+									$pointmodel->save(); 
+						}
+					}
+				}
+			}
+			}
+		}
+	}	
+	
 	public function actionImportUsers()
 	{
 		set_time_limit(0);

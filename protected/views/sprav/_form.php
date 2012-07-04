@@ -1,4 +1,44 @@
 <div class="form">
+
+	<?php if (Yii::app()->user->groupName=="root") : ?>
+	<?php Yii::app()->clientScript->registerScript('saveallregions',<<<EOD
+		
+		
+		$('#gibdd-allregions-form').submit(function() {
+			if (!allregionPolygons.length) return false;
+			
+			for (i in allregionPolygons){	
+				$(this).append('<input type="hidden" name="GibddAreaName['+i+']" value="'+allregionPolygons[i].name+'" />');
+				var points=allregionPolygons[i].getPoints();				
+					for (ii=0;ii<points.length;ii++){
+						$(this).append('<input type="hidden" name="GibddAreaPoints['+i+']['+ii+'][lat]" value="'+points[ii].getY()+'" /><input type="hidden" name="GibddAreaPoints['+i+']['+ii+'][lng]" value="'+points[ii].getX()+'" />');
+					}
+			}	
+			return true;
+		});		
+
+			
+EOD
+,CClientScript::POS_READY);
+?>
+	<div class="rCol"> 
+		<br/><a href="#" id="showAllRegions">Показать границы регионов</a>	
+		<div id="AllRegionsForm" style="display:none;">
+			<?php $form=$this->beginWidget('CActiveForm', array(
+				'id'=>'gibdd-allregions-form',
+				'enableAjaxValidation'=>false,
+				'htmlOptions'=>Array ('enctype'=>'multipart/form-data'),
+				'action'=>$this->createUrl('saveAllPolygions'),
+			)); ?>
+			<?php echo CHtml::submitButton('Сохранить границы всех областей', Array()); ?>
+			<?php $this->endWidget(); ?>
+		</div>
+
+	</div>	
+
+		
+	<?php endif; ?>
+
 <?php $form=$this->beginWidget('CActiveForm', array(
 	'id'=>'gibdd-form',
 	'enableAjaxValidation'=>false,
@@ -101,8 +141,8 @@
 		</div>
 	
 		
-		<?php echo $form->textField($model,'lat'); ?>
-		<?php echo $form->textField($model,'lng'); ?>
+		<?php echo $form->hiddenField($model,'lat'); ?>
+		<?php echo $form->hiddenField($model,'lng'); ?>
 		<?php echo $form->hiddenField($model,'str_subject'); ?>
 	</div>
 	<!-- /левая колоночка -->
@@ -265,8 +305,9 @@ EOD
 <div id="BX_YMAP_MAP_DzDvWLBsil" style="width:100%; height:400px;" class="bx-yandex-map">загрузка карты...</div>		
 			</div>
 		</div>
+		
 		<img src="/images/map_shadow.jpg" class="mapShadow" alt="" />
-
+		
 	</div>
 		
 	</div>
