@@ -255,7 +255,9 @@ class Holes extends CActiveRecord
 			}	
 		}	
 		
-		return $gibdds;
+		$newArr=Array();		
+		foreach ($gibdds as $gibdd) $newArr[]=$gibdd;		
+		return $newArr;
 	}
 		
 	

@@ -321,11 +321,16 @@ class XmlController extends Controller
 		$addressArr    = RfSubjects::model()->Address($address);
 		$subject_rf = $addressArr['subject_rf'];
 		$city       = $addressArr['city'];
-		$address    = $addressArr['address'];
-		
+		$address    = $addressArr['address'];		
+
 
 		
-
+		$tags=Array();
+		$model=new Holes;	
+		
+		$model->LATITUDE=$latitude;
+		$model->LONGITUDE=$longitude;
+		
 		if((!$subject_rf || !$city || !$address) && ($latitude && $longitude)){
 				$addressArr    = RfSubjects::model()->AddressfromLatLng($latitude, $longitude, $this->mapkey);
 					if ($addressArr) {
@@ -335,7 +340,7 @@ class XmlController extends Controller
 					}
 			}
 		
-		if ($model->territorialGibdd) {
+		if ($model->territorialGibdd && isset($model->territorialGibdd[0])) {
 			$gibdd_id=$model->territorialGibdd[0]->id;
 			$subject_rf=$model->territorialGibdd[0]->subject->id;
 		}	
@@ -345,8 +350,6 @@ class XmlController extends Controller
 	
 		if(!$city) $this->error('CANNOT_REALISE_CITY');
 		
-		$tags=Array();
-		$model=new Holes;		
 		$model->USER_ID=$user->id;	
 		$model->DATE_CREATED=time();
 		$model->ADR_SUBJECTRF=$subject_rf;
@@ -354,8 +357,7 @@ class XmlController extends Controller
 		$model->ADDRESS=trim($address);
 		if ($user->level > 50) $model->PREMODERATED=1;
 		else $model->PREMODERATED=0;
-		$model->LATITUDE=$latitude;
-		$model->LONGITUDE=$longitude;
+
 		$model->TYPE_ID=$typemodel->id;
 		$model->COMMENT1=$comment;
 		if (!$gibdd_id){
