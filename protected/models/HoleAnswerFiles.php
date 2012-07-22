@@ -71,6 +71,11 @@ class HoleAnswerFiles extends CActiveRecord
 		);
 	}
 	
+	
+	public function getDivClass(){
+		return str_replace('/', '_', $this->file_type);
+	}
+	
 	public function beforeDelete(){
 		if ($this->file_type=='image')
 			unlink($_SERVER['DOCUMENT_ROOT'].$this->answer->filesFolder.'/thumbs/'.$this->file_name);

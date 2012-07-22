@@ -9,3 +9,5 @@ bugs
 protected/runtime/*
 
 protected/runtime/application.log
+
+.DS_Store

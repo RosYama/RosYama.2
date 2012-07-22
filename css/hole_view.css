@@ -219,3 +219,6 @@ div.rCol .before:after, div.rCol .after:after {
 	resize:none;
 	margin-bottom:10px;
 }
+
+.answer_file{width: 105px; height: 150px; float:left; margin-right: 10px; text-align: right;}
+.answer_file .delfileBtn {position: absolute; width: 16px; margin-left: 92px;}

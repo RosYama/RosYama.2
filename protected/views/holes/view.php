@@ -420,14 +420,15 @@ new Ya.share({
 					<?php endif; ?>	
 					</h2>				
 					<?php if ($answer->files_other) : ?>
-					<? foreach($answer->files_other as $file): ?>
-					<p>
-						<?php echo CHtml::link($file->file_name, $answer->filesFolder.'/'.$file->file_name, Array('class'=>'declarationBtn')); ?>
+					<? foreach($answer->files_other as $file): ?>					
+						<div class="answer_file <?php echo $file->divClass; ?>">
 						<?php if ($request->user_id==Yii::app()->user->id) : ?>
-							<?php echo CHtml::link(CHtml::image('/images/delete.png', 'Удалить файл', Array('title'=>'Удалить файл')), Array('delanswerfile','id'=>$file->id), Array('class'=>'declarationBtn')); ?><br />
-						<?php endif; ?>					
-					</p>	
-					<? endforeach; ?>				
+							<?php echo CHtml::link(CHtml::image('/images/delete.png', 'Удалить файл', Array('title'=>'Удалить файл')), Array('delanswerfile','id'=>$file->id), Array('class'=>'delfileBtn')); ?>
+						<?php endif; ?>											
+						<?php echo CHtml::link(CHtml::image('/images/icon_'.$file->divClass.'.png', $file->file_name, Array('title'=>$file->file_name)), $answer->filesFolder.'/'.$file->file_name, Array('class'=>'declarationBtn')); ?>
+						</div>
+					<? endforeach; ?>	
+					<div class="clear"></div>
 					<br />
 					<?php endif; ?>
 					

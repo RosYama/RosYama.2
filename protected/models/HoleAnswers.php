@@ -108,7 +108,7 @@ class HoleAnswers extends CActiveRecord
 	{			
 		parent::afterSave();
 		
-		if ($this->scenario=="insert"){
+		if ($this->scenario=="insert" || $this->scenario=="update"){
 			$dir=$_SERVER['DOCUMENT_ROOT'].$this->filesFolder;
 			if (!is_dir($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/answers/'))
 				mkdir($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/answers/');
@@ -142,8 +142,7 @@ class HoleAnswers extends CActiveRecord
 							}
 						}
 						else {
-						$model->delete();
-						$die();
+							$model->delete();						
 						}
 					}
 				}
