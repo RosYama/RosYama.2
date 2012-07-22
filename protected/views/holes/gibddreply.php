@@ -32,7 +32,7 @@ $this->pageTitle=Yii::app()->name . ' :: Загрузка ответа ГИБД�
 		<!-- фотки -->
 		<div class="f">
 			<?php echo $form->labelEx($answer,'uppload_files'); ?>
-			<?php $this->widget('CMultiFileUpload',array('accept'=>'gif|jpg|png|pdf|txt', 'model'=>$answer, 'attribute'=>'uppload_files', 'htmlOptions'=>array('class'=>'mf'), 'denied'=>Yii::t('mf','Невозможно загрузить этот файл'),'duplicate'=>Yii::t('mf','Файл уже существует'),'remove'=>Yii::t('mf','удалить'),'selected'=>Yii::t('mf','Файлы: $file'),)); ?>						
+			<?php $this->widget('CMultiFileUpload',array('accept'=>'gif|jpg|jpeg|png|pdf|txt', 'model'=>$answer, 'attribute'=>'uppload_files', 'htmlOptions'=>array('class'=>'mf'), 'denied'=>Yii::t('mf','Невозможно загрузить этот файл'),'duplicate'=>Yii::t('mf','Файл уже существует'),'remove'=>Yii::t('mf','удалить'),'selected'=>Yii::t('mf','Файлы: $file'),)); ?>						
 		</div>
 		
 		<!-- анкета -->
