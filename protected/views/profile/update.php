@@ -125,8 +125,11 @@
 		<td colspan="3">		
 		<div class="chekboxes">
 			<?php echo $form->checkBox($miscModel->relProfile,'show_archive_holes',Array('class'=>'filter_checkbox')); ?>	
-			<?php echo $form->labelEx($miscModel->relProfile,'show_archive_holes',Array('label'=>'Показывать архивные ямы в "Моих ямах" и на "Моем участке"', 'class'=>'archive')); ?>
-			<?php echo $form->error($miscModel->relProfile,'show_archive_holes'); ?>  
+			<?php echo $form->labelEx($miscModel->relProfile,'show_archive_holes',Array('class'=>'archive')); ?>
+			<?php echo $form->error($miscModel->relProfile,'show_archive_holes'); ?>  <br/>
+			<?php echo $form->checkBox($miscModel->relProfile,'send_achtung_notifications',Array('class'=>'filter_checkbox')); ?>	
+			<?php echo $form->labelEx($miscModel->relProfile,'send_achtung_notifications',Array('class'=>'archive')); ?>
+			<?php echo $form->error($miscModel->relProfile,'send_achtung_notifications'); ?>  
 		</div>
 		</td>
 		</tr>

@@ -45,7 +45,7 @@ class Profile extends CActiveRecord
 			array('birthday, request_signature', 'length', 'max'=>120),
 			array('site, avatar, request_from, request_address', 'length', 'max'=>255),
 			array('aboutme', 'length'),
-			array('show_archive_holes', 'numerical', 'integerOnly'=>true),
+			array('show_archive_holes, send_achtung_notifications', 'numerical', 'integerOnly'=>true),
 			array('site', 'url','allowEmpty'=>true),
 			array('image', 'file', 'types'=>'jpeg, jpg, gif, png', 'allowEmpty' => true),
 			// The following rule is used by search().
@@ -118,7 +118,9 @@ class Profile extends CActiveRecord
 			'aboutme'=>'Обо мне',
 			'request_from'=>'Фамилия, имя и отчество в родительном падеже (для подстановки в заявления)',
 			'request_signature'=>'Подпись (фамилия в именительном падеже и инициалы)',
-			'request_address'=>'Почтовый адрес для подстановки в заявления'
+			'request_address'=>'Почтовый адрес для подстановки в заявления',
+			'send_achtung_notifications'=>'Присылать напоминания о просроченных запросах в ГИБДД',
+			'show_archive_holes'=>'Показывать архивные ямы в "Моих ямах" и на "Моем участке"'
 		);
 	}
 
