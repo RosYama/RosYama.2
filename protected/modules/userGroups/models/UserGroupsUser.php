@@ -327,6 +327,7 @@ class UserGroupsUser extends CActiveRecord
 			'holes_fixed_cnt' => array(self::STAT, 'Holes', 'USER_ID', 'condition'=>'STATE="fixed"'),
 			'holes_fresh_cnt' => array(self::STAT, 'Holes', 'USER_ID', 'condition'=>'STATE="fresh"'),
 			'hole_area'=> array(self::HAS_MANY, 'UserAreaShapes', 'ug_id', 'with'=>'points'),
+			'requests'=>array(self::HAS_MANY, 'HoleRequests', 'user_id'),
 			'selected_holes_lists'=> array(self::HAS_MANY, 'UserSelectedLists', 'user_id', 'order'=>'selected_holes_lists.date_created desc'),
 			);
 		// extract profile models list
@@ -398,7 +399,7 @@ class UserGroupsUser extends CActiveRecord
 			'captcha' => 'Введите слово на картинке',
 			'rememberMe' => 'Запомнить меня на этом компьютере',
 			'params'=>'Другим пользователям :',
-			'activation_code'=>'Код активации'
+			'activation_code'=>'Код активации',
 		);
 	}
 	

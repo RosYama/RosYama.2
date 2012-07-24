@@ -27,7 +27,7 @@ class HolesController extends Controller
 	{
 		return array(
 			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('index','view', 'findSubject', 'findCity', 'map', 'flushcashe', 'ajaxMap'),
+				'actions'=>array('index','view', 'findSubject', 'findCity', 'map', 'flushcashe', 'ajaxMap', 'cronDaily'),
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
@@ -54,6 +54,64 @@ class HolesController extends Controller
 		Yii::app()->user->setFlash('user','Кеш чист!');
 		$this->redirect(Array('personal'));
 	}	
+	
+	public function actionCronDaily($type){	
+		
+		$logmodel=HoleCronLog::model()->findByAttributes(Array('type'=>$type), 'time_finish >= '.CDateTimeParser::parse(date('Y-m-d'), 'yyyy-MM-dd'));		
+		
+		if (!$logmodel){
+			$logmodel=new HoleCronLog;
+			if ($type=="achtung-notifications"){		
+				//отмечаем ямы как просроченные
+				$holes=Holes::model()->findAll('t.STATE in ("inprogress", "achtung") AND t.DATE_SENT > 0');
+				foreach ($holes as $hole){
+					$WAIT_DAYS = 38 - ceil((time() - $hole->DATE_SENT) / 86400);
+					if ($WAIT_DAYS < 0 && $hole->STATE == 'inprogress') {
+						$hole->STATE = 'achtung';
+						$hole->update();
+					}
+					elseif ($hole->STATE == 'achtung' && $WAIT_DAYS > 0){
+						$hole->STATE = 'inprogress';
+						$hole->update();			
+					}					
+				}
+				//Находим пользователей с просроченными запросами
+				$users=UserGroupsUser::model()->with(Array(
+					'relProfile', 
+					'requests'=>Array(
+						'with'=>Array('answer', 'hole'),
+						'condition'=>'hole.STATE NOT IN ("fixed", "prosecutor")',
+					),
+					))->findAll(Array('condition'=>'relProfile.send_achtung_notifications=1 AND requests.type="gibdd" AND t.email != ""'));
+				
+				foreach ($users as $user){
+					$holes=Array();
+					$i=0;
+					foreach ($user->requests as $request){					
+						if (!$request->answer) {
+							$WAIT_DAYS = 38 - ceil((time() - $request->date_sent) / 86400);
+							if ($WAIT_DAYS < 0) {
+								$holes[$i]=$request->hole;						
+								$holes[$i]->PAST_DAYS=abs($WAIT_DAYS);
+								$i++;
+								}
+						
+						}
+					}
+					if ($holes){
+						$headers = "MIME-Version: 1.0\r\nFrom: \"Rosyama\" <".Yii::app()->params['adminEmail'].">\r\nReply-To: ".Yii::app()->params['adminEmail']."\r\nContent-Type: text/html; charset=utf-8";
+						Yii::app()->request->baseUrl=Yii::app()->request->hostInfo;
+						$mailbody=$this->renderPartial('/ugmail/achtung_notification', Array('user'=>$user, 'holes'=>$holes),true);
+						echo $mailbody;
+						mail($user->email,"=?utf-8?B?" . base64_encode('Истекло время ожидания ответа от ГИБДД') . "?=",$mailbody,$headers);
+					}
+				}
+			$logmodel->type=$type;
+			$logmodel->time_finish=time();
+			$logmodel->save();			
+			}
+		}	
+	}
 	
 	public function actionFindSubject()
 	{
