@@ -323,8 +323,11 @@ class HolesController extends Controller
 		
 		$model=$this->loadModel($id);
 		if (!$model->isUserHole && Yii::app()->user->level < 50){
-			if ($model->STATE=='fixed' || !$model->request_gibdd || !$model->request_gibdd->answers || $model->user_fix)
-				throw new CHttpException(403,'Доступ запрещен.');
+			if ($model->STATE=='fixed' || !$model->request_gibdd || !$model->request_gibdd->answers || $model->user_fix){
+				if ($model->STATE=='fixed' || $model->user_fix) throw new CHttpException(403,'Доступ запрещен.');
+				else throw new CHttpException(403,'Для отметки дефекта как исправленного необходимо загрузить ответ из ГИБДД. Если ответа из ГИБДД у вас нет, обратитесь к пользователю, добавившему этот дефект, для проставления соответствующей отметки.');
+			}
+				
 		}		
 		elseif ($model->STATE=='fixed' && $model->user_fix)
 				throw new CHttpException(403,'Доступ запрещен.');		

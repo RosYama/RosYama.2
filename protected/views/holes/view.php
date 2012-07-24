@@ -24,19 +24,23 @@ $this->widget('application.extensions.fancybox.EFancyBox', array(
 			<p class="status">
 				<span class="bull <?= $hole->STATE ?>">&bull;</span>
 				<span class="state">
-					<?= CHtml::encode($hole->StateName) ?>
+					<?= CHtml::encode($hole->StateName) ?>,
 					<? if($hole->STATE == 'prosecutor' && $hole->DATE_STATUS): ?>
 						<?= CHtml::encode(Y::dateFromTime($hole->DATE_STATUS)).' '.Yii::t('holes_view', 'REQUEST_TO_PROSECUTOR_SENT') ?>
-					<? elseif($hole->DATE_SENT): ?>
-						<?php if (count($hole->requests_gibdd) == 1) : ?>
+					<? elseif($hole->DATE_SENT): ?> 
+						<?php if (count($hole->requests) == 1) : ?>
 							<?= CHtml::encode(Y::dateFromTime($hole->DATE_SENT))?> отправлен запрос в ГИБДД
 						<? else : ?>
-							<?= CHtml::encode(Y::dateFromTime($hole->DATE_SENT))?> был отправлен первый запрос в ГИБДД <br/><a href="#" onclick="$('#requests_gibdd_history').toggle('slow'); return false;">история запросов</a>
+							<?= CHtml::encode(Y::dateFromTime($hole->DATE_SENT))?> был отправлен первый запрос в ГИБДД 
+						<? endif; ?>	
+					<? endif; ?>
+					<?php if (count($hole->requests) > 1) : ?>
+						<br/><a href="#" onclick="$('#requests_gibdd_history').toggle('slow'); return false;">история запросов</a>
 							<div id="requests_gibdd_history" style="display:none;">
 							<ul>
-							<?php foreach ($hole->requests_gibdd as $request) : ?>
+							<?php foreach ($hole->requests as $request) : ?>
 							<?php  if ($request->user) : ?>
-								<li><?php echo date('d.m.Y',$request->date_sent);?> <?php echo $userlink=CHtml::link(CHtml::encode($request->user->getParam('showFullname') ? $request->user->Fullname : ($request->user->name ? $request->user->name : $request->user->username)), array('/profile/view', 'id'=>$request->user->id),array('class'=>""));?>  отправил запрос в ГИБДД
+								<li><?php echo date('d.m.Y',$request->date_sent);?> <?php echo $userlink=CHtml::link(CHtml::encode($request->user->getParam('showFullname') ? $request->user->Fullname : ($request->user->name ? $request->user->name : $request->user->username)), array('/profile/view', 'id'=>$request->user->id),array('class'=>""));?>  отправил запрос в <?php echo $request->type=="gibdd" ? "ГИБДД" : "прокуратуру";?>
 								<?php if ($hole->STATE == 'fixed' && $fix=$hole->getFixByUser($request->user->id)) : ?> 
 								<br /><?php echo date('d.m.Y',$fix->date_fix);?> <?php echo $userlink; ?> отметил факт исправления дефекта
 								<?php endif; ?>
@@ -46,8 +50,7 @@ $this->widget('application.extensions.fancybox.EFancyBox', array(
 							<li>==========</li>
 							</ul>							
 							</div>
-						<? endif; ?>	
-					<? endif; ?>
+					<?php endif;?>
 					<? if($hole->STATE == 'fixed' && ($hole->fixeds || $hole->DATE_STATUS)): ?>
 						<?= CHtml::encode(Y::dateFromTime($hole->fixeds ? $hole->fixeds[0]->date_fix : $hole->DATE_STATUS))?> отмечен факт исправления дефекта
 					<? endif; ?>
@@ -227,22 +230,27 @@ $this->widget('application.extensions.fancybox.EFancyBox', array(
 					case 'prosecutor':
 					{
 						?>
+						<? if(!$hole->request_gibdd): ?><?php endif; ?>
 						<? if($hole->request_prosecutor): ?>
 						<div class="lc" style="width:150px">
 							<p><?= Yii::t('holes_view', 'HOLE_CART_ADMIN_TEXT_7') ?></p>
-							<?php echo CHtml::link(Yii::t('holes_view', 'HOLE_CART_ADMIN_TEXT_8'), array('fix', 'id'=>$hole->ID),array('class'=>"declarationBtn")); ?>
+							<?php echo CHtml::link(Yii::t('holes_view', 'HOLE_CART_ADMIN_TEXT_8'), array('fix', 'id'=>$hole->ID),array('class'=>"declarationBtn")); ?> 
 						</div>
 						<div class="cc">
 							<?php echo CHtml::link('Аннулировать факт отправки заявления в прокуратуру', array('prosecutornotsent', 'id'=>$hole->ID),array('class'=>"declarationBtn")); ?>
 						</div>
 						<? else : ?>
-							
+							<p>Для массовости отправьте свою жалобу в прокуратуру.</p>
 							<div class="cc" style="width:150px">
 								<? if($hole->request_gibdd): ?>
+									<p><?php echo CHtml::link(Yii::t('holes_view', 'HOLE_CART_ADMIN_GIBDD_REPLY_RECEIVED'), array('gibddreply', 'id'=>$hole->ID),array('class'=>"declarationBtn")); ?></p>
+									<p><?php echo CHtml::link(Yii::t('holes_view', 'HOLE_CART_ADMIN_TEXT_12').' в ГИБДД', array('notsent', 'id'=>$hole->ID),array('class'=>"declarationBtn")); ?></p>
 									<p><?= Yii::t('holes_view', 'HOLE_CART_ADMIN_TEXT_7') ?></p>
-									<?php echo CHtml::link(Yii::t('holes_view', 'HOLE_CART_ADMIN_TEXT_8'), array('fix', 'id'=>$hole->ID),array('class'=>"declarationBtn")); ?>
+									<?php echo CHtml::link(Yii::t('holes_view', 'HOLE_CART_ADMIN_TEXT_8'), array('fix', 'id'=>$hole->ID),array('class'=>"declarationBtn")); ?>									
 								<?php else: ?>	
-								<p>Для массовости отправьте свою жалобу в прокуратуру.</p>
+								<p>Или отправьте еще одно заявление в ГИБДД:</p>
+								<p><a href="#" onclick="var c=document.getElementById('pdf_form');if(c){c.style.display=c.style.display=='block'?'none':'block';}return false;" class="declarationBtn"><?= Yii::t('holes_view', 'HOLE_CART_ADMIN_TEXT_4') ?></a></p>
+								<p><?php echo CHtml::link(Yii::t('holes_view', 'HOLE_CART_ADMIN_TEXT_6'), array('sent', 'id'=>$hole->ID),array('class'=>"declarationBtn")); ?></p>
 								<?php endif; ?>	
 							</div>
 							
