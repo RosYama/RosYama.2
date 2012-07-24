@@ -147,7 +147,7 @@ class HoleAnswers extends CActiveRecord
 					}
 				}
 			}
-			else {
+			else if ($this->firstAnswermodel) {
 				foreach ($this->firstAnswermodel->files as $file){
 					$model=new HoleAnswerFiles;
 					$model->answer_id=$this->id;
