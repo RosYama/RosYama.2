@@ -57,6 +57,8 @@ class HolesController extends Controller
 	
 	public function actionCronDaily($type){	
 		
+		set_time_limit(0);
+		
 		$logmodel=HoleCronLog::model()->findByAttributes(Array('type'=>$type), 'time_finish >= '.CDateTimeParser::parse(date('Y-m-d'), 'yyyy-MM-dd'));		
 		
 		if (!$logmodel){
