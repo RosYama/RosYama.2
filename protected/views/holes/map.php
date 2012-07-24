@@ -41,7 +41,7 @@ $this->pageTitle=Yii::app()->name . ' :: Карта дефектов';
 <div class="submit"><input type="submit" name="button" id="button" value="Показать" /><input type="reset" name="reset" id="reset_button" value="Сбросить" type="button" />
 <div style="float:right;">
 <?php if (!Yii::app()->user->isGuest && Yii::app()->user->userModel->hole_area) : ?>
-<label><span class="myarea_check"><input id="myarea_check_inp" name="myarea_check_inp" type="checkbox" /></span><ins>Показать мою зону наблюдения</ins></label>
+<label><span class="myarea_check"><input id="myarea_check_inp" name="myarea_check_inp" type="checkbox" <?php if (!$usermodel) echo 'checked="true"' ?> /></span><ins>Показать мою зону наблюдения</ins></label>
 <?php endif; ?>
 <label style="padding-left:10px;"><span class="gibdd_check"><input id="ibdd_check_inp" name="ibdd_check_inp" type="checkbox" /></span><ins>Показывать границы наблюдения подразделений ГИБДД</ins></label>
 </div>
@@ -71,7 +71,7 @@ $this->pageTitle=Yii::app()->name . ' :: Карта дефектов';
 <script type="text/javascript">
 history.navigationMode = 'compatible';
 $(document).ready( function(){
-                                init_MAP_DzDvWLBsil(<?php if ($usermodel) echo "null, 'userarea'"; ?>);
+                                init_MAP_DzDvWLBsil(<?php if ($usermodel) echo "null, 'userarea'"; elseif(!Yii::app()->user->isGuest && Yii::app()->user->userModel->hole_area)  echo "null, 'bigmap_with_area'"?>);
                              }
                  );
 
