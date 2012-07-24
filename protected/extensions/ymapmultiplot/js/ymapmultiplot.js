@@ -351,10 +351,13 @@ function init_MAP_DzDvWLBsil(context, type)
 	if (type=="updatehole") {	
 	setCoordValue(map);
 	}
+	if (type=="bigmap_with_area" || type=="addhole") getMyArea(map);	
+	
 	if (type=="userarea") getUserArea(map);
 	
 	GetPlacemarks(map);	
 	GetGibbds(map);
+
 	
 	$('#myarea_check_inp').live('click',function() {			
 			
@@ -471,13 +474,15 @@ function getMyArea(map){
 	style.polygonStyle.strokeColor = 'ff000030'; 
 	style.polygonStyle.fillColor = 'ff000030';
 	
-	jQuery.getJSON(addr, function(data) {		
+	jQuery.getJSON(addr, function(data) {	
+			var bounds = new Array;
 			for (i=0;i<data.area.length;i++){							
 
-				var startpoints=new Array();				
+				var startpoints=new Array;				
 
 				for (ii=0;ii<data.area[i].length;ii++){
 					startpoints[ii]=new YMaps.GeoPoint(data.area[i][ii].lng,data.area[i][ii].lat);
+					bounds.push(startpoints[ii]);
 				}
 				
 				myareaPolygons[i] = new YMaps.Polygon(startpoints, {
@@ -489,7 +494,8 @@ function getMyArea(map){
 					
 				map.addOverlay(myareaPolygons[i]);
 				
-			}			
+			}	
+			if (bounds.length) map.setBounds (new YMaps.GeoCollectionBounds(bounds)); 
 			
 		});
 
