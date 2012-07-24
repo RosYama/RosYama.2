@@ -26,7 +26,7 @@ class UserGroupsModule extends CWebModule
 	 * implementation of UGCronJob
 	 * @var array
 	 */
-	public $crons = array();
+	public $crons = array('ArchiveHolesCron');
 	/**
 	 * additional profile models
 	 * every value in this array must be a CActiveRecord

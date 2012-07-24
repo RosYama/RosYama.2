@@ -162,7 +162,7 @@ class UserGroupsUser extends CActiveRecord
 			array('username', 'length', 'min'=>4, 'on'=>array('changePassword')),
 			array('email', 'required', 'on'=>array('registration','admin','mailRequest','changeMisc','invitation')),
 			array('username, email', 'unique', 'on'=>array('registration','admin', 'recovery','changeMisc', 'invitation')),
-			array('username', 'match', 'pattern'=>'/^[A-Za-z0-9-_\-]{4,}$/', 'on'=>array('registration','admin','recovery'),
+			array('username', 'match', 'pattern'=>'/^[A-Za-z0-9-_\-]{4,}$/', 'on'=>array('registration','admin','recovery', 'changePassword'),
 				'message' => 'Имя пользователя может состоять из латинских букв и символов "-" и "_"'),
 			array('password', 'required', 'on'=>array('recovery','changePassword')),
 			array('password', 'passwordStrength', 'on'=>array('registration','admin','recovery','changePassword')),
@@ -397,7 +397,8 @@ class UserGroupsUser extends CActiveRecord
 			'readable_home' => 'Домашняя страница',
 			'captcha' => 'Введите слово на картинке',
 			'rememberMe' => 'Запомнить меня на этом компьютере',
-			'params'=>'Другим пользователям :'
+			'params'=>'Другим пользователям :',
+			'activation_code'=>'Код активации'
 		);
 	}
 	

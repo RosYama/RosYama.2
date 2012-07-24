@@ -25,7 +25,7 @@
 	<div class="lCol">
 	<?php if($model->hole_area && $model->getParam('showMyarea')) : ?>
 	<h2>Зона наблюдения</h2>
-	<?php $this->widget('application.widgets.userAreaMap.userAreaMapWidget',Array('data'=>Array('area'=>$model->hole_area))); ?>
+	<?php $this->widget('application.widgets.userAreaMap.userAreaMapWidget',Array('data'=>Array('area'=>$model->hole_area, 'user'=>$model))); ?>
 	<?php endif; ?>
 	
 	<?php if($model->relProfile && $model->relProfile->aboutme && $model->getParam('showAboutme')) : ?>

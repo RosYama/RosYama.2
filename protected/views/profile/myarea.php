@@ -5,12 +5,14 @@
 	'htmlOptions'=>Array ('enctype'=>'multipart/form-data'),
 )); ?>
 <?php echo $form->errorSummary($model); ?>
-
+<?php echo $form->hiddenField($model,"id"); ?>
 	<!-- левая колоночка -->
 	<div class="lCol">
 		<div id="point_fields">
-		<?php foreach ($model->hole_area as $i=>$shape) : ?>
-			<?php $this->renderPartial('_area_point_fields',array('shape'=>$shape, 'i'=>$shape->ordering, 'form'=>$form)); ?>
+		<?php foreach ($model->hole_area as $i=>$shape) : ?>			
+			<div id="shape_container<?php echo $shape->ordering; ?>">
+				<?php $this->renderPartial('_area_point_fields',array('shape'=>$shape, 'i'=>$shape->ordering, 'form'=>$form)); ?>
+			</div>
 		<?php endforeach; ?>
 		</div>
 	</div>
@@ -24,7 +26,7 @@
 	<?php endif; ?>
 		<div class="bx-yandex-view-layout">
 			<div class="bx-yandex-view-map">
-			<p><a href="#" id="add_shape">Добавить прямоугольник</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Для удаления прямоугольника кликните по нему 2 раза</p>
+			<p><a href="#" id="add_shape">Добавить многоугольник</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Для удаления многоугольника кликните по нему 2 раза</p>
 			<div id="ymapcontainer" class="ymapcontainer"></div>
 			<?php Yii::app()->clientScript->registerScript('add_shape','
 			function reorder(){
@@ -56,9 +58,13 @@
         function addPolygon(ind){
         			var startpoints=new Array;
 					if ($('#UserAreaShapePoints_'+ind+'_0_lat').val()){
-						for (i=0;i<4;i++){
-						startpoints[i]=new YMaps.GeoPoint($('#UserAreaShapePoints_'+ind+'_'+i+'_lng').val(),$('#UserAreaShapePoints_'+ind+'_'+i+'_lat').val());
-						} 
+						i=0;
+						$('#shape_container'+ind).find('.shape_point').each(function() {
+							if ($(this).children('.point_lng').val()) {
+								startpoints[i]=new YMaps.GeoPoint($(this).children('.point_lng').val(),$(this).children('.point_lat').val());
+								i++;
+							}	
+						});
 	
 						if (startpoints) {
 							bounds = new YMaps.GeoCollectionBounds(startpoints);
@@ -67,10 +73,12 @@
 
 					}						
 					if (startpoints.length==0 && ind > 1) {
-							startpoints=[new YMaps.GeoPoint(map.getCenter().getX()-0.05,map.getCenter().getY()-0.05),
-									  new YMaps.GeoPoint(map.getCenter().getX()-0.05,map.getCenter().getY()+0.05),
-									  new YMaps.GeoPoint(map.getCenter().getX()+0.05,map.getCenter().getY()+0.05),
-									  new YMaps.GeoPoint(map.getCenter().getX()+0.05,map.getCenter().getY()-0.05)];		
+							var mapBounds = map.getBounds();
+							startpoints=[new YMaps.GeoPoint(mapBounds.getLeft()+0.2,mapBounds.getTop()-0.2),
+									  new YMaps.GeoPoint(mapBounds.getRight()-0.2,mapBounds.getTop()-0.2),
+									  new YMaps.GeoPoint(mapBounds.getRight()-0.2,mapBounds.getBottom()+0.2),
+									  new YMaps.GeoPoint(mapBounds.getLeft()+0.2,mapBounds.getBottom()+0.2),
+									  ];		
 						}
 					else if (startpoints.length==0 && ind <= 1){
 						if (YMaps.location) {
@@ -116,19 +124,11 @@
 					map.addOverlay(polygons[ind]);
 					
 					polygons[ind].setEditingOptions({
-						drawing: false,
-						maxPoints: 4,
-						dragging:true,
-						onClick: function (polygon, pointIndex, coordPath) {
-						return false;
-						},
-						onDblClick: function (polygon, pointIndex, coordPath) {						
-						return false;
-						},
-						menuManager: function (index, menuItems) {
-							return false;
-						},
-						onPointDragging: function (points, index) {                
+						drawing: true,
+						maxPoints: 100,
+						dragging:true,					
+						
+						/*onPointDragging: function (points, index) {                
 						if (index==1) {
 							var point1 = points[2].setY(points[1].getY()),
 								point2 = points[0].setX(points[1].getX());
@@ -154,7 +154,7 @@
 							polygons[ind].splicePoints(1, 1, map.converter.mapPixelsToCoordinates(point2));
 						}						
 						return points[index];						
-						}
+						}*/
 					});
 					
 				    polygons[ind].startEditing();
@@ -167,7 +167,7 @@
 							{
 								//alert(obj.id);
 								map.removeOverlay(obj);
-								$(".shape_"+obj.id).remove();
+								$("#shape_container"+obj.id).remove();
 								
 							}
 						)
@@ -211,7 +211,7 @@
 					$('#UserAreaShapePoints_'+ind+'_'+i+'_lng').val(points[i].getX());
 					}          
             }	
-            
+            return false;
             }
 				
 EOD

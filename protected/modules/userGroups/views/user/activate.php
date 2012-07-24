@@ -15,6 +15,7 @@ $this->breadcrumbs=array(
 			'id'=>'user-groups-activate-form',
 			'enableAjaxValidation'=>false,
 		)); ?>
+		<?php echo $form->hiddenField($activeModel,'active',Array('value'=>1)); ?>
 		<div class="row">
 			<?php echo $form->labelEx($activeModel,'username'); ?>
 			<?php echo $form->textField($activeModel,'username'); ?>

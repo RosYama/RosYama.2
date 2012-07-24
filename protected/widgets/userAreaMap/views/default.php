@@ -37,8 +37,7 @@ EOD
 				if(!bAjaxInProgress)
 				{
 					bAjaxInProgress = true;
-					<?php foreach ($area as $ind=>$shape) : ?>
-					var addr='/holes/ajaxMap/?bottom=<?php echo $shape->points[0]->lat; ?>&left=<?php echo $shape->points[0]->lng ;?>&top=<?php echo $shape->points[2]->lat; ?>&right=<?php echo $shape->points[2]->lng; ?>&<?php echo $params; ?>&jsoncallback=?';
+					var addr='/holes/ajaxMap/?user_id=<?php echo $user->id; ?>&jsoncallback=?';
 					//alert(addr);
 					jQuery.getJSON(addr, function(data) {
 						bAjaxInProgress = false;				
@@ -46,7 +45,6 @@ EOD
 							SetMarker(map, data.markers[i].id, data.markers[i].type, data.markers[i].lat, data.markers[i].lng, data.markers[i].state);  
 						}
 					});
-					<?php endforeach; ?>
 					
 				}
 				

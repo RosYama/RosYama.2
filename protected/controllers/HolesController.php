@@ -27,7 +27,7 @@ class HolesController extends Controller
 	{
 		return array(
 			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('index','view', 'findSubject', 'findCity', 'map', 'ajaxMap'),
+				'actions'=>array('index','view', 'findSubject', 'findCity', 'map', 'flushcashe', 'ajaxMap'),
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
@@ -47,6 +47,13 @@ class HolesController extends Controller
 			),
 		);
 	}
+	
+	public function actionFlushcashe()
+	{
+		Yii::app()->cache->flush();
+		Yii::app()->user->setFlash('user','Кеш чист!');
+		$this->redirect(Array('personal'));
+	}	
 	
 	public function actionFindSubject()
 	{
@@ -262,7 +269,7 @@ class HolesController extends Controller
 						if ($model->STATE=="inprogress" || $model->STATE=="achtung")
 							$model->STATE='gibddre';
 						$model->GIBDD_REPLY_RECEIVED=1;
-						if (!$model->DATE_STATUS) $model->DATE_STATUS=time();
+						$model->DATE_STATUS=time();
 						if ($model->update()){					
 							if ($count==0) $firstAnswermodel=$answer;
 							$count++;
@@ -786,7 +793,7 @@ class HolesController extends Controller
 			'area'=>$area,
 			'dataProvider'=>$model->areaSearch($user),
 		));
-	}		
+	}
 	
 	public function actionMap()
 	{
@@ -814,12 +821,29 @@ class HolesController extends Controller
 		
 		if ($ZOOM < 3) { $_GET['left']=-190; $_GET['right']=190;}
 
-		if (!isset ($_GET['bottom']) || !isset ($_GET['left']) || !isset ($_GET['right']) || !isset ($_GET['top'])) Yii::app()->end();
+		if ((!isset ($_GET['bottom']) || !isset ($_GET['left']) || !isset ($_GET['right']) || !isset ($_GET['top'])) && !isset($_GET['user_id'])) Yii::app()->end();
 		
-		if (isset ($_GET['bottom'])) $criteria->addCondition('LATITUDE > '.(float)$_GET['bottom']);
-		if (isset ($_GET['left'])) $criteria->addCondition('LONGITUDE > '.(float)$_GET['left']);	 	
-		if (isset ($_GET['right'])) $criteria->addCondition('LONGITUDE < '.abs((float)$_GET['right']));		
-		if (isset ($_GET['top'])) $criteria->addCondition('LATITUDE < '.abs((float)$_GET['top']));		
+		if  (!isset($_GET['user_id'])){
+			if (isset ($_GET['bottom'])) $criteria->addCondition('LATITUDE > '.(float)$_GET['bottom']);
+			if (isset ($_GET['left'])) $criteria->addCondition('LONGITUDE > '.(float)$_GET['left']);	 	
+			if (isset ($_GET['right'])) $criteria->addCondition('LONGITUDE < '.abs((float)$_GET['right']));		
+			if (isset ($_GET['top'])) $criteria->addCondition('LATITUDE < '.abs((float)$_GET['top']));	
+		}
+		else {
+			$usr=UserGroupsUser::model()->findByPk((int)$_GET['user_id']);			
+			$area=$usr->hole_area;		
+			foreach ($area as $shape){
+				$cond='LONGITUDE >= '.$shape->corners['left']
+				.' AND LONGITUDE <= '.$shape->corners['right']
+				.' AND LATITUDE >= '.$shape->corners['bottom']
+				.' AND LATITUDE <= '.$shape->corners['top'];					
+				$criteria->addCondition($cond,'OR');			
+				}		
+		
+			$notPolygonHolesIds=Holes::model()->findPkeysNotInAreaByUser($usr);
+			if ($notPolygonHolesIds) $criteria->addNotInCondition('t.ID',$notPolygonHolesIds);	
+		}
+		
 		if (isset ($_GET['exclude_id']) && $_GET['exclude_id']) $criteria->addCondition('ID != '.(int)$_GET['exclude_id']); 
 		if (!Yii::app()->user->isModer) $criteria->compare('PREMODERATED',1);
 	
@@ -838,6 +862,8 @@ class HolesController extends Controller
 			$criteria->compare('t.TYPE_ID',$_GET['Holes']['TYPE_ID'],false);
 		if(isset($_GET['Holes']['gibdd_id']))
 			$criteria->compare('t.gibdd_id',$_GET['Holes']['gibdd_id'],false);
+		if(isset($_GET['Holes']['archive']))
+			$criteria->compare('t.archive',Array($_GET['Holes']['archive'],0),false);
 			
 		$userid=Yii::app()->user->id;
 		if (isset($_GET['Holes']['showUserHoles'])) $showUserHoles=$_GET['Holes']['showUserHoles'];
@@ -853,7 +879,6 @@ class HolesController extends Controller
 		
 		$markers = Holes::model()->findAll($criteria);	
 		
-
 		
 		if ($ZOOM >=14) $ZOOM=30;
 				
@@ -977,6 +1002,27 @@ class HolesController extends Controller
 				}
 			}
 		}
+		
+		if ($_POST['submit_mult']=='В архив'){
+			foreach ( $_POST['itemsSelected'] as $id){
+				$model=Holes::model()->findByPk((int)$id);
+				if ($model) {
+				$model->archive=1;
+				$model->update();
+				}
+			}
+		}
+		
+		if ($_POST['submit_mult']=='Вытащить из архива'){
+			foreach ( $_POST['itemsSelected'] as $id){
+				$model=Holes::model()->findByPk((int)$id);
+				if ($model) {
+				$model->archive=0;
+				$model->update();
+				}
+			}
+		}
+		
     }
 		if (!isset($_GET['ajax'])) $this->redirect($_SERVER['HTTP_REFERER']);
 	}	

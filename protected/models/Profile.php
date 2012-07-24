@@ -45,6 +45,7 @@ class Profile extends CActiveRecord
 			array('birthday, request_signature', 'length', 'max'=>120),
 			array('site, avatar, request_from, request_address', 'length', 'max'=>255),
 			array('aboutme', 'length'),
+			array('show_archive_holes', 'numerical', 'integerOnly'=>true),
 			array('site', 'url','allowEmpty'=>true),
 			array('image', 'file', 'types'=>'jpeg, jpg, gif, png', 'allowEmpty' => true),
 			// The following rule is used by search().

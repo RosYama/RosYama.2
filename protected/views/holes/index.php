@@ -219,6 +219,10 @@ EOD
 			<p>
 			<?php echo $form->dropDownList($model, 'STATE', $model->Allstates, array('prompt'=>'Статус дефекта')); ?>
 			</p>
+				<p>
+				<?php echo $form->labelEx($model,'archive',Array('label'=>'Искать в архиве')); ?>
+				<?php echo $form->checkBox($model,"archive",Array('class'=>'filter_checkbox')); ?>				
+				</p>
 			<?php if(Yii::app()->user->isModer) : ?>
 				<p>
 				<?php echo $form->labelEx($model,'NOT_PREMODERATED'); ?>
@@ -260,6 +264,7 @@ EOD
 	'cssFile'=>'/css/holes_list.css',
 	'itemsCssClass'=>'holes_list',
 	'summaryText'=>false,
+	'emptyText'=>!$model->archive ? 'Ничего не найдено. Может быть попробовать '.CHtml::link('поискать в архиве',$model->archiveSearchLink).'?' : 'Ничего не найдено.',
 	'viewData'=>Array('user'=>Yii::app()->user),
 	
 )); ?>

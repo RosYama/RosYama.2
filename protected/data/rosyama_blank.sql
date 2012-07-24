@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: localhost
--- Время создания: Апр 23 2012 г., 02:55
+-- Время создания: Июн 04 2012 г., 13:47
 -- Версия сервера: 5.5.9
 -- Версия PHP: 5.3.5
 
@@ -18,6 +18,33 @@ SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 --
 -- База данных: `rosyama_blank`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `yii_comments`
+--
+
+CREATE TABLE IF NOT EXISTS `yii_comments` (
+  `owner_name` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `owner_id` int(12) NOT NULL,
+  `comment_id` int(12) NOT NULL AUTO_INCREMENT,
+  `parent_comment_id` int(12) DEFAULT NULL,
+  `creator_id` int(12) DEFAULT NULL,
+  `user_name` varchar(128) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `user_email` varchar(128) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `comment_text` text COLLATE utf8_unicode_ci,
+  `create_time` int(11) DEFAULT NULL,
+  `update_time` int(11) DEFAULT NULL,
+  `status` int(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`comment_id`),
+  KEY `owner_name` (`owner_name`,`owner_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+
+--
+-- Дамп данных таблицы `yii_comments`
+--
+
 
 -- --------------------------------------------------------
 
@@ -187,6 +214,7 @@ CREATE TABLE IF NOT EXISTS `yii_holes` (
   `COMMENT_GIBDD_REPLY` text,
   `GIBDD_REPLY_RECEIVED` tinyint(1) DEFAULT '0',
   `PREMODERATED` tinyint(1) DEFAULT '0',
+  `archive` tinyint(1) NOT NULL DEFAULT '0',
   `DATE_SENT_PROSECUTOR` int(10) unsigned DEFAULT NULL,
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
@@ -283,6 +311,26 @@ CREATE TABLE IF NOT EXISTS `yii_hole_answer_results_xref` (
 
 --
 -- Дамп данных таблицы `yii_hole_answer_results_xref`
+--
+
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `yii_hole_archive_filters`
+--
+
+CREATE TABLE IF NOT EXISTS `yii_hole_archive_filters` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `type_id` int(11) NOT NULL DEFAULT '0',
+  `status` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
+  `time_to` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+
+--
+-- Дамп данных таблицы `yii_hole_archive_filters`
 --
 
 
@@ -852,6 +900,7 @@ CREATE TABLE IF NOT EXISTS `yii_usergroups_user_profile` (
   `request_from` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `request_signature` varchar(127) COLLATE utf8_unicode_ci NOT NULL,
   `request_address` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `show_archive_holes` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 

@@ -402,7 +402,7 @@ class UserController extends Controller
 
 			if($model->validate()) {
 				if (isset($_GET['UserGroupsUser']) || $_POST['id'] === 'user-groups-activate-form') {
-					if (!isset($_GET['UserGroupsUser']['active'])){
+					if (!isset($_GET['UserGroupsUser']['active']) && !isset($_POST['UserGroupsUser']['active'])){
 						$model->login('recovery');
 						$this->redirect(Yii::app()->baseUrl . '/userGroups/user/recovery');
 						}

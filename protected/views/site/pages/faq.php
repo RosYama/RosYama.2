@@ -36,6 +36,7 @@ $this->layout='//layouts/header_default_without_add';
 			    <p>Приложение для Android от RedSolution: <a href="https://market.android.com/details?id=ru.redsolution.rosyama">https://market.android.com/details?id=ru.redsolution.rosyama</a></p>
 			    <p>Приложение для Samsung Bada: <a href="http://www.samsungapps.com/topApps/topAppsDetail.as?productId=G00004062550">http://www.samsungapps.com/topApps/topAppsDetail.as?productId=G00004062550</a></p>
 			    <p>Приложение для Windows Phone: <a href="http://www.windowsphone.com/ru-RU/apps/783e000f-c9ac-4c11-af17-f5e465cd881b">http://www.windowsphone.com/ru-RU/apps/783e000f-c9ac-4c11-af17-f5e465cd881b</a></p>
+			    <p>Ещё одно приложение для Windows Phone: <a href="http://www.windowsphone.com/ru-RU/apps/8994aa3e-3685-4d8e-8489-d1913591b7c3">http://www.windowsphone.com/ru-RU/apps/8994aa3e-3685-4d8e-8489-d1913591b7c3</a></p>
 			</td>
 
 		</tr>		

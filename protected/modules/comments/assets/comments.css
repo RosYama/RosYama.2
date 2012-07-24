@@ -1,0 +1,42 @@
+root { 
+    display: block;
+}
+
+.comment-avatar{
+	width: 110px;
+	float: left;
+}
+
+.comment-text{
+	padding-left:110px;
+
+}
+
+.comments-list{
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.comments-list .admin-panel{
+	float: right;
+}
+
+.comments-list .comments-list{
+    padding-left: 20px;
+}
+
+.comments-list li{
+    margin: 5px 0;
+    background: #F4F5E6;
+    padding: 5px;
+    border-radius: 5px;
+}
+
+.comments-list li:nth-child(2n){
+    background: #F7F7F7;
+}
+
+.comments-list li .comment-header{
+    font-weight: bold;
+}
+.clear{clear: both;}	
