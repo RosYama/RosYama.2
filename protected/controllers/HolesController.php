@@ -319,13 +319,13 @@ class HolesController extends Controller
 		if (!$holes){
 		$model=$this->loadModel($id);
 		$model->scenario='gibdd_reply';
-		if($model->STATE!='inprogress' && $model->STATE!='achtung' && !$model->request_gibdd)	
+		if(!$model->request_gibdd)	
 			throw new CHttpException(403,'Доступ запрещен.');
 		$models[]=$model;
 		}	
 		else $models=Holes::model()->findAllByPk(explode(',',$holes));
 		foreach ($models as $i=>$model){
-			if($model->STATE!='inprogress' && $model->STATE!='achtung' && !$model->request_gibdd) {unset ($models[$i]); continue;}
+			if(!$model->request_gibdd) {unset ($models[$i]); continue;}
 			$answer=new HoleAnswers;
 			if (isset($_GET['answer']) && $_GET['answer'])
 				$answer=HoleAnswers::model()->findByPk((int)$_GET['answer']);
@@ -340,8 +340,7 @@ class HolesController extends Controller
 					$answer->date=time();
 					if ($firstAnswermodel) $answer->firstAnswermodel=$firstAnswermodel;
 					if($answer->save()){
-						if ($model->STATE=="inprogress" || $model->STATE=="achtung")
-							$model->STATE='gibddre';
+						if ($model->STATE=="inprogress" || $model->STATE=="achtung") $model->STATE='gibddre';
 						$model->GIBDD_REPLY_RECEIVED=1;
 						$model->DATE_STATUS=time();
 						if ($model->update()){					
