@@ -106,6 +106,8 @@ class UserGroupsUser extends CActiveRecord
 	const VIEW = 'view';
 	const EDIT = 'edit';
 	const REGISTRATION = 'registration';
+	
+	public $notUseAfrefind=false;
 
 	/**
 	 * Returns the static model of the specified AR class.
@@ -557,37 +559,39 @@ class UserGroupsUser extends CActiveRecord
 	 */
 	public function afterFind()
 	{
-		if (!$this->relProfile){
-			$this->relProfile=new Profile;
-			$this->relProfile->ug_id=$this->id;
-			$this->relProfile->save();
-		}
+		if (!$this->notUseAfrefind){	
+			if (!$this->relProfile){
+				$this->relProfile=new Profile;
+				$this->relProfile->ug_id=$this->id;
+				$this->relProfile->save();
+			}
+		
+			// retrieve the group name
+			$this->group_name = $this->relUserGroupsGroup->groupname;
+			// retrieve the user access permission's arra
+			if ((int)$this->id === self::ROOT)
+				$this->access = self::ROOT_ACCESS;
+			else {
+				$this->access = UserGroupsAccess::findRules(UserGroupsAccess::USER, $this->id);
+			}
 	
-		// retrieve the group name
-		$this->group_name = $this->relUserGroupsGroup->groupname;
-		// retrieve the user access permission's arra
-		if ((int)$this->id === self::ROOT)
-			$this->access = self::ROOT_ACCESS;
-		else {
-			$this->access = UserGroupsAccess::findRules(UserGroupsAccess::USER, $this->id);
+			// copy the level of it's own group
+			$this->level = $this->relUserGroupsGroup->level;
+	
+			// copy the group home
+			$this->group_home = $this->relUserGroupsGroup->home;
+			
+			//Получение параметров
+			if ($this->params) $this->params=unserialize($this->params);
+			else $this->params=array_keys($this->ParamsFields);
+			
+			// get the user readable home
+			$home_array = UserGroupsAccess::homeList();
+			if ($this->home)
+				$this->readable_home = isset($home_array[$this->home]) ? $home_array[$this->home] : $this->home;
+			else
+				$this->readable_home = isset($home_array[$this->group_home]) ? $home_array[$this->group_home].' - <i><b>Inherited from Group</b></i>' : $this->group_home;
 		}
-
-		// copy the level of it's own group
-		$this->level = $this->relUserGroupsGroup->level;
-
-		// copy the group home
-		$this->group_home = $this->relUserGroupsGroup->home;
-		
-		//Получение параметров
-		if ($this->params) $this->params=unserialize($this->params);
-		else $this->params=array_keys($this->ParamsFields);
-		
-		// get the user readable home
-		$home_array = UserGroupsAccess::homeList();
-		if ($this->home)
-			$this->readable_home = isset($home_array[$this->home]) ? $home_array[$this->home] : $this->home;
-		else
-			$this->readable_home = isset($home_array[$this->group_home]) ? $home_array[$this->group_home].' - <i><b>Inherited from Group</b></i>' : $this->group_home;
 		parent::afterFind();
 	}
 

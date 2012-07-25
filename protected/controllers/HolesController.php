@@ -65,7 +65,7 @@ class HolesController extends Controller
 			$logmodel=new HoleCronLog;
 			if ($type=="achtung-notifications"){		
 				//отмечаем ямы как просроченные
-				$holes=Holes::model()->findAll('t.STATE in ("inprogress", "achtung") AND t.DATE_SENT > 0');
+				$holes=Holes::model()->findAll(Array('condition'=>'t.STATE in ("inprogress", "achtung") AND t.DATE_SENT > 0'));
 				foreach ($holes as $hole){
 					$WAIT_DAYS = 38 - ceil((time() - $hole->DATE_SENT) / 86400);
 					if ($WAIT_DAYS < 0 && $hole->STATE == 'inprogress') {
@@ -77,16 +77,24 @@ class HolesController extends Controller
 						$hole->update();			
 					}					
 				}
+				echo count($holes);
 				//Находим пользователей с просроченными запросами
-				$users=UserGroupsUser::model()->with(Array(
-					'relProfile', 
-					'requests'=>Array(
-						'with'=>Array('answer', 'hole'),
-						'condition'=>'hole.STATE NOT IN ("fixed", "prosecutor")',
-					),
-					))->findAll(Array('condition'=>'relProfile.send_achtung_notifications=1 AND requests.type="gibdd" AND t.email != ""'));
+				UserGroupsUser::model()->scenario="search";
+				$users=UserGroupsUser::model()->findAll(Array(
+						'select'=>'*, t.id as notUseAfrefind',
+						'condition'=>'relProfile.send_achtung_notifications=1 AND requests.type="gibdd" AND t.email != ""',
+						'with'=>Array(
+								'relProfile', 
+								'requests'=>Array(
+									'with'=>Array('answer', 'hole'=>Array('with'=>Array('type', 'pictures_fresh'))),
+									'condition'=>'hole.STATE NOT IN ("fixed", "prosecutor")',
+								),
+								'relUserGroupsGroup',
+							),
+						));
 				
 				foreach ($users as $user){
+					echo '<br />'.$user->notUseAfrefind;
 					$holes=Array();
 					$i=0;
 					foreach ($user->requests as $request){					
@@ -105,12 +113,15 @@ class HolesController extends Controller
 						Yii::app()->request->baseUrl=Yii::app()->request->hostInfo;
 						$mailbody=$this->renderPartial('/ugmail/achtung_notification', Array('user'=>$user, 'holes'=>$holes),true);
 						echo $mailbody;
-						mail($user->email,"=?utf-8?B?" . base64_encode('Истекло время ожидания ответа от ГИБДД') . "?=",$mailbody,$headers);
+						//$user->email
+						mail('local@localhost',"=?utf-8?B?" . base64_encode('Истекло время ожидания ответа от ГИБДД') . "?=",$mailbody,$headers);
 					}
+					unset ($holes);
 				}
 			$logmodel->type=$type;
 			$logmodel->time_finish=time();
-			$logmodel->save();			
+			//$logmodel->save();			
+			$this->render('/site/index');
 			}
 		}	
 	}
