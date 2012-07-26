@@ -24,10 +24,11 @@ $this->widget('application.extensions.fancybox.EFancyBox', array(
 			<p class="status">
 				<span class="bull <?= $hole->STATE ?>">&bull;</span>
 				<span class="state">
-					<?= CHtml::encode($hole->StateName) ?>,
+					<?= CHtml::encode($hole->StateName) ?>
 					<? if($hole->STATE == 'prosecutor' && $hole->DATE_STATUS): ?>
 						<?= CHtml::encode(Y::dateFromTime($hole->DATE_STATUS)).' '.Yii::t('holes_view', 'REQUEST_TO_PROSECUTOR_SENT') ?>
 					<? elseif($hole->DATE_SENT): ?> 
+						<?php if ($hole->requests_with_answers) echo (CHtml::encode(Y::dateFromTime($hole->requests_with_answers[0]->answers[0]->date))).'<br />'; ?>
 						<?php if (count($hole->requests) == 1) : ?>
 							<?= CHtml::encode(Y::dateFromTime($hole->DATE_SENT))?> отправлен запрос в ГИБДД
 						<? else : ?>

@@ -109,6 +109,7 @@ class Holes extends CActiveRecord
 		return array(
 			'subject'=>array(self::BELONGS_TO, 'RfSubjects', 'ADR_SUBJECTRF'),
 			'requests'=>array(self::HAS_MANY, 'HoleRequests', 'hole_id'),
+			'requests_with_answers'=>array(self::HAS_MANY, 'HoleRequests', 'hole_id', 'with'=>'answers', 'condition'=>'answers.id > 0', 'order'=>'requests_with_answers.date_sent, answers.date'),
 			'pictures'=>array(self::HAS_MANY, 'HolePictures', 'hole_id', 'order'=>'pictures.type, pictures.ordering'),
 			'pictures_fresh'=>array(self::HAS_MANY, 'HolePictures', 'hole_id', 'condition'=>'pictures_fresh.type="fresh"','order'=>'pictures_fresh.ordering'),
 			'pictures_fixed'=>array(self::HAS_MANY, 'HolePictures', 'hole_id', 'condition'=>'pictures_fixed.type="fixed"','order'=>'pictures_fixed.ordering'),
