@@ -77,50 +77,60 @@ class HolesController extends Controller
 						$hole->update();			
 					}					
 				}
-				echo count($holes);
+				//echo count($holes);
+
 				//Находим пользователей с просроченными запросами
-				UserGroupsUser::model()->scenario="search";
-				$users=UserGroupsUser::model()->findAll(Array(
-						'select'=>'*, t.id as notUseAfrefind',
-						'condition'=>'relProfile.send_achtung_notifications=1 AND requests.type="gibdd" AND t.email != ""',
-						'with'=>Array(
-								'relProfile', 
-								'requests'=>Array(
-									'with'=>Array('answer', 'hole'=>Array('with'=>Array('type', 'pictures_fresh'))),
-									'condition'=>'hole.STATE NOT IN ("fixed", "prosecutor")',
+				$users=1;
+				$limit=50;
+				$ofset=0;
+				while ($users){
+					$users=UserGroupsUser::model()->findAll(Array(
+							'select'=>'*, t.id as notUseAfrefind',
+							'condition'=>'relProfile.send_achtung_notifications=1 AND t.email != ""',
+							'with'=>Array(
+									'relProfile', 
+									'requests'=>Array(
+										'with'=>Array('answer', 'hole'=>Array('with'=>Array('type', 'pictures_fresh'))),
+										'condition'=>'requests.type="gibdd" AND hole.STATE NOT IN ("fixed", "prosecutor")',
+									),
+									'relUserGroupsGroup',
 								),
-								'relUserGroupsGroup',
-							),
-						));
-				
-				foreach ($users as $user){
-					echo '<br />'.$user->notUseAfrefind;
-					$holes=Array();
-					$i=0;
-					foreach ($user->requests as $request){					
-						if (!$request->answer) {
-							$WAIT_DAYS = 38 - ceil((time() - $request->date_sent) / 86400);
-							if ($WAIT_DAYS < 0) {
-								$holes[$i]=$request->hole;						
-								$holes[$i]->PAST_DAYS=abs($WAIT_DAYS);
-								$i++;
-								}
-						
+							'limit'=>$limit,
+							'offset'=>$ofset,
+							));
+					
+					foreach ($users as $user){					
+						$holes=Array();
+						$i=0;
+						foreach ($user->requests as $request){					
+							if (!$request->answer) {
+								$WAIT_DAYS = 38 - ceil((time() - $request->date_sent) / 86400);
+								if ($WAIT_DAYS < 0) {
+									$holes[$i]=$request->hole;						
+									$holes[$i]->PAST_DAYS=abs($WAIT_DAYS);
+									$i++;
+									}
+							
+							}
 						}
+						if ($holes){
+							$headers = "MIME-Version: 1.0\r\nFrom: \"Rosyama\" <".Yii::app()->params['adminEmail'].">\r\nReply-To: ".Yii::app()->params['adminEmail']."\r\nContent-Type: text/html; charset=utf-8";
+							Yii::app()->request->baseUrl=Yii::app()->request->hostInfo;
+							$mailbody=$this->renderPartial('/ugmail/achtung_notification', Array('user'=>$user, 'holes'=>$holes),true);
+							//echo $mailbody;
+							//$user->email
+							echo 'Напоминание на '.count($holes).'ям, отправлено пользователю '.$user->username.'<br />';
+							mail($user->email,"=?utf-8?B?" . base64_encode('Истекло время ожидания ответа от ГИБДД') . "?=",$mailbody,$headers);
+						}
+						unset ($holes);
 					}
-					if ($holes){
-						$headers = "MIME-Version: 1.0\r\nFrom: \"Rosyama\" <".Yii::app()->params['adminEmail'].">\r\nReply-To: ".Yii::app()->params['adminEmail']."\r\nContent-Type: text/html; charset=utf-8";
-						Yii::app()->request->baseUrl=Yii::app()->request->hostInfo;
-						$mailbody=$this->renderPartial('/ugmail/achtung_notification', Array('user'=>$user, 'holes'=>$holes),true);
-						echo $mailbody;
-						//$user->email
-						mail('local@localhost',"=?utf-8?B?" . base64_encode('Истекло время ожидания ответа от ГИБДД') . "?=",$mailbody,$headers);
-					}
-					unset ($holes);
+					$ofset+=$limit;
+					//if ($ofset > 2000) break;
 				}
+			
 			$logmodel->type=$type;
 			$logmodel->time_finish=time();
-			//$logmodel->save();			
+			$logmodel->save();			
 			$this->render('/site/index');
 			}
 		}	
