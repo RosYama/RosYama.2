@@ -351,7 +351,7 @@ function init_MAP_DzDvWLBsil(context, type)
 	if (type=="updatehole") {	
 	setCoordValue(map);
 	}
-	if (type=="bigmap_with_area" || type=="addhole") getMyArea(map);	
+	if (type=="bigmap_with_area") getMyArea(map);
 	
 	if (type=="userarea") getUserArea(map);
 	

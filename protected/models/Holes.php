@@ -616,8 +616,8 @@ class Holes extends CActiveRecord
 		return array(
 			'ID' => 'ID',
 			'USER_ID' => 'Пользователь',
-			'LATITUDE' => 'Latitude',
-			'LONGITUDE' => 'Longitude',
+			'LATITUDE' => 'Долгота',
+			'LONGITUDE' => 'Широта',
 			'ADDRESS' => 'Адрес дефекта',
 			'gibdd_id'=>'Отдел ГИБДД',
 			'STATE' => 'Статус',
