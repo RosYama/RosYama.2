@@ -81,7 +81,7 @@ class HolesController extends Controller
 
 				//Находим пользователей с просроченными запросами
 				$users=1;
-				$limit=50;
+				$limit=200;
 				$ofset=0;
 				while ($users){
 					$users=UserGroupsUser::model()->findAll(Array(
@@ -91,7 +91,7 @@ class HolesController extends Controller
 									'relProfile', 
 									'requests'=>Array(
 										'with'=>Array('answer', 'hole'=>Array('with'=>Array('type', 'pictures_fresh'))),
-										'condition'=>'requests.type="gibdd" AND hole.STATE NOT IN ("fixed", "prosecutor")',
+										'condition'=>'requests.date_sent < '.(time()-(60 * 60 * 24 * 28)).' AND requests.type="gibdd" AND requests.notification_sended=0 AND hole.STATE NOT IN ("fixed", "prosecutor") AND answer.request_id IS NULL',
 									),
 									'relUserGroupsGroup',
 								),
@@ -103,15 +103,16 @@ class HolesController extends Controller
 						$holes=Array();
 						$i=0;
 						foreach ($user->requests as $request){					
-							if (!$request->answer) {
 								$WAIT_DAYS = 38 - ceil((time() - $request->date_sent) / 86400);
 								if ($WAIT_DAYS < 0) {
 									$holes[$i]=$request->hole;						
 									$holes[$i]->PAST_DAYS=abs($WAIT_DAYS);
 									$i++;
-									}
-							
-							}
+									$request->notification_sended=1;
+									$request->update();
+									
+									}												
+
 						}
 						if ($holes){
 							$headers = "MIME-Version: 1.0\r\nFrom: \"Rosyama\" <".Yii::app()->params['adminEmail'].">\r\nReply-To: ".Yii::app()->params['adminEmail']."\r\nContent-Type: text/html; charset=utf-8";
