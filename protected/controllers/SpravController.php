@@ -98,6 +98,18 @@ class SpravController extends Controller
 	{
 		set_time_limit(0);
 		
+		$bufer=GibddHeadsBuffer::model()->findAll();
+		
+		if (!$bufer){
+			$gibds=GibddHeads::model()->findAll('is_regional=1');
+			foreach ($gibds as $gibd){
+				$model=new GibddHeadsBuffer;
+				$model->attributes=$gibd->attributes;
+				$model->id=$gibd->id;
+				$model->save();
+			}
+		}
+		
 		// 1) достать список регионов
 		$text = file_get_contents('http://www.gibdd.ru/regions/');
 		$text = substr($text, strpos($text, '<table cellpadding="0" cellspacing="0" width="730">'));
@@ -230,20 +242,70 @@ class SpravController extends Controller
 		// 4) занести всё в базу
 		foreach($_regions as &$r)
 		{			
-			$model=GibddHeads::model()->find('subject_id='.(int)$r['subject_id'].' AND is_regional=1');
-			if (!$model) $model=new GibddHeads;	
-			$model->scenario='fill';
-			$model->attributes=$r;
-			$model->is_regional=1;
-			$model->level=1;
-			$model->moderated=1;
-			$model->save();
+			$model=GibddHeadsBuffer::model()->find('subject_id='.(int)$r['subject_id'].' AND is_regional=1');
+			//if (!$model) $model=new GibddHeads;
+			
+			if ($model){
+				foreach ($r as $key=>$val){
+					unset ($r['href']);
+					unset ($r['subject_name']);
+					unset ($r['gibbd_name_dative']);
+					unset ($r['id']);
+					if (isset($model->$key) && $model->$key == $val) unset ($r[$key]);
+				}
+				if ($r){
+					$curmodel=GibddHeads::model()->findByPk($model->id);
+					if ($curmodel){
+						$model->scenario='fill';
+						$model->attributes=$r;	
+						$model->modified=time();
+						if ($model->update()){
+							$curmodel->scenario='fill';
+							$curmodel->attributes=$r;	
+							$curmodel->modified=time();
+							$curmodel->update();
+							echo 'Обновлено '.$curmodel->gibdd_name;
+							print_r($r);
+							echo '<br />';
+						}
+					}
+				}
+			}
+			else {
+				$model=new GibddHeads;
+				$model->scenario='fill';
+				$model->attributes=$r;
+				$model->is_regional=1;
+				$model->level=1;
+				$model->moderated=1;
+				$model->created=time();
+				if ($model->save()){
+					$bufer=new GibddHeadsBuffer;
+					$bufer->attributes=$model->attributes;
+					$bufer->id=$model->id;
+					$bufer->save();
+				}
+			}			
+
 		}
 		
 	}	
 
 	public function actionFill_prosecutor_reference(){
 		set_time_limit(0);
+		
+		$bufer=ProsecutorsBuffer::model()->findAll();
+		
+		if (!$bufer){
+			$gibds=Prosecutors::model()->findAll();
+			foreach ($gibds as $gibd){
+				$model=new ProsecutorsBuffer;
+				$model->attributes=$gibd->attributes;
+				$model->id=$gibd->id;
+				$model->save();
+			}
+		}
+		
 		$raw_html = file_get_contents('http://genproc.gov.ru/structure/subjects/');
 		preg_match_all('`<select([\s\S]+)</select>`U', $raw_html, $_matches);
 		preg_match_all('`<option value="([\d]+)"[\s\S]*>([\s\S]+)</option>`U', $_matches[0][0], $_matches, PREG_SET_ORDER);
@@ -253,6 +315,7 @@ class SpravController extends Controller
 		foreach($_matches as &$set)
 		{
 			$raw_html = file_get_contents('http://genproc.gov.ru/structure/subjects/district-'.$set[1].'/');
+			//echo 'http://genproc.gov.ru/structure/subjects/district-'.$set[1].'/<br />';
 			if(!$raw_html)
 			{
 				echo $set[1].' - fail<br>';
@@ -274,9 +337,10 @@ class SpravController extends Controller
 					if (isset($subjects[2])){
 					$itemname=$subjects[2];
 					$subjects[1]=preg_replace('/\(.*\)/i', '', $subjects[1]);
-					$subjectmodel = RfSubjects::model()->find("name_full LIKE '%".trim($subjects[1])."%'");
+					//echo $subjects[1].'<br />';
+					$subjectmodel = RfSubjects::model()->find("name_full LIKE '".trim($subjects[1])."'");
 					if ($subjectmodel) $subject=$subjectmodel->id;
-					else $subject=$subject=RfSubjects::model()->SearchID($subjects[1]);
+					else $subject=$subject=RfSubjects::model()->SearchID($subjects[1]);					
 					}
 					else {
 						$itemname=$subjects[0];
@@ -288,13 +352,50 @@ class SpravController extends Controller
 					$r['preview_text'] = trim(str_replace("\t", ' ', strip_tags($office[1], '<br>')));
 					$r['subject_id']=$subject;
 					
-					$model=Prosecutors::model()->find('subject_id='.(int)$subject);
-					if (!$model) $model=new Prosecutors;		
-					$model->attributes=$r;
-					$model->save();					
+					if($r['subject_id']==0) continue;
+					
+					$model=ProsecutorsBuffer::model()->find('subject_id='.(int)$subject);
+					
+					
+					if ($model){
+						foreach ($r as $key=>$val){
+							unset ($r['href']);
+							unset ($r['subject_name']);
+							unset ($r['id']);
+							if (isset($model->$key) && trim ($model->$key) == trim($val)) unset ($r[$key]);
+							
+						}
+						if ($r){
+							$curmodel=Prosecutors::model()->findByPk($model->id);
+							if ($curmodel){
+								$model->attributes=$r;	
+								if (!$model->subject_id) $model->subject_id=0;
+								if ($model->update()){
+									$curmodel->attributes=$r;	
+									$curmodel->save();
+									echo 'Обновлено '.$curmodel->gibdd_name;
+									print_r($r);
+									echo '<br />';
+								}
+								print_r($model->errors);
+							}
+						}
+					}
+					else {
+						$model=new Prosecutors;
+						$model->attributes=$r;
+						if ($model->save()){
+							$bufer=new ProsecutorsBuffer;
+							$bufer->attributes=$model->attributes;
+							$bufer->id=$model->id;
+							$bufer->save();
+						}
+					}			
+
+					
 				}
 			}
-			echo $set[1].' - ok<br>';
+			//echo $set[1].' - ok<br>';
 		}
 	}
 
