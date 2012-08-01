@@ -84,7 +84,7 @@ class Holes extends CActiveRecord
 		return array(
 			array('USER_ID, ADDRESS, DATE_CREATED, TYPE_ID, gibdd_id', 'required'),
 			array('LATITUDE, LONGITUDE', 'required', 'message' => 'Поставьте метку на карте двойным щелчком мыши!'),	
-			array('GIBDD_REPLY_RECEIVED, PREMODERATED, TYPE_ID, NOT_PREMODERATED, archive', 'numerical', 'integerOnly'=>true),
+			array('GIBDD_REPLY_RECEIVED, PREMODERATED, TYPE_ID, NOT_PREMODERATED, archive, deleted', 'numerical', 'integerOnly'=>true),
 			array('LATITUDE, LONGITUDE', 'numerical'),
 			array('USER_ID, STATE, DATE_CREATED, DATE_SENT, DATE_STATUS, ADR_SUBJECTRF, DATE_SENT_PROSECUTOR', 'length', 'max'=>10),
 			array('ADR_CITY', 'length', 'max'=>50),
@@ -121,6 +121,8 @@ class Holes extends CActiveRecord
 			'user_fix'=>array(self::HAS_ONE, 'HoleFixeds', 'hole_id', 'condition'=>'user_fix.user_id='.Yii::app()->user->id),
 			'type'=>array(self::BELONGS_TO, 'HoleTypes', 'TYPE_ID'),
 			'user'=>array(self::BELONGS_TO, 'UserGroupsUser', 'USER_ID'),		
+			'moder'=>array(self::BELONGS_TO, 'UserGroupsUser', 'premoderator_id'),
+			'deletor'=>array(self::BELONGS_TO, 'UserGroupsUser', 'deletor_id'),
 			'gibdd'=>array(self::BELONGS_TO, 'GibddHeads', 'gibdd_id'),
 			'selected_lists'=>array(self::MANY_MANY, 'UserSelectedLists',
                '{{user_selected_lists_holes_xref}}(hole_id,list_id)'),
@@ -640,6 +642,7 @@ class Holes extends CActiveRecord
 			'description_size'=>'Описание дефекта (размеры и прочая информация)',
 			'description_locality'=>'Подробное описание расположения дефекта на местности',
 			'archive'=>'Архив',
+			'deleted'=>'Удалено'
 		);
 	}
 
@@ -681,7 +684,7 @@ class Holes extends CActiveRecord
 			$tmpcriteria->select='ID';
 			$this->keys=CHtml::listData($this->findAll($tmpcriteria),'ID','ID');	
 		}
-		
+		$criteria->compare('t.deleted',0);
 		$criteria->compare('t.STATE',$this->STATE,true);	
 		$criteria->compare('t.TYPE_ID',$this->TYPE_ID,false);
 		$criteria->compare('t.gibdd_id',$this->gibdd_id,false);
@@ -862,6 +865,7 @@ class Holes extends CActiveRecord
 			
 		if (!$user->userModel->relProfile->show_archive_holes) $criteria->compare('t.archive',0,false);
 		
+		$criteria->compare('t.deleted',0);
 		$criteria->compare('t.STATE',$this->STATE,true);	
 		$criteria->compare('t.TYPE_ID',$this->TYPE_ID,false);
 		$criteria->compare('type.alias',$this->type_alias,true);
@@ -921,7 +925,7 @@ class Holes extends CActiveRecord
 		
 		}
 		
-		
+		$criteria->compare('t.deleted',0);
 		$criteria->compare('t.ID',$this->ID,false);
 		$criteria->compare('t.USER_ID',$this->USER_ID,false);
 		$criteria->compare('t.LATITUDE',$this->LATITUDE);
@@ -983,6 +987,7 @@ class Holes extends CActiveRecord
 		$criteria->compare('t.COMMENT1',$this->COMMENT1,true);
 		$criteria->compare('t.COMMENT2',$this->COMMENT2,true);
 		$criteria->compare('t.TYPE_ID',$this->TYPE_ID,false);
+		$criteria->compare('t.deleted',$this->deleted,false);
 		$criteria->compare('type.alias',$this->type_alias,true);
 		$criteria->compare('subject.name_full',$this->ADR_SUBJECTRF,true);
 		$criteria->compare('gibdd.name',$this->gibdd_id,true);

@@ -136,6 +136,11 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'filter'=>Array(1=>"да",0=>"нет"),
             'value'=>'$data->archive',
         ),
+        array(       
+            'name'=>'deleted',
+            'type'=>'boolean',
+            'filter'=>Array(1=>"да",0=>"нет"),
+        ),
 		/*
 		array(       
             'name'=>'DATE_SENT',

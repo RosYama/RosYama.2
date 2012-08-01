@@ -16,6 +16,18 @@
 	<!-- левая колоночка -->
 	<div class="lCol">
 		<div class="hiddenfields" <?php if (!$model->TYPE_ID) echo 'style="display:none;"';?> >
+		
+		<?php if (Yii::app()->user->level > 99) : ?>
+		<div class="f">
+			<?php echo $form->labelEx($model,'deleted'); ?>
+			<?php echo $form->dropDownList($model, 'deleted', Array(0=>'Нет', 1=>'Да')); ?>
+			<?php echo $form->error($model,'deleted'); ?>
+			<?php if ($model->deleted) : ?>
+				Удалил: <?php echo $model->deletor ? CHtml::link($model->deletor->Fullname, Array('profile/view','id'=>$model->deletor->id)) : 'Непонятно кто' ?>
+			<?php endif; ?>
+		</div>
+		<?php endif; ?>
+		
 		<!-- тип дефекта -->
 		<div class="f">
 			<?php echo $form->labelEx($model,'TYPE_ID'); ?>

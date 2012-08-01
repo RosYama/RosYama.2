@@ -48,4 +48,13 @@ $this->title='Статистика';
 	<?php echo $ar['user']; ?> &nbsp; &mdash;  <?=$ar['counts']?><br>
 <?}?>
 </div>
+
+<?php if (Yii::app()->user->level >= 90 && $arResult['moders']) : ?>
+<h2><?=Yii::t('statics', 'TOP_MODERS')?>:</h2>
+	<div class="stats">
+<?foreach($arResult['moders'] as $ar){?>
+	<?php echo $ar['moder']; ?> &nbsp; &mdash;  <?=$ar['counts']?><br>
+<?}?>
+</div>	
+<?php endif; ?>
 </div>

@@ -324,10 +324,10 @@ class UserGroupsUser extends CActiveRecord
 		// define basic relation with groups
 		$relations = array(
 			'relUserGroupsGroup' => array(self::BELONGS_TO, 'UserGroupsGroup', 'group_id'),
-			'holes' => array(self::HAS_MANY, 'Holes', 'USER_ID'),
-			'holes_cnt' => array(self::STAT, 'Holes', 'USER_ID'),
-			'holes_fixed_cnt' => array(self::STAT, 'Holes', 'USER_ID', 'condition'=>'STATE="fixed"'),
-			'holes_fresh_cnt' => array(self::STAT, 'Holes', 'USER_ID', 'condition'=>'STATE="fresh"'),
+			'holes' => array(self::HAS_MANY, 'Holes', 'USER_ID', 'condition'=>'deleted=0'),
+			'holes_cnt' => array(self::STAT, 'Holes', 'USER_ID', 'condition'=>'deleted=0'),
+			'holes_fixed_cnt' => array(self::STAT, 'Holes', 'USER_ID', 'condition'=>'STATE="fixed" AND deleted=0'),
+			'holes_fresh_cnt' => array(self::STAT, 'Holes', 'USER_ID', 'condition'=>'STATE="fresh" AND deleted=0'),
 			'hole_area'=> array(self::HAS_MANY, 'UserAreaShapes', 'ug_id', 'with'=>'points'),
 			'requests'=>array(self::HAS_MANY, 'HoleRequests', 'user_id'),
 			'selected_holes_lists'=> array(self::HAS_MANY, 'UserSelectedLists', 'user_id', 'order'=>'selected_holes_lists.date_created desc'),
