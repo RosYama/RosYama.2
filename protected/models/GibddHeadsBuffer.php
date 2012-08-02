@@ -18,7 +18,7 @@
  * @property string $tel_dover
  * @property string $url
  */
-class GibddHeads extends CActiveRecord
+class GibddHeadsBuffer extends CActiveRecord
 {
 	public $post='Начальник';
 	public $str_subject;
@@ -44,7 +44,7 @@ class GibddHeads extends CActiveRecord
 	 */
 	public function tableName()
 	{
-		return '{{gibdd_heads}}';
+		return '{{gibdd_heads_buffer}}';
 	}
 
 	/**
@@ -97,93 +97,10 @@ class GibddHeads extends CActiveRecord
 		'holes'=>array(self::HAS_MANY, 'Holes', 'gibdd_id'),
 		'areas'=>array(self::HAS_MANY, 'GibddAreas', 'gibdd_id'),
 		);
-	}
-	
-	public function getJsAreaPoints(){
-		$arr=Array();
-		foreach ($this->areaPoints as $i=>$point){
-			$arr[]='new YMaps.GeoPoint('.$point->lng.','.$point->lat.')';			
-		}
-		return implode(', ',$arr);
-	}
-	
-	public function BeforeDelete(){
-			
-		parent::beforeDelete();
-		
-		if ($this->subject->gibdd->id == $this->id) return false;		
-		foreach ($this->holes as $hole){
-			$hole->gibdd_id=$this->subject->gibdd->id;
-			$hole->update;
-		}
-		
-		foreach ($this->areas as $item) $item->delete();
-			
-		return true;
-	}
-	
-	public function BeforeValidate(){
-		parent::beforeValidate();
-		if (isset($_POST['GibddAreaPoints']) ){
-					$areaarr=Array(); 
-					foreach ($_POST['GibddAreaPoints'] as $i=>$area){
-						$areamodel=new GibddAreas;	
-						$pointarr=Array();
-							foreach ($area as $ii=>$point){
-								$pointmodel=new GibddAreaPoints;
-								$pointmodel->attributes=$point;								
-								$pointmodel->point_num=$ii;	
-								$pointarr[]=$pointmodel;
-							}	
-						$areamodel->points=$pointarr;
-						$areaarr[]=$areamodel;						
-					}				
-				$this->areas=$areaarr;	
-				}	
-		return true;
-	}
-	
-	public function BeforeSave(){
-				parent::beforeSave();
-				if (!$this->is_regional && ($this->lat==0 || $this->lng==0)) {
-					$this->addError('lat','Поставьте точку на карте двойным кликом'); 
-					return false;
-					}
-				if (!$this->is_regional && !$this->subject_id) {
-					$this->addError('subject_id', 'Не определен субъект РФ');  	
-					return false;
-					}			
-				
-				return true;
-	}
-	
-	public function AfterSave(){
-				parent::afterSave();
-				
-				if ($this->scenario != 'fill'){
-					$oldareas=GibddAreas::model()->findAll('gibdd_id='.$this->id);
-					foreach ($oldareas as $item) $item->delete();
-				
-					if (isset($_POST['GibddAreaPoints']) ){
-						//print_r($_POST['GibddAreaPoints']); die();
-						foreach ($_POST['GibddAreaPoints'] as $i=>$area){
-							$areamodel=new GibddAreas;
-							$areamodel->gibdd_id=$this->id;
-							if ($areamodel->save()){
-								foreach ($area as $ii=>$point){
-									$pointmodel=new GibddAreaPoints;
-									$pointmodel->attributes=$point;
-									$pointmodel->area_id=$areamodel->id;
-									$pointmodel->point_num=$ii;
-									$pointmodel->save(); 
-								}		
-							}
-						}				
-					}
-				}
-				return true;
 	}	
-
+		
+		
+	
 	/**	
 	 * @return array customized attribute labels (name=>label)
 	 */
