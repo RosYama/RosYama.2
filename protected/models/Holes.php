@@ -118,6 +118,7 @@ class Holes extends CActiveRecord
 			'request_prosecutor'=>array(self::HAS_ONE, 'HoleRequests', 'hole_id', 'condition'=>'request_prosecutor.type="prosecutor" AND user_id='.Yii::app()->user->id),
 			'requests_gibdd'=>array(self::HAS_MANY, 'HoleRequests', 'hole_id', 'condition'=>'requests_gibdd.type="gibdd"','order'=>'requests_gibdd.date_sent ASC'),
 			'requests_prosecutor'=>array(self::HAS_MANY, 'HoleRequests', 'hole_id', 'condition'=>'requests_prosecutor.type="prosecutor"','order'=>'date_sent ASC'),
+			'requests_with_answer_comment'=>array(self::HAS_MANY, 'HoleRequests', 'hole_id', 'with'=>'answers','condition'=>'answers.comment !=""','order'=>'requests_with_answer_comment.date_sent DESC'),
 			'fixeds'=>array(self::HAS_MANY, 'HoleFixeds', 'hole_id','order'=>'fixeds.date_fix ASC'),
 			'user_fix'=>array(self::HAS_ONE, 'HoleFixeds', 'hole_id', 'condition'=>'user_fix.user_id='.Yii::app()->user->id),
 			'type'=>array(self::BELONGS_TO, 'HoleTypes', 'TYPE_ID'),
@@ -940,9 +941,9 @@ class Holes extends CActiveRecord
 		$criteria->compare('t.ADR_CITY',$this->ADR_CITY,true);
 		$criteria->compare('t.COMMENT_GIBDD_REPLY',$this->COMMENT_GIBDD_REPLY,true);
 		$criteria->compare('t.GIBDD_REPLY_RECEIVED',$this->GIBDD_REPLY_RECEIVED);
-		if ($this->NOT_PREMODERATED) $criteria->compare('PREMODERATED',0);
+		if ($this->NOT_PREMODERATED) $criteria->compare('t.PREMODERATED',0);
 		$criteria->compare('archive',$this->archive ? $this->archive : 0);
-		if (!Yii::app()->user->isModer) $criteria->compare('PREMODERATED',$this->PREMODERATED,true);
+		if (!Yii::app()->user->isModer) $criteria->compare('t.PREMODERATED',$this->PREMODERATED,true);
 		$criteria->compare('DATE_SENT_PROSECUTOR',$this->DATE_SENT_PROSECUTOR,true);
 		//$criteria->together=true;
 	
