@@ -110,10 +110,11 @@ class Holes extends CActiveRecord
 			'subject'=>array(self::BELONGS_TO, 'RfSubjects', 'ADR_SUBJECTRF'),
 			'requests'=>array(self::HAS_MANY, 'HoleRequests', 'hole_id'),
 			'requests_with_answers'=>array(self::HAS_MANY, 'HoleRequests', 'hole_id', 'with'=>'answers', 'condition'=>'answers.id > 0', 'order'=>'requests_with_answers.date_sent, answers.date'),
-			'pictures'=>array(self::HAS_MANY, 'HolePictures', 'hole_id', 'order'=>'pictures.type, pictures.ordering'),
-			'pictures_fresh'=>array(self::HAS_MANY, 'HolePictures', 'hole_id', 'condition'=>'pictures_fresh.type="fresh"','order'=>'pictures_fresh.ordering'),
-			'pictures_fixed'=>array(self::HAS_MANY, 'HolePictures', 'hole_id', 'condition'=>'pictures_fixed.type="fixed"','order'=>'pictures_fixed.ordering'),
+			'pictures'=>array(self::HAS_MANY, 'HolePictures', 'hole_id', 'order'=>'pictures.type, pictures.ordering AND pictures.premoderated=1'),
+			'pictures_fresh'=>array(self::HAS_MANY, 'HolePictures', 'hole_id', 'condition'=>'pictures_fresh.type="fresh" AND pictures_fresh.premoderated=1','order'=>'pictures_fresh.ordering'),
+			'pictures_fixed'=>array(self::HAS_MANY, 'HolePictures', 'hole_id', 'condition'=>'pictures_fixed.type="fixed" AND pictures_fixed.premoderated=1','order'=>'pictures_fixed.ordering'),
 			'user_pictures_fixed'=>array(self::HAS_MANY, 'HolePictures', 'hole_id', 'condition'=>'user_pictures_fixed.type="fixed" AND user_pictures_fixed.user_id='.Yii::app()->user->id,'order'=>'user_pictures_fixed.ordering'),
+			'pictures_fixed_not_moderated'=>array(self::HAS_MANY, 'HolePictures', 'hole_id', 'condition'=>'pictures_fixed_not_moderated.type="fixed" AND pictures_fixed_not_moderated.premoderated=0','order'=>'pictures_fixed_not_moderated.ordering', 'with'=>'user'),
 			'request_gibdd'=>array(self::HAS_ONE, 'HoleRequests', 'hole_id', 'condition'=>'request_gibdd.type="gibdd" AND request_gibdd.user_id='.Yii::app()->user->id),
 			'request_prosecutor'=>array(self::HAS_ONE, 'HoleRequests', 'hole_id', 'condition'=>'request_prosecutor.type="prosecutor" AND user_id='.Yii::app()->user->id),
 			'requests_gibdd'=>array(self::HAS_MANY, 'HoleRequests', 'hole_id', 'condition'=>'requests_gibdd.type="gibdd"','order'=>'requests_gibdd.date_sent ASC'),
@@ -271,7 +272,6 @@ class Holes extends CActiveRecord
 			$pictmodel=HolePictures::model()->findByPk((int)$pictid);  
 			if ($pictmodel)$pictmodel->delete();
 		}
-
 		$imagess=$this->UpploadedPictures;
 		$id=$this->ID;
 		$prefix='';						
@@ -352,7 +352,8 @@ class Holes extends CActiveRecord
 				imagedestroy($image);
 							
 				$imgmodel=new HolePictures;
-				$imgmodel->type=$this->scenario=='fix'?'fixed':'fresh'; 
+				$imgmodel->type=$this->scenario=='fix' || $this->scenario=='addFixedFiles' ?'fixed':'fresh'; 
+				if ($this->scenario=='addFixedFiles') $imgmodel->premoderated=0;
 				$imgmodel->filename=$imgname;
 				$imgmodel->hole_id=$this->ID;
 				$imgmodel->user_id=Yii::app()->user->id;
