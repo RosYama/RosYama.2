@@ -472,14 +472,18 @@ class HolesController extends Controller
 							Yii::app()->user->setFlash('user', 'Произошла ошибка попробуйте немного позднее');
 					}
 				}
-				
-				$model->delete();
+				$model->deletor_id=Yii::app()->user->id;
+				$model->deleted=1;
+				$model->update();
 			}
 			else {
 				$holes=Holes::model()->findAll('id IN ('.$_POST['DELETE_ALL'].')');
 				$ok=0;
-				foreach ($holes as $model)
-					if ($model->delete()) $ok++;
+				foreach ($holes as $model){
+					$model->deletor_id=Yii::app()->user->id;
+					$model->deleted=1;
+					if ($model->update()) $ok++;
+					}
 				if ($ok==count($holes))  echo 'ok';
 			}			
 
@@ -499,7 +503,11 @@ class HolesController extends Controller
 	public function actionPersonalDelete($id)
 	{
 			$model=$this->loadChangeModel($id);				
-			$model->delete();			
+			if (!$model->isUserHole && Yii::app()->user->level<=90){
+				$model->deleted=1;
+				$model->update();
+			}
+			else $model->delete();			
 			
 			// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
 			if(!isset($_POST['ajax']))
@@ -642,6 +650,7 @@ class HolesController extends Controller
 			$model=$this->loadModel($id);
 			if (!$model->PREMODERATED) {
 				$model->PREMODERATED=1;
+				$model->premoderator_id=Yii::app()->user->id;
 				if ($model->update()) echo 'ok';
 				}
 			elseif (isset($_GET['ajax']) && $_GET['ajax']=='holes-grid'){
@@ -655,6 +664,7 @@ class HolesController extends Controller
 			foreach ($holes as $model)
 			if (!$model->PREMODERATED) {
 				$model->PREMODERATED=1;
+				$model->premoderator_id=Yii::app()->user->id;
 				if ($model->update()) $ok++;
 				}
 			if (isset($_GET['ajax']) && $ok==count($holes))  echo 'ok';
@@ -971,7 +981,9 @@ class HolesController extends Controller
 			$criteria->compare('t.gibdd_id',$_GET['Holes']['gibdd_id'],false);
 		if(isset($_GET['Holes']['archive']))
 			$criteria->compare('t.archive',Array($_GET['Holes']['archive'],0),false);
-			
+		
+		$criteria->compare('t.deleted',0);
+		
 		$userid=Yii::app()->user->id;
 		if (isset($_GET['Holes']['showUserHoles'])) $showUserHoles=$_GET['Holes']['showUserHoles'];
 		else $showUserHoles=0; 
@@ -1142,7 +1154,7 @@ class HolesController extends Controller
 	public function loadModel($id)
 	{
 		$model=Holes::model()->findByPk($id);
-		if($model===null)
+		if($model===null || ($model->deleted && Yii::app()->user->level < 95))
 			throw new CHttpException(404,'The requested page does not exist.');
 		return $model;
 	}
