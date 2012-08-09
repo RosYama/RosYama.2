@@ -943,7 +943,7 @@ class Holes extends CActiveRecord
 		$criteria->compare('t.GIBDD_REPLY_RECEIVED',$this->GIBDD_REPLY_RECEIVED);
 		if ($this->NOT_PREMODERATED) $criteria->compare('PREMODERATED',0);
 		$criteria->compare('archive',$this->archive ? $this->archive : 0);
-		if (!Yii::app()->user->isModer) $criteria->compare('PREMODERATED',$this->PREMODERATED,true);
+		if (!Yii::app()->user->isModer) $criteria->compare('t.PREMODERATED',$this->PREMODERATED,true);
 		$criteria->compare('DATE_SENT_PROSECUTOR',$this->DATE_SENT_PROSECUTOR,true);
 		//$criteria->together=true;
 	
