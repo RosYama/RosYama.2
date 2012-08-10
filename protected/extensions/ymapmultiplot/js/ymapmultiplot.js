@@ -353,6 +353,8 @@ function init_MAP_DzDvWLBsil(context, type)
 	}
 	if (type=="bigmap_with_area") getMyArea(map);	
 	
+	if (type=="addhole") getMyArea(map, false);	
+	
 	if (type=="userarea") getUserArea(map);
 	
 	GetPlacemarks(map);	
@@ -463,7 +465,8 @@ function GetGibbds(map){
 
 }
 
-function getMyArea(map){
+function getMyArea(map, showpolygon){
+	if (showpolygon==undefined)showpolygon=true;
 	var addr='/profile/myareaJsonView/?jsoncallback=?';
 	
 	var style = new YMaps.Style('default#greenPoint');
@@ -492,7 +495,7 @@ function getMyArea(map){
 				});
 		
 					
-				map.addOverlay(myareaPolygons[i]);
+				if (showpolygon) map.addOverlay(myareaPolygons[i]);
 				
 			}	
 			if (bounds.length) map.setBounds (new YMaps.GeoCollectionBounds(bounds)); 
