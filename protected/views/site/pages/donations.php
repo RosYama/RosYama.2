@@ -10,11 +10,19 @@ $this->layout='//layouts/header_default_without_add';
 <div class="rCol">
 <p><b>Деньги в поддержку РосЯмы можно перечислять сюда:</b></p>
 
-<p><b>QIWI</b> - 9161775694</p>
-
 <p><b>Яндекс.Деньги</b> <a href="http://yaudit.org/yaudit/41001550415485">кошелёк № 41001550415485</a></p>
 <!-- Кнопка Я-Аудита -->
 <p><button onclick="window.open('http://yaudit.org/41001550415485','newwindow','toolbar=0')">Посмотреть историю пожертвований</button></p>
+
+<p><b>QIWI</b> - 9161775694</p>
+
+<p><b>WebMoney</b>
+<ul>
+<li>R356781320482 - рубли
+<li>Z227171524847 - доллары
+<li>E326031675260 - евро
+</ul>
+</p>
 
 <p><b>PayPal</b> fezeev@gmail.com</p>
 
@@ -43,5 +51,6 @@ $this->layout='//layouts/header_default_without_add';
 <li>Финансовый отчёт за 2011 год: <a href="http://fezeev.livejournal.com/50545.html">http://fezeev.livejournal.com/50545.html</a>
 <li>Финансовый отчёт за январь-май 2012 года: <a href="http://fezeev.livejournal.com/61845.html">http://fezeev.livejournal.com/61845.html</a>
 <li>Финансовый отчёт за июнь 2012 года: <a href="http://fezeev.livejournal.com/63802.html">http://fezeev.livejournal.com/63802.html</a>
+<li>Финансовый отчёт за июль 2012 года: <a href="http://fezeev.livejournal.com/64709.html">http://fezeev.livejournal.com/64709.html</a>
 </ul>
 </div>
