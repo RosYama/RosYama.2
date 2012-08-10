@@ -75,9 +75,31 @@ $this->widget('application.extensions.fancybox.EFancyBox', array(
 			</div>
 			<? endif; ?>
 			<? if(!Yii::app()->user->isGuest): ?>
+				<?php if ($hole->STATE !='fixed' && !$hole->request_gibdd) : ?>
+				<div class="form">
+					Яму заделали? Есть фотографии? <a href="#" onclick="$('#upload_fixeds').toggle('slow'); return false;">Загрузи!</a>
+					<?php $form=$this->beginWidget('CActiveForm', array(
+						'id'=>'holes-form',
+						'enableAjaxValidation'=>false,
+						'htmlOptions'=>Array ('enctype'=>'multipart/form-data'),
+						'action'=>$this->createUrl('addFixedFiles', Array('id'=>$hole->ID)),
+					)); ?>
+					<?php echo $form->hiddenField($hole,'ID'); ?>
+					<div style="background-color:#E6EFC2; margin-left:116px; display:none;" id="upload_fixeds">
+					<div class="row">
+						<?php $this->widget('CMultiFileUpload',array('accept'=>'gif|jpg|png|pdf|txt', 'model'=>$hole, 'attribute'=>'upploadedPictures', 'htmlOptions'=>array('class'=>'mf'), 'denied'=>Yii::t('mf','Невозможно загрузить этот файл'),'duplicate'=>Yii::t('mf','Файл уже существует'),'remove'=>Yii::t('mf','удалить'),'selected'=>Yii::t('mf','Файлы: $file'),)); ?>						
+					</div>
+					<div class="row buttons" style="">
+						<?php echo CHtml::submitButton('Отправить'); ?>
+					</div>
+					</div>
+					<?php $this->endWidget(); ?>
+				</div>
+				<div class="clear"></div>
+				<?php endif; ?>
 				<? if(Yii::app()->user->IsAdmin) : ?>
 					<p>
-						<div class="errortext">
+						<div class="error">
 						Вы обладаете административными полномочиями
 						<br/>
 						</div>
@@ -86,13 +108,12 @@ $this->widget('application.extensions.fancybox.EFancyBox', array(
 				
 				<?php if(!$hole->PREMODERATED) : ?>
 				<p>
-						<div class="errortext">
+						<div class="error">
 						<?php echo  Yii::t('holes_view', 'PREMODRATION_WARNING');?>
 						<br/>
 						</div>
 				</p>
-				<? endif; ?>
-				
+				<? endif; ?>								
 				<?			
 				switch($hole->STATE)
 				{
@@ -283,7 +304,7 @@ $this->widget('application.extensions.fancybox.EFancyBox', array(
 					case 'fixed':
 					default:
 					{
-						if(!$hole->pictures_fixed)
+						if($hole->user_fix)
 						{
 							?>
 							<?php echo CHtml::link(Yii::t('holes_view', 'HOLE_CART_ADMIN_TEXT_13'), array('defix', 'id'=>$hole->ID),array('class'=>"declarationBtn")); ?>
@@ -418,6 +439,30 @@ new Ya.share({
 </div>
 <div class="rCol">
 	<div class="b">
+			<?php if(($hole->IsUserHole || Yii::app()->user->level > 80) && $hole->pictures_fixed_not_moderated) : ?>
+				<div class="before">
+					<h2>Фотографии исправленного дефекта на модерации</h2>
+					<? foreach($hole->pictures_fixed_not_moderated as $i=>$picture): ?>
+					<div class="picture_info">
+					<div style="width:515px;">
+					<h3>Загружено пользователем <?php echo $picture->user->fullname;?></h3>
+					</div>
+					<div style="text-align:right;">
+					<?php if (Yii::app()->user->level > 80 || $hole->IsUserHole) : ?>
+						<?php echo CHtml::link(CHtml::image('/images/published.png', 'Утвердить изображение и отметить яму как устраненную', Array('title'=>'Утвердить изображение и отметить яму как устраненную')), Array('approveFixedPicture','id'=>$hole->ID,'pictid'=>$picture->id), Array('class'=>'declarationBtn')); ?>
+					<?php endif; ?>
+					
+					<?php if ($picture->user_id==Yii::app()->user->id || Yii::app()->user->level > 80 || $hole->IsUserHole) : ?>
+							<?php echo CHtml::link(CHtml::image('/images/delete.png', 'Удалить это изображение', Array('title'=>'Удалить это изображение')), Array('delpicture','id'=>$picture->id), Array('class'=>'declarationBtn delpicture')); ?>
+					<?php endif; ?>
+					</div>
+					</div>
+					
+					<?php echo CHtml::link(CHtml::image($picture->medium), $picture->original, 
+					Array('class'=>'holes_pict','rel'=>'hole_fixed', 'title'=>CHtml::encode($hole->ADDRESS).' - исправлено')); ?>
+					<? endforeach; ?>
+			</div>
+		<?php endif; ?>
 		<div class="before">
 			<? if($hole->pictures_fixed): ?>
 				<h2><?= Yii::t('holes_view', 'HOLE_ITWAS') ?></h2>
@@ -457,7 +502,7 @@ new Ya.share({
 					<? foreach($answer->files_img as $img): ?>
 					<p>
 						<?php if ($request->user_id==Yii::app()->user->id) : ?>
-							<?php echo CHtml::link(CHtml::image('/images/delete.png', 'Удалить это изображение', Array('title'=>'Удалить это изображение')), Array('delanswerfile','id'=>$img->id), Array('class'=>'declarationBtn')); ?><br />
+							<?php echo CHtml::link(CHtml::image('/images/delete.png', 'Удалить это изображение', Array('title'=>'Удалить это изображение')), Array('delanswerfile','id'=>$img->id), Array('class'=>'declarationBtn delpicture')); ?><br />
 						<?php endif; ?>
 						<?php echo CHtml::link(CHtml::image($answer->filesFolder.'/thumbs/'.$img->file_name), $answer->filesFolder.'/'.$img->file_name, 
 							Array('class'=>'holes_pict','rel'=>'answer_'.$answer->id, 'title'=>'Ответ ГИБДД от '.date('d.m.Y',$answer->date))); ?>
@@ -475,7 +520,7 @@ new Ya.share({
 					<? foreach($hole->pictures_fixed as $i=>$picture): ?>
 					
 					<?php if ($picture->user_id==Yii::app()->user->id || Yii::app()->user->level > 80 || $hole->IsUserHole) : ?>
-							<?php echo CHtml::link(CHtml::image('/images/delete.png', 'Удалить это изображение', Array('title'=>'Удалить это изображение')), Array('delpicture','id'=>$picture->id), Array('class'=>'declarationBtn')); ?></br>
+							<?php echo CHtml::link(CHtml::image('/images/delete.png', 'Удалить это изображение', Array('title'=>'Удалить это изображение')), Array('delpicture','id'=>$picture->id), Array('class'=>'declarationBtn delpicture')); ?></br>
 					<?php endif; ?>
 					
 						<?php echo CHtml::link(CHtml::image($picture->medium), $picture->original, 
@@ -496,3 +541,4 @@ new Ya.share({
 	</div>
 </div>
 </div>
+

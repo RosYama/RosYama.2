@@ -222,3 +222,5 @@ div.rCol .before:after, div.rCol .after:after {
 
 .answer_file{width: 105px; height: 150px; float:left; margin-right: 10px; text-align: right;}
 .answer_file .delfileBtn {position: absolute; width: 16px; margin-left: 92px;}
+.picture_info{padding:5px; border: 1px solid #DDD; border-color: #aaa; width: 555px; height: 15px; border-bottom:none;}
+.picture_info div, .picture_info .declarationBtn{float:left;}

@@ -31,7 +31,7 @@ class HolesController extends Controller
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('add','update', 'personal','personalDelete','request','requestForm','sent','notsent','gibddreply', 'fix', 'defix', 'prosecutorsent', 'prosecutornotsent','delanswerfile','myarea', 'territorialGibdd', 'delpicture','selectHoles','sentMany','review', 'selected'),
+				'actions'=>array('add','update', 'personal','personalDelete','request','requestForm','sent','notsent','gibddreply', 'fix', 'defix', 'prosecutorsent', 'prosecutornotsent','delanswerfile','myarea', 'territorialGibdd', 'delpicture','selectHoles','sentMany','review', 'selected', 'addFixedFiles', 'approveFixedPicture'),
 				'users'=>array('@'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -202,12 +202,64 @@ class HolesController extends Controller
         $cs->registerScriptFile('http://api-maps.yandex.ru/1.1/index.xml?key='.$this->mapkey);
         $jsFile = CHtml::asset($this->viewPath.DIRECTORY_SEPARATOR.'js'.DIRECTORY_SEPARATOR.'view_script.js');
         $cs->registerScriptFile($jsFile);
+        $model=$this->loadModel($id);
+        
+        
         
 		$this->render('view',array(
-			'hole'=>$this->loadModel($id),
+			'hole'=>$model,
 
 		));
 	}
+	
+	public function actionAddFixedFiles($id)
+	{
+		$model=$this->loadModel($id);
+		if(isset($_POST['Holes']))
+		{			
+			$model->scenario="addFixedFiles";
+			if ($model->savePictures()) Yii::app()->user->setFlash('user', 'Файлы загружены. После одобрания пользователем, загрузившим эту яму или модератором яма получит статус "устранено"');
+			
+			//Отправляем уведомление хозяину ямы
+			$currentUser=Yii::app()->user->userModel;
+			$pictures=HolePictures::model()->findAll('hole_id='.$model->ID.' AND type="fixed" AND premoderated=0 AND user_id='.$currentUser->id);
+			if ($pictures){
+				$headers = "MIME-Version: 1.0\r\nFrom: \"Rosyama\" <".Yii::app()->params['adminEmail'].">\r\nReply-To: ".$currentUser->email ? $currentUser->email : Yii::app()->params['adminEmail']."\r\nContent-Type: text/html; charset=utf-8";
+				$user=$model->user;
+				Yii::app()->request->baseUrl=Yii::app()->request->hostInfo;
+				$mailbody=$this->renderPartial('/ugmail/fixed_pictures_notification', Array('user'=>$user, 'currentUser'=>$currentUser, 'pictures'=>$pictures, 'hole'=>$model),true);
+				//echo $mailbody; die();
+				//$user->email
+				mail($user->email,"=?utf-8?B?" . base64_encode('Новые фотографии исправленной ямы') . "?=",$mailbody,$headers);
+			}
+			
+		}
+		
+		$this->redirect(Array('view','id'=>(int)$id));
+		
+	}	
+	
+	public function actionApproveFixedPicture($id, $pictid)
+	{
+		$model=$this->loadChangeModel($id);		
+		
+		$picmodel=HolePictures::model()->findByPk((int)$pictid);
+		
+		if ($picmodel){
+			$picmodel->premoderated=1;
+			if ($picmodel->update()){
+				if (!$model->user_fix){
+					$model->scenario='fix';
+					$model->STATE='fixed';
+					$model->DATE_STATUS=time();
+					if ($model->save()) Yii::app()->user->setFlash('user', 'Статус ямы успешно изменен');
+				}
+			}
+		}
+		
+		$this->redirect(Array('view','id'=>(int)$id));
+		
+	}		
 	
 	public function actionReview($id)
 	{
@@ -439,7 +491,9 @@ class HolesController extends Controller
 		$model=$this->loadModel($id);
 		if (!$model->user_fix && Yii::app()->user->level < 80)
 			throw new CHttpException(403,'Доступ запрещен.');
-			
+		
+		if ($model->user_pictures_fixed) Yii::app()->user->setFlash('user', 'Для того чтобы анулировать факт исправления, сначала необходимо удалить загруженные Вами фотографии!');
+		
 		$model->updateSetinprogress();
 			if(!isset($_GET['ajax']))
 				$this->redirect(array('view','id'=>$model->ID));

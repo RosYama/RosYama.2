@@ -68,3 +68,7 @@ function gibddre_img_del(hole_id, img_id)
 		}
 	);
 }
+
+jQuery(".delpicture").live("click",function(){
+		return confirm('Вы уверены, что хотите удалить изображение?');
+	});
