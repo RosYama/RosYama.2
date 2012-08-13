@@ -117,7 +117,9 @@ class XmlController extends Controller
 					$tags[]=CHtml::tag('datestatus', array ('readable'=>$hole->DATE_STATUS ? date('d.m.Y',$hole->DATE_STATUS) : ''), CHtml::encode($hole->DATE_STATUS), true);
 					$tags[]=CHtml::tag('commentfresh', array (), CHtml::encode($hole->COMMENT1), true);
 					$tags[]=CHtml::tag('commentfixed', array (), CHtml::encode($hole->COMMENT2), true);
-					$tags[]=CHtml::tag('commentgibddre', array (), false, true);
+					$commentgibddre='';
+					if ($hole->STATE!='fresh' && $hole->STATE!='inprogress' && $hole->STATE!='achtung' && $hole->requests_with_answer_comment) $commentgibddre=$hole->requests_with_answer_comment[0]->answers[0]->comment;
+					$tags[]=CHtml::tag('commentgibddre', array (), CHtml::encode($commentgibddre), true);
 					$tags[]=CHtml::tag('pictures', array (), false, false);
 						$tags[]=CHtml::tag('original', array (), false, false);
 							$tags[]=CHtml::tag('fresh', array (), false, false);
