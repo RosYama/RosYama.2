@@ -118,7 +118,7 @@ class HolesController extends Controller
 							$headers = "MIME-Version: 1.0\r\nFrom: \"Rosyama\" <".Yii::app()->params['adminEmail'].">\r\nReply-To: ".Yii::app()->params['adminEmail']."\r\nContent-Type: text/html; charset=utf-8";
 							Yii::app()->request->baseUrl=Yii::app()->request->hostInfo;
 							$mailbody=$this->renderPartial('/ugmail/achtung_notification', Array('user'=>$user, 'holes'=>$holes),true);
-							//echo $mailbody;
+							//echo $mailbody; die();
 							//$user->email
 							echo 'Напоминание на '.count($holes).'ям, отправлено пользователю '.$user->username.'<br />';
 							mail($user->email,"=?utf-8?B?" . base64_encode('Истекло время ожидания ответа от ГИБДД') . "?=",$mailbody,$headers);
