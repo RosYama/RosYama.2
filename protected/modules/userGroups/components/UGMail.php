@@ -19,6 +19,7 @@ class UGMail {
 	 */
 	const ACTIVATION = 'activation';
 	const PASS_RESET = 'pass_reset';
+	const PASS_RESET_ERROR = 'pass_reset_error';
 	const INVITATION = 'invitation';
 
 	/**
@@ -146,6 +147,9 @@ class UGMail {
 				break;
 			case self::PASS_RESET:
 				return new UGMailPassReset;
+				break;
+			case self::PASS_RESET_ERROR:
+				return new UGMailPassResetError;
 				break;
 			case self::INVITATION:
 				return new UGMailInvitation;
