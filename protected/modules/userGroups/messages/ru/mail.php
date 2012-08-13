@@ -22,4 +22,5 @@ return array (
   'account activation' => 'Активация учетной записи',
   'invitation to {website}' => 'Приглашение на {website}',
   'password reset request' => 'Запрос на восстановление пароля',
+  'password reset request error' => 'Ошибка при восстановлении пароля',  
 );
