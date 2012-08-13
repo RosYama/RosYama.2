@@ -39,7 +39,7 @@ class HoleRequests extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('hole_id, user_id, gibdd_id, date_sent, type', 'required'),
-			array('hole_id, user_id, gibdd_id, date_sent', 'numerical', 'integerOnly'=>true),
+			array('hole_id, user_id, gibdd_id, date_sent, notification_sended', 'numerical', 'integerOnly'=>true),
 			array('type', 'length', 'max'=>30),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.

@@ -75,8 +75,16 @@
 			<?php echo $form->error($model,'COMMENT1'); ?>
 		</div>
 
-		<?php echo $form->hiddenField($model,'LATITUDE'); ?>
-		<?php echo $form->hiddenField($model,'LONGITUDE'); ?>
+		<div class="f">
+			<?php echo $form->labelEx($model,'LATITUDE'); ?>
+			<?php echo $form->textField($model,'LATITUDE',array('class'=>'textInput')); ?>
+			<?php echo $form->error($model,'LATITUDE'); ?>
+		</div>
+		<div class="f">
+			<?php echo $form->labelEx($model,'LONGITUDE'); ?>
+			<?php echo $form->textField($model,'LONGITUDE',array('class'=>'textInput')); ?>
+			<?php echo $form->error($model,'LONGITUDE'); ?>
+		</div>
 		<?php echo $form->hiddenField($model,'STR_SUBJECTRF'); ?>
 		<?php echo $form->hiddenField($model,'ADR_CITY'); ?>
 		</div>
