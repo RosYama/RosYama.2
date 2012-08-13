@@ -125,6 +125,7 @@ class UGMail {
 			'{email}'=>$model->email,
 			'{username}'=>$model->username,
 			'{activation_code}'=>$model->activation_code,
+			'{external_auth_id}'=>$model->external_auth_id,
 			'{link}'=>$link,
 			'{full_link}'=>$full_link,
 			'{website}'=>Yii::app()->name,
@@ -276,6 +277,56 @@ class UGMailPassReset implements UGMailMessage {
 	{
 
 		return Yii::app()->controller->renderPartial('//ugmail/passreset', array(
+			'data' => $data
+			), true);
+	}
+
+	/**
+	 * @see UGMailMessage::mailSuccess()
+	 */
+	public function mailSuccess($data)
+	{
+		return Yii::t('UserGroupsModule.general','An email containing the instructions to reset your password has been sent to your email address: {email}', $data);
+	}
+
+	/**
+	 * @see UGMailMessage::mailError()
+	 */
+	public function mailError($data)
+	{
+		return Yii::t('UserGroupsModule.general','Impossible to send email to the address {email}', $data);
+	}
+}
+
+
+class UGMailPassResetError implements UGMailMessage {
+
+	/**
+	 * @see UGMailMessage::mailHeader()
+	 */
+	public function mailHeader($admin_mail)
+	{
+		$headers = 'MIME-Version: 1.0' . "\n";
+		$headers .= 'Content-type: text/html; charset=utf8' . "\n";
+		$headers .= 'From: '.Yii::app()->name.' <'.$admin_mail.'>';
+		return $headers;
+	}
+
+	/**
+	 * @see UGMailMessage::mailSubject()
+	 */
+	public function mailSubject($data)
+	{
+		return Yii::t('UserGroupsModule.mail', 'password reset request error');
+	}
+
+	/**
+	 * @see UGMailMessage::mailBody()
+	 */
+	public function mailBody($data)
+	{
+
+		return Yii::app()->controller->renderPartial('//ugmail/passreseterror', array(
 			'data' => $data
 			), true);
 	}

@@ -483,7 +483,11 @@ class UserController extends Controller
 			if ($formmodel->username || $formmodel->email) {				
 				$model = UserGroupsUser::model()->findByAttributes(array($attr=>$val));			
 					if ($model) {
-						if ($model->xml_id && $model->external_auth_id) {Yii::app()->user->setFlash('success', 'Невозможно поменять пароль т.к. Вы авторизировались с помощью '.$model->external_auth_id);}
+						if ($model->xml_id && $model->external_auth_id) {
+							$mail = new UGMail($model, UGMail::PASS_RESET);
+							$mail->send();
+							Yii::app()->user->setFlash('success', 'Невозможно поменять пароль т.к. Вы авторизировались с помощью '.$model->external_auth_id);							
+							}
 						else {
 							$flash='';
 							$model->scenario = 'passRequest';
