@@ -1,0 +1,4 @@
+Disallow: /holes/flushcashe
+Disallow: /sprav/fill_gibdd_reference
+Disallow: /sprav/fill_prosecutor_reference
+Disallow: /holes/cronDaily/achtung-notifications
