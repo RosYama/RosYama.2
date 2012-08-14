@@ -95,8 +95,9 @@
 			
 			<p><strong>
 Поставьте метку на карте двойным щелчком мыши
-<span class="required">*</span>
-</strong>
+<span class="required">*</span></strong><br />
+или <a href="#" id="show_fields">введите координаты дефекта</a>
+
 </p>
 
 			<span id="recognized_address_str" title="Субъект РФ и населённый пункт"></span>
@@ -106,6 +107,18 @@
 			<div class="bx-yandex-view-map">
 		<?php if ($model->isNewRecord) $maptype='addhole'; else $maptype='updatehole'; ?>
 		<?php Yii::app()->clientScript->registerScript('initmap',<<<EOD
+		
+		$('#show_fields').live('click',function() {
+			$(".hiddenfields").animate({opacity: 'show'}, 'slow');				
+				if(jQuery.browser.safari){
+							jQuery("body").animate( { scrollTop: $("#Holes_LATITUDE").offset().top-20 }, 1100 );
+						  }else{
+							jQuery("html").animate( { scrollTop: $("#Holes_LATITUDE").offset().top-20 }, 1100 );
+						  }			
+			$("#Holes_LATITUDE").focus();
+			
+		});
+		
 		if (window.attachEvent) // IE
 			window.attachEvent("onload", function(){init_MAP_DzDvWLBsil(null,'{$maptype}')});
 		else if (window.addEventListener) // Gecko / W3C
