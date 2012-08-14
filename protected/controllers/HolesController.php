@@ -64,6 +64,9 @@ class HolesController extends Controller
 		if (!$logmodel){
 			$logmodel=new HoleCronLog;
 			if ($type=="achtung-notifications"){		
+				$logmodel->type=$type;
+				$logmodel->time_finish=time();
+				$logmodel->save();	
 				//отмечаем ямы как просроченные
 				$holes=Holes::model()->findAll(Array('condition'=>'t.STATE in ("inprogress", "achtung") AND t.DATE_SENT > 0'));
 				foreach ($holes as $hole){
@@ -127,11 +130,8 @@ class HolesController extends Controller
 					}
 					$ofset+=$limit;
 					//if ($ofset > 2000) break;
-				}
-			
-			$logmodel->type=$type;
-			$logmodel->time_finish=time();
-			$logmodel->save();			
+				}			
+		
 			$this->render('/site/index');
 			}
 		}	
