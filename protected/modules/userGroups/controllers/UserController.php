@@ -630,7 +630,7 @@ class UserController extends Controller
 	public function actionRecovery()
 	{
 		$model = $this->loadModel(Yii::app()->user->id, 'recovery');
-
+		$model->is_bitrix_pass=0;
 		// if user and password are already setted and so question and answer no form will be prompted
 		if (strpos($model->username, '_user') !== 0 && $model->password
 			&& $model->salt && $model->question && $model->answer) {
@@ -646,7 +646,7 @@ class UserController extends Controller
 		$this->performAjaxValidation($model);
 
 		if (isset($_POST['UserGroupsUser'])) {
-			$model->attributes = $_POST['UserGroupsUser'];
+			$model->attributes = $_POST['UserGroupsUser'];			
 			if ($model->validate()) {
 				if (!$model->save())
 					Yii::app()->user->setFlash('success', Yii::t('userGroupsModule.general','An Error Occurred. Please try later.'));
