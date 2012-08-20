@@ -890,7 +890,7 @@ class Holes extends CActiveRecord
 	}		
 	
 	
-	public function search()
+	public function search($fixeds=false)
 	{
 		// Warning: Please modify the following code to remove attributes that
 		// should not be searched.
@@ -899,6 +899,13 @@ class Holes extends CActiveRecord
 		//$criteria->with=Array('pictures_fresh','pictures_fixed');
 		$criteria->with=Array('type','pictures_fresh', 'comments_cnt');
 		
+		if ($fixeds){
+			$with=$criteria->with;
+			$with[]='pictures_fixed_not_moderated';
+			$criteria->with=$with;
+			$criteria->addCondition('t.STATE!="fixed"');
+			$criteria->together=true;
+		}
 		
 		if ($this->polygons){
 			$corners=Array();

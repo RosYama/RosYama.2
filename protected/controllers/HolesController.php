@@ -35,7 +35,7 @@ class HolesController extends Controller
 				'users'=>array('@'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
-				'actions'=>array('delete', 'moderate'),
+				'actions'=>array('delete', 'moderate','moderPhotoFix'),
 				'groups'=>array('root', 'admin', 'moder'), 
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -698,6 +698,25 @@ class HolesController extends Controller
 			'dataProvider'=>$dataProvider,
 		));
 	}
+	
+	public function actionModerPhotoFix()
+	{
+		
+		$this->layout='//layouts/header_default';
+	
+		$model=new Holes('search');		
+		
+		$model->unsetAttributes();  // clear any default values
+		$model->PREMODERATED=1;
+		if(isset($_POST['Holes']) || isset($_GET['Holes']))
+			$model->attributes=isset($_POST['Holes']) ? $_POST['Holes'] : $_GET['Holes'];
+			if ($model->ADR_CITY=="Город") $model->ADR_CITY='';
+		$dataProvider=$model->search(true);	
+		$this->render('index',array(
+			'model'=>$model,
+			'dataProvider'=>$dataProvider,
+		));
+	}	
 	
 	public function actionModerate($id)
 	{

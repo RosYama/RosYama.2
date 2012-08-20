@@ -256,7 +256,13 @@ EOD
 </div>
 
 <div class="rCol">
-
+<?php if(Yii::app()->user->isModer) : ?>
+	<?php if($this->action->id!='moderPhotoFix') : ?>
+		<?php echo CHtml::link('Ямы с неотмодерированными фото устраненного дефекта ('.Holes::model()->with('pictures_fixed_not_moderated')->count(Array('condition'=>'t.deleted=0 AND t.PREMODERATED=1 AND t.STATE!="fixed"')).')', Array('/holes/moderPhotoFix/'));?><br /><br />
+	<?php else : ?>
+	<h2><?php echo 'Ямы с неотмодерированными фото устраненного дефекта ('.Holes::model()->with('pictures_fixed_not_moderated')->count(Array('condition'=>'t.deleted=0 AND t.PREMODERATED=1 AND t.STATE!="fixed"')).')'; ?></h2>
+	<?php endif; ?>	
+<?php endif; ?>	
 <?php $this->widget('zii.widgets.CListView', array(
 	'dataProvider'=>$dataProvider,
 	'itemView'=>'_view',
