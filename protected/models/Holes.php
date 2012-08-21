@@ -92,7 +92,8 @@ class Holes extends CActiveRecord
 			array('COMMENT1, COMMENT2, COMMENT_GIBDD_REPLY, deletepict, upploadedPictures, request_gibdd, showUserHoles', 'safe'),	
 			array('upploadedPictures', 'file', 'types'=>'jpg, jpeg, png, gif','maxFiles'=>10, 'allowEmpty'=>true, 'on' => 'update, import, fix'),
 			array('upploadedPictures', 'file', 'types'=>'jpg, jpeg, png, gif','maxFiles'=>10, 'allowEmpty'=>false, 'on' => 'insert'),
-			array('upploadedPictures', 'required', 'on' => 'insert', 'message' => 'Необходимо загрузить фотографии'),			
+			array('upploadedPictures', 'unsafe', 'on' => 'add'),
+			array('upploadedPictures', 'required', 'on' => 'insert, add', 'message' => 'Необходимо загрузить фотографии'),			
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
 			array('ID, USER_ID, LATITUDE, LONGITUDE, ADDRESS, STATE, DATE_CREATED, DATE_SENT, DATE_STATUS, COMMENT1, COMMENT2, TYPE_ID, ADR_SUBJECTRF, ADR_CITY, COMMENT_GIBDD_REPLY, GIBDD_REPLY_RECEIVED, PREMODERATED, DATE_SENT_PROSECUTOR', 'safe', 'on'=>'search'),
@@ -267,7 +268,23 @@ class Holes extends CActiveRecord
 		
 	
 	public function getUpploadedPictures(){
-		return CUploadedFile::getInstancesByName('');
+		$session=new CHttpSession;
+		$session->open();
+		
+		$folder=$_SERVER['DOCUMENT_ROOT'].'/upload/tmp/'.$session->SessionID;
+		$files=Array();
+		if (is_dir($folder)){		
+			foreach(glob($folder . '/*') as $file) {
+				$files[]=$file;
+			}
+		}
+		
+		
+		
+		if (!$files)
+			return CUploadedFile::getInstancesByName('');
+		else 
+			return $files;	
 	}
 	
 	public function savePictures(){						
@@ -276,6 +293,7 @@ class Holes extends CActiveRecord
 			if ($pictmodel)$pictmodel->delete();
 		}
 		$imagess=$this->UpploadedPictures;
+		//print_r($imagess); die();
 		$id=$this->ID;
 		$prefix='';						
 		if (!is_dir($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/original/'.$id)){
@@ -305,10 +323,11 @@ class Holes extends CActiveRecord
 		$pictdir=$_SERVER['DOCUMENT_ROOT'].'/upload/st1234/';
 						
         foreach ($imagess as $_file){
-			if(!$_file->hasError)
+			if(is_string($_file) || !$_file->hasError)
 			{	
 				$imgname=rand().'.jpg';
-				$image = $this->imagecreatefromfile($_file->getTempName(), &$_image_info);
+				$tempname=is_string($_file) ? $_file : $_file->getTempName();
+				$image = $this->imagecreatefromfile($tempname, &$_image_info);
 				if(!$image)
 				{
 					$this->addError('pictures',Yii::t('errors', 'GREENSIGHT_ERROR_UNSUPPORTED_IMAGE_TYPE'));
@@ -364,6 +383,7 @@ class Holes extends CActiveRecord
 				$imgmodel->save();
 			}
 		}
+		Yii::app()->controller->flushUploadDir();
 		return true;			
 	}
 

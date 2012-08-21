@@ -31,7 +31,7 @@ class HolesController extends Controller
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('add','update', 'personal','personalDelete','request','requestForm','sent','notsent','gibddreply', 'fix', 'defix', 'prosecutorsent', 'prosecutornotsent','delanswerfile','myarea', 'territorialGibdd', 'delpicture','selectHoles','sentMany','review', 'selected', 'addFixedFiles', 'approveFixedPicture'),
+				'actions'=>array('add','update', 'personal','personalDelete','request','requestForm','sent','notsent','gibddreply', 'fix', 'defix', 'prosecutorsent', 'prosecutornotsent','delanswerfile','myarea', 'territorialGibdd', 'delpicture','selectHoles','sentMany','review', 'selected', 'addFixedFiles', 'approveFixedPicture', 'upload'),
 				'users'=>array('@'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -273,14 +273,14 @@ class HolesController extends Controller
 	 */
 	public function actionAdd()
 	{
-		$model=new Holes;
+		$model=new Holes('add');
 
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 		
 		$cs=Yii::app()->getClientScript();
         $cs->registerCssFile('/css/add_form.css');
-
+		
 		if(isset($_POST['Holes']))
 		{
 			$model->attributes=$_POST['Holes'];
@@ -314,10 +314,38 @@ class HolesController extends Controller
 			if ($geoIp->longitude) $model->LATITUDE=$geoIp->longitude;
 			if ($geoIp->latitude) $model->LONGITUDE=$geoIp->latitude;
 		}
+		$this->flushUploadDir();
 
 		$this->render('add',array(
 			'model'=>$model,			
 		));
+	}
+	
+	public function actionUpload()
+	{
+			Yii::import("ext.EAjaxUpload.qqFileUploader");
+	 		
+	 		$session=new CHttpSession;
+			$session->open();
+			
+			$rootfolder=$_SERVER['DOCUMENT_ROOT'].'/upload/tmp';
+	 		if (!is_dir($rootfolder)) mkdir($rootfolder);
+	 		
+			$folder=$rootfolder.'/'.$session->SessionID.'/';// folder for uploaded files
+			
+			if (!is_dir($folder)) mkdir($folder);
+			
+			//$folder='upload/';// folder for uploaded files
+			$allowedExtensions = array("jpg", "jpeg", "png", "gif", "txt", "pdf");//array("jpg","jpeg","gif","exe","mov" and etc...
+			$sizeLimit = 10 * 1024 * 1024;// maximum file size in bytes
+			$uploader = new qqFileUploader($allowedExtensions, $sizeLimit);
+			$result = $uploader->handleUpload($folder);
+			$return = htmlspecialchars(json_encode($result), ENT_NOQUOTES);
+	 
+			$fileSize=filesize($folder.$result['filename']);//GETTING FILE SIZE
+			$fileName=$result['filename'];//GETTING FILE NAME
+	 
+			echo $return;// it's array
 	}
 	
 	
@@ -360,7 +388,6 @@ class HolesController extends Controller
 		// $this->performAjaxValidation($model);
 		$cs=Yii::app()->getClientScript();
         $cs->registerCssFile('/css/add_form.css');
-
 		if(isset($_POST['Holes']))
 		{
 			$model->attributes=$_POST['Holes'];
@@ -377,6 +404,7 @@ class HolesController extends Controller
 			if($model->save() && $model->savePictures())
 				$this->redirect(array('view','id'=>$model->ID));
 		}
+		$this->flushUploadDir();
 
 		$this->render('update',array(
 			'model'=>$model,
@@ -442,7 +470,7 @@ class HolesController extends Controller
 		$cs=Yii::app()->getClientScript();
         $cs->registerCssFile('/css/add_form.css');
         $cs->registerScriptFile('http://api-maps.yandex.ru/1.1/index.xml?key='.$this->mapkey);
-		
+		$this->flushUploadDir();
 		$this->render('gibddreply',array(
 			'models'=>$models,
 			'answer'=>$answer,
@@ -480,7 +508,9 @@ class HolesController extends Controller
 					$this->redirect(array('view','id'=>$model->ID));
 					}
 		}
-
+		
+		$this->flushUploadDir();
+		
 		$this->render('fix_form',array(
 			'model'=>$model,	
 			'newimage'=>new PictureFiles
@@ -797,6 +827,7 @@ class HolesController extends Controller
 	//удаление файла ответа гибдд
 	public function actionDelanswerfile($id)
 	{
+			$this->flushUploadDir();
 			$file=HoleAnswerFiles::model()->findByPk((int)$id);
 			
 			if (!$file)

@@ -53,7 +53,27 @@
 		<!-- фотки -->
 		<div class="f">
 			<?php echo $form->labelEx($model,'upploadedPictures'); ?>
-			<?php $this->widget('CMultiFileUpload',array('accept'=>'gif|jpg|png', 'model'=>$model, 'attribute'=>'upploadedPictures', 'htmlOptions'=>array('class'=>'mf'), 'denied'=>Yii::t('mf','Невозможно загрузить этот файл'),'duplicate'=>Yii::t('mf','Файл уже существует'),'remove'=>Yii::t('mf','удалить'),'selected'=>Yii::t('mf','Файлы: $file'),)); ?>						
+			<?php //$this->widget('CMultiFileUpload',array('accept'=>'gif|jpg|png', 'model'=>$model, 'attribute'=>'upploadedPictures', 'htmlOptions'=>array('class'=>'mf'), 'denied'=>Yii::t('mf','Невозможно загрузить этот файл'),'duplicate'=>Yii::t('mf','Файл уже существует'),'remove'=>Yii::t('mf','удалить'),'selected'=>Yii::t('mf','Файлы: $file'),)); ?>						
+			<?php $this->widget('ext.EAjaxUpload.EAjaxUpload',
+					array(
+							'id'=>'uploadFile',
+							'config'=>array(
+								   'action'=>Yii::app()->createUrl('/holes/upload'),
+								   'allowedExtensions'=>array("jpg", "jpeg", "png", "gif"),//array("jpg","jpeg","gif","exe","mov" and etc...
+								   'sizeLimit'=>10*1024*1024,// maximum file size in bytes
+								   'minSizeLimit'=>20,// minimum file size in bytes
+								   'multiple'=>true,
+								   //'onComplete'=>"js:function(id, fileName, responseJSON){ alert(fileName); }",
+								   'messages'=>array(
+								                     'typeError'=>"{file} не верный тип файла. Можно загружать только {extensions}.",
+								                     'sizeError'=>"{file} слишком большой файл. Максимальный размер {sizeLimit}.",
+								                     'minSizeError'=>"{file} слишком маленький файл. Минимальный размер {minSizeLimit}.",
+								                     'emptyError'=>"{file} пуст. Выберите другой файл для загрузки",
+								                     'onLeave'=>"Файлы загружаются, если вы выйдете сейчас, загрузка будет прервана."
+								                   ),
+								   //'showMessage'=>"js:function(message){ alert(message); }"
+								  )
+					)); ?>
 		</div>
 		
 		<!-- камент -->

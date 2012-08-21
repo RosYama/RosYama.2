@@ -25,7 +25,21 @@ class Controller extends CController
 	public function getUser(){
 		if (!$this->_user) $this->_user=Yii::app()->user;
 		return $this->_user;
-	}
+	}	
+	
+	public function flushUploadDir(){
+		$session=new CHttpSession;
+		$session->open();
+		
+		$folder=$_SERVER['DOCUMENT_ROOT'].'/upload/tmp/'.$session->SessionID;
+		if (is_dir($folder)){		
+			foreach(glob($folder . '/*') as $file) {
+				unlink($file);
+			}
+			rmdir($folder);		
+		}
+	}	
+	
 	/**
 	 * @var array context menu items. This property will be assigned to {@link CMenu::items}.
 	 */
