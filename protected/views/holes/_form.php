@@ -53,8 +53,10 @@
 		<!-- фотки -->
 		<div class="f">
 			<?php echo $form->labelEx($model,'upploadedPictures'); ?>
-			<?php //$this->widget('CMultiFileUpload',array('accept'=>'gif|jpg|png', 'model'=>$model, 'attribute'=>'upploadedPictures', 'htmlOptions'=>array('class'=>'mf'), 'denied'=>Yii::t('mf','Невозможно загрузить этот файл'),'duplicate'=>Yii::t('mf','Файл уже существует'),'remove'=>Yii::t('mf','удалить'),'selected'=>Yii::t('mf','Файлы: $file'),)); ?>						
-			<?php $this->widget('ext.EAjaxUpload.EAjaxUpload',
+			<?php 
+				if (!Yii::app()->user->userModel->relProfile->use_multi_upload) 
+					$this->widget('CMultiFileUpload',array('accept'=>'gif|jpg|jpeg|png', 'model'=>$model, 'attribute'=>'upploadedPictures', 'htmlOptions'=>array('class'=>'mf'), 'denied'=>Yii::t('mf','Невозможно загрузить этот файл'),'duplicate'=>Yii::t('mf','Файл уже существует'),'remove'=>Yii::t('mf','удалить'),'selected'=>Yii::t('mf','Файлы: $file'),));
+				else $this->widget('ext.EAjaxUpload.EAjaxUpload',
 					array(
 							'id'=>'uploadFile',
 							'config'=>array(

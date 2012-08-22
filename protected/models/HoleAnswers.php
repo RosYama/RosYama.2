@@ -146,7 +146,7 @@ class HoleAnswers extends CActiveRecord
 					$ext = $isstr ? $fileHelper->getExtension($file) : $file->extensionName;
 					$model->file_name=rand().'.'.$ext;
 					
-					$type = $isstr ? $fileHelper->getMimeType($file) : $file->extensionName;
+					$type = $isstr ? $fileHelper->getMimeType($file) : $file->type;
 					
 					$filetypeArr=explode('/', $type);
 					if ($filetypeArr[0]=='image') $filetype='image';

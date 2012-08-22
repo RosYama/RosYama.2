@@ -273,7 +273,8 @@ class HolesController extends Controller
 	 */
 	public function actionAdd()
 	{
-		$model=new Holes('add');
+		if (Yii::app()->user->userModel->relProfile->use_multi_upload) $model=new Holes('add');
+		else $model=new Holes;
 
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);

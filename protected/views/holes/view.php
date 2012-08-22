@@ -87,8 +87,10 @@ $this->widget('application.extensions.fancybox.EFancyBox', array(
 					<?php echo $form->hiddenField($hole,'ID'); ?>
 					<div style="background-color:#E6EFC2; margin-left:116px; display:none;" id="upload_fixeds">
 					<div class="row">
-						<?php //$this->widget('CMultiFileUpload',array('accept'=>'gif|jpg|png|pdf|txt', 'model'=>$hole, 'attribute'=>'upploadedPictures', 'htmlOptions'=>array('class'=>'mf'), 'denied'=>Yii::t('mf','Невозможно загрузить этот файл'),'duplicate'=>Yii::t('mf','Файл уже существует'),'remove'=>Yii::t('mf','удалить'),'selected'=>Yii::t('mf','Файлы: $file'),)); ?>						
-						<?php $this->widget('ext.EAjaxUpload.EAjaxUpload',
+						<?php if (!Yii::app()->user->userModel->relProfile->use_multi_upload) 
+							$this->widget('CMultiFileUpload',array('accept'=>'gif|jpg|jpeg|png|pdf|txt', 'model'=>$hole, 'attribute'=>'upploadedPictures', 'htmlOptions'=>array('class'=>'mf'), 'denied'=>Yii::t('mf','Невозможно загрузить этот файл'),'duplicate'=>Yii::t('mf','Файл уже существует'),'remove'=>Yii::t('mf','удалить'),'selected'=>Yii::t('mf','Файлы: $file'),));
+						else 
+							$this->widget('ext.EAjaxUpload.EAjaxUpload',
 							array(
 									'id'=>'uploadFile',
 									'config'=>array(
