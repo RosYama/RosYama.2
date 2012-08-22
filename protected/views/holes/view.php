@@ -87,7 +87,30 @@ $this->widget('application.extensions.fancybox.EFancyBox', array(
 					<?php echo $form->hiddenField($hole,'ID'); ?>
 					<div style="background-color:#E6EFC2; margin-left:116px; display:none;" id="upload_fixeds">
 					<div class="row">
-						<?php $this->widget('CMultiFileUpload',array('accept'=>'gif|jpg|png|pdf|txt', 'model'=>$hole, 'attribute'=>'upploadedPictures', 'htmlOptions'=>array('class'=>'mf'), 'denied'=>Yii::t('mf','Невозможно загрузить этот файл'),'duplicate'=>Yii::t('mf','Файл уже существует'),'remove'=>Yii::t('mf','удалить'),'selected'=>Yii::t('mf','Файлы: $file'),)); ?>						
+						<?php if (!Yii::app()->user->userModel->relProfile->use_multi_upload) 
+							$this->widget('CMultiFileUpload',array('accept'=>'gif|jpg|jpeg|png|pdf|txt', 'model'=>$hole, 'attribute'=>'upploadedPictures', 'htmlOptions'=>array('class'=>'mf'), 'denied'=>Yii::t('mf','Невозможно загрузить этот файл'),'duplicate'=>Yii::t('mf','Файл уже существует'),'remove'=>Yii::t('mf','удалить'),'selected'=>Yii::t('mf','Файлы: $file'),));
+						else 
+							$this->widget('ext.EAjaxUpload.EAjaxUpload',
+							array(
+									'id'=>'uploadFile',
+									'config'=>array(
+										   'action'=>Yii::app()->createUrl('/holes/upload'),
+										   'allowedExtensions'=>array("jpg", "jpeg", "png", "gif"),//array("jpg","jpeg","gif","exe","mov" and etc...
+										   'sizeLimit'=>10*1024*1024,// maximum file size in bytes
+										   'minSizeLimit'=>20,// minimum file size in bytes
+										   'multiple'=>true,
+										   //'onComplete'=>"js:function(id, fileName, responseJSON){ alert(fileName); }",
+										   'messages'=>array(
+															 'typeError'=>"{file} не верный тип файла. Можно загружать только {extensions}.",
+															 'sizeError'=>"{file} слишком большой файл. Максимальный размер {sizeLimit}.",
+															 'minSizeError'=>"{file} слишком маленький файл. Минимальный размер {minSizeLimit}.",
+															 'emptyError'=>"{file} пуст. Выберите другой файл для загрузки",
+															 'onLeave'=>"Файлы загружаются, если вы выйдете сейчас, загрузка будет прервана."
+														   ),
+										   //'showMessage'=>"js:function(message){ alert(message); }"
+										  )
+							)); $this->flushUploadDir();
+							?>
 					</div>
 					<div class="row buttons" style="">
 						<?php echo CHtml::submitButton('Отправить'); ?>
