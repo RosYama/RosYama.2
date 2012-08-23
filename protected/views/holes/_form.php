@@ -74,7 +74,11 @@
 			<?php echo $form->textArea($model,'COMMENT1',Array('class'=>'big')); ?>
 			<?php echo $form->error($model,'COMMENT1'); ?>
 		</div>
-
+	
+		<?php echo $form->hiddenField($model,'STR_SUBJECTRF'); ?>
+		<?php echo $form->hiddenField($model,'ADR_CITY'); ?>
+		</div>
+		<div id="coord_fields" style="display:none;">
 		<div class="f">
 			<?php echo $form->labelEx($model,'LATITUDE'); ?>
 			<?php echo $form->textField($model,'LATITUDE',array('class'=>'textInput')); ?>
@@ -85,8 +89,13 @@
 			<?php echo $form->textField($model,'LONGITUDE',array('class'=>'textInput')); ?>
 			<?php echo $form->error($model,'LONGITUDE'); ?>
 		</div>
-		<?php echo $form->hiddenField($model,'STR_SUBJECTRF'); ?>
-		<?php echo $form->hiddenField($model,'ADR_CITY'); ?>
+		<div class="addSubmit">
+			<div class="container" style="padding:0px;">				
+				<div class="btn">
+					<a class="addFact set_by_coord"><i class="text">Показать</i><i class="arrow"></i></a>
+				</div>
+			</div>
+		</div>
 		</div>
 	</div>
 	<!-- /левая колоночка -->
@@ -121,7 +130,7 @@
 		<?php Yii::app()->clientScript->registerScript('initmap',<<<EOD
 		
 		$('#show_fields').live('click',function() {
-			$(".hiddenfields").animate({opacity: 'show'}, 'slow');				
+			$("#coord_fields").animate({opacity: 'show'}, 'slow');				
 				if(jQuery.browser.safari){
 							jQuery("body").animate( { scrollTop: $("#Holes_LATITUDE").offset().top-20 }, 1100 );
 						  }else{
