@@ -204,7 +204,7 @@ class pdf1234{
 	//универсальный шаблон для типов ям
 	protected function getTypeTemplate(){
 		$type=$this->temp;
-		$ar['body0'] = '    '.$this->params['date1.day'].'.'.$this->params['date1.month'].'.'.$this->params['date1.year'].' мною на территории дороги по адресу: '.$this->params['street'].'.';
+		$ar['body0'] = '    '.$this->params['date1.day'].'.'.$this->params['date1.month'].'.'.$this->params['date1.year'].' мною на территории дороги по адресу: '.$this->params['street'];
 		$ar['body1'] = $type->pdf_body;
 		$ar['footerUP0'] = $type->pdf_footer;
 		foreach ($type->commands as $i=>$count){
