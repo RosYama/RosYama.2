@@ -348,15 +348,15 @@ function init_MAP_DzDvWLBsil(context, type)
 	map.disableDblClickZoom();
 	YMaps.Events.observe(map, map.Events.DblClick, setCoordValue);
 	$('.set_by_coord').live('click',function() {
-		var lon = $('#Holes_LATITUDE').val();
-		var lat = $('#Holes_LONGITUDE').val();
+		var lat = $('#Holes_LATITUDE').val();
+		var lon = $('#Holes_LONGITUDE').val();
 		var split_lon = lon.split(',');
 		var split_lat = lat.split(',');
 		if (split_lon[1] || split_lat[1]){
 			if (split_lon[1]) var coordarr=split_lon;
 			if (split_lat[1]) var coordarr=split_lat;
-			$('#Holes_LATITUDE').val(coordarr[0]);
-			$('#Holes_LONGITUDE').val(coordarr[1]);
+			$('#Holes_LONGITUDE').val(coordarr[0]);			
+			$('#Holes_LATITUDE').val(coordarr[1]);
 		}
 		
 

@@ -136,7 +136,7 @@
 						  }else{
 							jQuery("html").animate( { scrollTop: $("#Holes_LATITUDE").offset().top-20 }, 1100 );
 						  }			
-			$("#Holes_LATITUDE").focus();
+			$("#Holes_LONGITUDE").focus();
 			
 		});
 		
