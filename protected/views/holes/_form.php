@@ -80,14 +80,14 @@
 		</div>
 		<div id="coord_fields" style="display:none;">
 		<div class="f">
-			<?php echo $form->labelEx($model,'LATITUDE'); ?>
-			<?php echo $form->textField($model,'LATITUDE',array('class'=>'textInput')); ?>
-			<?php echo $form->error($model,'LATITUDE'); ?>
-		</div>
-		<div class="f">
 			<?php echo $form->labelEx($model,'LONGITUDE'); ?>
 			<?php echo $form->textField($model,'LONGITUDE',array('class'=>'textInput')); ?>
 			<?php echo $form->error($model,'LONGITUDE'); ?>
+		</div>
+		<div class="f">
+			<?php echo $form->labelEx($model,'LATITUDE'); ?>
+			<?php echo $form->textField($model,'LATITUDE',array('class'=>'textInput')); ?>
+			<?php echo $form->error($model,'LATITUDE'); ?>
 		</div>
 		<div class="addSubmit">
 			<div class="container" style="padding:0px;">				
