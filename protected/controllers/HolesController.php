@@ -311,8 +311,8 @@ class HolesController extends Controller
 			$geoIp = new EGeoIP();
 			$geoIp->locate($request->userHostAddress); 	
 			//echo ($request->userHostAddress);
-			if ($geoIp->longitude) $model->LATITUDE=$geoIp->longitude;
-			if ($geoIp->latitude) $model->LONGITUDE=$geoIp->latitude;
+			if ($geoIp->longitude) $model->LONGITUDE=$geoIp->longitude;
+			if ($geoIp->latitude) $model->LATITUDE=$geoIp->latitude;
 		}
 
 		$this->render('add',array(
