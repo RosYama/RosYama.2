@@ -96,19 +96,28 @@
 			<?php echo $form->textArea($model,'COMMENT1',Array('class'=>'big')); ?>
 			<?php echo $form->error($model,'COMMENT1'); ?>
 		</div>
-
-		<div class="f">
-			<?php echo $form->labelEx($model,'LATITUDE'); ?>
-			<?php echo $form->textField($model,'LATITUDE',array('class'=>'textInput')); ?>
-			<?php echo $form->error($model,'LATITUDE'); ?>
+	
+		<?php echo $form->hiddenField($model,'STR_SUBJECTRF'); ?>
+		<?php echo $form->hiddenField($model,'ADR_CITY'); ?>
 		</div>
+		<div id="coord_fields" style="display:none;">
 		<div class="f">
 			<?php echo $form->labelEx($model,'LONGITUDE'); ?>
 			<?php echo $form->textField($model,'LONGITUDE',array('class'=>'textInput')); ?>
 			<?php echo $form->error($model,'LONGITUDE'); ?>
 		</div>
-		<?php echo $form->hiddenField($model,'STR_SUBJECTRF'); ?>
-		<?php echo $form->hiddenField($model,'ADR_CITY'); ?>
+		<div class="f">
+			<?php echo $form->labelEx($model,'LATITUDE'); ?>
+			<?php echo $form->textField($model,'LATITUDE',array('class'=>'textInput')); ?>
+			<?php echo $form->error($model,'LATITUDE'); ?>
+		</div>
+		<div class="addSubmit">
+			<div class="container" style="padding:0px;">				
+				<div class="btn">
+					<a class="addFact set_by_coord"><i class="text">Показать</i><i class="arrow"></i></a>
+				</div>
+			</div>
+		</div>
 		</div>
 	</div>
 	<!-- /левая колоночка -->
@@ -129,8 +138,9 @@
 			
 			<p><strong>
 Поставьте метку на карте двойным щелчком мыши
-<span class="required">*</span>
-</strong>
+<span class="required">*</span></strong><br />
+или <a href="#" id="show_fields">введите координаты дефекта</a>
+
 </p>
 
 			<span id="recognized_address_str" title="Субъект РФ и населённый пункт"></span>
@@ -140,6 +150,18 @@
 			<div class="bx-yandex-view-map">
 		<?php if ($model->isNewRecord) $maptype='addhole'; else $maptype='updatehole'; ?>
 		<?php Yii::app()->clientScript->registerScript('initmap',<<<EOD
+		
+		$('#show_fields').live('click',function() {
+			$("#coord_fields").animate({opacity: 'show'}, 'slow');				
+				if(jQuery.browser.safari){
+							jQuery("body").animate( { scrollTop: $("#Holes_LATITUDE").offset().top-20 }, 1100 );
+						  }else{
+							jQuery("html").animate( { scrollTop: $("#Holes_LATITUDE").offset().top-20 }, 1100 );
+						  }			
+			$("#Holes_LONGITUDE").focus();
+			
+		});
+		
 		if (window.attachEvent) // IE
 			window.attachEvent("onload", function(){init_MAP_DzDvWLBsil(null,'{$maptype}')});
 		else if (window.addEventListener) // Gecko / W3C

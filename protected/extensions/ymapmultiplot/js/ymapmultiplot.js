@@ -347,6 +347,24 @@ function init_MAP_DzDvWLBsil(context, type)
 	if (type=="addhole" || type=="updatehole") {
 	map.disableDblClickZoom();
 	YMaps.Events.observe(map, map.Events.DblClick, setCoordValue);
+	$('.set_by_coord').live('click',function() {
+		var lat = $('#Holes_LATITUDE').val();
+		var lon = $('#Holes_LONGITUDE').val();
+		var split_lon = lon.split(',');
+		var split_lat = lat.split(',');
+		if (split_lon[1] || split_lat[1]){
+			if (split_lon[1]) var coordarr=split_lon;
+			if (split_lat[1]) var coordarr=split_lat;
+			$('#Holes_LONGITUDE').val(coordarr[0]);			
+			$('#Holes_LATITUDE').val(coordarr[1]);
+		}
+		
+
+		
+		setCoordValue(map, 'from_coord');
+		return false;
+		});
+		
 	}
 	if (type=="updatehole") {	
 	setCoordValue(map);
@@ -696,17 +714,18 @@ var coordpoint;
 
 function setCoordValue(map, ev)
 {
+	
 	if(coordpoint)
 	{
 		map.removeOverlay(coordpoint);
 		coordpoint = null;
 	}
-	if (ev){
+	if (ev && ev!='from_coord'){
 		$('#Holes_LATITUDE').val(ev.getCoordPoint().getY());
 		$('#Holes_LONGITUDE').val(ev.getCoordPoint().getX());
 	}
 	else {
-		var ev=false; 
+		if (ev!='from_coord') var ev=false; 
 		map.setCenter(new YMaps.GeoPoint($('#Holes_LONGITUDE').val(), $('#Holes_LATITUDE').val()));
 		}
 	var lon = $('#Holes_LATITUDE').val();
