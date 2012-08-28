@@ -1,7 +1,7 @@
 <h2>Здравствуйте, <?php echo $user->fullName; ?></h2>
 <p><strong>Пользователь <?php echo $currentUser->fullName; ?>, загрузил фотографии исправленного дефекта:</strong></p>
 	<?php foreach($pictures as $i=>$picture): ?>
-			<?php echo CHtml::image($picture->small); ?>
+			<?php echo CHtml::image(Yii::app()->request->baseUrl.$picture->small); ?>
 			<?php endforeach; ?>
 		
 <p><strong>К дефекту:</strong></p>
