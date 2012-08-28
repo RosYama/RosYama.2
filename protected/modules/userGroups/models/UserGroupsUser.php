@@ -164,7 +164,7 @@ class UserGroupsUser extends CActiveRecord
 			array('username', 'length', 'min'=>4, 'on'=>array('changePassword')),
 			array('email', 'required', 'on'=>array('registration','admin','mailRequest','changeMisc','invitation')),
 			array('username, email', 'unique', 'on'=>array('registration','admin', 'recovery','changeMisc', 'invitation')),
-			array('username', 'match', 'pattern'=>'/^[A-Za-z0-9-_\-]{4,}$/', 'on'=>array('registration','admin','recovery', 'changePassword'),
+			array('username', 'match', 'pattern'=>'/^[A-Za-z0-9-_\-]{3,}$/', 'on'=>array('registration','admin','recovery', 'changePassword'),
 				'message' => 'Имя пользователя может состоять из латинских букв и символов "-" и "_"'),
 			array('password', 'required', 'on'=>array('recovery','changePassword')),
 			array('password', 'passwordStrength', 'on'=>array('registration','admin','recovery','changePassword')),
@@ -415,6 +415,15 @@ class UserGroupsUser extends CActiveRecord
 		);
 	}
 	
+	public function getDefParams()
+	{
+		$def=Array();
+		foreach ($this->ParamsFields as $key=>$val){
+			$def[$key]=1;
+		}
+		return $def;
+	}
+	
 	
 	public function getParam($str)
 	{
@@ -522,6 +531,7 @@ class UserGroupsUser extends CActiveRecord
 					$this->status = self::WAITING_APPROVAL;
 				else
 					$this->status = self::ACTIVE;
+				$this->params=serialize($this->defParams);	
 			}
 			// erese the activation code for security reasons
 			if ((int)$this->status !== self::WAITING_ACTIVATION && (int)$this->status !== self::WAITING_APPROVAL && (int)$this->status !== self::PASSWORD_CHANGE_REQUEST && $this->scenario !== 'passRequest')
