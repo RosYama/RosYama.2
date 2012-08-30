@@ -3,9 +3,9 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: localhost
--- Время создания: Июл 05 2012 г., 10:41
+-- Время создания: Авг 31 2012 г., 01:02
 -- Версия сервера: 5.5.9
--- Версия PHP: 5.3.5
+-- Версия PHP: 5.3.6
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 
@@ -206,6 +206,43 @@ INSERT INTO `yii_gibdd_heads` (`id`, `name`, `subject_id`, `is_regional`, `level
 -- --------------------------------------------------------
 
 --
+-- Структура таблицы `yii_gibdd_heads_buffer`
+--
+
+CREATE TABLE IF NOT EXISTS `yii_gibdd_heads_buffer` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` text COLLATE utf8_unicode_ci NOT NULL,
+  `subject_id` int(11) NOT NULL,
+  `is_regional` int(11) NOT NULL DEFAULT '0',
+  `level` tinyint(4) NOT NULL DEFAULT '2',
+  `moderated` int(11) NOT NULL DEFAULT '0',
+  `post` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `post_dative` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `fio` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `fio_dative` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `gibdd_name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `contacts` text COLLATE utf8_unicode_ci NOT NULL,
+  `address` text COLLATE utf8_unicode_ci NOT NULL,
+  `tel_degurn` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `tel_dover` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `url` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `url_priemnaya` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `lat` double(14,11) NOT NULL DEFAULT '0.00000000000',
+  `lng` double(14,11) NOT NULL DEFAULT '0.00000000000',
+  `created` int(10) NOT NULL,
+  `modified` int(10) NOT NULL,
+  `author_id` int(11) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+
+--
+-- Дамп данных таблицы `yii_gibdd_heads_buffer`
+--
+
+
+-- --------------------------------------------------------
+
+--
 -- Структура таблицы `yii_globals`
 --
 
@@ -249,8 +286,11 @@ CREATE TABLE IF NOT EXISTS `yii_holes` (
   `COMMENT_GIBDD_REPLY` text,
   `GIBDD_REPLY_RECEIVED` tinyint(1) DEFAULT '0',
   `PREMODERATED` tinyint(1) DEFAULT '0',
+  `premoderator_id` int(11) NOT NULL DEFAULT '0',
   `archive` tinyint(1) NOT NULL DEFAULT '0',
   `DATE_SENT_PROSECUTOR` int(10) unsigned DEFAULT NULL,
+  `deleted` tinyint(1) NOT NULL DEFAULT '0',
+  `deletor_id` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
@@ -356,6 +396,24 @@ CREATE TABLE IF NOT EXISTS `yii_hole_archive_filters` (
 -- --------------------------------------------------------
 
 --
+-- Структура таблицы `yii_hole_cron_log`
+--
+
+CREATE TABLE IF NOT EXISTS `yii_hole_cron_log` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `type` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `time_finish` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+
+--
+-- Дамп данных таблицы `yii_hole_cron_log`
+--
+
+
+-- --------------------------------------------------------
+
+--
 -- Структура таблицы `yii_hole_fixeds`
 --
 
@@ -385,6 +443,7 @@ CREATE TABLE IF NOT EXISTS `yii_hole_pictures` (
   `user_id` int(11) NOT NULL DEFAULT '0',
   `filename` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `ordering` int(11) NOT NULL,
+  `premoderated` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
@@ -406,6 +465,7 @@ CREATE TABLE IF NOT EXISTS `yii_hole_requests` (
   `gibdd_id` int(11) NOT NULL,
   `date_sent` int(11) NOT NULL,
   `type` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
+  `notification_sended` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
@@ -629,6 +689,27 @@ INSERT INTO `yii_prosecutors` (`id`, `name`, `subject_id`, `preview_text`, `gibd
 (80, 'г. Санкт-Петербург         Прокуратура города', 78, 'Прокурор города    Литвиненко Сергей Иванович     \n        <br />\n          190000, г. Санкт-Петербург, ул. Почтамтская, д. 2/9     \n        <br />\n          (812) 312-82-00 факс 318-97-86', 'Прокуратура города', ''),
 (81, 'Чувашская Республика - Чувашия         Прокуратура республики', 21, 'Прокурор республики    Метелин Владимир Георгиевич     \n        <br />\n          428000, г. Чебоксары, ул. Карла Маркса, дом 48     \n        <br />\n          (835-2) 62-00-05 62-40-70', 'Прокуратура республики', ''),
 (82, 'Ханты-Мансийский автономный округ - Югра         Прокуратура округа', 81, 'Прокурор округа    Кондратьев Александр Филиппович     \n        <br />\n          628011, г. Ханты-Мансийск, ул. Чехова, д.1&quot;а&quot;     \n        <br />\n          (346-71) 3-30-90', 'Прокуратура округа', '');
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `yii_prosecutors_buffer`
+--
+
+CREATE TABLE IF NOT EXISTS `yii_prosecutors_buffer` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `subject_id` int(11) NOT NULL,
+  `preview_text` text COLLATE utf8_unicode_ci NOT NULL,
+  `gibdd_name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `url_priemnaya` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+
+--
+-- Дамп данных таблицы `yii_prosecutors_buffer`
+--
+
 
 -- --------------------------------------------------------
 
@@ -920,6 +1001,8 @@ CREATE TABLE IF NOT EXISTS `yii_usergroups_user_profile` (
   `request_signature` varchar(127) COLLATE utf8_unicode_ci NOT NULL,
   `request_address` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `show_archive_holes` tinyint(1) NOT NULL DEFAULT '1',
+  `send_achtung_notifications` tinyint(1) NOT NULL DEFAULT '1',
+  `use_multi_upload` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
