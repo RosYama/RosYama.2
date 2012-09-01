@@ -201,7 +201,7 @@ class HoleAnswers extends CActiveRecord
 		parent::afterDelete();
 		$requests=CHtml::listData( $this->request->hole->requests_gibdd, 'id', 'id' );
 		if (!count ($this->findAll('request_id IN ('.implode(',',$requests).')'))){						
-			$this->request->hole->STATE='inprogress';				
+			if ($this->request->hole->STATE=='gibddre') $this->request->hole->STATE='inprogress';				
 			$this->request->hole->update();
 			}
 		return true;	
