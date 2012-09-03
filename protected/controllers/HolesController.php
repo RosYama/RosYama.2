@@ -656,13 +656,15 @@ class HolesController extends Controller
 					}
 					header('Content-Type: text/html; charset=utf8', true);
 					$HT = new html1234();
-					if (!$request->holes)
+					if (!$request->holes){
+						$HT->models=Array($model);
 						$HT->gethtml
-						(
+						(							
 							$request->form_type ? $request->form_type : $model->type,
 							$_data,
 							$_images
 						);
+					}	
 					else {
 						$HT->models=Holes::model()->findAllByPk($request->holes);
 							$HT->gethtml
@@ -683,13 +685,15 @@ class HolesController extends Controller
 					}
 					header('Content-Type: application/pdf; charset=utf-8', true);
 					$PDF = new pdf1234();
-					if (!$request->holes)
+					if (!$request->holes){
+						$PDF->models=Array($model);
 						$PDF->getpdf
 						(
 							$request->form_type ? $request->form_type : $model->type,
 							$_data,
 							$_images
 						);
+					}
 					else {
 						$PDF->models=Holes::model()->findAllByPk($request->holes);
 							$PDF->getpdf

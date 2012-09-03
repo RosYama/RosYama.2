@@ -16,7 +16,7 @@ class html1234 extends pdf1234
 		{
 			$this->temp = $temp;
 		}
-		elseif (!$this->models) return false;
+		elseif (count ($this->models) < 2) return false;
 		$this->note = count($image);
 		$this->template();
 		if(is_array($image) && $this->temp != 'prosecutor' && $this->temp != 'prosecutor2')
@@ -47,7 +47,7 @@ class html1234 extends pdf1234
 	// собственно шаблон
 	protected function template()
 	{
-		if (!$this->models){
+		if (count ($this->models) < 2){
 			if (!is_object($this->temp)) $arResult = call_user_func(array(__CLASS__, 'text_'.$this->temp));
 			else $arResult=$this->getTypeTemplate();
 		}

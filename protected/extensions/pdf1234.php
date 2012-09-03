@@ -204,7 +204,8 @@ class pdf1234{
 	//универсальный шаблон для типов ям
 	protected function getTypeTemplate(){
 		$type=$this->temp;
-		$ar['body0'] = '    '.$this->params['date1.day'].'.'.$this->params['date1.month'].'.'.$this->params['date1.year'].' мною на территории дороги по адресу: '.$this->params['street'];
+		$model=$this->models[0];
+		$ar['body0'] = '    '.$this->params['date1.day'].'.'.$this->params['date1.month'].'.'.$this->params['date1.year'].' мною на территории дороги по адресу: '.$this->params['street']." (широта: $model->LATITUDE, долгота: $model->LONGITUDE)";
 		$ar['body1'] = $type->pdf_body;
 		$ar['footerUP0'] = $type->pdf_footer;
 		foreach ($type->commands as $i=>$count){
@@ -270,7 +271,7 @@ class pdf1234{
 	 */
 	protected function template()
 	{
-		if (!$this->models){
+		if (count($this->models) <= 1){
 			if (!is_object($this->temp)) $arResult = call_user_func(array(__CLASS__, 'text_'.$this->temp));
 			else $arResult=$this->getTypeTemplate();
 		}
