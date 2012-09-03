@@ -196,7 +196,7 @@ class HolesController extends Controller
 	 * Displays a particular model.
 	 * @param integer $id the ID of the model to be displayed
 	 */
-	public function actionView($id)
+	public function actionView($id, $fromadd=false)
 	{
 		$cs=Yii::app()->getClientScript();
         $cs->registerCssFile('/css/hole_view.css'); 
@@ -209,7 +209,7 @@ class HolesController extends Controller
         
 		$this->render('view',array(
 			'hole'=>$model,
-
+			'fromadd'=>$fromadd,
 		));
 	}
 	
@@ -304,7 +304,7 @@ class HolesController extends Controller
 			}
 			
 			if($model->save() && $model->savePictures())
-				$this->redirect(array('view','id'=>$model->ID));
+				$this->redirect(array('view','id'=>$model->ID, 'fromadd'=>true));
 		}
 		else {
 			//выставляем центр на карте по координатам IP юзера

@@ -14,6 +14,14 @@ $this->widget('application.extensions.fancybox.EFancyBox', array(
 		<div class="container">
 		<div class="lCol">
 					<a href="/" class="logo" title="На главную"><img src="/images/logo.png"  alt="РосЯма" /></a>
+					<div class="btn">
+						<?php 
+						$newlnk=Array('/holes/add');
+						if ($fromadd) $newlnk['#']='center:'.$hole->LONGITUDE.','.$hole->LATITUDE.';zoom:10;type:map';
+						?>
+						
+						<?php echo CHtml::link('<i class="text">Добавить</i><i class="arrow"></i>',$newlnk,Array('class'=>'addFact')); ?>
+					</div>
 			</div>
 			<div class="rCol">
 	<div class="h">
