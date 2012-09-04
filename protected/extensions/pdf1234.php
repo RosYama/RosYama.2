@@ -205,7 +205,7 @@ class pdf1234{
 	protected function getTypeTemplate(){
 		$type=$this->temp;
 		$model=$this->models[0];
-		$ar['body0'] = '    '.$this->params['date1.day'].'.'.$this->params['date1.month'].'.'.$this->params['date1.year'].' мною на территории дороги по адресу: '.$this->params['street']." (широта: $model->LATITUDE, долгота: $model->LONGITUDE)";
+		$ar['body0'] = '    '.$this->params['date1.day'].'.'.$this->params['date1.month'].'.'.$this->params['date1.year'].' мною на территории дороги по адресу: '.$this->params['street']." (долгота: $model->LONGITUDE, широта: $model->LATITUDE)";
 		$ar['body1'] = $type->pdf_body;
 		$ar['footerUP0'] = $type->pdf_footer;
 		foreach ($type->commands as $i=>$count){
