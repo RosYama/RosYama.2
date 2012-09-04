@@ -6,6 +6,9 @@ $this->pageTitle=Yii::app()->name . ' :: Карта дефектов';
 		<div class="container">
 <div class="lCol">
 												<a href="/" class="logo" title="На главную"><img src="/images/logo.png"  alt="РосЯма" /></a>
+												<div class="btn">									
+													<?php echo CHtml::link('<i class="text">Добавить</i><i class="arrow"></i>',Array('/holes/add'),Array('class'=>'addFact', 'id'=>'addFactButton')); ?>
+												</div>
 											</div>
 						<div class="rCol">
 <h1>Карта дефектов<?php if ($usermodel) echo ' в зоне наблюдения <br /> пользователя '.CHtml::link(CHtml::encode($usermodel->fullname), Array('profile/view', 'id'=>$usermodel->id)); ?></h1>

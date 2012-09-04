@@ -371,7 +371,7 @@ function init_MAP_DzDvWLBsil(context, type)
 	}
 	if (type=="bigmap_with_area") getMyArea(map);	
 	
-	if (type=="addhole") getMyArea(map, false);	
+	if (type=="addhole" && !loc[1]) getMyArea(map, false);	
 	
 	if (type=="userarea") getUserArea(map);
 	
@@ -661,6 +661,13 @@ function GetPlacemarks(map)
 	
 }
 
+function changeAddLink(hash){
+	obj=$("#addFactButton");
+	if (obj){
+		obj.attr('href','/holes/add/#'+hash);
+	}
+}
+
 function BX_SetPlacemarks_MAP_DzDvWLBsil(map)
 {
 	var arObjects = {PLACEMARKS:[],POLYLINES:[]};	
@@ -672,6 +679,7 @@ function BX_SetPlacemarks_MAP_DzDvWLBsil(map)
 		var loc = new String(document.location);
 		loc = loc.split('#');
 		document.location = loc[0] + '#' + res;
+		changeAddLink(res);
 		GetPlacemarks(map);
 	} );
 	
@@ -684,6 +692,7 @@ function BX_SetPlacemarks_MAP_DzDvWLBsil(map)
 		var loc = new String(document.location);
 		loc = loc.split('#');
 		document.location = loc[0] + '#' + res;
+		changeAddLink(res);
 		GetPlacemarks(map);
 	} );
 	
@@ -694,6 +703,7 @@ function BX_SetPlacemarks_MAP_DzDvWLBsil(map)
 		var loc = new String(document.location);
 		loc = loc.split('#');
 		document.location = loc[0] + '#' + res;
+		changeAddLink(res);
 	} );
 	
 	
