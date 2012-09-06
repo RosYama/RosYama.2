@@ -26,7 +26,11 @@ $this->widget('application.extensions.fancybox.EFancyBox', array(
 			<div class="rCol">
 	<div class="h">
 		<div class="info">
-			<p><span class="date"><?php echo CHtml::encode(Y::dateFromTime($hole->DATE_CREATED)); ?></span><?php echo CHtml::link(CHtml::encode($hole->user->getParam('showFullname') ? $hole->user->Fullname : $hole->user->username), array('/profile/view', 'id'=>$hole->user->id),array('class'=>""));?></p>
+			<p><span class="date"><?php echo CHtml::encode(Y::dateFromTime($hole->DATE_CREATED)); ?></span><?php echo CHtml::link(CHtml::encode($hole->user->getParam('showFullname') ? $hole->user->Fullname : $hole->user->username), array('/profile/view', 'id'=>$hole->user->id),array('class'=>""));?>
+			<span class="abuse_lnk" style="float:right;"><?php echo CHtml::link('Пожаловаться на эту яму', '#', array(
+   'onclick'=>'$("#abuseDialog").dialog("open"); return false;',
+)); ?></span>
+			</p>
 			<p class="type type_<?= $hole->type->alias ?>"><?= $hole->type->name; ?><?php if ($hole->archive) echo ' (в архиве)';?></p>
 			<p class="address"><?= CHtml::encode($hole->ADDRESS) ?></p>
 			<p class="status">
@@ -569,7 +573,53 @@ new Ya.share({
 		<?php  $this->widget('comments.widgets.ECommentsListWidget', array(
 				'model' => $hole,
 			));  ?>
+			
+			<?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
+				'id'=>'abuseDialog',
+				// additional javascript options for the dialog plugin
+				'options'=>array(
+					'title'=>'Отправить жалобу на яму',
+					'autoOpen'=>$abuseModel->errors ? true : false,
+					'width'=>'auto',
+					'height'=>'auto',
+					'resizable'=>false,
+					'modal'=>true,
+					'buttons'=>'js:[
+						{
+							text: "Отправить модератору",
+							click: function(){
+								$("#hole-abuse-form").submit();
+							}
+						},
+						{
+							text: "Закрыть",
+							click: function(){
+								$(this).dialog("close");
+								return false;
+							}
+						}
+					]'
+				),
+			)); ?>
+			
+			<div class="form">
+			<?php $form=$this->beginWidget('CActiveForm', array(
+				'id'=>'hole-abuse-form',
+				'enableAjaxValidation'=>false,
+			)); 
+			?>			
+		 	 <?php echo $form->hiddenField($abuseModel,'hole_id',array('value'=>$hole->ID)); ?>
+			<div class="row">
+				<?php echo $form->labelEx($abuseModel,'text'); ?>
+				<?php echo $form->textArea($abuseModel,'text',array('cols'=>60,'rows'=>10)); ?>
+				<?php echo $form->error($abuseModel,'text'); ?>
+			</div>
+			<?php $this->endWidget(); ?>	
+
+			<?php $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>			
+		 	</div><!-- form -->
+	
+	 
 	</div>
 </div>
 </div>
-

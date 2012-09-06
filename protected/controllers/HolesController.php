@@ -204,12 +204,30 @@ class HolesController extends Controller
         $jsFile = CHtml::asset($this->viewPath.DIRECTORY_SEPARATOR.'js'.DIRECTORY_SEPARATOR.'view_script.js');
         $cs->registerScriptFile($jsFile);
         $model=$this->loadModel($id);
+        $abuseModel=new AbuseForm;
         
-        
+        if(isset($_POST['AbuseForm']))
+		{
+			$abuseModel->attributes=$_POST['AbuseForm'];
+			$abuseModel->user_id=Yii::app()->user->id;
+			if ($abuseModel->validate()){
+				$userModel=Yii::app()->user->userModel;
+				
+				$headers = "MIME-Version: 1.0\r\nFrom: \"Rosyama\" <".Yii::app()->params['adminEmail'].">\r\nReply-To: ".($userModel->email ? $userModel->email : Yii::app()->params['adminEmail'])."\r\nContent-Type: text/html; charset=utf-8";
+				$user=$model->user;
+				Yii::app()->request->baseUrl=Yii::app()->request->hostInfo;
+				$mailbody=$this->renderPartial('/ugmail/abuse2hole', Array('user'=>$userModel, 'hole'=>$model, 'abuse'=>$abuseModel),true);
+				//echo $mailbody; die();
+				mail($user->email,"=?utf-8?B?" . base64_encode('Новая жалоба на яму!') . "?=",$mailbody,$headers);
+				Yii::app()->user->setFlash('user', 'Жалоба успешно отправлена');
+				$this->refresh();
+			}
+		}
         
 		$this->render('view',array(
 			'hole'=>$model,
 			'fromadd'=>$fromadd,
+			'abuseModel'=>$abuseModel,
 		));
 	}
 	
