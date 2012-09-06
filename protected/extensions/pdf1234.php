@@ -212,7 +212,7 @@ class pdf1234{
 	protected function getTypeTemplate(){
 		$type=$this->temp;
 		$model=$this->models[0];
-		$ar['body0'] = '    '.$this->params['date1.day'].'.'.$this->params['date1.month'].'.'.$this->params['date1.year'].' мною на территории дороги по адресу: '.$this->params['street'].($model->description_locality && $this->requestForm && $this->requestForm->showDescriptions ? ', '.$model->description_locality : '')." (широта: $model->LATITUDE, долгота: $model->LONGITUDE)";
+		$ar['body0'] = '    '.$this->params['date1.day'].'.'.$this->params['date1.month'].'.'.$this->params['date1.year'].' мною на территории дороги по адресу: '.$this->params['street'].($model->description_locality && $this->requestForm && $this->requestForm->showDescriptions ? ', '.$model->description_locality : '')." (долгота: $model->LONGITUDE, широта: $model->LATITUDE)";
 			$regex = "#{descr}(.*?){/descr}#s";
 			$type->pdf_body = preg_replace_callback(
 				$regex,
