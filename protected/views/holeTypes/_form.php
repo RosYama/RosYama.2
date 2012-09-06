@@ -29,6 +29,7 @@
 
 	<div class="row">
 		<?php echo $form->labelEx($model,'pdf_body'); ?>
+		<p class="hint">шаблон для вставки описания дефекта: {descr}повреждения дорожного полотна{/descr}</p>
 		<?php echo $form->textArea($model,'pdf_body',array('rows'=>8, 'cols'=>80)); ?>
 		<?php echo $form->error($model,'pdf_body'); ?>
 	</div>

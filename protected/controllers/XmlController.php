@@ -746,6 +746,7 @@ class XmlController extends Controller
 					header('Content-Type: text/html; charset=utf8', true);
 					$HT = new html1234();
 					$HT->models=Array($model);
+					$HT->requestForm=$request;
 					$HT->gethtml
 					(
 						$request->form_type ? $request->form_type : $model->type,
@@ -763,6 +764,7 @@ class XmlController extends Controller
 					header('Content-Type: application/pdf; charset=utf-8', true);
 					$PDF = new pdf1234();
 					$PDF->models=Array($model);
+					$PDF->requestForm=$request;
 					$PDF->getpdf
 					(
 						$request->form_type ? $request->form_type : $model->type,

@@ -658,6 +658,7 @@ class HolesController extends Controller
 					$HT = new html1234();
 					if (!$request->holes){
 						$HT->models=Array($model);
+						$HT->requestForm=$request;
 						$HT->gethtml
 						(							
 							$request->form_type ? $request->form_type : $model->type,
@@ -667,6 +668,7 @@ class HolesController extends Controller
 					}	
 					else {
 						$HT->models=Holes::model()->findAllByPk($request->holes);
+						$HT->requestForm=$request;
 							$HT->gethtml
 							(
 								'gibdd',
@@ -687,6 +689,7 @@ class HolesController extends Controller
 					$PDF = new pdf1234();
 					if (!$request->holes){
 						$PDF->models=Array($model);
+						$PDF->requestForm=$request;
 						$PDF->getpdf
 						(
 							$request->form_type ? $request->form_type : $model->type,
@@ -696,6 +699,7 @@ class HolesController extends Controller
 					}
 					else {
 						$PDF->models=Holes::model()->findAllByPk($request->holes);
+						$PDF->requestForm=$request;
 							$PDF->getpdf
 							(
 								'gibdd',

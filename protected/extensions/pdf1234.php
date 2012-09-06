@@ -8,6 +8,7 @@ class pdf1234{
 	public $params;
 	public $temp;
 	public $models=Array();
+	public $requestForm;
 	private $note;
 	
 	public function __construct(){		
@@ -200,12 +201,28 @@ class pdf1234{
 		$ar['count'][3] = 'По существу моего заявления и о принятых мерах сообщить мне письменно.';
 		return $ar;
 	}	
+	
+	public function replaceDescr($matches) {
+			$model=$this->models[0];
+			if ($model->description_size && $this->requestForm && $this->requestForm->showDescriptions) return $model->description_size;
+			else return $matches[1];
+		}	
 
 	//универсальный шаблон для типов ям
 	protected function getTypeTemplate(){
 		$type=$this->temp;
 		$model=$this->models[0];
+<<<<<<< HEAD
 		$ar['body0'] = '    '.$this->params['date1.day'].'.'.$this->params['date1.month'].'.'.$this->params['date1.year'].' мною на территории дороги по адресу: '.$this->params['street']." (долгота: $model->LONGITUDE, широта: $model->LATITUDE)";
+=======
+		$ar['body0'] = '    '.$this->params['date1.day'].'.'.$this->params['date1.month'].'.'.$this->params['date1.year'].' мною на территории дороги по адресу: '.$this->params['street'].($model->description_locality && $this->requestForm && $this->requestForm->showDescriptions ? ', '.$model->description_locality : '')." (широта: $model->LATITUDE, долгота: $model->LONGITUDE)";
+			$regex = "#{descr}(.*?){/descr}#s";
+			$type->pdf_body = preg_replace_callback(
+				$regex,
+				array('self', 'replaceDescr'),
+				$type->pdf_body
+			);
+>>>>>>> http://dev.rosyama.ru/bugs/show_bug.cgi?id=153
 		$ar['body1'] = $type->pdf_body;
 		$ar['footerUP0'] = $type->pdf_footer;
 		foreach ($type->commands as $i=>$count){

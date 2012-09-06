@@ -42,6 +42,8 @@ $MESS['HOLE_REQUEST_FORM_COMMENT_COMMENT']     = 'можно указать пр
 $MESS['HOLE_REQUEST_FORM_SIGNATURE_COMMENT']   = 'Фамилия в именительном падеже и инициалы';
 $MESS['HOLE_REQUEST_FORM_SUBMIT']              = 'Сгенерировать PDF-файл';
 $MESS['HOLE_REQUEST_FORM_SUBMIT2']             = 'Текст заявления в HTML';
+$MESS['HOLE_REQUEST_FORM_SHOW_DESCRIPTIONS']            = 'Выводить описание дефекта и описание местоположения';
+$MESS['HOLE_REQUEST_FORM_SHOW_DESCRIPTIONS_COMMENT']            = 'Снимите отметку если не нужно выводить описания дефекта и местоположения, указанные вами при добавлении ямы';
 $MESS['HOLE_REQUEST_FORM_PRINT_PICTURES']            = 'Выводить изображения к ямам';
 $MESS['HOLE_REQUEST_FORM_PRINT_PICTURES_COMMENT']            = 'Отметьте, если нужно выводить изображения';
 

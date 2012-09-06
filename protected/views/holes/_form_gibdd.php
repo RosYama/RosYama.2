@@ -32,12 +32,18 @@
 								<th><?php echo $form->labelEx($model,'address'); ?><span class="comment"><?= Yii::t('holes_view', 'HOLE_REQUEST_FORM_ADDRESS_COMMENT') ?></span></th>
 								<td><?php echo $form->textArea($model,'address',array('rows'=>3, 'cols'=>40)); ?></td>
 							</tr>
-							<? if($hole->type->alias == 'light'): ?>
+							<?php if($hole->type->alias == 'light'): ?>
 								<tr>
 									<th><?php echo $form->labelEx($model,'comment'); ?><span class="comment"><?= Yii::t('holes_view', 'HOLE_REQUEST_FORM_COMMENT_COMMENT') ?></span></th>
 									<td><?php echo $form->textArea($model,'comment',array('rows'=>3, 'cols'=>40)); ?></td>
 								</tr>
-							<? endif; ?>
+							<?php endif; ?>
+							<?php if($hole->description_size || $hole->description_locality): ?>
+							<tr>
+								<th colspan="2"><?php echo $form->labelEx($model,'showDescriptions'); ?>&nbsp;&nbsp;&nbsp;<?php echo $form->checkBox($model,'showDescriptions',array('style'=>'width:20px')); ?><span class="comment"><?= Yii::t('holes_view', 'HOLE_REQUEST_FORM_SHOW_DESCRIPTIONS_COMMENT') ?></span></th>
+								
+							</tr>
+							<?php endif; ?>
 							<tr>
 								<th><?php echo $form->labelEx($model,'signature'); ?><span class="comment"><?= Yii::t('holes_view', 'HOLE_REQUEST_FORM_SIGNATURE_COMMENT') ?></span></th>
 								<td><?php echo $form->textField($model,'signature',array('class'=>'textInput')); ?></td>
