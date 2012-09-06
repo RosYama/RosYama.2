@@ -34,13 +34,13 @@ $this->widget('application.extensions.fancybox.EFancyBox', array(
 				<span class="state">
 					<?= CHtml::encode($hole->StateName) ?>
 					<? if($hole->STATE == 'prosecutor' && $hole->DATE_STATUS): ?>
-						<?= CHtml::encode(Y::dateFromTime($hole->DATE_STATUS)).' '.Yii::t('holes_view', 'REQUEST_TO_PROSECUTOR_SENT') ?>
+						<br /><?= CHtml::encode(Y::dateFromTime($hole->DATE_STATUS)).' '.Yii::t('holes_view', 'REQUEST_TO_PROSECUTOR_SENT') ?>
 					<? elseif($hole->DATE_SENT): ?> 
-						<?php if ($hole->requests_with_answers) echo (CHtml::encode(Y::dateFromTime($hole->requests_with_answers[0]->answers[0]->date))).'<br />'; ?>
+						<?php if ($hole->requests_with_answers) echo ($hole->STATE != 'fixed' ? CHtml::encode(Y::dateFromTime($hole->requests_with_answers[0]->answers[0]->date)) : '<br />'.CHtml::encode(Y::dateFromTime($hole->requests_with_answers[0]->answers[0]->date)).' получен ответ ГИБДД'); ?>
 						<?php if (count($hole->requests) == 1) : ?>
-							<?= CHtml::encode(Y::dateFromTime($hole->DATE_SENT))?> отправлен запрос в ГИБДД
+							<br /><?= CHtml::encode(Y::dateFromTime($hole->DATE_SENT))?> отправлен запрос в ГИБДД
 						<? else : ?>
-							<?= CHtml::encode(Y::dateFromTime($hole->DATE_SENT))?> был отправлен первый запрос в ГИБДД 
+							<br /><?= CHtml::encode(Y::dateFromTime($hole->DATE_SENT))?> был отправлен первый запрос в ГИБДД 
 						<? endif; ?>	
 					<? endif; ?>
 					<?php if (count($hole->requests) > 1) : ?>
@@ -61,7 +61,7 @@ $this->widget('application.extensions.fancybox.EFancyBox', array(
 							</div>
 					<?php endif;?>
 					<? if($hole->STATE == 'fixed' && ($hole->fixeds || $hole->DATE_STATUS)): ?>
-						<?= CHtml::encode(Y::dateFromTime($hole->fixeds ? $hole->fixeds[0]->date_fix : $hole->DATE_STATUS))?> отмечен факт исправления дефекта
+						<br /><?= CHtml::encode(Y::dateFromTime($hole->fixeds ? $hole->fixeds[0]->date_fix : $hole->DATE_STATUS))?> отмечен факт исправления дефекта
 					<? endif; ?>
 				</span>
 			</p>
