@@ -212,9 +212,6 @@ class pdf1234{
 	protected function getTypeTemplate(){
 		$type=$this->temp;
 		$model=$this->models[0];
-<<<<<<< HEAD
-		$ar['body0'] = '    '.$this->params['date1.day'].'.'.$this->params['date1.month'].'.'.$this->params['date1.year'].' мною на территории дороги по адресу: '.$this->params['street']." (долгота: $model->LONGITUDE, широта: $model->LATITUDE)";
-=======
 		$ar['body0'] = '    '.$this->params['date1.day'].'.'.$this->params['date1.month'].'.'.$this->params['date1.year'].' мною на территории дороги по адресу: '.$this->params['street'].($model->description_locality && $this->requestForm && $this->requestForm->showDescriptions ? ', '.$model->description_locality : '')." (широта: $model->LATITUDE, долгота: $model->LONGITUDE)";
 			$regex = "#{descr}(.*?){/descr}#s";
 			$type->pdf_body = preg_replace_callback(
@@ -222,8 +219,6 @@ class pdf1234{
 				array('self', 'replaceDescr'),
 				$type->pdf_body
 			);
->>>>>>> http://dev.rosyama.ru/bugs/show_bug.cgi?id=153
-		$ar['body1'] = $type->pdf_body;
 		$ar['footerUP0'] = $type->pdf_footer;
 		foreach ($type->commands as $i=>$count){
 		$ar['count'][$i+1] = $count->text;
