@@ -219,7 +219,8 @@ class pdf1234{
 				array('self', 'replaceDescr'),
 				$type->pdf_body
 			);
-		$ar['body1']=$type->pdf_body;
+		$ar['body0'].=' '.$type->pdf_body;
+		$ar['body1']='';
 		$ar['footerUP0'] = $type->pdf_footer;
 		foreach ($type->commands as $i=>$count){
 		$ar['count'][$i+1] = $count->text;
