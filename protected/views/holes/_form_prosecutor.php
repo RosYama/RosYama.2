@@ -13,7 +13,7 @@
 									$model->address=CHtml::encode($hole->ADDRESS);
 									$model->signature=$usermodel->relProfile->request_signature ? $usermodel->relProfile->request_signature : $usermodel->last_name.' '.substr($usermodel->name, 0, 2).($usermodel->name ? '.' : '').' '.substr($usermodel->second_name, 0, 2).($usermodel->second_name ? '.' : '');
 									$model->gibdd=$hole->subject && $hole->subject->gibdd ? $hole->subject->gibdd->gibdd_name : '';
-									$model->application_data=$hole->request_gibdd ? date('d.m.Y',$hole->request_gibdd->date_sent) : '';
+									$model->application_data=$hole->request_gibdd ? ($hole->request_gibdd->answer ? date('d.m.Y',$hole->request_gibdd->answer->date) : date('d.m.Y',$hole->request_gibdd->date_sent)) : '';
 									$model->postaddress=$usermodel->relProfile->request_address ? $usermodel->relProfile->request_address : '';
 									?>											
 									

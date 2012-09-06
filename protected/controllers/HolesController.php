@@ -626,7 +626,7 @@ class HolesController extends Controller
 				if ($request->form_type == 'prosecutor')
 					$date3 = strtotime($request->application_data);
 					
-				$date2 = $request->form_type == 'prosecutor' && $model->request_gibdd ? $model->request_gibdd->date_sent  : time();
+				$date2 = ($request->form_type == 'prosecutor' || $request->form_type == 'prosecutor2') && $model->request_gibdd ? $model->request_gibdd->date_sent  : time();
 				$_data = array
 				(
 					'chief'       => $request->to,
@@ -656,15 +656,19 @@ class HolesController extends Controller
 					}
 					header('Content-Type: text/html; charset=utf8', true);
 					$HT = new html1234();
-					if (!$request->holes)
+					if (!$request->holes){
+						$HT->models=Array($model);
+						$HT->requestForm=$request;
 						$HT->gethtml
-						(
+						(							
 							$request->form_type ? $request->form_type : $model->type,
 							$_data,
 							$_images
 						);
+					}	
 					else {
 						$HT->models=Holes::model()->findAllByPk($request->holes);
+						$HT->requestForm=$request;
 							$HT->gethtml
 							(
 								'gibdd',
@@ -683,15 +687,19 @@ class HolesController extends Controller
 					}
 					header('Content-Type: application/pdf; charset=utf-8', true);
 					$PDF = new pdf1234();
-					if (!$request->holes)
+					if (!$request->holes){
+						$PDF->models=Array($model);
+						$PDF->requestForm=$request;
 						$PDF->getpdf
 						(
 							$request->form_type ? $request->form_type : $model->type,
 							$_data,
 							$_images
 						);
+					}
 					else {
 						$PDF->models=Holes::model()->findAllByPk($request->holes);
+						$PDF->requestForm=$request;
 							$PDF->getpdf
 							(
 								'gibdd',

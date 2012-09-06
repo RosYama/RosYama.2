@@ -8,6 +8,7 @@ class pdf1234{
 	public $params;
 	public $temp;
 	public $models=Array();
+	public $requestForm;
 	private $note;
 	
 	public function __construct(){		
@@ -200,12 +201,26 @@ class pdf1234{
 		$ar['count'][3] = 'По существу моего заявления и о принятых мерах сообщить мне письменно.';
 		return $ar;
 	}	
+	
+	public function replaceDescr($matches) {
+			$model=$this->models[0];
+			if ($model->description_size && $this->requestForm && $this->requestForm->showDescriptions) return $model->description_size;
+			else return $matches[1];
+		}	
 
 	//универсальный шаблон для типов ям
 	protected function getTypeTemplate(){
 		$type=$this->temp;
-		$ar['body0'] = '    '.$this->params['date1.day'].'.'.$this->params['date1.month'].'.'.$this->params['date1.year'].' мною на территории дороги по адресу: '.$this->params['street'];
-		$ar['body1'] = $type->pdf_body;
+		$model=$this->models[0];
+		$ar['body0'] = '    '.$this->params['date1.day'].'.'.$this->params['date1.month'].'.'.$this->params['date1.year'].' мною на территории дороги по адресу: '.$this->params['street'].($model->description_locality && $this->requestForm && $this->requestForm->showDescriptions ? ', '.$model->description_locality : '')." (долгота: $model->LONGITUDE, широта: $model->LATITUDE, ".Yii::app()->request->hostInfo.CController::createUrl('/holes/view', Array('id'=>$model->ID)).")";
+			$regex = "#{descr}(.*?){/descr}#s";
+			$type->pdf_body = preg_replace_callback(
+				$regex,
+				array('self', 'replaceDescr'),
+				$type->pdf_body
+			);
+		$ar['body0'].=' '.$type->pdf_body;
+		$ar['body1']='';
 		$ar['footerUP0'] = $type->pdf_footer;
 		foreach ($type->commands as $i=>$count){
 		$ar['count'][$i+1] = $count->text;
@@ -270,7 +285,7 @@ class pdf1234{
 	 */
 	protected function template()
 	{
-		if (!$this->models){
+		if (count($this->models) <= 1){
 			if (!is_object($this->temp)) $arResult = call_user_func(array(__CLASS__, 'text_'.$this->temp));
 			else $arResult=$this->getTypeTemplate();
 		}
