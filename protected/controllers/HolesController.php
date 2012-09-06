@@ -218,7 +218,7 @@ class HolesController extends Controller
 				Yii::app()->request->baseUrl=Yii::app()->request->hostInfo;
 				$mailbody=$this->renderPartial('/ugmail/abuse2hole', Array('user'=>$userModel, 'hole'=>$model, 'abuse'=>$abuseModel),true);
 				//echo $mailbody; die();
-				mail($user->email,"=?utf-8?B?" . base64_encode('Новая жалоба на яму!') . "?=",$mailbody,$headers);
+				mail(Yii::app()->params['adminEmail'],"=?utf-8?B?" . base64_encode('Новая жалоба на яму!') . "?=",$mailbody,$headers);
 				Yii::app()->user->setFlash('user', 'Жалоба успешно отправлена');
 				$this->refresh();
 			}
