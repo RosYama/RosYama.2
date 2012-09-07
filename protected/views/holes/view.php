@@ -40,12 +40,12 @@ $this->widget('application.extensions.fancybox.EFancyBox', array(
 					<? if($hole->STATE == 'prosecutor' && $hole->DATE_STATUS): ?>
 						<br /><?= CHtml::encode(Y::dateFromTime($hole->DATE_STATUS)).' '.Yii::t('holes_view', 'REQUEST_TO_PROSECUTOR_SENT') ?>
 					<? elseif($hole->DATE_SENT): ?> 
-						<?php if ($hole->requests_with_answers) echo ($hole->STATE != 'fixed' ? CHtml::encode(Y::dateFromTime($hole->requests_with_answers[0]->answers[0]->date)) : '<br />'.CHtml::encode(Y::dateFromTime($hole->requests_with_answers[0]->answers[0]->date)).' получен ответ ГИБДД'); ?>
 						<?php if (count($hole->requests) == 1) : ?>
 							<br /><?= CHtml::encode(Y::dateFromTime($hole->DATE_SENT))?> отправлен запрос в ГИБДД
 						<? else : ?>
 							<br /><?= CHtml::encode(Y::dateFromTime($hole->DATE_SENT))?> был отправлен первый запрос в ГИБДД 
 						<? endif; ?>	
+						<?php if ($hole->requests_with_answers) echo ($hole->STATE != 'fixed' ? CHtml::encode(Y::dateFromTime($hole->requests_with_answers[0]->answers[0]->date)) : '<br />'.CHtml::encode(Y::dateFromTime($hole->requests_with_answers[0]->answers[0]->date)).' получен ответ ГИБДД'); ?>
 					<? endif; ?>
 					<?php if (count($hole->requests) > 1) : ?>
 						<br/><a href="#" onclick="$('#requests_gibdd_history').toggle('slow'); return false;">история запросов</a>
