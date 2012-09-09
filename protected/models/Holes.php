@@ -272,14 +272,8 @@ class Holes extends CActiveRecord
 		$session->open();
 		
 		$folder=$_SERVER['DOCUMENT_ROOT'].'/upload/tmp/'.$session->SessionID;
-		$files=Array();
-		if (is_dir($folder)){		
-			foreach(glob($folder . '/*') as $file) {
-				$files[]=$file;
-			}
-		}
-		
-		
+		if (is_dir($folder)) $files=CFileHelper::findFiles($folder,Array('level'=>0));		
+		else $files=Array();
 		
 		if (!$files)
 			return CUploadedFile::getInstancesByName('');

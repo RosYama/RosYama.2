@@ -340,19 +340,22 @@ class HolesController extends Controller
 		));
 	}
 	
-	public function actionUpload()
-	{
+	public function actionUpload($rotate=false)
+	{	
+		$session=new CHttpSession;
+		$session->open();
+			
+		$rootfolder=$_SERVER['DOCUMENT_ROOT'].'/upload/tmp';
+	 	if (!is_dir($rootfolder)) mkdir($rootfolder);
+	 		
+		$folder=$rootfolder.'/'.$session->SessionID.'/';// folder for uploaded files
+			
+		if (!is_dir($folder)) mkdir($folder);
+			
+		if (!$rotate){
 			Yii::import("ext.EAjaxUpload.qqFileUploader");
 	 		
-	 		$session=new CHttpSession;
-			$session->open();
-			
-			$rootfolder=$_SERVER['DOCUMENT_ROOT'].'/upload/tmp';
-	 		if (!is_dir($rootfolder)) mkdir($rootfolder);
 	 		
-			$folder=$rootfolder.'/'.$session->SessionID.'/';// folder for uploaded files
-			
-			if (!is_dir($folder)) mkdir($folder);
 			
 			//$folder='upload/';// folder for uploaded files
 			$allowedExtensions = array("jpg", "jpeg", "png", "gif", "txt", "pdf");//array("jpg","jpeg","gif","exe","mov" and etc...
@@ -365,6 +368,15 @@ class HolesController extends Controller
 			$fileName=$result['filename'];//GETTING FILE NAME
 	 
 			echo $return;// it's array
+		}
+		else {
+			$fileName=$_GET['filename'];
+			$image = Yii::app()->image->load($folder.$fileName);
+			$thumb = Yii::app()->image->load($folder.'thumbs/'.$fileName);
+			if ($rotate==-1) {$image->rotate(-90)->save(); $thumb->rotate(-90)->save();}
+			if ($rotate==1) {$image->rotate(90)->save(); $thumb->rotate(90)->save();}
+			echo 'ok';		
+		}
 	}
 	
 	

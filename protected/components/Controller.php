@@ -32,12 +32,8 @@ class Controller extends CController
 		$session->open();
 		
 		$folder=$_SERVER['DOCUMENT_ROOT'].'/upload/tmp/'.$session->SessionID;
-		if (is_dir($folder)){		
-			foreach(glob($folder . '/*') as $file) {
-				unlink($file);
-			}
-			rmdir($folder);		
-		}
+		
+		Y::recursiveRemDir($folder);
 	}	
 	
 	/**
