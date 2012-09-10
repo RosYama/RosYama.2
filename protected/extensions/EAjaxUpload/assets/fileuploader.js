@@ -621,9 +621,9 @@ qq.extend(qq.FileUploader.prototype, {
              //выдаем превью картинки вместо имени файла
             if (result.has_thumb){
 				var file=$(this._find(item, 'file'));
-				var rotate_l_html='<a class="rotate_l" href="#"><-</a>';
-				var rotate_r_html='<a class="rotate_r" href="#">-></a>';
-				file.html(rotate_l_html+'<img class="file_thumb" src="'+result.dir+'thumbs/'+result.filename+'" />'+rotate_r_html);
+				var rotate_l_html='<a class="rotate_l" href="#" title="Повернуть влево"><img width="37px" heigth="50px" src="/images/rotate-curved-arrow-l.png" alt="Повернуть влево" /></a>';
+				var rotate_r_html='<a class="rotate_r" href="#" title="Повернуть вправо"><img width="37px" heigth="50px" src="/images/rotate-curved-arrow-r.png" alt="Повернуть вправо" /></a>';
+				file.html(rotate_r_html+'<img class="file_thumb" src="'+result.dir+'thumbs/'+result.filename+'" />'+rotate_l_html+'<br />');
 				var image=file.children(".file_thumb");
 				rotate=this._rotatePict;
 				
