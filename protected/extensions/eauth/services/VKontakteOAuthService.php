@@ -71,10 +71,21 @@ class VKontakteOAuthService extends EOAuth2Service {
 	 * @return string url to request. 
 	 */
 	protected function getCodeUrl($redirect_uri) {
+		$this->setState('redirect_uri', $redirect_uri);
+		
 		$url = parent::getCodeUrl($redirect_uri);
 		if (isset($_GET['js']))
 			$url .= '&display=popup';
+				
 		return $url;
+	}
+	
+	/**
+	 * Returns the url to request to get OAuth2 access token.
+	 * @return string url to request. 
+	 */
+	protected function getTokenUrl($code) {
+		return parent::getTokenUrl($code).'&redirect_uri='.urlencode($this->getState('redirect_uri'));
 	}
 	
 	/**
