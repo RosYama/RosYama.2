@@ -113,7 +113,7 @@ $this->layout='//layouts/header_default_without_add';
 		</tr>		
 		<tr>
 			<th>A:</th>
-			<td>Довольно подробный разбор этой ситуации есть в ЖЖ Георгия Бадьина (в двух частях). Часть <a href="http://wilych96.livejournal.com/175051.html">первая</a>. Часть <a href="http://wilych96.livejournal.com/175278.html">вторая</a>.<br>
+			<td>Подробный разбор ДТП из-за ямы есть в ЖЖ Георгия Бадьина (в двух частях). Часть <a href="http://wilych96.livejournal.com/175051.html">первая</a>. Часть <a href="http://wilych96.livejournal.com/175278.html">вторая</a>.<br>
 			Еще один вариант разбора от Андрея Сычикова: Часть <a href="http://grajdanin25.livejournal.com/1385.html">первая</a>. Часть <a href="http://grajdanin25.livejournal.com/1730.html">вторая</a>.
 			</td>
 		</tr>		
