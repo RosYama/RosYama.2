@@ -26,6 +26,12 @@
 		<?php echo $form->textField($model,'name',array('size'=>60,'maxlength'=>255)); ?>
 		<?php echo $form->error($model,'name'); ?>
 	</div>
+	
+	<div class="row">
+		<?php echo $form->labelEx($model,'dorogimos_id'); $dmosobj=new DorogiMosForm; ?>
+		<?php echo $form->dropDownList($model, 'dorogimos_id', CHtml::listData( $dmosobj->categories, 'code', 'problemCategory')); ?>
+		<?php echo $form->error($model,'dorogimos_id'); ?>
+	</div>
 
 	<div class="row">
 		<?php echo $form->labelEx($model,'pdf_body'); ?>

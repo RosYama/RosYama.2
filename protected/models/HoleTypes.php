@@ -41,9 +41,9 @@ class HoleTypes extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('alias, name, pdf_body, pdf_footer, published, ordering', 'required'),
+			array('alias, name, pdf_body, pdf_footer, dorogimos_id, published, ordering', 'required'),
 			array('published, ordering', 'numerical', 'integerOnly'=>true),
-			array('alias, name', 'length', 'max'=>255),
+			array('alias, name, dorogimos_id', 'length', 'max'=>255),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
 			array('id, alias, name, pdf_body, pdf_footer, published, ordering', 'safe', 'on'=>'search'),
@@ -125,6 +125,7 @@ class HoleTypes extends CActiveRecord
 			'pdf_footer' => 'Низ ПДФ документа',
 			'published' => 'Опубликованно',
 			'ordering' => 'Порядок',
+			'dorogimos_id'=>'Категория дефекта на сайте dorogi.mos.ru'
 		);
 	}
 

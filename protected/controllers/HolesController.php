@@ -31,7 +31,7 @@ class HolesController extends Controller
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('add','update', 'personal','personalDelete','request','requestForm','sent','notsent','gibddreply', 'fix', 'defix', 'prosecutorsent', 'prosecutornotsent','delanswerfile','myarea', 'territorialGibdd', 'delpicture','selectHoles','sentMany','review', 'selected', 'addFixedFiles', 'approveFixedPicture', 'upload'),
+				'actions'=>array('add','update', 'personal','personalDelete','request','requestForm','sent','notsent','gibddreply', 'fix', 'defix', 'prosecutorsent', 'prosecutornotsent','delanswerfile','myarea', 'territorialGibdd', 'delpicture','selectHoles','sentMany','review', 'selected', 'addFixedFiles', 'approveFixedPicture', 'upload', 'requestDorogiMos'),
 				'users'=>array('@'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -205,6 +205,7 @@ class HolesController extends Controller
         $cs->registerScriptFile($jsFile);
         $model=$this->loadModel($id);
         $abuseModel=new AbuseForm;
+        $dorogiMosModel=new DorogiMosForm;
         
         if(isset($_POST['AbuseForm']))
 		{
@@ -223,11 +224,25 @@ class HolesController extends Controller
 				$this->refresh();
 			}
 		}
+		
+		if(isset($_POST['DorogiMosForm']))
+		{
+			$dorogiMosModel->attributes=$_POST['DorogiMosForm'];
+			
+			if ($dorogiMosModel->validate()){				
+				if ($dorogiMosModel->sendRequest($model, $this->user)){	
+					Yii::app()->user->setFlash('user', 'Заявление успешно отправлено');				
+				}
+				else Yii::app()->user->setFlash('user', 'Произошла ошибка. Заявление не отправлено. <br />Попробуйте отправить еще раз');
+				$this->refresh();
+			}
+		}
         
 		$this->render('view',array(
 			'hole'=>$model,
 			'fromadd'=>$fromadd,
 			'abuseModel'=>$abuseModel,
+			'dorogiMosModel'=>$dorogiMosModel,
 		));
 	}
 	
