@@ -109,11 +109,13 @@ $this->layout='//layouts/header_default_without_add';
 	<table class="faq-item">
 		<tr>
 			<th>Q:</th>
-			<td class="question">У вас на сайте есть яма, которую уже заделали. Автор ямы, похоже, забыл про неё. Как можно пометить яму, как исправленную, если не я её создал?</td>
+			<td class="question">Что делать, если из-за ямы я попал в ДТП? Как возместить ущерб?</td>
 		</tr>		
 		<tr>
 			<th>A:</th>
-			<td>Пришлите на <a class="txttohtmllink" href="mailto:rossyama@gmail.com" title="Написать письмо">rossyama@gmail.com</a> фотографию исправленного участка, желательно с того же ракурса, что и раньше. Укажите номер дефекта на сайте. Мы отметим факт исправления дефекта вручную.</td>
+			<td>Довольно подробный разбор этой ситуации есть в ЖЖ Георгия Бадьина (в двух частях). Часть <a href="http://wilych96.livejournal.com/175051.html">первая</a>. Часть <a href="http://wilych96.livejournal.com/175278.html">вторая</a>.<br>
+			Еще один вариант разбора от Андрея Сычикова: Часть <a href="http://grajdanin25.livejournal.com/1385.html">первая</a>. Часть <a href="http://grajdanin25.livejournal.com/1730.html">вторая</a>.
+			</td>
 		</tr>		
 	</table>	
 </div>
