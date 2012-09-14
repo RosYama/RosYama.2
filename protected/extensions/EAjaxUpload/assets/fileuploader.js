@@ -613,10 +613,30 @@ qq.extend(qq.FileUploader.prototype, {
         // mark completed
         var item = this._getItemByFileId(id);
         qq.remove(this._find(item, 'cancel'));
-        qq.remove(this._find(item, 'spinner'));
-
+        qq.remove(this._find(item, 'spinner'));        
+       
+		
         if (result.success){
             qq.addClass(item, this._classes.success);
+             //выдаем превью картинки вместо имени файла
+            if (result.has_thumb){
+				var file=$(this._find(item, 'file'));
+				var rotate_l_html='<a class="rotate_l" href="#" title="Повернуть влево"><img width="37px" heigth="50px" src="/images/rotate-curved-arrow-l.png" alt="Повернуть влево" /></a>';
+				var rotate_r_html='<a class="rotate_r" href="#" title="Повернуть вправо"><img width="37px" heigth="50px" src="/images/rotate-curved-arrow-r.png" alt="Повернуть вправо" /></a>';
+				file.html(rotate_r_html+'<img class="file_thumb" src="'+result.dir+'thumbs/'+result.filename+'" />'+rotate_l_html+'<br />');
+				var image=file.children(".file_thumb");
+				rotate=this._rotatePict;
+				
+				file.children(".rotate_l").click(function() {		  
+					 rotate(image, result, -1);
+					return false;	
+				});
+				
+				file.children(".rotate_r").click(function() {		  
+					 rotate(image, result, 1);
+					return false;	
+				});		
+			}
         } else {
             qq.addClass(item, this._classes.fail);
         }
@@ -660,6 +680,23 @@ qq.extend(qq.FileUploader.prototype, {
                 qq.remove(item);
             }
         });
+    },
+     _rotatePict: function(image, result, direction){
+         jQuery.get
+			(
+				'/holes/upload',
+				{
+					rotate: direction,
+					filename: result.filename
+				},
+				function(data)
+				{
+					if(data == 'ok')
+					{
+						image.attr('src',result.dir+'thumbs/'+result.filename+'?'+Math.random());
+					}					
+				}
+			);
     }
 });
 

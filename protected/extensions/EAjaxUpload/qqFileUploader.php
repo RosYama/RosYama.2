@@ -139,9 +139,23 @@ class qqFileUploader {
                 $filename .= rand(10, 99);
             }
         }
-
+		
+		$publicDir=str_replace($_SERVER['DOCUMENT_ROOT'], '', $uploadDirectory);
+		
+		
+		
         if ($this->file->save($uploadDirectory . $filename . '.' . $ext)){
-            return array('success'=>true,'filename'=>$filename.'.'.$ext);
+        	$has_thumb=false;
+        	if (strpos(CFileHelper::getMimeType($uploadDirectory . $filename . '.' . $ext), 'image') !== false){
+				$image = Yii::app()->image->load($uploadDirectory . $filename . '.' . $ext);
+				if ($image){
+					$image->resize(100, 100)->rotate(0)->quality(90)->sharpen(20);
+					//$image->crop($imgmax['width'], $imgmax['height']);			
+					if (!is_dir($uploadDirectory.'thumbs')) mkdir($uploadDirectory.'thumbs');
+					if ($image->save($uploadDirectory.'thumbs/'.$filename . '.' . $ext)) $has_thumb=true;
+				}
+        	}
+            return array('success'=>true,'filename'=>$filename.'.'.$ext, 'dir'=>$publicDir, 'has_thumb'=>$has_thumb);
         } else {
             return array('error'=> 'Could not save uploaded file.' .
                 'The upload was cancelled, or server error encountered');

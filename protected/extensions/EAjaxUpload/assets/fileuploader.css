@@ -17,8 +17,8 @@
 }
 .qq-upload-drop-area-active {background:#FF7171;}
 
-.qq-upload-list {margin:15px 35px; padding:0; list-style:disc;}
-.qq-upload-list li { margin:0; padding:0; line-height:15px; font-size:12px;}
+.qq-upload-list {margin:15px 0px; padding:0; /*list-style:disc;*/}
+.qq-upload-list li { margin:0; padding:0; line-height:15px; font-size:12px; list-style: none; text-align: center;}
 .qq-upload-file, .qq-upload-spinner, .qq-upload-size, .qq-upload-cancel, .qq-upload-failed-text {
     margin-right: 7px;
 }
@@ -29,3 +29,4 @@
 
 .qq-upload-failed-text {display:none;}
 .qq-upload-fail .qq-upload-failed-text {display:inline;}
+
