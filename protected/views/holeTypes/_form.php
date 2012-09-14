@@ -29,7 +29,7 @@
 	
 	<div class="row">
 		<?php echo $form->labelEx($model,'dorogimos_id'); $dmosobj=new DorogiMosForm; ?>
-		<?php echo $form->dropDownList($model, 'dorogimos_id', CHtml::listData( $dmosobj->categories, 'code', 'problemCategory')); ?>
+		<?php echo $form->dropDownList($model, 'dorogimos_id', CHtml::listData( $dmosobj->categories, 'code', 'problemCategory'), Array('prompt'=>'Нет соответствия')); ?>
 		<?php echo $form->error($model,'dorogimos_id'); ?>
 	</div>
 

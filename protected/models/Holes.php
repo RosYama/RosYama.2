@@ -190,7 +190,7 @@ class Holes extends CActiveRecord
 	
 	public function getIsMoscow()	
 	{	
-		if ($this->subject && $this->subject->region_num==77) return true;
+		if ($this->STATE != 'fixed' && $this->type->dorogimos_id && $this->subject && $this->subject->region_num==77) return true;
 		else return false;
 	}	
 	

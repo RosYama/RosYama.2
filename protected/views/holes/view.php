@@ -31,13 +31,13 @@ $this->widget('application.extensions.fancybox.EFancyBox', array(
    'onclick'=>'$("#abuseDialog").dialog("open"); return false;',
 )); ?></span>
 			</p>
-			<div <?php if ($hole->isMoscow) echo 'style="width:332px; float:left;"' ?>>
+			<div <?php if ($hole->isMoscow && !$this->user->isGuest) echo 'style="width:332px; float:left;"' ?>>
 			<p class="type type_<?= $hole->type->alias ?>"><?= $hole->type->name; ?><?php if ($hole->archive) echo ' (в архиве)';?></p>
 			<p class="address"><?= CHtml::encode($hole->ADDRESS) ?></p>
 			</div>
-			<?php if ($hole->isMoscow) : ?>
+			<?php if ($hole->isMoscow && !$this->user->isGuest) : ?>
 			<div class="dorogimos_button" onclick='$("#dorogimosDialog").dialog("open"); return false;'>
-				Отправить заявление <br /> в мерию Москвы
+				Отправить заявление <br /> в мэрию Москвы
 			</div>
 			<?php endif;?>
 			<div class="clear"></div>

@@ -2,7 +2,7 @@
 				'id'=>'dorogimosDialog',
 				// additional javascript options for the dialog plugin
 				'options'=>array(
-					'title'=>'Отправить заявление в мерию Москвы',
+					'title'=>'Отправить заявление в мэрию Москвы',
 					'autoOpen'=>$model->errors ? true : false,
 					'width'=>'auto',
 					'height'=>'auto',
@@ -36,8 +36,10 @@
 			if (!$model->fatherName) $model->fatherName=$user->second_name;
 			if (!$model->email) $model->email=$user->email;
 			if (!$model->address) $model->address=$user->relProfile->request_address ? $user->relProfile->request_address : '';
-			if (!$model->holeAddress) $model->holeAddress=CHtml::encode($hole->ADDRESS);
-			if (!$model->details) $model->details=CHtml::encode($hole->COMMENT1.' '.$hole->description_size);
+			if (!$model->phoneNumber) $model->phoneNumber=$user->relProfile->request_phone ? $user->relProfile->request_phone : '';
+			if (!$model->phoneNumber) $model->notifyViaSms=0;
+			if (!$model->holeAddress) $model->holeAddress=$hole->ADDRESS;
+			if (!$model->details) $model->details=$hole->description_size.' '.$hole->description_locality.'('.$hole->COMMENT1.')';
 			?>
 			<p class="note">Поля отмеченные <span class="required">*</span> являются обязательными.</p>
 			<?php echo $form->errorSummary($model); ?>

@@ -41,7 +41,7 @@ class HoleTypes extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('alias, name, pdf_body, pdf_footer, dorogimos_id, published, ordering', 'required'),
+			array('alias, name, pdf_body, pdf_footer, published, ordering', 'required'),
 			array('published, ordering', 'numerical', 'integerOnly'=>true),
 			array('alias, name, dorogimos_id', 'length', 'max'=>255),
 			// The following rule is used by search().

@@ -105,8 +105,9 @@ class DorogiMosForm extends CFormModel
 			$holeRequest->type='dorogimos';
 			$holeRequest->gibdd_id=0;
 			if ($holeRequest->save()) return true;
-			else print_r($holeRequest->errors); die();
+			//else print_r($holeRequest->errors); die();
 		}
+		//else print_r($answer); die();
 		return false;
 	}	
 
