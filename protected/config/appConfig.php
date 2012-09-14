@@ -10,7 +10,8 @@ $bd=array(
 			'schemaCachingDuration'=>3600,
 			'enableProfiling' => true,
             'enableParamLogging' => true,
-		);
+		);		
+	
 		
 $socials=array( // You can change the providers and their classes.
 				/*'google' => array(
@@ -76,8 +77,11 @@ $params=array(
 		// this is used in contact page
 		'adminEmail'=>'arbprint@mail.ru',
 		'YMapKey'=>'AEmk904BAAAAUCGkRAMAvTSoZfbI0tw8-95WnNcZkDQqXzAAAAAAAAAAAAB49EpXB9Mlar25hE3r2xY70FiRmQ==',
-		//'layout'=>'startpage',
-
+		'dorogiMos'=>array(
+				'login'=>'',
+				'password' => '',
+				'server' => '',
+			),
 	);		
 
 ?>

@@ -31,11 +31,12 @@ class DorogiMosForm extends CFormModel
 		
 	public function getClient()
 	{
-		$username = 'rosyama'; 
-		$password = '1qa@WS3ed'; 
+		$params=Yii::app()->params['dorogiMos'];
+		$username = $params['login']; 
+		$password = $params['password'];
 		
 		$wsse_header = new WsseAuthHeader($username, $password);
-		$client = new SoapClient('http://80.234.91.18:8081/ws/v3/RequestV3.wsdl');
+		$client = new SoapClient($params['server']);
 		$client->__setSoapHeaders(array($wsse_header));
 		return $client;
 	}
