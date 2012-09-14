@@ -101,7 +101,7 @@ class DorogiMosForm extends CFormModel
 			$holeRequest->hole_id=$hole->ID;
 			$holeRequest->user_id=$user->id;
 			$holeRequest->date_sent=time();
-			$holeRequest->respionse_requestid=$answer->request->requestNumber;
+			$holeRequest->response_requestid=$answer->request->requestNumber;
 			$holeRequest->type='dorogimos';
 			$holeRequest->gibdd_id=0;
 			if ($holeRequest->save()) return true;
