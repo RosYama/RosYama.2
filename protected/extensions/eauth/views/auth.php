@@ -2,9 +2,18 @@
   <ul class="auth-services clear">
   <?php
 	foreach ($services as $name => $service) {	
+		$isUsrServ=false;
+		foreach ($userServices as $userService){
+			if ($name==$userService->name) $isUsrServ=true;
+		}
 		echo '<li class="auth-service '.$service->id.'">';
-		$html = '<span class="auth-icon '.$service->id.'"><i></i></span>';
-		$html .= '<span class="auth-title">'.$service->title.'</span>';
+		if ($isUsrServ)
+			echo CHtml::link('x', Array('/profile/delservice', 'type'=>$name), array(
+				'class' => 'del-service-btn',
+				'title' =>"удалить аккаунт",
+			));
+		$html = '<span class="auth-icon '.$service->id.($inProfile && !$isUsrServ ? ' gray' : '').'"><i></i></span>';
+		$html .= '<span class="auth-title">'.$service->title.'</span>';		
 		if (isset($service->jsArguments['autologin']) && !$service->jsArguments['autologin'])
 			$html = CHtml::link($html, '#', array(
 				'class' => 'auth-link '.$service->id,
@@ -22,7 +31,7 @@
   </ul>
   <div class="bx-auth-line"></div>
 	<div class="bx-auth-service-form" id="bx_auth_serv">
-	<form method="GET">
+	<form method="GET" action="/userGroups/">
 	<input type="hidden" name="service" id="service_name" value="" size="20" />
 	
 	<div id="bx_auth_serv_livejournal" style="display:none">

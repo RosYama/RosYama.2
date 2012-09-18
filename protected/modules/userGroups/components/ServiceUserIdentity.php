@@ -58,6 +58,22 @@ class ServiceUserIdentity extends CUserIdentity {
         $this->service = $service;
     }
     
+    public $xml_id;
+    
+    public $external_auth_id;
+    
+    public function setAccountParams() { 
+    	 if ($this->service && $this->service->isAuthenticated) {
+    	 	$this->username = $this->service->serviceName.'#'.$this->service->id;
+            $this->setState('name', $this->username);
+            $this->setState('service', $this->service->serviceName);  
+            $this->xml_id=$this->service->id;
+            $this->external_auth_id=$this->service->getAttribute('external_auth_id') ? $this->service->getAttribute('external_auth_id') : $this->service->serviceName;
+            return true;
+    	 }
+    	 return false;
+    }
+    
     /**
      * Authenticates a user based on {@link username}.
      * This method is required by {@link IUserIdentity}.
@@ -66,11 +82,10 @@ class ServiceUserIdentity extends CUserIdentity {
     public function authenticate() {   
     
         if ($this->service && $this->service->isAuthenticated) {
-            $this->username = $this->service->serviceName.'#'.$this->service->id;
-            $this->setState('name', $this->username);
-            $this->setState('service', $this->service->serviceName);           
+            $this->setAccountParams();           
             $this->errorCode = self::ERROR_NONE; 
-            $model=UserGroupsUser::model()->findByAttributes(array('xml_id' => $this->service->id, 'external_auth_id' => $this->service->getAttribute('external_auth_id') ? $this->service->getAttribute('external_auth_id') : $this->service->serviceName));
+            $model=UserGroupsUser::model()->with('social_accounts')->find(array('condition'=>'social_accounts.xml_id = "'.$this->xml_id.'" AND social_accounts.external_auth_id="'.$this->external_auth_id.'"'));
+            if (!$model) $model=UserGroupsUser::model()->findByAttributes(array('xml_id' => $this->xml_id, 'external_auth_id' => $this->external_auth_id));
 			if (!$model){
 						$model=new UserGroupsUser();
 						$model->username = $this->username;
@@ -80,10 +95,18 @@ class ServiceUserIdentity extends CUserIdentity {
 						$model->last_name = $this->service->getAttribute('lastname');
 						$model->group_id = 2;
 						$model->status=4;
-						$model->params=array_keys($model->ParamsFields);
-						$model->xml_id = $this->service->id;
-						$model->external_auth_id = $this->service->getAttribute('external_auth_id') ? $this->service->getAttribute('external_auth_id') : $this->service->serviceName;
-						$model->save();
+						$model->params=array_keys($model->ParamsFields);						
+						if ($model->save()){
+							$serviceModel=UsergroupsSocialServices::model()->findByAttributes(Array('service_name'=>$this->external_auth_id));
+							if ($serviceModel){
+							$acc=new UsergroupsUserSocialAccounts;
+							$acc->xml_id = $this->service->id;
+							$acc->external_auth_id = $this->external_auth_id;
+							$acc->ug_id=$model->id;
+							$acc->service_id=$serviceModel->id;
+							$acc->save();
+							}
+						}
 			}			
 			if(!$model)
 				$this->errorCode=self::ERROR_USERNAME_INVALID;

@@ -33,6 +33,10 @@ class EAuthWidget extends CWidget {
 	 * @var string the action to use for dialog destination. Default: the current route.
 	 */
 	public $action = null;
+	
+	public $inProfile=false;
+	
+	public $userServices=Array();
 
 	/**
 	 * Initializes the widget.
@@ -69,6 +73,8 @@ class EAuthWidget extends CWidget {
 			'id' => $this->getId(),
 			'services' => $this->services,
 			'action' => $this->action,
+			'userServices'=>$this->userServices,
+			'inProfile'=>$this->inProfile,
 		));
     }
 	
