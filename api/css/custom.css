@@ -1,0 +1,538 @@
+/*****
+* @author: Auston Bunsen
+* @title: general styles
+* @section: entire page
+* @explanation: general styles that overwrite some of the bootstrap.css styles
+*****/
+body{
+    background-color: #fdfdfd;
+}
+
+[class*="span"] > iframe{
+    max-width: 95%;
+    vertical-align: middle;
+    border: 1px solid #ddd;
+    -ms-interpolation-mode: bicubic;
+    max-height: 245px;
+    margin: 5px;
+}
+
+h1#logo{
+font-family: 'Oranienbaum', serif;
+    font-size: 54px;
+    line-height: 64px;
+    text-align: center;
+    text-transform: none !important;
+}
+
+.div-on-left{
+    margin-left: 20px;
+}
+
+.offset20px{
+    margin-left: 40px;
+}
+
+.offset40px{
+    margin-left: 60px;
+}
+
+.offsetright20px{
+    margin-right: 20px;
+}
+
+.center-align{
+    text-align: center;
+}
+
+#main{
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #fff;
+    padding-top: 20px;
+}
+
+.smalltext{
+    font-size: 12px;
+}
+
+.thumbnail img{
+    max-height: 175px;
+}
+
+/*****
+* @author: Auston Bunsen
+* @title: type styles
+* @section: entire page
+* @explanation: styles that decide the type on the page
+*****/
+h1{
+    font-size: 36px;
+    line-height: 42px;
+}
+
+.genes h1, .genes h2, .genes h3, .genes h4, .genes h5, .genes h6{
+    font-family: 'Open Sans', sans-serif;
+    text-transform: uppercase;
+}
+
+.genes p, .genes strong, .genes div, .genes span{
+    font-family: 'Gentium Book Basic', serif;
+}
+
+.showcase h1, .showcase h2, .showcase h3, .showcase h4, .showcase h5, .showcase h6{
+    font-family: 'Abril Fatface', sans-serif;
+}
+
+.showcase p, .showcase strong, .showcase div, .showcase span{
+    font-family: 'Open Sans', serif;
+    font-weight: 300;
+}
+
+.showcase .benefit p, .genes .benefit p{
+    margin-top: 5px;
+    margin-left: 33px;
+    font-size: 14px !important;
+}
+
+.showcase .span2.benefit p, .genes .span2.benefit p{
+    font-size: 13px !important;
+}
+
+.hub h1, .hub h2, .hub h3, .hub h4, .hub h5, .hub h6{
+    font-family: 'Patua One', sans-serif;
+}
+
+.hub p, .hub strong, .hub div, .hub span{
+    font-family: 'Lato', serif;
+    font-weight: 300;
+    font-size: 16px;
+}
+
+.hub strong{
+    font-weight: bold !important;
+}
+
+.hub .benefit p{
+    margin-top: 5px;
+    margin-left: 33px;
+    font-size: 14px !important;
+}
+
+.hub .span2.benefit p{
+    font-size: 12px !important;
+}
+
+.daily_paper h1, .daily_paper h2, .daily_paper h3, .daily_paper h4, .daily_paper h5, .daily_paper h6{
+    font-family: 'Merriweather', serif;
+    font-weight: 900;
+}
+
+.daily_paper p, .daily_paper strong, .daily_paper div, .daily_paper span{
+    font-family: 'Merriweather', serif;
+    font-weight: 400;
+}
+
+.daily_paper .benefit p, .benefit p{
+    margin-top: 5px;
+    margin-left: 33px;
+    font-size: 12px !important;
+}
+
+.daily_paper .span2.benefit p, .span2.benefit p{
+    font-size: 11px !important;
+}
+
+/*****
+* @author: Auston Bunsen
+* @title: style variations
+* @section: entire page
+* @explanation: styles that decide the color or background of stuff
+*****/
+.green .btn{
+    background-color: #5bb75b !important;
+    *background-color: #51a351 !important;
+    background-image: -ms-linear-gradient(top, #62c462, #51a351) !important;
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#62c462), to(#51a351)) !important;
+    background-image: -webkit-linear-gradient(top, #62c462, #51a351) !important;
+    background-image: -o-linear-gradient(top, #62c462, #51a351) !important;
+    background-image: -moz-linear-gradient(top, #62c462, #51a351) !important;
+    background-image: linear-gradient(top, #62c462, #51a351) !important;
+    background-repeat: repeat-x;
+    border-color: #51a351 #51a351 #387038 !important;
+    border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25) !important;
+    filter: progid:dximagetransform.microsoft.gradient(startColorstr='#62c462', endColorstr='#51a351', GradientType=0) !important;
+    filter: progid:dximagetransform.microsoft.gradient(enabled=false) !important;
+    color: #ffffff !important;
+}
+
+.green a{
+    color: #3DA33D !important;
+}
+
+.green .thumbnail:hover{
+    border-color: #2EDE2E !important;
+      -webkit-box-shadow: 0 1px 4px rgba(98, 196, 98, 0.25) !important;
+         -moz-box-shadow: 0 1px 4px rgba(98, 196, 98, 0.25) !important;
+              box-shadow: 0 1px 4px rgba(98, 196, 98, 0.25) !important;
+}
+
+.fiberbg{
+    background: url(../img/backgrounds/lightpaperfibers.png);
+}
+
+.gridbg{
+    background: url(../img/backgrounds/tiny_grid.png);
+}
+
+.dotsbg{
+    background: url(../img/backgrounds/worn_dots.png);
+}
+
+/*****
+* @author: Auston Bunsen
+* @title: section styles
+* @section: section with a headline
+* @explanation: styles for the different "rows"
+*****/
+#seen_in{
+    background-color: #fafafa;
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+}
+
+#seen_in h1, #seen_in h2, #seen_in h3, #seen_in h4, #seen_in h5, #seen_in h6{
+    text-align: center;
+    margin-top: 10px;
+    color: #444;
+}
+
+#seen_in h3 {
+	font-size: 18px;
+	line-height: 27px;
+}
+
+#seen_in .center-align{
+    margin-left: 20px;
+    text-align: center;
+}
+
+#seen_in a.publication{
+    margin: 10px 10px 15px 10px !important;
+    display: inline-block;
+}
+
+#seen_in a.publication:first-child{
+    margin-left: 0px;
+}
+
+#seen_in a.publication img{
+    max-height: 100px !important;
+}
+
+.benefit img{
+    float: left;
+    margin-right: 8px;
+}
+
+.email-subscribe{
+    padding-bottom: 0px;
+}
+
+.video {
+    margin-right: 20px;
+}
+
+.video iframe{
+    width: 100%;
+    height: 415px;
+    border: 1px solid #ddd;
+    margin-left: -1px;
+}
+
+/*****
+* @author: Auston Bunsen
+* @title: testimonial styles
+* @section: testimonials throughout the page
+* @explanation: adds styles so images of people can be used with testimonials
+*****/
+blockquote p strong{
+    font-weight: bold !important;
+}
+
+.small-testimonial blockquote{
+    border-left-color: transparent;
+}
+
+.small-testimonial blockquote img{
+    float: left;
+    border: 1px solid #666;
+    border-radius: 8px;
+    max-width: 55px;
+    float: left;
+    margin: 0px 8px 0px 0px;
+    box-shadow: 0px 1px 3px #999;
+}
+
+.small-testimonial blockquote .quotation{
+    float: left;
+    width: 25px;
+    font-size: 24px;
+    color: #ddd;
+}
+
+.small-testimonial blockquote p.quote{
+    float: left;
+    width: 250px;
+    margin-left: 0px;
+}
+
+.small-testimonial blockquote small{
+    font-size: 12px;
+    display: inline-block;
+    width: 250px;
+    margin-left: 25px;
+}
+
+/*****
+* @author: Auston Bunsen
+* @title: testimonial styles
+* @section: testimonials throughout the page
+* @explanation: adds styles so logos of news outlets can be used with testimonials
+*****/
+.company-testimonial:nth-child(2){
+     width: 360px !important;
+    margin-right: 20px !important;
+}
+
+.company-testimonial blockquote{
+    border-left-color: transparent;
+}
+
+.company-testimonial blockquote img{
+    max-width: 200px;
+    max-height: 29px;
+    opacity: 0.5;
+    margin-bottom: 5px;
+}
+
+.company-testimonial:hover blockquote img{
+    opacity: 1.0;
+}
+
+.company-testimonial blockquote p .quotation{
+    color: #ccc;
+    font-size: 22px;
+}
+
+/*****
+* @author: Auston Bunsen
+* @title: button styles
+* @section: buttons throughout the page
+* @explanation: styles for buttons
+*****/
+a.btn{
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 18px;
+    line-height: 18px;
+    font-weight: bold;
+}
+
+a > small{
+    font-size: 11px;
+    line-height: 13px;
+    font-weight: normal;
+}
+
+.btn-wide{
+    width: 70%;
+}
+
+.btn-full-width{
+    width: 100%;
+}
+
+.btn-left-align{
+    text-align: left;
+}
+
+.btn-right-align{
+    text-align: right;
+}
+
+
+.buyform{
+    margin-left: 20px;
+}
+
+.form_top{
+    border: 1px solid #ddd;
+    border-top-right-radius: 4px;
+    border-top-left-radius: 4px;
+    background: #fcfcfc;
+}
+
+.form_top h2, .form_top h3, .form_top h4, .form_top h5{
+    margin: 10px 15px 0px;
+}
+
+.form_top p{
+    margin-left: 15px;
+}
+
+.form_cont{
+    border-right: 1px solid #ddd;
+    border-left: 1px solid #ddd;
+    border-bottom-right-radius: 4px;
+    border-bottom-left-radius: 4px;
+    padding-top: 15px;
+}
+
+
+.form_cont label, .form_cont input, .form_cont .selection{
+    margin-left: 15px !important;
+}
+
+.form_cont input.inputy{
+    width: 235px;
+}
+
+.form_bottom{
+    padding: 15px 0px;
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+    border-bottom-right-radius: 4px;
+    border-bottom-left-radius: 4px;
+    background: #fcfcfc;
+    text-align: center;
+    margin-top: 15px;
+}
+
+.form_bottom .btn{
+    margin: 0px 15px;
+    width: 250px;
+    font-weight: bold;
+}
+
+.map iframe{
+    width: 100%;
+    max-height: 340px;
+    border: 1px solid #ddd;
+}
+
+/*****
+* @title: footer styles
+* @section: footer
+* @explanation: styles for footer and contained elements
+*****/
+.footer{
+    border-top: 1px solid #ddd;
+    background-color: #fcfcfc;
+    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+    padding: 25px 0px 20px;
+}
+
+.footer .contact{
+    padding-left: 20px;
+    line-height: 24px;
+}
+
+.footer strong{
+    font-weight: bold;
+}
+
+
+/*****
+* @title: social icons
+* @section: footer
+* @explanation: styles for social icons in the footer
+*****/
+.social_icons{
+    float: right;
+    text-align: right;    
+}
+
+.social_icons a{
+    display: inline-block;
+    height: 24px;
+    width: 24px;
+    opacity: 0.6;
+    margin: 0px 5px;
+}
+
+.social_icons a:last-child{
+    margin-right: 20px;
+}
+
+.social_icons a:hover{
+    opacity: 1.0;
+}
+
+.copyright{
+    font-size: 11px;
+}
+
+
+/*****
+* @title: fancyzoom
+* @section: overlay of images
+* @explanation: styles for overlaying images in a modal
+*****/
+#zoom { 
+    position: absolute; 
+    display: none; 
+    z-index: 499; 
+    -webkit-box-shadow: 
+    0px 5px 25px #000; 
+    -moz-box-shadow: 0px 5px 25px #000; 
+    box-shadow: 0px 5px 25px #000;
+}
+
+#zoom_img { 
+    display: block; 
+    cursor: pointer; 
+    width: 100%; 
+    border: 0; 
+    margin: 0; 
+    padding: 0;
+}
+
+#zoom_close { 
+    position: absolute; 
+    display: none; 
+    cursor: pointer; 
+    left: -15px; 
+    top: -15px; 
+    width: 30px; 
+    height: 30px; 
+    background: url(../img/zoom/closebox.png) no-repeat;
+}
+
+#zoom_spin { 
+    position: absolute; 
+    display: none; 
+    z-index: 525; 
+    width: 50px; 
+    height: 50px; 
+    background: url(../img/zoom/spin.png) no-repeat;
+}
+
+.subnav-fixed {
+position: fixed;
+top: 0px;
+z-index: 1020;
+border-color: #D5D5D5;
+border-width: 0 0 1px;
+-webkit-border-radius: 0;
+-moz-border-radius: 0;
+border-radius: 0;
+-webkit-box-shadow: inset 0 1px 0 white,0 1px 5px rgba(0, 0, 0, .1);
+-moz-box-shadow: inset 0 1px 0 #fff,0 1px 5px rgba(0,0,0,.1);
+box-shadow: inset 0 1px 0 white,0 1px 5px rgba(0, 0, 0, .1);
+filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+}
+
+#rosyama {
+	padding-top: 60px;
+}
