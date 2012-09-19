@@ -146,6 +146,9 @@
 	<?php $this->endWidget(); ?>
 	</div><!-- form -->
 
+	<h2>Авторизованные аккаунты социальных сетей:</h2>
+	
+	<?php $this->widget('ext.eauth.EAuthWidget', array('action' => '/userGroups/', 'userServices'=>$socials, 'inProfile'=>true)); ?>
 
 	<h2>Смена пароля</h2>
 	<div class="form">
@@ -156,11 +159,10 @@
 		'enableClientValidation'=>true,
 	)); ?>
 
-		<?php if ($passModel->xml_id && $passModel->external_auth_id) :?>
+		<?php if (!$miscModel->password) :?>
 		<div class="row">
 			<?php echo $form->labelEx($passModel,'username'); ?>
 			<?php echo $form->textField($passModel,'username',array('size'=>60,'maxlength'=>120)); ?>
-			<p>Изменив логин вы потеряете возможность авторизовываться через аккаунт социальной сети!</p>
 			<?php echo $form->error($passModel,'username'); ?>
 		</div>
 		<?php endif; ?>

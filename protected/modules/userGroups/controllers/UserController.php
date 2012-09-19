@@ -187,6 +187,60 @@ class UserController extends Controller
 				$profiles[] = array('view' => $views[UserGroupsUser::VIEW], 'model' => $p_instance);
 			}
 		}
+		
+		$service = Yii::app()->request->getQuery('service');
+		if (isset($service) && !Yii::app()->user->isGuest) {
+			$authIdentity = Yii::app()->eauth->getIdentity($service);
+			$authIdentity->redirectUrl = Yii::app()->user->returnUrl;
+			$authIdentity->cancelUrl = $this->createAbsoluteUrl('/profile/update');		
+			
+			if ($authIdentity->authenticate()) {
+				$identity = new ServiceUserIdentity($authIdentity);
+
+				// успешная авторизация
+				if ($identity->setAccountParams()) {
+					//Yii::app()->user->login($identity);
+					$serviceModel=UsergroupsSocialServices::model()->findByAttributes(Array('service_name'=>$identity->external_auth_id));
+					$isInAnoter=UsergroupsUserSocialAccounts::model()->findByAttributes(Array('xml_id'=>$identity->xml_id, 'external_auth_id'=>$identity->external_auth_id), 'ug_id !='.Yii::app()->user->id);
+					if ($serviceModel && (!$isInAnoter || ($isInAnoter && count($isInAnoter->user->social_accounts) <= 1))){	
+						$userRes=Array();
+						$oldUsers=UserGroupsUser::model()->findAllByAttributes(Array('xml_id'=>$identity->xml_id, 'external_auth_id'=>$identity->external_auth_id), 'id !='.Yii::app()->user->id);
+						if ($isInAnoter)$oldUsers[]=$isInAnoter->user;
+						if ($oldUsers) $userRes=Yii::app()->user->userModel->eatUsers($oldUsers);
+						$account=UsergroupsUserSocialAccounts::model()->findByPk(Array('ug_id'=>Yii::app()->user->id, 'service_id'=>$serviceModel->id));
+						if (!$account) {
+							$account=new UsergroupsUserSocialAccounts;
+							$account->ug_id=Yii::app()->user->id;
+							$account->service_id=$serviceModel->id;
+						}
+						$account->xml_id=$identity->xml_id;
+						$account->external_auth_id=$identity->external_auth_id;
+						if ($account->save())
+							Yii::app()->user->setFlash('user', 'Аккаунт сервиса '.$serviceModel->name.' успешно добавлен!'.(
+									$userRes ? 
+										'<br /> Поглощено пользователей: '.$userRes['usersCnt'].
+										'<br /> Переназначено ям:'.$userRes['holesCnt'].
+										'<br /> Переназначено комментариев:'.$userRes['commentsCnt']
+									: ''
+								)
+							);
+					}
+					elseif($isInAnoter){
+						Yii::app()->user->setFlash('user', '<span style="color:red;">Ошибка! Этот аккаунт уже ассоциирован с пользователем '.CHtml::link($isInAnoter->user->Fullname, array('/profile/view', 'id'=>$isInAnoter->user->id)).'.</span>');
+					}
+					// специальное перенаправления для корректного закрытия всплывающего окна
+					$this->redirect(Array('/profile/update/'));
+				}
+				else {
+					// закрытие всплывающего окна и перенаправление на cancelUrl
+					$authIdentity->cancel();
+				}
+			}
+			// авторизация не удалась, перенаправляем на страницу входа
+			Yii::app()->user->setFlash('user', 'Ошибка! Невозможно авторизовать аккаунт.');			
+			$this->redirect(Array('/profile/update/'));
+			
+		}	
 
 
 		if (Yii::app()->request->isAjaxRequest || isset($_GET['_isAjax']))

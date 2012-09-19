@@ -10,6 +10,10 @@
     background: url("../images/auth.png") no-repeat;
 }
 
+.auth-icon.gray {
+    background: url("../images/auth_gray.png") no-repeat;
+}
+
 .auth-icon.google, 
 .auth-icon.GoogleOAuth  { background-position: 0 -34px;  }
 .auth-icon.Twitter    	 { background-position: 0 -68px;  }
@@ -56,4 +60,11 @@
     display: block;
     margin-top: 0.4em;
     text-align: center;
+}
+.del-service-btn{
+	position:absolute; 
+	padding-left:55px;
+	color:red;
+	font-weight: 800;
+	text-decoration:none;
 }

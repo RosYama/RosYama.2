@@ -115,8 +115,14 @@ class ProfileController extends Controller
 				} else
 					Yii::app()->user->setFlash('user', 'Произошла ошибка. Попробуйте позже.');
 			}
-		}		
-		$this->render('update',array('miscModel'=>$miscModel,'passModel'=>$passModel, 'profiles' => $profile_models), false, true);
+		}	
+		
+		$socials=UsergroupsSocialServices::model()->with('account')->findAll();		
+		
+		
+		
+		
+		$this->render('update',array('miscModel'=>$miscModel,'passModel'=>$passModel, 'profiles' => $profile_models, 'socials'=>$socials), false, true);
 	}
 	
 	public function actionMyarea()
@@ -215,7 +221,21 @@ class ProfileController extends Controller
 		$p[0]->actionSelectHoles(false);
 	}		
 
-	
+	public function actionDelservice($type)
+	{
+		$userModel=Yii::app()->user->userModel;
+		if (!$userModel->password && count($userModel->social_accounts)<=1) {
+			Yii::app()->user->setFlash('user', '<span style="color:red;">Ошибка! Это Ваш единственный способ авторизации! <br />Нужно сначала установить пароль для авторизации через сайт.</span>');
+		}
+		else {
+			$model=UsergroupsUserSocialAccounts::model()->with('service')->find('service.name="'.$type.'" AND t.ug_id='.$userModel->id);	
+			if ($model) {
+				Yii::app()->user->setFlash('user', 'Аккаунт сервиса '.$model->service->name.' успешно удален!');
+				$model->delete();			
+				}
+		}	
+		$this->redirect(Array('/profile/update/'));	
+	}
 	
 	public function actionView($id)
 	{

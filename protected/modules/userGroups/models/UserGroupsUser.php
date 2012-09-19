@@ -324,6 +324,7 @@ class UserGroupsUser extends CActiveRecord
 		// define basic relation with groups
 		$relations = array(
 			'relUserGroupsGroup' => array(self::BELONGS_TO, 'UserGroupsGroup', 'group_id'),
+			'Allholes' => array(self::HAS_MANY, 'Holes', 'USER_ID'),
 			'holes' => array(self::HAS_MANY, 'Holes', 'USER_ID', 'condition'=>'deleted=0'),
 			'holes_cnt' => array(self::STAT, 'Holes', 'USER_ID', 'condition'=>'deleted=0'),
 			'holes_fixed_cnt' => array(self::STAT, 'Holes', 'USER_ID', 'condition'=>'STATE="fixed" AND deleted=0'),
@@ -331,6 +332,8 @@ class UserGroupsUser extends CActiveRecord
 			'hole_area'=> array(self::HAS_MANY, 'UserAreaShapes', 'ug_id', 'with'=>'points'),
 			'requests'=>array(self::HAS_MANY, 'HoleRequests', 'user_id'),
 			'selected_holes_lists'=> array(self::HAS_MANY, 'UserSelectedLists', 'user_id', 'order'=>'selected_holes_lists.date_created desc'),
+			'comments' => array(self::HAS_MANY, 'Comment', 'creator_id'),
+			'social_accounts' => array(self::HAS_MANY, 'UsergroupsUserSocialAccounts', 'ug_id'),
 			);
 		// extract profile models list
 		$modulesData = Yii::app()->getModules();
@@ -343,12 +346,71 @@ class UserGroupsUser extends CActiveRecord
 		return $relations;
 	}
 	
+	public function eatUser($user)
+	{
+		$holesCnt=0;
+		$commentsCnt=0;
+		if ($user->relUserGroupsGroup->level > $this->relUserGroupsGroup->level) {
+			$this->group_id=$user->group_id;
+			$this->update();
+			}
+		foreach ($user->Allholes as $hole) {
+			$hole->USER_ID=$this->id;
+			$hole->update();
+			$holesCnt++;
+			}
+		foreach ($user->comments as $item) {
+			$item->creator_id=$this->id;
+			$item->update();
+			$commentsCnt++;
+			}
+		foreach ($user->requests as $item) {
+			$item->user_id=$this->id;
+			$item->update();
+			}							
+		$relations=Array(
+			'GibddHeads'=>'author_id',
+			'GibddHeadsBuffer'=>'author_id',
+			'HoleFixeds'=>'user_id',
+			'HolePictures'=>'user_id',
+			'Holes'=>'premoderator_id',
+			'Holes'=>'deletor_id',
+		);
+		
+		foreach ($relations as $key=>$val){
+			$model=$key::model()->findAllByAttributes(Array($val=>$user->id));
+			foreach ($model as $item) {
+				$item->$val=$this->id;
+				$item->update();
+				}
+		}	
+		
+		$user=$this->findByPk($user->id);
+		$user->delete();
+		return Array('holesCnt'=>$holesCnt, 'commentsCnt'=>$commentsCnt);
+		
+	}	
+	
+	public function eatUsers($users)
+	{
+		$holesCnt=0;
+		$commentsCnt=0;
+		$count=count($users);
+		foreach ($users as $user){
+			$res=$this->eatUser($user);
+			$holesCnt+=$res['holesCnt'];
+			$commentsCnt+=$res['commentsCnt'];
+		}
+		return Array('usersCnt'=>$count, 'holesCnt'=>$holesCnt, 'commentsCnt'=>$commentsCnt);
+	}
+	
 	protected function beforeDelete()
 	{
 		parent::beforeDelete();
-		foreach ($this->holes as $item) $item->delete();
+		foreach ($this->Allholes as $item) $item->delete();
 		foreach ($this->hole_area as $item) $item->delete();
 		foreach ($this->selected_holes_lists as $item) $item->delete();		
+		foreach ($this->social_accounts as $item) $item->delete();		
 		return true;
 	}	
 	
@@ -430,7 +492,8 @@ class UserGroupsUser extends CActiveRecord
 		if (!$this->params || !is_array($this->params)) return true;
 		foreach ($this->params as $param) if ($str==$param) return true;
 		return false;
-	}	
+	}		
+	
 	
 
 	/**
