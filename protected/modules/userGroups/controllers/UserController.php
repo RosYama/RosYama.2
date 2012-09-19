@@ -202,9 +202,10 @@ class UserController extends Controller
 					//Yii::app()->user->login($identity);
 					$serviceModel=UsergroupsSocialServices::model()->findByAttributes(Array('service_name'=>$identity->external_auth_id));
 					$isInAnoter=UsergroupsUserSocialAccounts::model()->findByAttributes(Array('xml_id'=>$identity->xml_id, 'external_auth_id'=>$identity->external_auth_id), 'ug_id !='.Yii::app()->user->id);
-					if ($serviceModel && !$isInAnoter){	
+					if ($serviceModel && (!$isInAnoter || ($isInAnoter && count($isInAnoter->user->social_accounts) <= 1))){	
 						$userRes=Array();
 						$oldUsers=UserGroupsUser::model()->findAllByAttributes(Array('xml_id'=>$identity->xml_id, 'external_auth_id'=>$identity->external_auth_id), 'id !='.Yii::app()->user->id);
+						if ($isInAnoter)$oldUsers[]=$isInAnoter->user;
 						if ($oldUsers) $userRes=Yii::app()->user->userModel->eatUsers($oldUsers);
 						$account=UsergroupsUserSocialAccounts::model()->findByPk(Array('ug_id'=>Yii::app()->user->id, 'service_id'=>$serviceModel->id));
 						if (!$account) {
