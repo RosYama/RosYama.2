@@ -385,6 +385,7 @@ class UserGroupsUser extends CActiveRecord
 				}
 		}	
 		
+		$user=$this->findByPk($user->id);
 		$user->delete();
 		return Array('holesCnt'=>$holesCnt, 'commentsCnt'=>$commentsCnt);
 		
