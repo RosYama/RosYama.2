@@ -84,7 +84,7 @@ class Holes extends CActiveRecord
 		return array(
 			array('USER_ID, ADDRESS, DATE_CREATED, TYPE_ID, gibdd_id', 'required'),
 			array('LATITUDE, LONGITUDE', 'required', 'message' => 'Поставьте метку на карте двойным щелчком мыши!'),	
-			array('GIBDD_REPLY_RECEIVED, PREMODERATED, TYPE_ID, NOT_PREMODERATED, archive, deleted', 'numerical', 'integerOnly'=>true),
+			array('GIBDD_REPLY_RECEIVED, PREMODERATED, TYPE_ID, NOT_PREMODERATED, archive, deleted, premoderator_id, deletor_id', 'numerical', 'integerOnly'=>true),
 			array('LATITUDE, LONGITUDE', 'numerical'),
 			array('USER_ID, STATE, DATE_CREATED, DATE_SENT, DATE_STATUS, ADR_SUBJECTRF, DATE_SENT_PROSECUTOR', 'length', 'max'=>10),
 			array('ADR_CITY', 'length', 'max'=>50),

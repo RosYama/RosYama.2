@@ -369,22 +369,22 @@ class UserGroupsUser extends CActiveRecord
 			$item->update();
 			}							
 		$relations=Array(
-			'GibddHeads'=>'author_id',
-			'GibddHeadsBuffer'=>'author_id',
-			'HoleFixeds'=>'user_id',
-			'HolePictures'=>'user_id',
-			'Holes'=>'premoderator_id',
-			'Holes'=>'deletor_id',
+			'GibddHeads'=>Array('author_id'),
+			'GibddHeadsBuffer'=>Array('author_id'),
+			'HoleFixeds'=>Array('user_id'),
+			'HolePictures'=>Array('user_id'),
+			'Holes'=>Array('premoderator_id','deletor_id')
 		);
 		
-		foreach ($relations as $key=>$val){
-			$model=$key::model()->findAllByAttributes(Array($val=>$user->id));
+		foreach ($relations as $key=>$vals){
+			foreach($vals as $val){
+			$model=$key::model()->findAllByAttributes(Array($val=>$user->id));			
 			foreach ($model as $item) {
 				$item->$val=$this->id;
 				$item->update();
 				}
+			}	
 		}	
-		
 		$user=$this->findByPk($user->id);
 		$user->delete();
 		return Array('holesCnt'=>$holesCnt, 'commentsCnt'=>$commentsCnt);
