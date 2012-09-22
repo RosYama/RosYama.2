@@ -196,6 +196,11 @@ class Holes extends CActiveRecord
 		return null;
 	}	
 	
+	public function getBigFolder()	
+	{	
+		return date('m_Y', $this->DATE_CREATED);
+	} 
+	
 	const EARTH_RADIUS_KM = 6373;
 	public function getTerritorialGibdd()	
 	{	
@@ -290,22 +295,22 @@ class Holes extends CActiveRecord
 		//print_r($imagess); die();
 		$id=$this->ID;
 		$prefix='';						
-		if (!is_dir($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/original/'.$id)){
-			if(!mkdir($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/original/'.$id))
+		if (!is_dir($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/'.$this->bigFolder.'/original/'.$id)){
+			if(!mkdir($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/'.$this->bigFolder.'/original/'.$id))
 			{
 				$this->addError('upploadedPictures', Yii::t('errors', 'GREENSIGHT_ERROR_CANNOT_CREATE_DIR'));
 				return false;
 			}
-			if(!mkdir($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/medium/'.$id))
+			if(!mkdir($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/'.$this->bigFolder.'/medium/'.$id))
 			{
-				unlink($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/original/'.$id);
+				unlink($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/'.$this->bigFolder.'/original/'.$id);
 				$this->addError('upploadedPictures',Yii::t('errors', 'GREENSIGHT_ERROR_CANNOT_CREATE_DIR'));
 				return false;
 			}
-			if(!mkdir($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/small/'.$id))
+			if(!mkdir($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/'.$this->bigFolder.'/small/'.$id))
 			{
-				unlink($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/original/'.$id);
-				unlink($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/medium/'.$id);
+				unlink($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/'.$this->bigFolder.'/original/'.$id);
+				unlink($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/'.$this->bigFolder.'/medium/'.$id);
 				$this->addError('upploadedPictures',Yii::t('errors', 'GREENSIGHT_ERROR_CANNOT_CREATE_DIR'));
 				return false;
 			}
@@ -334,11 +339,11 @@ class Holes extends CActiveRecord
 					$new_y    = floor($_image_info[1] / $aspect);
 					$newimage = imagecreatetruecolor($new_x, $new_y);
 					imagecopyresampled($newimage, $image, 0, 0, 0, 0, $new_x, $new_y, $_image_info[0], $_image_info[1]);
-					imagejpeg($newimage, $_SERVER['DOCUMENT_ROOT'].'/upload/st1234/original/'.$id.'/'.$imgname);
+					imagejpeg($newimage, $_SERVER['DOCUMENT_ROOT'].'/upload/st1234/'.$this->bigFolder.'/original/'.$id.'/'.$imgname);
 				}
 				else
 				{
-					imagejpeg($image, $_SERVER['DOCUMENT_ROOT'].'/upload/st1234/original/'.$id.'/'.$imgname);
+					imagejpeg($image, $_SERVER['DOCUMENT_ROOT'].'/upload/st1234/'.$this->bigFolder.'/original/'.$id.'/'.$imgname);
 				}
 	
 				$aspect   = max($_image_info[0] / $_params['medium_sizex'], $_image_info[1] / $_params['medium_sizey']);
@@ -346,7 +351,7 @@ class Holes extends CActiveRecord
 				$new_y    = floor($_image_info[1] / $aspect);
 				$newimage = imagecreatetruecolor($new_x, $new_y);
 				imagecopyresampled($newimage, $image, 0, 0, 0, 0, $new_x, $new_y, $_image_info[0], $_image_info[1]);
-				imagejpeg($newimage, $_SERVER['DOCUMENT_ROOT'].'/upload/st1234/medium/'.$id.'/'.$imgname);
+				imagejpeg($newimage, $_SERVER['DOCUMENT_ROOT'].'/upload/st1234/'.$this->bigFolder.'/medium/'.$id.'/'.$imgname);
 				imagedestroy($newimage);
 				$aspect   = min($_image_info[0] / $_params['small_sizex'], $_image_info[1] / $_params['small_sizey']);
 				$newimage = imagecreatetruecolor($_params['small_sizex'], $_params['small_sizey']);
@@ -363,7 +368,7 @@ class Holes extends CActiveRecord
 					ceil($aspect * $_params['small_sizex']),
 					ceil($aspect * $_params['small_sizey'])
 				);
-				imagejpeg($newimage, $_SERVER['DOCUMENT_ROOT'].'/upload/st1234/small/'.$id.'/'.$imgname);
+				imagejpeg($newimage, $_SERVER['DOCUMENT_ROOT'].'/upload/st1234/'.$this->bigFolder.'/small/'.$id.'/'.$imgname);
 				imagedestroy($newimage);
 				imagedestroy($image);
 							

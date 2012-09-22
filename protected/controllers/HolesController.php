@@ -35,7 +35,7 @@ class HolesController extends Controller
 				'users'=>array('@'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
-				'actions'=>array('delete', 'moderate','moderPhotoFix'),
+				'actions'=>array('delete', 'moderate','moderPhotoFix', 'convertFoldersbug'),
 				'groups'=>array('root', 'admin', 'moder'), 
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -47,6 +47,33 @@ class HolesController extends Controller
 			),
 		);
 	}
+	
+	public function actionConvertFoldersbug()
+	{
+		$holes=Holes::model()->findAll();
+		
+		foreach ($holes as $hole){
+			if (is_dir($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/original/'.$hole->ID)){			
+				if (!is_dir($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/'.$hole->bigFolder)) mkdir($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/'.$hole->bigFolder);
+				if (!is_dir($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/'.$hole->bigFolder.'/original')) mkdir($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/'.$hole->bigFolder.'/original');
+				if (!is_dir($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/'.$hole->bigFolder.'/original/'.$hole->ID)) mkdir($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/'.$hole->bigFolder.'/original/'.$hole->ID);
+				Y::copyr($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/original/'.$hole->ID, $_SERVER['DOCUMENT_ROOT'].'/upload/st1234/'.$hole->bigFolder.'/original/'.$hole->ID);								
+				Y::recursiveRemDir($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/original/'.$hole->ID,false);
+				
+				if (!is_dir($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/'.$hole->bigFolder.'/medium')) mkdir($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/'.$hole->bigFolder.'/medium');
+				if (!is_dir($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/'.$hole->bigFolder.'/medium/'.$hole->ID)) mkdir($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/'.$hole->bigFolder.'/medium/'.$hole->ID);
+				Y::copyr($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/medium/'.$hole->ID, $_SERVER['DOCUMENT_ROOT'].'/upload/st1234/'.$hole->bigFolder.'/medium/'.$hole->ID);
+				Y::recursiveRemDir($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/medium/'.$hole->ID,false);
+				
+				if (!is_dir($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/'.$hole->bigFolder.'/small')) mkdir($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/'.$hole->bigFolder.'/small');
+				if (!is_dir($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/'.$hole->bigFolder.'/small/'.$hole->ID)) mkdir($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/'.$hole->bigFolder.'/small/'.$hole->ID);
+				Y::copyr($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/small/'.$hole->ID, $_SERVER['DOCUMENT_ROOT'].'/upload/st1234/'.$hole->bigFolder.'/small/'.$hole->ID);
+				Y::recursiveRemDir($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/small/'.$hole->ID,false);
+			}			
+		}
+		
+	}
+	
 	
 	public function actionFlushcashe()
 	{

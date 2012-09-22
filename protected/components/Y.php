@@ -62,5 +62,29 @@ class Y
      return TRUE;
 	}	
 	
+	static public function copyr($source, $dest)
+	{
+		// recursive function to copy
+		// all subdirectories and contents:
+		if(is_dir($source)) {
+			$dir_handle=opendir($source);
+			$sourcefolder = basename($source);
+			if (!is_dir($dest."/".$sourcefolder)) mkdir($dest."/".$sourcefolder);
+			while($file=readdir($dir_handle)){
+				if($file!="." && $file!=".."){
+					if(is_dir($source."/".$file)){
+						self::copyr($source."/".$file, $dest."/".$sourcefolder);
+					} else {
+						copy($source."/".$file, $dest."/".$file);
+					}
+				}
+			}
+			closedir($dir_handle);
+		} else {
+			// can also handle simple copy commands
+			copy($source, $dest);
+		}
+	}	
+	
 }
 ?>

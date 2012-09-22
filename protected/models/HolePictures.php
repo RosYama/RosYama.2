@@ -31,15 +31,15 @@ class HolePictures extends CActiveRecord
 	
 	public function getOriginal()
 	{
-		return '/upload/st1234/original/'.$this->hole_id.'/'.$this->filename;
+		return '/upload/st1234/'.$this->hole->bigFolder.'/original/'.$this->hole_id.'/'.$this->filename;
 	}
 	public function getMedium()
 	{
-		return '/upload/st1234/medium/'.$this->hole_id.'/'.$this->filename;
+		return '/upload/st1234/'.$this->hole->bigFolder.'/medium/'.$this->hole_id.'/'.$this->filename;
 	}
 	public function getSmall()
 	{
-		return '/upload/st1234/small/'.$this->hole_id.'/'.$this->filename;
+		return '/upload/st1234/'.$this->hole->bigFolder.'/small/'.$this->hole_id.'/'.$this->filename;
 	}
 	
 	public function getLastOrder() 
