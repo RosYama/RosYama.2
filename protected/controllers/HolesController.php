@@ -118,7 +118,7 @@ class HolesController extends Controller
 
 						}
 						if ($holes){
-							$headers = "MIME-Version: 1.0\r\nFrom: \"Rosyama\" <".Yii::app()->params['adminEmail'].">\r\nReply-To: ".Yii::app()->params['adminEmail']."\r\nContent-Type: text/html; charset=utf-8";
+							$headers = "MIME-Version: 1.0\r\nFrom: \"".Yii::app()->name."\" <".Yii::app()->params['adminEmail'].">\r\nReply-To: ".Yii::app()->params['adminEmail']."\r\nContent-Type: text/html; charset=utf-8";
 							Yii::app()->request->baseUrl=Yii::app()->request->hostInfo;
 							$mailbody=$this->renderPartial('/ugmail/achtung_notification', Array('user'=>$user, 'holes'=>$holes),true);
 							//echo $mailbody; die();
@@ -213,7 +213,7 @@ class HolesController extends Controller
 			if ($abuseModel->validate()){
 				$userModel=Yii::app()->user->userModel;
 				
-				$headers = "MIME-Version: 1.0\r\nFrom: \"Rosyama\" <".Yii::app()->params['adminEmail'].">\r\nReply-To: ".($userModel->email ? $userModel->email : Yii::app()->params['adminEmail'])."\r\nContent-Type: text/html; charset=utf-8";
+				$headers = "MIME-Version: 1.0\r\nFrom: \"".Yii::app()->name."\" <".Yii::app()->params['adminEmail'].">\r\nReply-To: ".($userModel->email ? $userModel->email : Yii::app()->params['adminEmail'])."\r\nContent-Type: text/html; charset=utf-8";
 				$user=$model->user;
 				Yii::app()->request->baseUrl=Yii::app()->request->hostInfo;
 				$mailbody=$this->renderPartial('/ugmail/abuse2hole', Array('user'=>$userModel, 'hole'=>$model, 'abuse'=>$abuseModel),true);
@@ -243,7 +243,7 @@ class HolesController extends Controller
 			$currentUser=Yii::app()->user->userModel;
 			$pictures=HolePictures::model()->findAll('hole_id='.$model->ID.' AND type="fixed" AND premoderated=0 AND user_id='.$currentUser->id);
 			if ($pictures){
-				$headers = "MIME-Version: 1.0\r\nFrom: \"Rosyama\" <".Yii::app()->params['adminEmail'].">\r\nReply-To: ".($currentUser->email ? $currentUser->email : Yii::app()->params['adminEmail'])."\r\nContent-Type: text/html; charset=utf-8";
+				$headers = "MIME-Version: 1.0\r\nFrom: \"".Yii::app()->name."\" <".Yii::app()->params['adminEmail'].">\r\nReply-To: ".($currentUser->email ? $currentUser->email : Yii::app()->params['adminEmail'])."\r\nContent-Type: text/html; charset=utf-8";
 				$user=$model->user;
 				Yii::app()->request->baseUrl=Yii::app()->request->hostInfo;
 				$mailbody=$this->renderPartial('/ugmail/fixed_pictures_notification', Array('user'=>$user, 'currentUser'=>$currentUser, 'pictures'=>$pictures, 'hole'=>$model),true);

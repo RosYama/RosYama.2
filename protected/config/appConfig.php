@@ -1,10 +1,10 @@
 <?php 
 $bd=array(
 			'class'=>'CDbConnection',
-			'connectionString' => 'mysql:host=localhost;dbname=rosyama',
+			'connectionString' => 'mysql:host=localhost;dbname=develrosdostup',
 			'emulatePrepare' => false,
-			'username' => 'root',
-			'password' => 'qwe1024',
+			'username' => 'develrosdostup',
+			'password' => 'qwer1234',
 			'charset' => 'utf8',
 			'tablePrefix'=>'yii_',
 			'schemaCachingDuration'=>3600,
@@ -22,21 +22,21 @@ $socials=array( // You can change the providers and their classes.
 				'twitter' => array(
 					// регистрация приложения: https://dev.twitter.com/apps/new
 					'class' => 'TwitterOAuthService',
-					'key' => 'l3EbqAebpIlPR1SAI5KANQ',
-					'secret' => 'BPdGnGf0DvD5dLCkQKuyYKbzQ0ZnmvE2bXi795fUKk',
+					'key' => 'MRPer4S0jcGnhQA8AwPQ', 
+					'secret' => 'hW3rSqtagjFHClDXGu2m0uLkmf6TWMbePjQp7Z6ZeE', 
 				),
 				'google_oauth' => array(
 					// регистрация приложения: https://code.google.com/apis/console/
 					'class' => 'GoogleOAuthService',
-					'client_id' => '433170583991.apps.googleusercontent.com',
-					'client_secret' => 'FAZmvzjXjciqkENr4-a8c61q',
+					'client_id' => '1011257333158.apps.googleusercontent.com',
+					'client_secret' => 'OVwt4LX24jPXEmbzF32ILP2J',
 					'title' => 'Google',
 				),
 				'facebook' => array(
 					// регистрация приложения: https://developers.facebook.com/apps/
 					'class' => 'FacebookOAuthService',
-					'client_id' => '321432484568993',
-					'client_secret' => 'd8290ffe86ea761fa1125bbd86eea708',
+					'client_id' => '115042318646426',
+					'client_secret' => 'a43b65c1bbe998986b35cd70ec98061e',
 				),
 				'vkontakte' => array(
 					// регистрация приложения: http://vkontakte.ru/editapp?act=create&site=1
@@ -74,8 +74,8 @@ $socials=array( // You can change the providers and their classes.
 
 $params=array(
 		// this is used in contact page
-		'adminEmail'=>'arbprint@mail.ru',
-		'YMapKey'=>'AEmk904BAAAAUCGkRAMAvTSoZfbI0tw8-95WnNcZkDQqXzAAAAAAAAAAAAB49EpXB9Mlar25hE3r2xY70FiRmQ==',
+		'adminEmail'=>'admin@rosdostup.ru',
+		'YMapKey'=>'AKtzDVABAAAAbnnpfAIAZPFgkjAuQV52QNsahNkE7plr4F0AAAAAAAAAAAAyrGSHDyaYbEfL1i8AVZDhjT4VHQ==',
 		//'layout'=>'startpage',
 
 	);		

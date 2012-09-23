@@ -605,7 +605,7 @@ class Holes extends CActiveRecord
 	
 	public function newCommentInHole($comment){				
 		if($this->user->email && $this->user->id!=$comment->user->id){
-			$headers = "MIME-Version: 1.0\r\nFrom: \"Rosyama\" <".Yii::app()->params['adminEmail'].">\r\nReply-To: ".Yii::app()->params['adminEmail']."\r\nContent-Type: text/html; charset=utf-8";
+			$headers = "MIME-Version: 1.0\r\nFrom: \"".Yii::app()->name."\" <".Yii::app()->params['adminEmail'].">\r\nReply-To: ".Yii::app()->params['adminEmail']."\r\nContent-Type: text/html; charset=utf-8";
 			Yii::app()->request->baseUrl='http://'.$_SERVER['HTTP_HOST'];
 			$mailbody=Yii::app()->controller->renderPartial('//ugmail/newComment', Array(
 						'hole'=>$this,
