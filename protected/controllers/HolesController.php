@@ -50,6 +50,9 @@ class HolesController extends Controller
 	
 	public function actionConvertFoldersbug()
 	{
+		ini_set('memory_limit', '1024M');
+		set_time_limit(0);
+		
 		$holes=Holes::model()->findAll();
 		
 		foreach ($holes as $hole){
