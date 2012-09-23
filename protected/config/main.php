@@ -8,14 +8,13 @@ include ('appConfig.php');
 
 return array(
 	'basePath'=>dirname(__FILE__).DIRECTORY_SEPARATOR.'..',
-	'name'=>'Rosyama',
+	'name'=>'РосДоступ',
 	'language'=>'ru',
 	'defaultController'=>'holes',
 	// preloading 'log' component
 	//'layout'=>'startpage',
 	'preload'=>array('log'),	
 	
-
 	// autoloading model and component classes
 	'import'=>array(
 		'application.models.*',
@@ -117,8 +116,7 @@ return array(
 				  'api/<id:\d+>'=>'api/index',
 				  'api/my/<id:\d+>/update'=>'api/update',
 				  'api/my/<id:\d+>/<type:[a-zA-Z0-9\_]+>'=>'api/setstate',
-				  'holes/cronDaily/<type:[a-zA-Z0-9\_-]+>'=>'holes/cronDaily',
-				  '<controller:\w+>'=>'<controller>/index',
+				   '<controller:\w+>'=>'<controller>/index',
 				  '<controller:\w+>/<id:\d+>'=>'<controller>/view',
 				  '<controller:\w+>/<action:\w+>/<id:\d+>'=>'<controller>/<action>',
 				  '<controller:\w+>/<action:\w+>'=>'<controller>/<action>',
@@ -149,7 +147,12 @@ return array(
 		'db'=>$bd,
 		
 		'cache'=>array(
-            'class'=>'system.caching.CApcCache',          
+            //'class'=>'system.caching.CApcCache',          // we use MemCache for RosDostup
+            'class'=>'system.caching.CMemCache',          
+            'servers'=>array(
+                array('host'=>'localhost', 'weight'=>60),
+            ),
+		'useMemcached'=>true,
         ),
 
 		'errorHandler'=>array(

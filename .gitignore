@@ -1,13 +1,12 @@
-/upload/*
-/assets/*
 *.zip
-upload
 *~
-bugs
-/bugs/*
-/protected/runtime/*
-protected/runtime/*
-
-protected/runtime/application.log
+/bugs
+/protected/runtime
+/nbproject/private
 
 .DS_Store
+
+#RosDostup specific
+/dokuwiki_integrated
+/tmp
+/webstat

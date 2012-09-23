@@ -1,6 +1,6 @@
   <div class="head">
 		<div class="container">
-			<div class="lCol"><a href="/" class="logo" title="На главную"><img src="/images/logo.png"  alt="РосЯма" /></a>
+			<div class="lCol"><a href="/" class="logo" title="На главную"><img src="/images/logo.png"  alt="Логотип" /></a>
 			</div>
 				<div class="rCol">
 								

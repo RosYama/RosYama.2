@@ -247,15 +247,15 @@ class ProfileController extends Controller
 			$contactModel->attributes=$_POST['ContactForm'];
 			if($contactModel->validate())
 			{
-				$headers="From: ".Yii::app()->params['adminEmail']."\r\nReply-To: ".Yii::app()->user->email;
-				$headers = "MIME-Version: 1.0\r\nFrom: ".Yii::app()->params['adminEmail']."\r\nReply-To: ".Yii::app()->user->email."\r\nContent-Type: text/html; charset=utf-8";
+				$headers="From: \"".Yii::app()->name."\" <".Yii::app()->params['adminEmail'].">\r\nReply-To: ".Yii::app()->user->email;
+				$headers = "MIME-Version: 1.0\r\nFrom: \"".Yii::app()->name."\" <".Yii::app()->params['adminEmail'].">\r\nReply-To: ".Yii::app()->user->email."\r\nContent-Type: text/html; charset=utf-8";
 				Yii::app()->request->baseUrl=Yii::app()->request->hostInfo;
 				$mailbody=$this->renderPartial('application.views.ugmail.user2user', Array(
 						'fromuser'=> Yii::app()->user->userModel,
 						'touser'=>$model,
 						'model'=>$contactModel,
 						),true);
-				mail($model->email,'РосЯма: личное сообщение - '.$contactModel->subject,$mailbody,$headers);
+				mail($model->email, Yii::app()->name.': личное сообщение - '.$contactModel->subject,$mailbody,$headers);
 				Yii::app()->user->setFlash('contact','Сообщение успешно отправлено');
 				$this->refresh();
 			}
