@@ -162,3 +162,6 @@ div.chekboxes input {
 float: left;
 width: 20px;
 }
+ul.radiogroup li input {float: left;}
+ul.radiogroup li label {float: left; padding-left: 10px;}
+ul.radiogroup li {clear: both;}

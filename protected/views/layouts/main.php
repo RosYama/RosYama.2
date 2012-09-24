@@ -34,20 +34,8 @@
 <div class="wrap">
 <div class="navigation">
 		<div class="container">
-			<?php $this->widget('zii.widgets.CMenu',array(
-			'items'=>array(
-				array('label'=>'О проекте', 'url'=>array('/site/page', 'view'=>'about')),
-				array('label'=>'Карта', 'url'=>array('/holes/map')),
-				array('label'=>'Нормативы', 'url'=>array('/site/page', 'view'=>'regulations')),
-				array('label'=>'Статистика', 'url'=>array('/statics/index')),
-				array('label'=>'FAQ', 'url'=>array('/site/page', 'view'=>'faq')),
-				array('label'=>'Справочники', 'url'=>array('/sprav/index')),
-				//array('label'=>'Logout ('.$this->user->name.')', 'url'=>array('/site/logout'), 'visible'=>!$this->user->isGuest)
-			),
-			'htmlOptions'=>array('class'=>'menu'),
-			'firstItemCssClass'=>'first',
-			'activeCssClass'=>'selected',
-		)); ?>
+			 <?php $this->widget('application.widgets.topmenu.topmenuWidget');?>			 
+			
 			<div class="search">
 				<form action="/map">
 			<input type="image" name="s" src="/images/search_btn.gif" class="btn" /><input type="text" class="textInput inactive" name="q"  value="Поиск по адресу" />
