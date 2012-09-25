@@ -966,5 +966,6 @@ color: rgb(0, 128, 0);
 	height: 40px;
 	background: transparent url(/images/ajaxload.gif) center center no-repeat;
 	} 
+.holes_pict img {padding-bottom: 5px;}	
 .clear{clear: both;}	
 
