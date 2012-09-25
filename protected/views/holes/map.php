@@ -60,7 +60,7 @@ $this->pageTitle=Yii::app()->name . ' :: Карта дефектов';
 	<div class="bx-yandex-search-form">
 		<form id="search_form_MAP_DzDvWLBsil" name="search_form_MAP_DzDvWLBsil" onsubmit="jsYandexSearch_MAP_DzDvWLBsil.searchByAddress(this.address.value); return false;">
 			<p>Введите адрес места для быстрого поиска</p>
-			<input type="text" id="address_inp" name="address" class="textInput" value="" style="width: 300px;" />
+			<input type="text" id="address_inp" name="address" class="textInput" value="<?php echo isset($_GET['q']) ? $_GET['q'] : ''?>" style="width: 300px;" />
 			<input type="submit" value="Искать" />
 			<a style="display:none;" id="clear_result_link" href="#" onclick="clearSerchResults('MAP_DzDvWLBsil', JCBXYandexSearch_arSerachresults); document.getElementById('address_inp').value=''; return false;">Очистить</a>
 		</form>

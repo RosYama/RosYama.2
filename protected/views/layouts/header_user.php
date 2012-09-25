@@ -38,6 +38,7 @@
 	echo '<br/>';
 	$this->widget('zii.widgets.CMenu', array(
 				'items'=>Array(
+						array('label'=>'Главное меню', 'url'=>array('/mainMenu/index'), 'linkOptions'=>array('class'=>'profileBtn'), 'visible'=>$this->user->groupName=='root'),
 						array('label'=>'Управление комментариями', 'url'=>array('/comments/comment/admin'), 'linkOptions'=>array('class'=>'profileBtn')),
 						array('label'=>'Новости', 'url'=>array('/news/admin'), 'linkOptions'=>array('class'=>'profileBtn'), 'visible'=>$this->user->isAdmin),
 						array('label'=>'Пользователи', 'url'=>array('/userGroups/'), 'linkOptions'=>array('class'=>'profileBtn'), 'visible'=>$this->user->isAdmin),
