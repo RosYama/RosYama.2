@@ -378,11 +378,11 @@ class Holes extends CActiveRecord
 							
 				$imgmodel=new HolePictures;
 				$imgmodel->type=$this->scenario=='fix' || $this->scenario=='addFixedFiles' ?'fixed':'fresh'; 
-				if ($this->scenario=='addFixedFiles') $imgmodel->premoderated=0;
 				$imgmodel->filename=$imgname;
 				$imgmodel->hole_id=$this->ID;
 				$imgmodel->user_id=Yii::app()->user->id;
 				$imgmodel->ordering=$imgmodel->lastOrder+1;
+				if ($this->scenario=='addFixedFiles') $imgmodel->premoderated= $imgmodel->user_id != $this->USER_ID ? 0 : 1;
 				$imgmodel->save();
 			}
 		}

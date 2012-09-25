@@ -88,9 +88,9 @@ $this->widget('application.extensions.fancybox.EFancyBox', array(
 			</div>
 			<? endif; ?>
 			<? if(!Yii::app()->user->isGuest): ?>
-				<?php if ($hole->STATE !='fixed' && !$hole->request_gibdd) : ?>
+				<?php if ((!$hole->IsUserHole && !($hole->request_gibdd && $hole->request_gibdd->answer)) || ($hole->IsUserHole && $hole->STATE =='fixed')) : ?>
 				<div class="form">
-					Яму заделали? Есть фотографии? <a href="#" onclick="$('#upload_fixeds').toggle('slow'); return false;">Загрузи!</a>
+					<?php echo $hole->STATE !='fixed' ? 'Яму заделали? Есть фотографии?' : 'Есть еще фотографии этой исправленной ямы?'; ?> <a href="#" onclick="$('#upload_fixeds').toggle('slow'); return false;">Загрузи!</a>
 					<?php $form=$this->beginWidget('CActiveForm', array(
 						'id'=>'holes-form',
 						'enableAjaxValidation'=>false,
