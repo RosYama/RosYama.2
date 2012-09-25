@@ -17,3 +17,40 @@ INSERT INTO `yii_usergroups_social_services` (`id`, `name`, `service_name`) VALU
   (8, 'moikrug', 'MyMailRu'),
   (9, 'odnoklassniki', 'odnoklassniki');
   
+CREATE TABLE IF NOT EXISTS `yii_mainmenu` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `lft` int(11) NOT NULL,
+  `rgt` int(11) NOT NULL,
+  `level` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL DEFAULT '',
+  `type` int(11) NOT NULL DEFAULT '0',
+  `link` varchar(255) NOT NULL,
+  `controller` varchar(255) DEFAULT NULL,
+  `action` varchar(255) DEFAULT NULL,
+  `element` varchar(255) DEFAULT NULL,
+  `elementmodel` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `lft` (`lft`),
+  KEY `rgt` (`rgt`),
+  KEY `level` (`level`),
+  KEY `name` (`name`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=19 ;
+
+INSERT INTO `yii_mainmenu` (`id`, `lft`, `rgt`, `level`, `name`, `type`,
+`link`, `controller`, `action`, `element`, `elementmodel`) VALUES
+(1, 0, 175, 0, 'root', 0, '', '', '', '0', ''),
+(2, 145, 150, 1, 'Ямы', 0, '', '', '', NULL, ''),
+(3, 146, 147, 2, 'Поиск ям', 0, '', 'Holes', 'Index', NULL, ''),
+(4, 148, 149, 2, 'Карта', 0, '', 'Holes', 'Map', NULL, ''),
+(5, 151, 152, 1, 'Новости', 0, '', 'News', 'Index', NULL, ''),
+(6, 153, 162, 1, 'Информация', 0, '', NULL, NULL, NULL, ''),
+(7, 154, 155, 2, 'О проекте', 0, '', 'Site', 'page', 'about', 'CViewAction'),
+(8, 156, 157, 2, 'Статистика', 0, '', 'Statics', 'Index', '', ''),
+(9, 158, 159, 2, 'Нормативы', 0, '', 'Site', 'page', 'regulations', 'CViewAction'),
+(10, 160, 161, 2, 'Справочники', 0, '', 'Sprav', 'Index', '', ''),
+(11, 163, 166, 1, 'Поддержка', 0, '', NULL, NULL, NULL, ''),
+(12, 167, 174, 1, 'Чем помочь?', 0, '', NULL, NULL, NULL, ''),
+(13, 168, 169, 2, 'Деньги', 0, '', 'Site', 'page', 'donations', 'CViewAction'),
+(14, 170, 173, 2, 'Разработка', 0, '', NULL, NULL, NULL, ''),
+(15, 171, 172, 3, 'API', 1, 'http://rosyama.ru/api/', '', '', '', ''),
+(18, 164, 165, 2, 'FAQ', 0, '', 'Site', 'page', 'faq', 'CViewAction');
