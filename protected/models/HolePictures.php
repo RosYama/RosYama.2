@@ -42,6 +42,22 @@ class HolePictures extends CActiveRecord
 		return '/upload/st1234/'.$this->hole->bigFolder.'/small/'.$this->hole_id.'/'.$this->filename;
 	}
 	
+	public function getBinary($size='original')
+	{
+		$img_src = $_SERVER['DOCUMENT_ROOT'].$this->$size;
+
+		$imgbinary = fread(fopen($img_src, "r"), 
+		
+		filesize($img_src));
+		
+		return base64_encode($imgbinary); 
+	}
+	
+	public function getMime($size='original')
+	{
+		return CFileHelper::getMimeType($_SERVER['DOCUMENT_ROOT'].$this->$size);
+	}
+	
 	public function getLastOrder() 
 		{
         $criteria = new CDbCriteria();

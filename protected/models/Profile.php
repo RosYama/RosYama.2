@@ -43,6 +43,7 @@ class Profile extends CActiveRecord
 		return array(
 			array('ug_id', 'length', 'max'=>20),
 			array('birthday, request_signature', 'length', 'max'=>120),
+			array('request_phone', 'length', 'max'=>62),
 			array('site, avatar, request_from, request_address', 'length', 'max'=>255),
 			array('aboutme', 'length'),
 			array('show_archive_holes, send_achtung_notifications, use_multi_upload', 'numerical', 'integerOnly'=>true),
@@ -119,6 +120,7 @@ class Profile extends CActiveRecord
 			'request_from'=>'Фамилия, имя и отчество в родительном падеже (для подстановки в заявления)',
 			'request_signature'=>'Подпись (фамилия в именительном падеже и инициалы)',
 			'request_address'=>'Почтовый адрес для подстановки в заявления',
+			'request_phone'=>'Телефон для подстановки в заявления',
 			'send_achtung_notifications'=>'Присылать напоминания о просроченных запросах в ГИБДД',
 			'show_archive_holes'=>'Показывать архивные ямы в "Моих ямах" и на "Моем участке"',
 			'use_multi_upload'=>'Включить загрузку нескольких картинок одновременно'

@@ -31,8 +31,16 @@ $this->widget('application.extensions.fancybox.EFancyBox', array(
    'onclick'=>'$("#abuseDialog").dialog("open"); return false;',
 )); ?></span>
 			</p>
+			<div <?php if ($hole->isMoscow && !$this->user->isGuest) echo 'style="width:332px; float:left;"' ?>>
 			<p class="type type_<?= $hole->type->alias ?>"><?= $hole->type->name; ?><?php if ($hole->archive) echo ' (в архиве)';?></p>
 			<p class="address"><?= CHtml::encode($hole->ADDRESS) ?></p>
+			</div>
+			<?php if ($hole->isMoscow && !$this->user->isGuest) : ?>
+			<div class="dorogimos_button" onclick='$("#dorogimosDialog").dialog("open"); return false;'>
+				Отправить заявление <br /> в мэрию Москвы
+			</div>
+			<?php endif;?>
+			<div class="clear"></div>
 			<p class="status">
 				<span class="bull <?= $hole->STATE ?>">&bull;</span>
 				<span class="state">
@@ -574,6 +582,8 @@ new Ya.share({
 		<?php  $this->widget('comments.widgets.ECommentsListWidget', array(
 				'model' => $hole,
 			));  ?>
+			
+		<?php if ($hole->isMoscow && !$this->user->isGuest) $this->renderPartial('_form_dorogimos', Array('model'=>$dorogiMosModel, 'hole'=>$hole, 'user'=>$this->user->userModel));  ?>	
 			
 			<?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
 				'id'=>'abuseDialog',

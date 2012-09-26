@@ -186,6 +186,12 @@ class Holes extends CActiveRecord
 		foreach (Yii::app()->user->getState('selectedHoles', Array()) as $id) 
 			if ($id==$this->ID) return true;
 		return false;	
+	}
+	
+	public function getIsMoscow()	
+	{	
+		if ($this->STATE != 'fixed' && $this->type->dorogimos_id && $this->subject && $this->subject->region_num==77) return true;
+		else return false;
 	}	
 	
 	public function getFixByUser($id)	

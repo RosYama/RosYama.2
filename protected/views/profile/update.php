@@ -122,6 +122,13 @@
 		</td>
 		</tr>
 		<tr>
+		<td colspan="3">
+		<?php echo $form->labelEx($miscModel->relProfile,'request_phone'); ?>
+		<?php echo $form->textField($miscModel->relProfile,'request_phone',array('maxlength'=>63,'class'=>'textInput')); ?>
+		<?php echo $form->error($miscModel->relProfile,'request_phone'); ?>  
+		</td>
+		</tr>
+		<tr>
 		<td colspan="3">		
 		<div class="chekboxes">
 			<?php echo $form->checkBox($miscModel->relProfile,'use_multi_upload',Array('class'=>'filter_checkbox')); ?>	
