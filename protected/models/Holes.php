@@ -304,6 +304,9 @@ class Holes extends CActiveRecord
 		if (!is_dir($_SERVER['DOCUMENT_ROOT'].'/upload')) mkdir($_SERVER['DOCUMENT_ROOT'].'/upload');
 		if (!is_dir($_SERVER['DOCUMENT_ROOT'].'/upload/st1234')) mkdir($_SERVER['DOCUMENT_ROOT'].'/upload/st1234');
 		if (!is_dir($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/'.$this->bigFolder)) mkdir($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/'.$this->bigFolder);
+		if (!is_dir($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/'.$this->bigFolder.'/original')) mkdir($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/'.$this->bigFolder.'/original');
+		if (!is_dir($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/'.$this->bigFolder.'/medium')) mkdir($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/'.$this->bigFolder.'/medium');
+		if (!is_dir($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/'.$this->bigFolder.'/small')) mkdir($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/'.$this->bigFolder.'/small');
 		
 		if (!is_dir($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/'.$this->bigFolder.'/original/'.$id)){
 			if(!mkdir($_SERVER['DOCUMENT_ROOT'].'/upload/st1234/'.$this->bigFolder.'/original/'.$id))
