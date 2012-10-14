@@ -27,7 +27,7 @@ $this->widget('application.extensions.fancybox.EFancyBox', array(
 	<div class="h">
 		<div class="info">
 			<p><span class="date"><?php echo CHtml::encode(Y::dateFromTime($hole->DATE_CREATED)); ?></span><?php echo CHtml::link(CHtml::encode($hole->user->getParam('showFullname') ? $hole->user->Fullname : $hole->user->username), array('/profile/view', 'id'=>$hole->user->id),array('class'=>""));?>
-			<span class="abuse_lnk" style="float:right;"><?php echo CHtml::link('Пожаловаться модератору сайта на эту яму', '#', array(
+			<span class="abuse_lnk" style="float:right;"><?php echo CHtml::link('Пожаловаться модератору', '#', array(
    'onclick'=>'$("#abuseDialog").dialog("open"); return false;',
 )); ?></span>
 			</p>
