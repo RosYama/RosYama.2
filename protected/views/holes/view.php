@@ -468,9 +468,13 @@ new Ya.share({
 			map.addOverlay(placemark);
 		</script>
 		
+				
+
+		
 		<div class="comment">
 			<?= $hole['COMMENT1'] ?>
 		</div>
+		
 		<div class="bbcode">
 			<p><b>Ссылка на эту страницу:</b></p>
 			<input onfocus="selectAll(this)" type="text" value='<a href="<?=Yii::app()->request->hostInfo?>/<?=Yii::app()->request->pathInfo?>">РосЯма :: <?= CHtml::encode($hole->ADDRESS) ?></a>'/>
@@ -480,6 +484,7 @@ new Ya.share({
 			
 			
 		</div>
+		
 </div>
 <div class="rCol">
 	<div class="b">
@@ -516,69 +521,97 @@ new Ya.share({
 					Array('class'=>'holes_pict','rel'=>'hole', 'title'=>CHtml::encode($hole->ADDRESS))); ?>
 			<? endforeach; ?>
 		</div>
+	</div>
+</div>	
+<div class="clear"></div>
+
 		<?php foreach($hole->requests_gibdd as $request): ?>
 			<?php if($request->answers): ?>
 				<?php foreach($request->answers as $answer) : ?>		
-				<div class="after">
-					<?php if($answer->comment): ?>
-					<div class="comment">
-						<?php echo $answer->comment ?>
-					</div>
-					<? endif; ?>
-					<h2><?= Yii::t('holes_view', 'HOLE_GIBDDREPLY') ?> пользователю <?php echo $request->user->fullname;?>, от <?php echo date('d.m.Y',$answer->date);?>
-					<?php if ($request->user_id==Yii::app()->user->id) : ?>
-							<?php echo CHtml::link(CHtml::image('/images/update.png', 'Редактировать', Array('title'=>'Редактировать')), Array('gibddreply','id'=>$hole->ID,'answer'=>$answer->id), Array('class'=>'declarationBtn')); ?><br />
-					<?php endif; ?>	
-					</h2>				
-					<?php if ($answer->files_other) : ?>
-					<? foreach($answer->files_other as $file): ?>					
-						<div class="answer_file <?php echo $file->divClass; ?>">
-						<?php if ($request->user_id==Yii::app()->user->id) : ?>
-							<?php echo CHtml::link(CHtml::image('/images/delete.png', 'Удалить файл', Array('title'=>'Удалить файл')), Array('delanswerfile','id'=>$file->id), Array('class'=>'delfileBtn')); ?>
-						<?php endif; ?>											
-						<?php echo CHtml::link(CHtml::image('/images/icon_'.$file->divClass.'.png', $file->file_name, Array('title'=>$file->file_name)), $answer->filesFolder.'/'.$file->file_name, Array('class'=>'declarationBtn')); ?>
+				<div class="lCol">
+					<div class="b">
+						<?php if($answer->comment): ?>
+						<div class="comment">
+							<?php echo $answer->comment ?>
 						</div>
-					<? endforeach; ?>	
-					<div class="clear"></div>
-					<br />
-					<?php endif; ?>
-					
-					<? foreach($answer->files_img as $img): ?>
-					<p>
+						<? endif; ?>
+					</div>
+				</div>	
+				<div class="rCol">
+					<div class="b">
+						<div class="after">
+						<h2><?= Yii::t('holes_view', 'HOLE_GIBDDREPLY') ?> пользователю <?php echo $request->user->fullname;?>, от <?php echo date('d.m.Y',$answer->date);?>
 						<?php if ($request->user_id==Yii::app()->user->id) : ?>
-							<?php echo CHtml::link(CHtml::image('/images/delete.png', 'Удалить это изображение', Array('title'=>'Удалить это изображение')), Array('delanswerfile','id'=>$img->id), Array('class'=>'declarationBtn delpicture')); ?><br />
+								<?php echo CHtml::link(CHtml::image('/images/update.png', 'Редактировать', Array('title'=>'Редактировать')), Array('gibddreply','id'=>$hole->ID,'answer'=>$answer->id), Array('class'=>'declarationBtn')); ?><br />
+						<?php endif; ?>	
+						</h2>				
+						<?php if ($answer->files_other) : ?>
+						<? foreach($answer->files_other as $file): ?>					
+							<div class="answer_file <?php echo $file->divClass; ?>">
+							<?php if ($request->user_id==Yii::app()->user->id) : ?>
+								<?php echo CHtml::link(CHtml::image('/images/delete.png', 'Удалить файл', Array('title'=>'Удалить файл')), Array('delanswerfile','id'=>$file->id), Array('class'=>'delfileBtn')); ?>
+							<?php endif; ?>											
+							<?php echo CHtml::link(CHtml::image('/images/icon_'.$file->divClass.'.png', $file->file_name, Array('title'=>$file->file_name)), $answer->filesFolder.'/'.$file->file_name, Array('class'=>'declarationBtn')); ?>
+							</div>
+						<? endforeach; ?>	
+						<div class="clear"></div>
+						<br />
 						<?php endif; ?>
-						<?php echo CHtml::link(CHtml::image($answer->filesFolder.'/thumbs/'.$img->file_name), $answer->filesFolder.'/'.$img->file_name, 
-							Array('class'=>'holes_pict','rel'=>'answer_'.$answer->id, 'title'=>'Ответ ГИБДД от '.date('d.m.Y',$answer->date))); ?>
-					</p>		
-					<? endforeach; ?>
-				
+						
+						<? foreach($answer->files_img as $img): ?>
+						<p>
+							<?php if ($request->user_id==Yii::app()->user->id) : ?>
+								<?php echo CHtml::link(CHtml::image('/images/delete.png', 'Удалить это изображение', Array('title'=>'Удалить это изображение')), Array('delanswerfile','id'=>$img->id), Array('class'=>'declarationBtn delpicture')); ?><br />
+							<?php endif; ?>
+							<?php echo CHtml::link(CHtml::image($answer->filesFolder.'/thumbs/'.$img->file_name), $answer->filesFolder.'/'.$img->file_name, 
+								Array('class'=>'holes_pict','rel'=>'answer_'.$answer->id, 'title'=>'Ответ ГИБДД от '.date('d.m.Y',$answer->date))); ?>
+						</p>		
+						<? endforeach; ?>					
+						</div>
 				</div>
-				<?php endforeach; ?>	
+			</div>	
+			<div class="clear"></div>
+			<?php endforeach; ?>	
 			<?php endif; ?>
 		<?php endforeach; ?>
+		
 		<?php if($hole['STATE'] == 'fixed'): ?>
-			<div class="after">
-				<? if($hole->pictures_fixed): ?>
-					<h2><?= Yii::t('holes_view', 'HOLE_ITBECAME') ?></h2>
-					<? foreach($hole->pictures_fixed as $i=>$picture): ?>
-					
-					<?php if ($picture->user_id==Yii::app()->user->id || Yii::app()->user->level > 80 || $hole->IsUserHole) : ?>
-							<?php echo CHtml::link(CHtml::image('/images/delete.png', 'Удалить это изображение', Array('title'=>'Удалить это изображение')), Array('delpicture','id'=>$picture->id), Array('class'=>'declarationBtn delpicture')); ?></br>
-					<?php endif; ?>
-					
-						<?php echo CHtml::link(CHtml::image($picture->medium), $picture->original, 
-					Array('class'=>'holes_pict','rel'=>'hole_fixed', 'title'=>CHtml::encode($hole->ADDRESS).' - исправлено')); ?>
-					<? endforeach; ?>
-				<? endif; ?>
-				<? if($hole['COMMENT2']): ?>
-					<div class="comment">
-						<?= $hole['COMMENT2'] ?>
-					</div>
-				<? endif; ?>
+		<div class="lCol">
+			<div class="b">
+			<? if($hole['COMMENT2']): ?>
+				<div class="comment">
+					<?= $hole['COMMENT2'] ?>
+				</div>
+			<? endif; ?>
 			</div>
+		</div>					
+		<div class="rCol">
+					<div class="b">
+				<div class="after">
+					<? if($hole->pictures_fixed): ?>
+						<h2><?= Yii::t('holes_view', 'HOLE_ITBECAME') ?></h2>
+						<? foreach($hole->pictures_fixed as $i=>$picture): ?>
+						
+						<?php if ($picture->user_id==Yii::app()->user->id || Yii::app()->user->level > 80 || $hole->IsUserHole) : ?>
+								<?php echo CHtml::link(CHtml::image('/images/delete.png', 'Удалить это изображение', Array('title'=>'Удалить это изображение')), Array('delpicture','id'=>$picture->id), Array('class'=>'declarationBtn delpicture')); ?></br>
+						<?php endif; ?>
+						
+							<?php echo CHtml::link(CHtml::image($picture->medium), $picture->original, 
+						Array('class'=>'holes_pict','rel'=>'hole_fixed', 'title'=>CHtml::encode($hole->ADDRESS).' - исправлено')); ?>
+						<? endforeach; ?>
+					<? endif; ?>
+				</div>
 		<? endif; ?>
+			</div>
+		</div>			
 		<br/>
+		<div class="lCol">
+			<div class="b">
+
+			</div>
+		</div>					
+		<div class="rCol">
+					<div class="b">
 		<?php  $this->widget('comments.widgets.ECommentsListWidget', array(
 				'model' => $hole,
 			));  ?>

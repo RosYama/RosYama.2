@@ -128,10 +128,10 @@ div.rCol .before {
 
 div.rCol .after {
 	border-top: 1px solid #d1d1d1;
-	left: -240px;
+	/*left: -240px;
 	padding-left: 240px;
 	position: relative;
-	width: 750px;
+	width: 750px;*/
 }
 
 div.rCol .after h2 {
@@ -256,3 +256,4 @@ div.rCol .before:after, div.rCol .after:after {
 	position:relative;
 	top:1px;
 }
+.b .comment{padding-top: 35px;}
