@@ -602,6 +602,8 @@ class XmlController extends Controller
 				'gibdd'=>Yii::app()->request->getParam('gibdd'),
 				'gibdd_reply'=>Yii::app()->request->getParam('gibddre'),
 				'application_data'=>$model->request_gibdd ? date('d.m.Y',$model->request_gibdd->date_sent) : '',
+				'html'=>Yii::app()->request->getParam('html'),
+				'textonly'=>Yii::app()->request->getParam('textonly') ? Yii::app()->request->getParam('textonly') : false,
 				'pdf'=>true,
 				);
 				$this->makepdf($attribs, $model);
