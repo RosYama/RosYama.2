@@ -17,6 +17,7 @@ class HoleRequestForm extends CFormModel
 	public $holes=Array();
 	public $printAllPictures=true;
 	public $showDescriptions=true;
+	public $textonly=false;
 
 
 	public function rules()
@@ -25,7 +26,7 @@ class HoleRequestForm extends CFormModel
 			// username and password are required
 			//array('username, password', 'required'),
 			// rememberMe needs to be a boolean
-			array('html, pdf, printAllPictures, showDescriptions', 'boolean'),
+			array('html, pdf, printAllPictures, showDescriptions, textonly', 'boolean'),
 			// password needs to be authenticated
 			array('form_type, to, from, postaddress, address, comment, signature, application_data, gibdd, gibdd_reply', 'length'),
 			array('holes', 'safe'),

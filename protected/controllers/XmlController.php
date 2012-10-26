@@ -580,6 +580,8 @@ class XmlController extends Controller
 				'address'=>Yii::app()->request->getParam('holeaddress') ? Yii::app()->request->getParam('holeaddress') : $model->ADDRESS,
 				'comment'=>Yii::app()->request->getParam('comment'),
 				'signature'=>Yii::app()->request->getParam('signature'),
+				'html'=>Yii::app()->request->getParam('html'),
+				'textonly'=>Yii::app()->request->getParam('textonly') ? Yii::app()->request->getParam('textonly') : false,
 				'pdf'=>true,
 				);
 				$this->makepdf($attribs, $model);
@@ -600,6 +602,8 @@ class XmlController extends Controller
 				'gibdd'=>Yii::app()->request->getParam('gibdd'),
 				'gibdd_reply'=>Yii::app()->request->getParam('gibddre'),
 				'application_data'=>$model->request_gibdd ? date('d.m.Y',$model->request_gibdd->date_sent) : '',
+				'html'=>Yii::app()->request->getParam('html'),
+				'textonly'=>Yii::app()->request->getParam('textonly') ? Yii::app()->request->getParam('textonly') : false,
 				'pdf'=>true,
 				);
 				$this->makepdf($attribs, $model);
@@ -736,8 +740,7 @@ class XmlController extends Controller
 					'gibdd'       => $request->gibdd,
 					'gibdd_reply' => $request->gibdd_reply
 				);
-			
-				if($request->html)
+				if($request->html || $request->textonly)
 				{
 					foreach($model->pictures_fresh as $picture)
 					{
@@ -751,7 +754,9 @@ class XmlController extends Controller
 					(
 						$request->form_type ? $request->form_type : $model->type,
 						$_data,
-						$_images
+						$_images,
+						$request->textonly ? false : true,
+						$request->textonly
 					);
 				}
 				else

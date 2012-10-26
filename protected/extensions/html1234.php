@@ -10,7 +10,7 @@ class html1234 extends pdf1234
 	public function __construct() { }
 	
 	// получение HTML
-	public function gethtml($temp, $params, $image = null, $printAllPictures=true){
+	public function gethtml($temp, $params, $image = null, $printAllPictures=true, $textonly=false){
 		$this->params = pdf1234::regexp($params);
 		if(is_object($temp) || method_exists(__CLASS__,'text_'.$temp))
 		{
@@ -18,14 +18,16 @@ class html1234 extends pdf1234
 		}
 		elseif (count ($this->models) < 2) return false;
 		$this->note = count($image);
-		$this->template();
+		$this->template($textonly);
 		if(is_array($image) && $this->temp != 'prosecutor' && $this->temp != 'prosecutor2')
 		{
+			if ($textonly) echo "Ссылки на фотографии:\n";
 			foreach($image as $im_path)
 			{
 				if(!empty($im_path))
 				{
-					echo '<p><img src="'.$im_path.'"></p>';
+					if (!$textonly) echo '<p><img src="'.$im_path.'"></p>';
+					else echo $im_path."\n";
 				}
 			}
 		}
@@ -33,19 +35,20 @@ class html1234 extends pdf1234
 		// Обработка и вывод картинок на многоям
 		if ($this->models && $printAllPictures)
 			foreach($this->models as $model){
-				echo '<h3>'.$model->ADDRESS.'</h3>';
+				echo $textonly ? $model->ADDRESS."\n" : '<h3>'.$model->ADDRESS.'</h3>';
 				foreach($model->pictures_fresh as $picture)
 					{
-						echo '<p><img src="'.$picture->original.'"></p>'; 
+						if (!$textonly) echo '<p><img src="'.$picture->original.'"></p>'; 
+						else echo $picture->original."\n";
 					}
 			}
 		
-		$this->getsignature();
-		echo '</body></html>';
+		$this->getsignature($textonly);
+		if (!$textonly) echo '</body></html>';
 	}
 	
 	// собственно шаблон
-	protected function template()
+	protected function template($textonly=false)
 	{
 		if (count ($this->models) < 2){
 			if (!is_object($this->temp)) $arResult = call_user_func(array(__CLASS__, 'text_'.$this->temp));
@@ -56,6 +59,7 @@ class html1234 extends pdf1234
 		$header = $this->header();
 		$footer = $this->footer();
 		$name   = $this->name();
+		if (!$textonly) {
 		ob_start();
 		{
 ?><!DOCTYPE html>
@@ -89,12 +93,23 @@ class html1234 extends pdf1234
 		}
 		$buf = ob_get_clean();
 		echo $buf;
+		}
+		else {
+			 foreach($header as $h)
+				echo $h."\n";
+			echo $name."\n";	
+			echo $arResult['body0']."\n";
+			if(!isset($arResult['holes'])) echo $arResult['body1']."\n"; 
+			else foreach ($arResult['holes'] as $str) 
+				echo $str."\n";
+
+		}
 	}
 	
 	// добавление подписи
-	protected function getsignature()
+	protected function getsignature($textonly=false)
 	{
-		echo '<p>'.'<p>';
+		if (!$textonly) echo '<p>'.'<p>';
 		if($this->temp == 'prosecutor' || $this->temp == 'prosecutor2')
 		{
 			$date = date('d.m.Y');
@@ -103,7 +118,8 @@ class html1234 extends pdf1234
 		{
 			$date = $this->params['date2.day'].'.'.$this->params['date2.month'].'.'.$this->params['date2.year'];
 		}
-		echo '<div style="float: right;">'.$this->params['signature'].'</div><p>'.$this->signature().'</p>'.$date;
+		if (!$textonly) echo '<div style="float: right;">'.$this->params['signature'].'</div><p>'.$this->signature().'</p>'.$date;
+		else echo $this->params['signature']."\n".$this->signature()."\n".$date; 
 	}
 }
 
