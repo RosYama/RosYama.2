@@ -118,9 +118,10 @@ class Holes extends CActiveRecord
 			'pictures_fixed_not_moderated'=>array(self::HAS_MANY, 'HolePictures', 'hole_id', 'condition'=>'pictures_fixed_not_moderated.type="fixed" AND pictures_fixed_not_moderated.premoderated=0','order'=>'pictures_fixed_not_moderated.ordering'),
 			'request_gibdd'=>array(self::HAS_ONE, 'HoleRequests', 'hole_id', 'condition'=>'request_gibdd.type="gibdd" AND request_gibdd.user_id='.Yii::app()->user->id),
 			'request_prosecutor'=>array(self::HAS_ONE, 'HoleRequests', 'hole_id', 'condition'=>'request_prosecutor.type="prosecutor" AND user_id='.Yii::app()->user->id),
-			'requests_gibdd'=>array(self::HAS_MANY, 'HoleRequests', 'hole_id', 'condition'=>'requests_gibdd.type="gibdd"','order'=>'requests_gibdd.date_sent DESC'),
+			'requests_gibdd'=>array(self::HAS_MANY, 'HoleRequests', 'hole_id', 'condition'=>'requests_gibdd.type="gibdd"','order'=>'requests_gibdd.date_sent ASC'),
 			'requests_prosecutor'=>array(self::HAS_MANY, 'HoleRequests', 'hole_id', 'condition'=>'requests_prosecutor.type="prosecutor"','order'=>'date_sent ASC'),
 			'requests_with_answer_comment'=>array(self::HAS_MANY, 'HoleRequests', 'hole_id', 'with'=>'answers','condition'=>'answers.comment !=""','order'=>'requests_with_answer_comment.date_sent DESC'),
+			'requests_answers'=>array(self::HAS_MANY, 'HoleRequests', 'hole_id', 'condition'=>'requests_gibdd.type="gibdd"','order'=>'requests_gibdd.date_sent DESC'),
 			'fixeds'=>array(self::HAS_MANY, 'HoleFixeds', 'hole_id','order'=>'fixeds.date_fix ASC'),
 			'user_fix'=>array(self::HAS_ONE, 'HoleFixeds', 'hole_id', 'condition'=>'user_fix.user_id='.Yii::app()->user->id),
 			'type'=>array(self::BELONGS_TO, 'HoleTypes', 'TYPE_ID'),
@@ -175,6 +176,11 @@ class Holes extends CActiveRecord
 	$arr['prosecutor'] = 'Жалоба в прокуратуре';
 	return $arr;
 	}	
+	
+	public function getAllAnswers()	
+	{
+		return HoleAnswers::model()->with('request')->findAll(Array('condition'=>'request.hole_id='.$this->ID.' AND request.id=t.request_id', 'order'=>'t.date ASC'));
+	}
 	
 	public function getStateName()	
 	{	

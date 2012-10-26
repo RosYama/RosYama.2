@@ -525,9 +525,7 @@ new Ya.share({
 </div>	
 <div class="clear"></div>
 
-		<?php foreach($hole->requests_gibdd as $request): ?>
-			<?php if($request->answers): ?>
-				<?php foreach($request->answers as $answer) : ?>		
+				<?php foreach($hole->allAnswers as $answer) : ?>		
 				<div class="lCol">
 					<div class="b">
 						<?php if($answer->comment): ?>
@@ -540,15 +538,15 @@ new Ya.share({
 				<div class="rCol">
 					<div class="b">
 						<div class="after">
-						<h2><?= Yii::t('holes_view', 'HOLE_GIBDDREPLY') ?> пользователю <?php echo $request->user->fullname;?>, от <?php echo date('d.m.Y',$answer->date);?>
-						<?php if ($request->user_id==Yii::app()->user->id) : ?>
+						<h2><?= Yii::t('holes_view', 'HOLE_GIBDDREPLY') ?> пользователю <?php echo $answer->request->user->fullname;?>, от <?php echo date('d.m.Y',$answer->date);?>
+						<?php if ($answer->request->user_id==Yii::app()->user->id) : ?>
 								<?php echo CHtml::link(CHtml::image('/images/update.png', 'Редактировать', Array('title'=>'Редактировать')), Array('gibddreply','id'=>$hole->ID,'answer'=>$answer->id), Array('class'=>'declarationBtn')); ?><br />
 						<?php endif; ?>	
 						</h2>				
 						<?php if ($answer->files_other) : ?>
 						<? foreach($answer->files_other as $file): ?>					
 							<div class="answer_file <?php echo $file->divClass; ?>">
-							<?php if ($request->user_id==Yii::app()->user->id) : ?>
+							<?php if ($answer->request->user_id==Yii::app()->user->id) : ?>
 								<?php echo CHtml::link(CHtml::image('/images/delete.png', 'Удалить файл', Array('title'=>'Удалить файл')), Array('delanswerfile','id'=>$file->id), Array('class'=>'delfileBtn')); ?>
 							<?php endif; ?>											
 							<?php echo CHtml::link(CHtml::image('/images/icon_'.$file->divClass.'.png', $file->file_name, Array('title'=>$file->file_name)), $answer->filesFolder.'/'.$file->file_name, Array('class'=>'declarationBtn')); ?>
@@ -560,7 +558,7 @@ new Ya.share({
 						
 						<? foreach($answer->files_img as $img): ?>
 						<p>
-							<?php if ($request->user_id==Yii::app()->user->id) : ?>
+							<?php if ($answer->request->user_id==Yii::app()->user->id) : ?>
 								<?php echo CHtml::link(CHtml::image('/images/delete.png', 'Удалить это изображение', Array('title'=>'Удалить это изображение')), Array('delanswerfile','id'=>$img->id), Array('class'=>'declarationBtn delpicture')); ?><br />
 							<?php endif; ?>
 							<?php echo CHtml::link(CHtml::image($answer->filesFolder.'/thumbs/'.$img->file_name), $answer->filesFolder.'/'.$img->file_name, 
@@ -572,8 +570,6 @@ new Ya.share({
 			</div>	
 			<div class="clear"></div>
 			<?php endforeach; ?>	
-			<?php endif; ?>
-		<?php endforeach; ?>
 		
 		<?php if($hole['STATE'] == 'fixed'): ?>
 		<div class="lCol">
