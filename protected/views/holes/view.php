@@ -458,6 +458,7 @@ new Ya.share({
 			YMaps.Events.observe(map, map.Events.DblClick, function () { toggleMap(); } );
 			map.enableScrollZoom();
 			map.setCenter(new YMaps.GeoPoint(map_centerx, map_centery), 14);
+			map.addControl(new YMaps.SmallZoom());
 			var s = new YMaps.Style();
 			s.iconStyle = new YMaps.IconStyle();
 			s.iconStyle.href = "/images/st1234/<?= $hole->type->alias;?>_<?= $hole['STATE'] ?>.png";
