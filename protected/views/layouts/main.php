@@ -36,6 +36,7 @@
 		<div class="container">
 			 <?php $this->widget('application.widgets.topmenu.topmenuWidget');?>			 
 			
+			<!-- 
 			<div class="search">
 				<form action="/map">
 			<input type="image" name="s" src="/images/search_btn.gif" class="btn" /><input type="text" class="textInput inactive" name="q"  value="Поиск по адресу" />
@@ -74,7 +75,7 @@
 			})
 	</script>
 	</form>
-			</div>
+			</div> -->
 			<div class="auth">
 			<?php if(!$this->user->isGuest) : ?>
 					<?php echo CHtml::link('<img src="/images/logout.png" alt="Выйти" />',Array('/site/logout'),Array('title'=>'Выйти')); ?>
