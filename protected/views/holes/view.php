@@ -601,10 +601,10 @@ new Ya.share({
 						<? endforeach; ?>
 					<? endif; ?>
 				</div>
-		<? endif; ?>
 			</div>
-		</div>			
-		<br/>
+		</div>	
+		<? endif; ?>		
+		
 		<div class="lCol">
 			<div class="b">
 
