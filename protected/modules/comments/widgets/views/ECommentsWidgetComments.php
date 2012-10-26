@@ -13,11 +13,11 @@
                     <?php echo Yii::app()->dateFormatter->formatDateTime($comment->create_time);?>
                      
                     <span class="admin-panel">
-                    <?php if($this->adminMode === true):?>
+                    <?php /* if($this->adminMode === true):?>
                         <?php if($comment->status === null || $comment->status == Comment::STATUS_NOT_APPROWED) echo CHtml::link(Yii::t('CommentsModule.msg', 'approve'), Yii::app()->urlManager->createUrl(
                             CommentsModule::APPROVE_ACTION_ROUTE, array('id'=>$comment->comment_id)
                         ), array('class'=>'approve'));?>
-                    <?php endif; ?>    
+                    <?php endif;*/ ?>    
                         <?php if (Yii::app()->user->id == $comment->user->id || Yii::app()->user->level > 80 || $this->model->IsUserHole) echo CHtml::link(Yii::t('CommentsModule.msg', 'delete'), Yii::app()->urlManager->createUrl(
                             CommentsModule::DELETE_ACTION_ROUTE, array('id'=>$comment->comment_id)
                         ), array('class'=>'delete'));?>
