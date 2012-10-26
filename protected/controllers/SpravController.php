@@ -244,7 +244,7 @@ class SpravController extends Controller
 		{			
 			$model=GibddHeadsBuffer::model()->find('subject_id='.(int)$r['subject_id'].' AND is_regional=1');
 			//if (!$model) $model=new GibddHeads;
-			
+			$r['level']=1;
 			if ($model){
 				foreach ($r as $key=>$val){
 					unset ($r['href']);
@@ -258,6 +258,7 @@ class SpravController extends Controller
 					if ($curmodel){
 						$model->scenario='fill';
 						$model->attributes=$r;	
+						$model->level=1;
 						$model->modified=time();
 						if ($model->update()){
 							$curmodel->scenario='fill';
