@@ -84,11 +84,10 @@ class html1234 extends pdf1234
 			<?php } ?>
 		</p>
 		<p><?= $arResult['footerUP0'] ?></p>
-		<ol>
-			<? foreach($arResult['count'] as $c): ?>
-				<li><?= $c ?></li>
+			<? foreach($arResult['count'] as $i=>$c): ?>
+				<p style="padding-left:20px;"><?php echo $i; ?>.&nbsp;<?= $c ?></p>
 			<? endforeach; ?>
-		</ol>
+
 		<p><?= $footer[0] ?></p><?
 		}
 		$buf = ob_get_clean();
