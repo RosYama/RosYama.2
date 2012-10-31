@@ -23,8 +23,8 @@ $this->pageTitle=Yii::app()->name . ' :: Печатная агитация дл�
 </tr>
 <tr>
 	<td>15x20</td>
-	<td><a href=""><img src=""></a></td>	
-	<td><a href=""><img src=""></a></td>
+	<td><a href="/files/rosyama15x20_black.png"><img src="/files/rosyama15x20_black-small.png"></a></td>	
+	<td><a href="/files/rosyama15x20_white.png"><img src="/files/rosyama15x20_white-small.png"></a></td>
 </tr>
 <tr>
 	<td>25x40</td>
