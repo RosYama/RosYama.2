@@ -18,34 +18,35 @@ $this->pageTitle=Yii::app()->name . ' :: Печатная агитация дл�
 <table>
 <tr>
 	<td></td>
+	<td><b>Чёрный текст</b></td>
+	<td><b>Белый текст</b></td>
 </tr>
 <tr>
-	<td></td>
+	<td>15x20</td>
+	<td><a href=""><img src=""></a></td>	
+	<td><a href=""><img src=""></a></td>
 </tr>
 <tr>
-	<td></td>
+	<td>25x40</td>
+	<td><a href=""><img src=""></a></td>	
+	<td><a href=""><img src=""></a></td>
 </tr>
 <tr>
-	<td></td>
+	<td>75x27</td>
+	<td><a href=""><img src=""></a></td>	
+	<td><a href=""><img src=""></a></td>
 </tr>
 <tr>
-	<td></td>
+	<td>85x30</td>
+	<td><a href=""><img src=""></a></td>	
+	<td><a href=""><img src=""></a></td>
 </tr>
 <tr>
-	<td></td>
+	<td>90x32</td>
+	<td><a href=""><img src=""></a></td>	
+	<td><a href=""><img src=""></a></td>
 </tr>
-<tr>
-	<td></td>
-</tr>
-<tr>
-	<td></td>
-</tr>
-<tr>
-	<td></td>
-</tr>
-<tr>
-	<td></td>
-</tr>
+
 </table>
 
 <h3>Логотип в формате cdr</h3>
