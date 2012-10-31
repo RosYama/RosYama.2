@@ -3,7 +3,7 @@ $this->pageTitle=Yii::app()->name . ' :: Печатная агитация дл�
 ?>
 
 <h1>Вы можете помочь проекту, распространяя печатные материалы</h1>
-
+<p>
 <h2>Листовки</h2>
 <table>
 <tr>
@@ -12,9 +12,10 @@ $this->pageTitle=Yii::app()->name . ' :: Печатная агитация дл�
 	<td><a href="/files/rosyama-4pict.jpeg"><img src="/files/rosyama-4pict-small.jpeg"></a></td>
 </tr>
 </table>
+</p>
 
+<p>
 <h2>Наклейки</h2>
-
 <table>
 <tr>
 	<td></td>
@@ -46,13 +47,14 @@ $this->pageTitle=Yii::app()->name . ' :: Печатная агитация дл�
 	<td><a href="/files/rosyama90x32_black.png"><img src="/files/rosyama90x32_black-small.png"></a></td>	
 	<td><a href="/files/rosyama90x32_white.png"><img src="/files/rosyama90x32_white-small.png"></a></td>
 </tr>
-
 </table>
+</p>
 
+<p>
 <h2>Логотип в формате cdr</h2>
 <table>
 <tr>
 	<td><a href="/files/logo.cdr"><img src="/files/logo-small.png"></a></td>
 </tr>
 </table>
-
+</p>
