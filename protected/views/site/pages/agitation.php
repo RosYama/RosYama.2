@@ -67,9 +67,9 @@ $this->pageTitle=Yii::app()->name . ' :: Печатная агитация дл�
 
 <h3>Логотип</h3>
 <table>
-<tr>
-	<td><a href="/files/logo.cdr">Логотип</a></td>
-	<td><img src="/files/logo-small.png"></td>
+<tr><a href="/files/logo.cdr">
+	<td>Логотип в формате cdr</td>
+	<td><img src="/files/logo-small.png"></td></a>
 </tr>
 </table>
 
