@@ -30,9 +30,9 @@ $this->layout='//layouts/header_default_without_add';
 Банк получателя ОАО «Альфа- Банк», г. Москва<br>
 БИК 044525593<br>
 К/с 30101810200000000593<br>
-Наименование получателя: Езеев Федор Андреевич<br>
-№ счета получателя: 40817810606050014327<br>
-Назначение платежа: Дарение.
+Наименование получателя: НО "Фонд борьбы с коррупцией"<br>
+№ счета получателя: 40703810102710000001<br>
+Назначение платежа: Пожертвование на реализацию проекта "РосЯма". НДС не облагается.
 </p>
 
 <hr />
@@ -52,5 +52,6 @@ $this->layout='//layouts/header_default_without_add';
 <li>Финансовый отчёт за январь-май 2012 года: <a href="http://fezeev.livejournal.com/61845.html">http://fezeev.livejournal.com/61845.html</a>
 <li>Финансовый отчёт за июнь 2012 года: <a href="http://fezeev.livejournal.com/63802.html">http://fezeev.livejournal.com/63802.html</a>
 <li>Финансовый отчёт за июль 2012 года: <a href="http://fezeev.livejournal.com/64709.html">http://fezeev.livejournal.com/64709.html</a>
+<li>Финансовый отчёт за август 2012 года: <a href="http://fezeev.livejournal.com/65617.html">http://fezeev.livejournal.com/65617.html</a>
 </ul>
 </div>
