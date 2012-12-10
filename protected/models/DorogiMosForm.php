@@ -14,6 +14,8 @@ class DorogiMosForm extends CFormModel
 	public $holeAddress;
 	public $category;
 	public $details;
+	
+	public $todayCount=0;
 
 	/**
 	 * Declares the validation rules.
@@ -23,7 +25,9 @@ class DorogiMosForm extends CFormModel
 		return array(
 			array('name, surname, email, holeAddress, details', 'required'),
 			array('phoneNumber, address, fatherName, address', 'length', 'max'=>255),
+			array('details', 'length', 'max'=>690),
 			array('notifyViaEmail, notifyViaSms', 'numerical', 'integerOnly'=>true),
+			array('todayCount', 'numerical', 'integerOnly'=>true, 'max'=>20, 'tooBig'=>'Вы пытаетесь отправлять слишком много заявлений. Максимальное число заявлений в день = {max} шт.'),
 			array('email', 'email'),
 		);
 	}	
@@ -110,7 +114,14 @@ class DorogiMosForm extends CFormModel
 		}
 		//else print_r($answer); die();
 		return false;
-	}	
+	}
+	
+	public function beforeValidate(){
+		parent::beforeValidate();
+		$requests=HoleRequests::model()->count(Array('condition'=>'type="dorogimos" AND user_id='.Yii::app()->user->id.' AND date_sent >= UNIX_TIMESTAMP(DATE_SUB(CURRENT_DATE, INTERVAL 1 DAY))'));
+		$this->todayCount=$requests;
+		return true;		
+	}
 
 	/**
 	 * Declares customized attribute labels.
@@ -131,6 +142,7 @@ class DorogiMosForm extends CFormModel
 			'category'=>'Категория обращения',
 			'details'=>'Детальное описание дефекта',
 			'holeAddress'=>'Адрес дефекта',
+			'todayCount'=>'Количество отправленых заявлений за сегодня'
 		);
 	}
 }
