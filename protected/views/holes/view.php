@@ -649,6 +649,11 @@ new Ya.share({
 				'enableAjaxValidation'=>false,
 			)); 
 			?>			
+			<?php if ($abuseModel->hasErrors('user_email')) : ?>
+			<div class="errorSummary">​
+				<p><?php echo $abuseModel->getError('user_email');?></p>
+			</div>
+			<?php endif;?>
 		 	 <?php echo $form->hiddenField($abuseModel,'hole_id',array('value'=>$hole->ID)); ?>
 			<div class="row">
 				<?php echo $form->labelEx($abuseModel,'text'); ?>
