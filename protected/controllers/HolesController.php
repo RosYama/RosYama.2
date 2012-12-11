@@ -244,12 +244,12 @@ class HolesController extends Controller
 			if ($abuseModel->validate()){
 				$userModel=Yii::app()->user->userModel;
 				
-				$headers = "MIME-Version: 1.0\r\nFrom: \"Rosyama\" <".Yii::app()->params['adminEmail'].">\r\nReply-To: ".($userModel->email ? $userModel->email : Yii::app()->params['adminEmail'])."\r\nContent-Type: text/html; charset=utf-8";
+				$headers = "MIME-Version: 1.0\r\nFrom: \"".$userModel->username."\" <".($userModel->email ? $userModel->email : Yii::app()->params['adminEmail']).">\r\nReply-To: ".($userModel->email ? $userModel->email : Yii::app()->params['adminEmail'])."\r\nContent-Type: text/html; charset=utf-8";
 				$user=$model->user;
 				Yii::app()->request->baseUrl=Yii::app()->request->hostInfo;
 				$mailbody=$this->renderPartial('/ugmail/abuse2hole', Array('user'=>$userModel, 'hole'=>$model, 'abuse'=>$abuseModel),true);
 				//echo $mailbody; die();
-				mail(Yii::app()->params['adminEmail'],"=?utf-8?B?" . base64_encode('Новая жалоба на яму!') . "?=",$mailbody,$headers);
+				mail(Yii::app()->params['adminEmail'],"=?utf-8?B?" . base64_encode('RosYama::Новая жалоба на яму!') . "?=",$mailbody,$headers);
 				Yii::app()->user->setFlash('user', 'Жалоба успешно отправлена');
 				$this->refresh();
 			}
