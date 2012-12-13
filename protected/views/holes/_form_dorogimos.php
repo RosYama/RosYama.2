@@ -41,7 +41,7 @@
 			if (!$model->holeAddress) $model->holeAddress=$hole->ADDRESS;
 			if (!$model->details) $model->details=$hole->description_size.' '.$hole->description_locality.'('.$hole->COMMENT1.')';
 			?>
-			<p class="note">за сегодня отправлено <?php echo $model->todayCount; ?> из возможных <?php echo $model->maxTodayCount; ?>-ти заявлений</p>
+			<p class="note"><strong>за сегодня отправлено <?php echo $model->todaySended; ?> из возможных <?php echo $model->maxTodayCount; ?>-ти заявлений</strong></p>
 			<p class="note">Поля отмеченные <span class="required">*</span> являются обязательными.</p>
 			<?php echo $form->errorSummary($model); ?>
 			<div class="row">
