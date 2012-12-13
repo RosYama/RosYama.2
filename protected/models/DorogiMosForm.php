@@ -122,9 +122,13 @@ class DorogiMosForm extends CFormModel
 		return false;
 	}
 	
+	private $_TodaySended=-1;
+	
 	public function getTodaySended(){
-		$requests=HoleRequests::model()->count(Array('condition'=>'type="dorogimos" AND user_id='.Yii::app()->user->id.' AND date_sent >= UNIX_TIMESTAMP(DATE_SUB(CURRENT_DATE, INTERVAL 1 DAY))'));
-		return $requests;	
+		if ($this->_TodaySended < 0){
+		$this->_TodaySended=HoleRequests::model()->count(Array('condition'=>'type="dorogimos" AND user_id='.Yii::app()->user->id.' AND date_sent >= UNIX_TIMESTAMP(DATE_SUB(CURRENT_DATE, INTERVAL 1 DAY))'));		
+		}
+		return $this->_TodaySended;	
 	}
 	
 	public function beforeValidate(){

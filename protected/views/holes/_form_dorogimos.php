@@ -9,12 +9,13 @@
 					'resizable'=>false,
 					'modal'=>true,
 					'buttons'=>'js:[
+						'.($model->todaySended <= $model->maxTodayCount ? '
 						{
 							text: "Отправить",
 							click: function(){
 								$("#dorogimos-request-form").submit();
 							}
-						},
+						},' : '').'
 						{
 							text: "Закрыть",
 							click: function(){
@@ -25,7 +26,7 @@
 					]'
 				),
 			)); ?>
-			
+		<?php if ($model->todaySended <= $model->maxTodayCount) : ?>
 			<div class="wide form">
 			<?php $form=$this->beginWidget('CActiveForm', array(
 				'id'=>'dorogimos-request-form',
@@ -102,5 +103,8 @@
 				<?php echo $form->error($model,'details'); ?>
 			</div>
 			<?php $this->endWidget(); ?>	
-
+			</div>
+		<?php else : ?>		
+		<p>Порталы Мэрии Москвы принимают максимум по <?php echo $model->maxTodayCount; ?> заявлений в день от человека. <br />Приходите завтра. <br />Спасибо за понимание.</p>
+		<?php endif; ?>	
 			<?php $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
