@@ -16,6 +16,7 @@ class DorogiMosForm extends CFormModel
 	public $details;
 	
 	public $todayCount=0;
+	public $maxTodayCount=20;
 	
 	public $errortext;
 
@@ -29,7 +30,7 @@ class DorogiMosForm extends CFormModel
 			array('phoneNumber, address, fatherName, address', 'length', 'max'=>255),
 			array('details', 'length', 'max'=>690),
 			array('notifyViaEmail, notifyViaSms', 'numerical', 'integerOnly'=>true),
-			array('todayCount', 'numerical', 'integerOnly'=>true, 'max'=>20, 'tooBig'=>'Вы пытаетесь отправлять слишком много заявлений. Максимальное число заявлений в день = {max} шт.'),
+			array('todayCount', 'numerical', 'integerOnly'=>true, 'max'=>$this->maxTodayCount, 'tooBig'=>'Вы пытаетесь отправлять слишком много заявлений. Максимальное число заявлений в день = {max} шт.'),
 			array('email', 'email'),
 		);
 	}	
@@ -116,15 +117,19 @@ class DorogiMosForm extends CFormModel
 		}
 		else {
 			$this->errortext=$answer->failReason;
-			print_r($answer); die();
+			//print_r($answer); die();
 			}
 		return false;
 	}
 	
+	public function getTodaySended(){
+		$requests=HoleRequests::model()->count(Array('condition'=>'type="dorogimos" AND user_id='.Yii::app()->user->id.' AND date_sent >= UNIX_TIMESTAMP(DATE_SUB(CURRENT_DATE, INTERVAL 1 DAY))'));
+		return $requests;	
+	}
+	
 	public function beforeValidate(){
 		parent::beforeValidate();
-		$requests=HoleRequests::model()->count(Array('condition'=>'type="dorogimos" AND user_id='.Yii::app()->user->id.' AND date_sent >= UNIX_TIMESTAMP(DATE_SUB(CURRENT_DATE, INTERVAL 1 DAY))'));
-		$this->todayCount=$requests;
+		$this->todayCount=$this->todaySended;
 		return true;		
 	}
 

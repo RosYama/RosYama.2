@@ -13,6 +13,13 @@
  */
 class HoleRequests extends CActiveRecord
 {
+	
+	public $typeStrings=Array(
+		'gibdd'=>"ГИБДД",
+		'prosecutor'=>"прокуратуру",
+		'dorogimos'=>"мэрию Москвы",
+	);
+
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @return HoleRequests the static model class
@@ -28,6 +35,10 @@ class HoleRequests extends CActiveRecord
 	public function tableName()
 	{
 		return '{{hole_requests}}';
+	}
+	
+	public function getTypeString(){
+		return $this->typeStrings[$this->type];		
 	}
 
 	/**

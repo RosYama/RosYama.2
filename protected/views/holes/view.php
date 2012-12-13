@@ -62,7 +62,7 @@ $this->widget('application.extensions.fancybox.EFancyBox', array(
 							<ul>
 							<?php foreach ($hole->requests as $request) : ?>
 							<?php  if ($request->user) : ?>
-								<li><?php echo date('d.m.Y',$request->date_sent);?> <?php echo $userlink=CHtml::link(CHtml::encode($request->user->getParam('showFullname') ? $request->user->Fullname : ($request->user->name ? $request->user->name : $request->user->username)), array('/profile/view', 'id'=>$request->user->id),array('class'=>""));?>  отправил запрос в <?php echo $request->type=="gibdd" ? "ГИБДД" : "прокуратуру";?>
+								<li><?php echo date('d.m.Y',$request->date_sent);?> <?php echo $userlink=CHtml::link(CHtml::encode($request->user->getParam('showFullname') ? $request->user->Fullname : ($request->user->name ? $request->user->name : $request->user->username)), array('/profile/view', 'id'=>$request->user->id),array('class'=>""));?>  отправил запрос в <?php echo $request->typeString;?>
 								<?php if ($hole->STATE == 'fixed' && $fix=$hole->getFixByUser($request->user->id)) : ?> 
 								<br /><?php echo date('d.m.Y',$fix->date_fix);?> <?php echo $userlink; ?> отметил факт исправления дефекта
 								<?php endif; ?>
