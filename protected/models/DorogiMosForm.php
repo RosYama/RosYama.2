@@ -16,6 +16,8 @@ class DorogiMosForm extends CFormModel
 	public $details;
 	
 	public $todayCount=0;
+	
+	public $errortext;
 
 	/**
 	 * Declares the validation rules.
@@ -69,7 +71,7 @@ class DorogiMosForm extends CFormModel
 		foreach ($hole->pictures_fresh as $pict)
 			$pictures[]=Array(
 				'name'=>$pict->filename,
-				'fileType'=>$pict->mime,
+				'fileType'=>$pict->extension,
 				'content'=>$pict->binary,
 			);
 
@@ -112,7 +114,10 @@ class DorogiMosForm extends CFormModel
 			if ($holeRequest->save()) return true;
 			//else print_r($holeRequest->errors); die();
 		}
-		//else print_r($answer); die();
+		else {
+			$this->errortext=$answer->failReason;
+			print_r($answer); die();
+			}
 		return false;
 	}
 	

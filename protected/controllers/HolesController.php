@@ -263,7 +263,7 @@ class HolesController extends Controller
 				if ($dorogiMosModel->sendRequest($model, $this->user)){	
 					Yii::app()->user->setFlash('user', 'Заявление успешно отправлено');				
 				}
-				else Yii::app()->user->setFlash('user', 'Произошла ошибка. Заявление не отправлено. <br />Попробуйте отправить еще раз');
+				else Yii::app()->user->setFlash('user', 'Произошла ошибка. Заявление не отправлено. <br />'.$dorogiMosModel->errortext);
 				$this->refresh();
 			}
 		}

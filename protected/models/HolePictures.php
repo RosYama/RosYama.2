@@ -58,6 +58,11 @@ class HolePictures extends CActiveRecord
 		return CFileHelper::getMimeType($_SERVER['DOCUMENT_ROOT'].$this->$size);
 	}
 	
+	public function getExtension($size='original')
+	{
+		return CFileHelper::getExtension($_SERVER['DOCUMENT_ROOT'].$this->$size);
+	}
+	
 	public function getLastOrder() 
 		{
         $criteria = new CDbCriteria();
