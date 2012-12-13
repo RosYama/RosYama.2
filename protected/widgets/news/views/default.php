@@ -3,8 +3,7 @@
 <?php foreach ($model as $news) : ?>	
 	<div class="news-item">		
 					<p  class="date"><?php echo Y::dateFromTime($news->date); ?></p>
-			
-		
+					<h3><?php echo CHtml::link($news->title, array('news/view', 'id'=>$news->id)); ?></h3>		
 					<p><?php echo $news->introtext; ?></p>
 					<?php echo CHtml::link('>>', array('news/view', 'id'=>$news->id), array('class'=>"show")); ?>
 	</div>
