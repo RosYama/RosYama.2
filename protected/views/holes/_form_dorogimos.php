@@ -2,7 +2,7 @@
 				'id'=>'dorogimosDialog',
 				// additional javascript options for the dialog plugin
 				'options'=>array(
-					'title'=>'Отправить заявление в мэрию Москвы',
+					'title'=>'Сообщить через портал dorogi.mos.ru',
 					'autoOpen'=>$model->errors ? true : false,
 					'width'=>'auto',
 					'height'=>'auto',
