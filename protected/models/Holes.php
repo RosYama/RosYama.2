@@ -543,7 +543,7 @@ class Holes extends CActiveRecord
 				}
 				$this->DATE_STATUS = time();
 				$this->request_gibdd->delete();
-				if (!count(HoleRequests::model()->findAll('hole_id='.$this->ID.' AND type="gibdd"'))) {
+				if (!count(HoleRequests::model()->findAll('hole_id='.$this->ID.' AND type IN ("gibdd", "dorogimos")'))) {
 					$this->DATE_SENT = null;
 					$this->DATE_STATUS = time();
 					$this->STATE = 'fresh';
