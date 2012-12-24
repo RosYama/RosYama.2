@@ -37,7 +37,7 @@ $this->widget('application.extensions.fancybox.EFancyBox', array(
 			</div>
 			<?php if ($hole->isMoscow && !$this->user->isGuest) : ?>
 			<div class="dorogimos_button" onclick='$("#dorogimosDialog").dialog("open"); return false;'>
-				Отправить заявление <br /> в мэрию Москвы
+				Сообщить через портал <br /> dorogi.mos.ru
 			</div>
 			<?php endif;?>
 			<div class="clear"></div>
