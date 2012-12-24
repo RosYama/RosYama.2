@@ -58,6 +58,52 @@ class SpravController extends Controller
 		return trim($nanoyandex_reply, "\n\t ");
 	}	
 	
+	function file_get_html() {
+		$dom = new simple_html_dom;
+		$args = func_get_args();
+		$dom->load(call_user_func_array('file_get_contents', $args), true);
+		return $dom;
+	}
+	
+	// get html dom form string
+	function str_get_html($str, $lowercase=true) {
+		$dom = new simple_html_dom;
+		$dom->load($str, $lowercase);
+		return $dom;
+	}
+	
+	// dump html dom tree
+	function dump_html_tree($node, $show_attr=true, $deep=0) {
+		$lead = str_repeat('    ', $deep);
+		echo $lead.$node->tag;
+		if ($show_attr && count($node->attr)>0) {
+			echo '(';
+			foreach($node->attr as $k=>$v)
+				echo "[$k]=>\"".$node->$k.'", ';
+			echo ')';
+		}
+		echo "\n";
+	
+		foreach($node->nodes as $c)
+			dump_html_tree($c, $show_attr, $deep+1);
+	}
+	
+	// get dom form file (deprecated)
+	function file_get_dom() {
+		$dom = new simple_html_dom;
+		$args = func_get_args();
+		$dom->load(call_user_func_array('file_get_contents', $args), true);
+		return $dom;
+	}
+	
+	// get dom form string (deprecated)
+	function str_get_dom($str, $lowercase=true) {
+		$dom = new simple_html_dom;
+		$dom->load($str, $lowercase);
+		return $dom;
+	}
+	
+	
 	public function actionSaveAllPolygions()
 	{
 		if (isset($_POST['GibddAreaName'])){
@@ -110,184 +156,97 @@ class SpravController extends Controller
 			}
 		}
 		
-		// 1) достать список регионов
-		$text = file_get_contents('http://www.gibdd.ru/regions/');
-		$text = substr($text, strpos($text, '<table cellpadding="0" cellspacing="0" width="730">'));
-		$text = substr($text, 0, strpos($text, '</table>'));
-		$text = explode('<tr>', $text);
-		$i = 0;
-		$_regions = array();
-		foreach($text as &$item)
-		{
-			if($i > 2)
-			{
-				$item = explode('<td', $item);
-				preg_match('/\<a[\s\S]*href=(\"|\')([\s\S]*)\1[\s\S]*\>([\s\S]*)\<\/a\>/U', $item[1], $_m);
-				$region_id = substr($_m[2], 14);
-				$_regions[$region_id] = array
-				(
-					'id'   => $region_id,
-					'name' => $_m[3],
-					'href' => $_m[2]
-				);
-			}
-			$i++;
-		}
+		$regions=RfSubjects::model()->findAll(Array('order'=>'region_num'));
 		
-		// 2) сопоставить всем регионам субъект РФ
-		$myRegions=CHtml::listData(RfSubjects::model()->findAll(), 'id','name_full');
-		foreach($_regions as &$r)
-		{
-			foreach($myRegions as $k => &$s)
-			{
 		
+		foreach($regions as $r)
+		{			
+			
+			$html = $this->file_get_html('http://www.gibdd.ru/struct/reg/'.($r->region_num < 10 ? '0'.$r->region_num : $r->region_num).'/');
+			
+			$links=Array();
+			
+            foreach($html->find('div[class="news-item"]') as $div){
+				$links[]=$div->find('a',0)->href;
+			}			
+            $html->clear();	
+
+            foreach ($links as $i=>$link){
+            	if ($i > 0) break; //пока тут останавливаем т.к. берем только региональные
+            	
+            	$attribs=Array();
+            	
+            	$html = $this->file_get_html('http://www.gibdd.ru'.$link);
+            	$div=$html->find('div[id="gosserv"]',0);
+            	
+            	$attribs['gibdd_name']=$div->find('h3',0)->innertext;
+            	$attribs['gibdd_kod']=str_replace('Код подразделения: ', '', $div->find('div[class="bord_left"]',0)->find('p',0)->innertext);
+            	
+            	
+            	foreach ($div->find('p') as $p){
+            		$b=$p->find('b',0);
+            		if ($b){
+            			if ($b->innertext=='Дежурная часть:') $attribs['tel_degurn']=trim(str_replace('<b>'.$b->innertext.'</b>', '', trim($p->innertext)));
+            			if ($b->innertext=='Телефон доверия:') $attribs['tel_dover']=trim(str_replace('<b>'.$b->innertext.'</b>', '', trim($p->innertext)));
+            		} 
+            		$attribs['address']=$p->innertext;
+            	}   	
+            	$html->clear();	
+            	
+            	$attribs['gibbd_name_dative']=str_replace('Управление', 'Управления', $attribs['gibdd_name']);            	
+            	$attribs['contacts'] = '';
+            	$attribs['url']='http://'.($r->region_num < 10 ? '0'.$r->region_num : $r->region_num).'.gibdd.ru';
+            	//$r['post_dative'] = trim($attribs['post'].'у '.$attribs['gibbd_name_dative']);
+				//$r['fio_dative']  = $this->sklonyator($text[1][1]);
 				
-				if(strtolower($s) == strtolower($r['name']))
-				{
-					$r['subject_id']   = $k;
-					$r['subject_name'] = $s;
-					continue;
-				}
-				else
-				{
-					$name = explode(' ', $r['name']);
-					$sname = explode(' ', strtolower($s));
-					foreach($name as $part)
-					{
-						$part = strtolower($part);
-						if
-						(
-							$part != ''
-							&& $part != 'Республика' // на промышленном сервере strtolower на срабатывает на слове "республика"
-							&& $part != 'республика'
-							&& $part != 'край'
-							&& $part != 'область'
-							&& $part != 'автономная'
-							&& $part != 'округ'
-							&& $part != 'автономный'
-						)
-						{
-							//if(stripos($s, $part) !== false)
-							if(in_array($part, $sname))
-							{
-								$r['subject_id']   = $k;
-								$r['subject_name'] = $s;
-								continue;
+				//сохраняем							
+				$model=GibddHeadsBuffer::model()->find('subject_id='.$r->id.' AND is_regional=1');
+				//if (!$model) $model=new GibddHeads;
+				$attribs['level']=1;
+				if ($model){
+					foreach ($attribs as $key=>$val){
+						unset ($attribs['gibdd_kod']);
+						unset ($attribs['gibbd_name_dative']);
+						if (isset($model->$key) && $model->$key == $val) unset ($attribs[$key]);
+					}
+					if ($attribs){
+						$curmodel=GibddHeads::model()->findByPk($model->id);
+						if ($curmodel){
+							$model->scenario='fill';
+							$model->attributes=$attribs;	
+							$model->level=1;
+							$model->modified=time();
+							if ($model->update()){
+								$curmodel->scenario='fill';
+								$curmodel->attributes=$attribs;	
+								$curmodel->modified=time();
+								$curmodel->update();
+								echo 'Обновлено '.$curmodel->gibdd_name;
+								print_r($attribs);
+								echo '<br />';
 							}
 						}
 					}
 				}
-			}
-			foreach($_regions as $rr)
-			{
-				if($rr['id'] != $r['id'] && isset($rr['subject_id']) && $rr['subject_id'] == $r['subject_id'])
-				{
-					echo 'коллизия '.$r['name'].'-'.$rr['name'].'<br>';
-					die();
-				}
-			}
-			if(!$r['subject_id'])
-			{
-				echo 'нет ид '.$r['name'].'<br>';
-				die();
-			}
-		}
-		
-		// 3) для каждого региона достать его главу и контакты		
-		foreach($_regions as &$r)
-		{
-			if(!$r['subject_id'] || !$r['href'])
-			{
-				echo 'нет ссылки или ид субъекта '.$r['name'].'<br>';
-				die();
-			}	
-			$regionnum=str_replace('/regions/show/', '', $r['href']);
-			$subjmodel=RfSubjects::model()->findByPk($r['subject_id']);
-			if ($subjmodel && !$subjmodel->region_num) {
-			$subjmodel->region_num=(int)$regionnum;
-			$subjmodel->update();
-			}
-			
-			$text = file_get_contents('http://www.gibdd.ru'.$r['href']);
-			$text = substr($text, strpos($text, '<p class="bold" style="padding-bottom:15px;">'));
-			$text = substr($text, 0, strpos($text, '</div>'));
-			$text = explode('<p class="bold">', $text);
-			
-			$r['gibdd_name']=strip_tags(trim($text[0]));
-			
-			$text[0] = str_replace('УПРАВЛЕНИЕ', 'УПРАВЛЕНИЯ', strip_tags($text[0]));
-			$text[1] = explode('</p>', $text[1]);
-			$text[1][0] = str_replace(':', '', strip_tags($text[1][0]));
-			$text[1][1] = str_replace(':', '', strip_tags($text[1][1]));
-			
-			$r['gibbd_name_dative']=$text[0];
-			$r['post']     = trim($text[1][0]);
-			$r['fio']      = trim($text[1][1]);
-			$r['post_dative'] = trim($text[1][0].'у '.$text[0]);
-			$r['fio_dative']  = $this->sklonyator($text[1][1]);
-			$r['contacts'] = '';
-			$contact_fiels=Array('','','address', 'tel_degurn', 'tel_dover','url');
-			for($i = 2; $i < 6; $i++)
-			{
-				$r['contacts'] .= strip_tags(trim($text[$i])).'<br>';
-				$text[$i] = explode('</p>', $text[$i]);
-				$text[$i][0] = str_replace(':', '', strip_tags($text[$i][0]));
-				$text[$i][1] = str_replace(':', '', strip_tags($text[$i][1]));
-				$r[$contact_fiels[$i]]=trim($text[$i][1]);
-				
-			}
-			$r['url']='http://'.$r['url'];
-		}
-		
-		// 4) занести всё в базу
-		foreach($_regions as &$r)
-		{			
-			$model=GibddHeadsBuffer::model()->find('subject_id='.(int)$r['subject_id'].' AND is_regional=1');
-			//if (!$model) $model=new GibddHeads;
-			$r['level']=1;
-			if ($model){
-				foreach ($r as $key=>$val){
-					unset ($r['href']);
-					unset ($r['subject_name']);
-					unset ($r['gibbd_name_dative']);
-					unset ($r['id']);
-					if (isset($model->$key) && $model->$key == $val) unset ($r[$key]);
-				}
-				if ($r){
-					$curmodel=GibddHeads::model()->findByPk($model->id);
-					if ($curmodel){
-						$model->scenario='fill';
-						$model->attributes=$r;	
-						$model->level=1;
-						$model->modified=time();
-						if ($model->update()){
-							$curmodel->scenario='fill';
-							$curmodel->attributes=$r;	
-							$curmodel->modified=time();
-							$curmodel->update();
-							echo 'Обновлено '.$curmodel->gibdd_name;
-							print_r($r);
-							echo '<br />';
-						}
+				else {
+					$model=new GibddHeads;
+					$model->scenario='fill';
+					$model->attributes=$attribs;
+					$model->is_regional=1;
+					$model->level=1;
+					$model->moderated=1;
+					$model->created=time();
+					if ($model->save()){
+						$bufer=new GibddHeadsBuffer;
+						$bufer->attributes=$model->attributes;
+						$bufer->id=$model->id;
+						$bufer->save();
 					}
-				}
-			}
-			else {
-				$model=new GibddHeads;
-				$model->scenario='fill';
-				$model->attributes=$r;
-				$model->is_regional=1;
-				$model->level=1;
-				$model->moderated=1;
-				$model->created=time();
-				if ($model->save()){
-					$bufer=new GibddHeadsBuffer;
-					$bufer->attributes=$model->attributes;
-					$bufer->id=$model->id;
-					$bufer->save();
-				}
-			}			
-
+				}						
+            	
+            }
+	
+			
 		}
 		
 	}	
