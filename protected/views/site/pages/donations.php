@@ -14,6 +14,15 @@ $this->layout='//layouts/header_default_without_add';
 <!-- Кнопка Я-Аудита -->
 <p><button onclick="window.open('http://yaudit.org/41001550415485','newwindow','toolbar=0')">Посмотреть историю пожертвований</button></p>
 
+<p><b>PayPal и пластиковые карточки</b> 
+<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+<input type="hidden" name="cmd" value="_s-xclick">
+<input type="hidden" name="hosted_button_id" value="SNF55HDZWZJ76">
+<input type="image" src="https://www.paypalobjects.com/ru_RU/RU/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal — более безопасный и легкий способ оплаты через Интернет!">
+<img alt="" border="0" src="https://www.paypalobjects.com/ru_RU/i/scr/pixel.gif" width="1" height="1">
+</form>
+</p>
+
 <p><b>QIWI</b> - 9161775694</p>
 
 <p><b>WebMoney</b>
@@ -23,8 +32,6 @@ $this->layout='//layouts/header_default_without_add';
 <li>E326031675260 - евро
 </ul>
 </p>
-
-<p><b>PayPal</b> fezeev@gmail.com</p>
 
 <p><h4>Банковский перевод:</h4>
 Банк получателя ОАО «Альфа- Банк», г. Москва<br>
