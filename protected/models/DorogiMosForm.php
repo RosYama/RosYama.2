@@ -113,7 +113,7 @@ class DorogiMosForm extends CFormModel
 			$holeRequest->type='dorogimos';
 			$holeRequest->gibdd_id=0;
 			if ($holeRequest->save()){
-				if ($this->STATE == 'fresh') $hole->updateSetinprogress();
+				if ($hole->STATE == 'fresh') $hole->updateSetinprogress();
 				return true;				
 				}
 			//else print_r($holeRequest->errors); die();
