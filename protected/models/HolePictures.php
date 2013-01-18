@@ -46,11 +46,9 @@ class HolePictures extends CActiveRecord
 	{
 		$img_src = $_SERVER['DOCUMENT_ROOT'].$this->$size;
 
-		$imgbinary = fread(fopen($img_src, "r"), 
+		$imgbinary = fread(fopen($img_src, "r"), filesize($img_src));
 		
-		filesize($img_src));
-		
-		return base64_encode($imgbinary); 
+		return $imgbinary; 
 	}
 	
 	public function getMime($size='original')
