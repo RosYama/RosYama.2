@@ -19,7 +19,7 @@ class html1234 extends pdf1234
 		elseif (count ($this->models) < 2) return false;
 		$this->note = count($image);
 		$this->template($textonly);
-		if(is_array($image) && $this->temp != 'prosecutor' && $this->temp != 'prosecutor2')
+		/*if(is_array($image) && $this->temp != 'prosecutor' && $this->temp != 'prosecutor2')
 		{
 			if ($textonly) echo "Ссылки на фотографии:\n";
 			foreach($image as $im_path)
@@ -30,12 +30,12 @@ class html1234 extends pdf1234
 					else echo $im_path."\n";
 				}
 			}
-		}
+		}*/
 		
 		// Обработка и вывод картинок на многоям
 		if ($this->models && $printAllPictures)
 			foreach($this->models as $model){
-				echo $textonly ? $model->ADDRESS."\n" : '<h3>'.$model->ADDRESS.'</h3>';
+				if (count($this->models) >1) echo $textonly ? $model->ADDRESS."\n" : '<h3>'.$model->ADDRESS.'</h3>';
 				foreach($model->pictures_fresh as $picture)
 					{
 						if (!$textonly) echo '<p><img src="'.$picture->original.'"></p>'; 

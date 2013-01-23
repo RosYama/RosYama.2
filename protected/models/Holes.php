@@ -478,8 +478,8 @@ class Holes extends CActiveRecord
 							'type'=>$type,
 							);
 			if ($request->save()){
-			if ($type=='gibdd') if ($this->updateSetinprogress()) return true;
-			elseif ($type=='prosecutor') if ($this->updateToprosecutor()) return true;
+			if ($type=='gibdd') {if ($this->updateSetinprogress()) return true;}
+			elseif ($type=='prosecutor') {if ($this->updateToprosecutor()) return true;}
 			}
 		}
 		elseif ($type=='prosecutor' && $this->STATE=='achtung') $this->updateToprosecutor();

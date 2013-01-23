@@ -45,19 +45,19 @@ class pdf1234{
 		$this->template();
 		
 		// Обработка  и вывод картинок
-		if(is_array($image) && $this->temp != 'prosecutor' && $this->temp != 'prosecutor2')
+		/*if(is_array($image) && $this->temp != 'prosecutor' && $this->temp != 'prosecutor2')
 		{
 			foreach($image as $im_path){
 					if(!empty($im_path)){
 						$this->pdf->Image($im_path, null, null, 180, 0,'jpg');
 					}
 			}
-		}
+		}*/
 		// Обработка и вывод картинок на многоям
-		if ($this->models && $printAllPictures)
-			foreach($this->models as $model){
-				$this->pdf->AddPage();
-				pdf1234::getpages(pdf1234::slashN($model->ADDRESS, 100), 5, 20);
+		if ($this->models &&  $printAllPictures)
+			foreach($this->models as $i=>$model){
+				if ($i > 0) $this->pdf->AddPage();
+				if (count($this->models) > 1) pdf1234::getpages(pdf1234::slashN($model->ADDRESS, 100), 5, 10);
 				foreach($model->pictures_fresh as $picture)
 					{
 						$this->pdf->Image($_SERVER['DOCUMENT_ROOT'].$picture->original, null, null, 180, 0,'jpg');
@@ -143,6 +143,8 @@ class pdf1234{
 	{
 		$x=Array('');
 		if($this->note!=0){
+			$x[0] = 'Приложение: '.$this->note.' фотографи'.pdf1234::getEnd($this->note);
+			
 			if($this->temp == 'prosecutor' || $this->temp == 'prosecutor2')
 			{
 				if($this->params['date3.year'] > 1970)
@@ -329,6 +331,7 @@ class pdf1234{
 			$this->pdf->Ln();
 		}
 		$this->pdf->SetX(20);
+		$this->pdf->AddPage();
 		$this->pdf->Write(5,$y[0]);
 		$this->pdf->Ln();
 	}
