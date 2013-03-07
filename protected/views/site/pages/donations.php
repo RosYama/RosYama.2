@@ -22,7 +22,7 @@ $this->layout='//layouts/header_default_without_add';
 <tr>
 
 <!-- <td style="width: 100%;"> -->
-<td>
+<td style="height: 100px;">
 <form action="https://auth.robokassa.ru/Merchant/Index.aspx" method="POST" target="_blank">
 <input name="MrchLogin" type="hidden" value="fbk" />
 <input name="Desc" type="hidden" value="Пожертвование на работу проекта РосЯма" />
