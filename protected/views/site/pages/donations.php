@@ -19,7 +19,7 @@ $this->layout='//layouts/header_default_without_add';
 <p><b>Банковская карта</b> <br> 
 
 <table>
-<tr style="height: 100px;">
+<tr>
 
 <!-- <td style="width: 100%;"> -->
 <td>
@@ -36,7 +36,8 @@ $this->layout='//layouts/header_default_without_add';
 </td>
 
 <td>
-<img height="100px" src="/images/robokassa/qr.png" />
+<!--<img height="100px" src="/images/robokassa/qr.png" /> -->
+<img src="/images/robokassa/qr.png" />
 </td>
 
 </tr>
