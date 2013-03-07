@@ -19,10 +19,10 @@ $this->layout='//layouts/header_default_without_add';
 <p><b>Банковская карта</b> <br> 
 
 <table>
-<tr>
+<tr style="height: 100px;">
 
 <!-- <td style="width: 100%;"> -->
-<td style="height: 100px;">
+<td>
 <form action="https://auth.robokassa.ru/Merchant/Index.aspx" method="POST" target="_blank">
 <input name="MrchLogin" type="hidden" value="fbk" />
 <input name="Desc" type="hidden" value="Пожертвование на работу проекта РосЯма" />
