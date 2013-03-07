@@ -14,13 +14,23 @@ $this->layout='//layouts/header_default_without_add';
 <iframe frameborder="0" allowtransparency="true" scrolling="no" src="https://money.yandex.ru/embed/bank.xml?payer-type=legal&amp;recipient-name=%D0%9D%D0%9E+%22%D0%A4%D0%BE%D0%BD%D0%B4+%D0%B1%D0%BE%D1%80%D1%8C%D0%B1%D1%8B+%D1%81+%D0%BA%D0%BE%D1%80%D1%80%D1%83%D0%BF%D1%86%D0%B8%D0%B5%D0%B9%22&amp;recipient-inn=7709471429&amp;recipient-kpp=770901001&amp;recipient-bik=044525593&amp;recipient-account=40703810402710000002&amp;recipient-kbk=&amp;recipient-okato=&amp;writer=seller&amp;targets=%D0%9F%D0%BE%D0%B6%D0%B5%D1%80%D1%82%D0%B2%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5+%D0%BD%D0%B0+%D1%80%D0%B5%D0%B0%D0%BB%D0%B8%D0%B7%D0%B0%D1%86%D0%B8%D1%8E+%D0%BF%D1%80%D0%BE%D0%B5%D0%BA%D1%82%D0%B0+%22%D0%A0%D0%BE%D1%81%D0%AF%D0%BC%D0%B0%22.+%D0%9D%D0%94%D0%A1+%D0%BD%D0%B5+%D0%BE%D0%B1%D0%BB%D0%B0%D0%B3%D0%B0%D0%B5%D1%82%D1%81%D1%8F.&amp;default-sum=1000&amp;nds-rate=&amp;button-text=03" width="490" height="190"></iframe>
 </p>
 
-<p><b>PayPal и пластиковые карточки</b> 
-<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
-<input type="hidden" name="cmd" value="_s-xclick">
-<input type="hidden" name="hosted_button_id" value="SNF55HDZWZJ76">
-<input type="image" src="https://www.paypalobjects.com/ru_RU/RU/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal — более безопасный и легкий способ оплаты через Интернет!">
-<img alt="" border="0" src="https://www.paypalobjects.com/ru_RU/i/scr/pixel.gif" width="1" height="1">
+
+
+<p><b>Банковская карта</b> <br> 
+
+<table>
+<tr>
+<td style="width: 100%;">
+<form action="https://auth.robokassa.ru/Merchant/Index.aspx" method="POST" target="_blank">
+<input name="MrchLogin" type="hidden" value="fbk" /><input name="Desc" type="hidden" value="Пожертвование на работу проекта РосЯма" /><input name="SignatureValue" type="hidden" value="e407e6af2c0d93e702fe66bbc1ac7b14" /><input name="IncCurrLabel" type="hidden" value="BANKOCEAN2R" /><input class="b-input-text__input" maxlength="10" name="FreeOutSum" style="text-align: right;" type="text" value="1000" /><span class="b-widget-donate__currency">руб. </span><input name="submit-button" type="submit" value="Пожертвовать" />
 </form>
+<img src="/images/robokassa/robokassa.gif" style="margin-top: 10px;" />
+</td>
+<td>
+<img height="100px" src="/images/robokassa/qr.png" />
+</td>
+</tr>
+</table>
 </p>
 
 <p><b>QIWI</b> - 9161775694</p>
