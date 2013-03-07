@@ -35,10 +35,11 @@ $this->layout='//layouts/header_default_without_add';
 <img src="/images/robokassa/robokassa.gif" style="margin-top: 10px;" />
 </td>
 
+<!--
 <td>
-<!--<img height="100px" src="/images/robokassa/qr.png" /> -->
-<img src="/images/robokassa/qr.png" />
+<img height="100px" src="/images/robokassa/qr.png" />
 </td>
+-->
 
 </tr>
 </table>
