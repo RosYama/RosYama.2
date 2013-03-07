@@ -10,9 +10,9 @@ $this->layout='//layouts/header_default_without_add';
 <div class="rCol">
 <p><b>Деньги в поддержку РосЯмы можно перечислять сюда:</b></p>
 
-<p><b>Яндекс.Деньги</b> 
+<p><b>Яндекс.Деньги</b> <br>
 <iframe frameborder="0" allowtransparency="true" scrolling="no" src="https://money.yandex.ru/embed/bank.xml?payer-type=legal&amp;recipient-name=%D0%9D%D0%9E+%22%D0%A4%D0%BE%D0%BD%D0%B4+%D0%B1%D0%BE%D1%80%D1%8C%D0%B1%D1%8B+%D1%81+%D0%BA%D0%BE%D1%80%D1%80%D1%83%D0%BF%D1%86%D0%B8%D0%B5%D0%B9%22&amp;recipient-inn=7709471429&amp;recipient-kpp=770901001&amp;recipient-bik=044525593&amp;recipient-account=40703810402710000002&amp;recipient-kbk=&amp;recipient-okato=&amp;writer=seller&amp;targets=%D0%9F%D0%BE%D0%B6%D0%B5%D1%80%D1%82%D0%B2%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5+%D0%BD%D0%B0+%D1%80%D0%B5%D0%B0%D0%BB%D0%B8%D0%B7%D0%B0%D1%86%D0%B8%D1%8E+%D0%BF%D1%80%D0%BE%D0%B5%D0%BA%D1%82%D0%B0+%22%D0%A0%D0%BE%D1%81%D0%AF%D0%BC%D0%B0%22.+%D0%9D%D0%94%D0%A1+%D0%BD%D0%B5+%D0%BE%D0%B1%D0%BB%D0%B0%D0%B3%D0%B0%D0%B5%D1%82%D1%81%D1%8F.&amp;default-sum=1000&amp;nds-rate=&amp;button-text=03" width="490" height="190"></iframe>
-
+</p>
 <!--
 <a href="http://yaudit.org/yaudit/41001550415485">кошелёк № 41001550415485</a></p>
 <p><button onclick="window.open('http://yaudit.org/41001550415485','newwindow','toolbar=0')">Посмотреть историю пожертвований</button></p>
