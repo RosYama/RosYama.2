@@ -20,15 +20,25 @@ $this->layout='//layouts/header_default_without_add';
 
 <table>
 <tr>
-<td style="width: 100%;">
+
+<!-- <td style="width: 100%;"> -->
+<td>
 <form action="https://auth.robokassa.ru/Merchant/Index.aspx" method="POST" target="_blank">
-<input name="MrchLogin" type="hidden" value="fbk" /><input name="Desc" type="hidden" value="Пожертвование на работу проекта РосЯма" /><input name="SignatureValue" type="hidden" value="e407e6af2c0d93e702fe66bbc1ac7b14" /><input name="IncCurrLabel" type="hidden" value="BANKOCEAN2R" /><input class="b-input-text__input" maxlength="10" name="FreeOutSum" style="text-align: right;" type="text" value="1000" /><span class="b-widget-donate__currency">руб. </span><input name="submit-button" type="submit" value="Пожертвовать" />
+<input name="MrchLogin" type="hidden" value="fbk" />
+<input name="Desc" type="hidden" value="Пожертвование на работу проекта РосЯма" />
+<input name="SignatureValue" type="hidden" value="e407e6af2c0d93e702fe66bbc1ac7b14" />
+<input name="IncCurrLabel" type="hidden" value="BANKOCEAN2R" />
+<input class="b-input-text__input" maxlength="10" name="FreeOutSum" style="text-align: right;" type="text" value="1000" />
+<span class="b-widget-donate__currency">руб. </span>
+<input name="submit-button" type="submit" value="Пожертвовать" />
 </form>
 <img src="/images/robokassa/robokassa.gif" style="margin-top: 10px;" />
 </td>
+
 <td>
 <img height="100px" src="/images/robokassa/qr.png" />
 </td>
+
 </tr>
 </table>
 </p>
