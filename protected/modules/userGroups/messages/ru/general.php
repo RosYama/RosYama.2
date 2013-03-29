@@ -23,7 +23,7 @@ return array (
   'An invitation email was sent to the address {email}' => 'Приглашение было отправлено на адрес {email}',
   'Creation Date' => 'Дата создания',
   'Impossible to send email to the address {email}' => 'Невозможно отправить письмо по адресу {email}',
-  'The activation email was successfully sent to {email}' => 'Письмо с инструкциями по активации акаунта было отправлено на {email}',
+  'The activation email was successfully sent to {email}' => 'Письмо с инструкциями по активации аккаунта было отправлено на {email}',
   'Update External Profile' => 'Обновление внешнего профиля',
   'A password change has been requested.<br/>You won\'t be able to login until you change the password.' => 'Была запрошена смена пароля.<br/>Вы не можете авторизироваться на сайте пока не измените пароль.',
   'Access' => 'Доступ',

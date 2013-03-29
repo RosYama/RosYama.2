@@ -628,7 +628,7 @@ class HolesController extends Controller
 						$usermodel->ban_reason = $reason;
 						$usermodel->status = UserGroupsUser::BANNED;
 						if ($usermodel->update())
-							Yii::app()->user->setFlash('user', '{$usermodel->username}\ акаунт забанен до {$usermodel->ban}.');
+							Yii::app()->user->setFlash('user', '{$usermodel->username}\ аккаунт забанен до {$usermodel->ban}.');
 						else
 							Yii::app()->user->setFlash('user', 'Произошла ошибка попробуйте немного позднее');
 					}
