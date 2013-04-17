@@ -400,7 +400,7 @@ class Comment extends CActiveRecord {
             $routeData = array();
             foreach($config['pageUrl']['data'] as $routeVar=>$modelProperty)
                 $routeData[$routeVar] = $ownerModel->$modelProperty;
-            return Yii::app()->urlManager->createUrl($config['pageUrl']['route'], $routeData)."#comment-$this->comment_id";
+            return Yii::app()->controller->createAbsoluteUrl('/'.$config['pageUrl']['route'], $routeData)."#comment-$this->comment_id";
         }
         return null;
     }
