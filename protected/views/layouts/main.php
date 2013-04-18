@@ -32,6 +32,16 @@
 				</script>
 
 <div class="wrap">
+	<div class="projects_links">
+		<ul>
+			<li class="no_bg">Проекты <a href="http://fbk.info">Фонда борьбы с коррупцией</a>:</li>
+			<li class="rospil"><a href="http://rospil.info">РосПил</a></li>
+			<li class="rosvybory"><a href="http://rosvybory.org">РосВыборы</a></li>
+			<li class="rosyama"><span>РосЯма</span></li>
+			<li class="rosjkh"><a href="http://roszkh.ru">РосЖКХ</a></li>
+			<li class="rosdmp"><a href="http://mashina.org">ДМП</a></li>
+		</ul>
+	</div>
 <div class="navigation">
 		<div class="container">
 			 <?php $this->widget('application.widgets.topmenu.topmenuWidget');?>			 

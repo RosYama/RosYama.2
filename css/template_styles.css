@@ -969,3 +969,30 @@ color: rgb(0, 128, 0);
 .holes_pict img {padding-bottom: 5px;}	
 .clear{clear: both;}	
 
+/* projects_links */
+
+.projects_links{font-size: 13px; background: #454545; color: #fff;}
+.projects_links ul{}
+.projects_links ul li{display: inline-block; zoom: 1; *display: inline; padding: 5px 0;}
+.projects_links ul li a{}
+
+.projects_links ul li.no_bg a{color: #82B2DC}
+
+.projects_links ul li span,
+.projects_links ul li.rospil a,
+.projects_links ul li.rosvybory a,
+.projects_links ul li.rosyama a,
+.projects_links ul li.rosjkh a,
+.projects_links ul li.rosdmp a{ display: block; height: 30px; line-height: 30px; padding: 0 5px; color: transparent!important;}
+
+.projects_links ul li.rospil a, .projects_links ul li.rospil span{width: 87px; background: transparent url(/images/projects_links/rospil-link.png) center center no-repeat;}
+.projects_links ul li.rosvybory a, .projects_links ul li.rosvybory span{width: 123px; background: transparent url(/images/projects_links/rosvybory-link.png) center center no-repeat;}
+.projects_links ul li.rosyama a, .projects_links ul li.rosyama span{width: 77px; background: transparent url(/images/projects_links/rosyama-not-a-link.png) center center no-repeat;}
+.projects_links ul li.rosjkh a, .projects_links ul li.rosjkh span {width: 80px; background: transparent url(/images/projects_links/roszhkh-link.png) center center no-repeat;}
+.projects_links ul li.rosdmp a, .projects_links ul li.rosdmp span{width: 75px; background: transparent url(/images/projects_links/dmp-link.png) center center no-repeat;}
+
+.projects_links ul li.rospil a:hover{background-image: url(/images/projects_links/rospil-hover.png);}
+.projects_links ul li.rosvybory a:hover{background-image: url(/images/projects_links/rosvybory-hover.png);}
+.projects_links ul li.rosyama a:hover{background-image: url(/images/projects_links/rosyama-hover.png);}
+.projects_links ul li.rosjkh a:hover{background-image: url(/images/projects_links/roszhkh-hover.png);}
+.projects_links ul li.rosdmp a:hover{background-image: url(/images/projects_links/dmp-hover.png);}
