@@ -796,7 +796,7 @@ class HolesController extends Controller
 		$this->layout='//layouts/header_default';
 		
 		//Если нет таблиц в базе редиректим на контроллер миграции
-		if(Holes::getDbConnection()->getSchema()->getTable(Holes::tableName())===null)
+		if(Holes::model()->getDbConnection()->getSchema()->getTable(Holes::model()->tableName())===null)
 			$this->redirect(array('migration/index'));
 	
 		$model=new Holes('search');		
