@@ -257,3 +257,5 @@ div.rCol .before:after, div.rCol .after:after {
 	top:1px;
 }
 .b .comment{padding-top: 35px;}
+
+.answer_results li{background: url(/images/icon-checked.png) no-repeat 1px -1px; float: left; border:2px solid #40bf67; display: block; height: 20px; margin-right: 10px; padding-left: 30px; padding-top:5px; padding-right: 5px;}

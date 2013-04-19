@@ -543,7 +543,16 @@ new Ya.share({
 						<?php if ($answer->request->user_id==Yii::app()->user->id) : ?>
 								<?php echo CHtml::link(CHtml::image('/images/update.png', 'Редактировать', Array('title'=>'Редактировать')), Array('gibddreply','id'=>$hole->ID,'answer'=>$answer->id), Array('class'=>'declarationBtn')); ?><br />
 						<?php endif; ?>	
-						</h2>				
+						</h2>
+						<?php if ($answer->results) : ?>
+							<ul class="answer_results">
+							<?php foreach ($answer->results as $result) : ?>
+								<li><?php echo $result->name; ?></li>
+							<?php endforeach; ?>
+							</ul>
+							<div class="clear"></div>
+							<br />
+						<?php endif; ?>
 						<?php if ($answer->files_other) : ?>
 						<? foreach($answer->files_other as $file): ?>					
 							<div class="answer_file <?php echo $file->divClass; ?>">
