@@ -133,6 +133,6 @@
 				return false;
 			});	
 			
-			jQuery("#holes_selectors select").live("change",function() {
+			jQuery("#holes_selectors select, #holes_selectors input:not(.state_check)").live("change",function() {
 				$.fn.yiiListView.update("holes_list",{ data:$(this).parents("form").serialize()});								    	
 			});

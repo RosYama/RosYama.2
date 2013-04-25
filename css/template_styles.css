@@ -452,6 +452,11 @@ ul.usermenu li.active .profileBtn{background: #f88100;}
 	margin: 0;
 	vertical-align: middle;
 }
+.map_bottom_check .chekboxes{float: left;}
+.map_bottom_check .chekboxes.withAnswers{}
+.map_bottom_check .chekboxes.archive{margin-left: 15px;}
+
+#holes_selectors #Holes_gibdd_id{max-width: 400px;}
 
 div.submit {border-top: 1px solid #ddd; clear: both; padding-top: 12px;}
 div.submit input {font: normal 1em "Trebuchet MS", Arial, sans-serif; margin-right: 8px;}

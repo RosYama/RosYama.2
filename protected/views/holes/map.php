@@ -34,12 +34,20 @@ $this->pageTitle=Yii::app()->name . ' :: Карта дефектов';
 
 <div class="clear"></div>
 <br />
-<div class="chekboxes" style="float:right;">
-<?php echo $form->checkBox($model,"archive",Array('class'=>'filter_checkbox')); ?>	
-<?php echo $form->labelEx($model,'archive',Array('label'=>'Показывать ямы из архива', 'class'=>'archive')); ?>
+<div class="map_bottom_check">
+	<div class="chekboxes withAnswers">
+	<?php echo $form->checkBox($model,"withAnswers",Array('class'=>'filter_checkbox')); ?>	
+	<?php echo $form->labelEx($model,'withAnswers',Array('label'=>'с загруженными ответами ГИБДД')); ?>		
+	</div>
+	
+	<div class="chekboxes archive">
+	
+	<?php echo $form->checkBox($model,"archive",Array('class'=>'filter_checkbox')); ?>	
+	<?php echo $form->labelEx($model,'archive',Array('label'=>'Показывать ямы из архива', 'class'=>'archive')); ?>
+	
+	</div>
 
 </div>
-
 </div>
 <div class="submit"><input type="submit" name="button" id="button" value="Показать" /><input type="reset" name="reset" id="reset_button" value="Сбросить" type="button" />
 <div style="float:right;">

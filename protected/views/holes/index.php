@@ -220,13 +220,18 @@ EOD
 			<?php echo $form->dropDownList($model, 'STATE', $model->Allstates, array('prompt'=>'Статус дефекта')); ?>
 			</p>
 				<p>
-				<?php echo $form->labelEx($model,'archive',Array('label'=>'Искать в архиве')); ?>
-				<?php echo $form->checkBox($model,"archive",Array('class'=>'filter_checkbox')); ?>				
+				<?php echo $form->checkBox($model,"withAnswers",Array('class'=>'filter_checkbox')); ?>	
+				<?php echo $form->labelEx($model,'withAnswers',Array('label'=>'с загруженными ответами ГИБДД')); ?>							
 				</p>
+				<p>
+				<?php echo $form->checkBox($model,"archive",Array('class'=>'filter_checkbox')); ?>	
+				<?php echo $form->labelEx($model,'archive',Array('label'=>'Искать в архиве')); ?>							
+				</p>
+			
 			<?php if(Yii::app()->user->isModer) : ?>
 				<p>
-				<?php echo $form->labelEx($model,'NOT_PREMODERATED'); ?>
-				<?php echo $form->checkBox($model,"NOT_PREMODERATED",Array('class'=>'filter_checkbox')); ?>				
+				<?php echo $form->checkBox($model,"NOT_PREMODERATED",Array('class'=>'filter_checkbox')); ?>	
+				<?php echo $form->labelEx($model,'NOT_PREMODERATED'); ?>							
 				</p>
 			<?php endif; ?>
 			<span class="filterBtn" onclick="$(this).parents('form').submit();">

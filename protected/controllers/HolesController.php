@@ -1173,6 +1173,12 @@ class HolesController extends Controller
 		
 		$criteria->compare('t.deleted',0);
 		
+		if (isset($_GET['Holes']['withAnswers'])){
+			$criteria->with[]='requests_with_answers_files';
+			$criteria->together=true;
+			$criteria->group='t.id';
+		}
+		
 		$userid=Yii::app()->user->id;
 		if (isset($_GET['Holes']['showUserHoles'])) $showUserHoles=$_GET['Holes']['showUserHoles'];
 		else $showUserHoles=0; 
