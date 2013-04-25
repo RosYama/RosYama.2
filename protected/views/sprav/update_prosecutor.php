@@ -37,7 +37,14 @@ $this->title=CHtml::link($model->gibdd_name, Array('local','id'=>$model->id)).' 
 			<?php echo $form->labelEx($model,'preview_text'); ?>
 			<?php echo $form->textArea($model,'preview_text',array('class'=>'textInput')); ?>
 			<?php echo $form->error($model,'preview_text'); ?>
-		</div>		
+		</div>	
+		
+		<div class="f">
+			<?php echo $form->labelEx($model,'tel_chancery'); ?>
+			<?php echo $form->textField($model,'tel_chancery',array('class'=>'textInput')); ?>
+			<?php echo $form->error($model,'tel_chancery'); ?>
+			<em class="hint">Пример: (495) 624-31-17</em>
+		</div>
 		
 		<div class="f">
 			<?php echo $form->labelEx($model,'url_priemnaya'); ?>

@@ -12,6 +12,9 @@ $this->title=CHtml::link('Справочник ГИБДД', Array('index')).' > 
 <div class="news-detail">
 				<h2><?php echo $model->prosecutor->gibdd_name; ?></h2>
 				<?php echo $model->prosecutor->preview_text; ?><div style="clear:both"></div>
+				<?php if ($model->prosecutor->tel_chancery) : ?>
+	 				Телефон канцелярии:&nbsp;<?php echo $model->prosecutor->tel_chancery; ?><br />
+	  				<?php endif; ?>
 				<?php if ($model->prosecutor->url_priemnaya): ?>
 	 				Интернет-приемная:&nbsp;<?php echo CHtml::link($model->prosecutor->url_priemnaya, $model->prosecutor->url_priemnaya); ?><br />
  				<?php endif; ?>

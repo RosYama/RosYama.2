@@ -125,6 +125,13 @@ EOD
 			<em class="hint">Пример: (495) 624-31-17</em>
 		</div>
 		
+		<div class="f">
+			<?php echo $form->labelEx($model,'tel_chancery'); ?>
+			<?php echo $form->textField($model,'tel_chancery',array('class'=>'textInput')); ?>
+			<?php echo $form->error($model,'tel_chancery'); ?>
+			<em class="hint">Пример: (495) 624-31-17</em>
+		</div>
+		
 		<?php if ($model->is_regional) : ?>	
 		<div class="f">
 			<?php echo $form->labelEx($model,'url'); ?>

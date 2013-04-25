@@ -10,7 +10,9 @@
 	 				Телефон дежурной части:&nbsp;<?php echo $data->tel_degurn; ?><br />
 	  		
 	 				Телефон доверия:&nbsp;<?php echo $data->tel_dover; ?><br />
-	  		
+	 				<?php if ($data->tel_chancery) : ?>
+	 				Телефон канцелярии:&nbsp;<?php echo $data->tel_chancery; ?><br />
+	  				<?php endif; ?>
 	 				Сайт:&nbsp;<?php echo $data->link; ?><br />
 	 				
 	 				<?php if ($data->url_priemnaya): ?>
