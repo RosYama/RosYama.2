@@ -473,7 +473,9 @@ new Ya.share({
 
 		
 		<div class="comment">
-			<?= $hole['COMMENT1'] ?>
+			<p><?php echo $hole->description_size; ?></p>
+			<p><?php echo $hole->description_locality; ?></p>
+			<p><?php echo $hole->COMMENT1; ?></p>
 		</div>
 		
 		<div class="bbcode">
