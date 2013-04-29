@@ -347,7 +347,7 @@ class Holes extends CActiveRecord
 			{	
 				$imgname=rand().'.jpg';
 				$tempname=is_string($_file) ? $_file : $_file->getTempName();
-				$image = $this->imagecreatefromfile($tempname, &$_image_info);
+				$image = $this->imagecreatefromfile($tempname, $_image_info);
 				if(!$image)
 				{
 					$this->addError('pictures',Yii::t('errors', 'GREENSIGHT_ERROR_UNSUPPORTED_IMAGE_TYPE'));
@@ -409,7 +409,7 @@ class Holes extends CActiveRecord
 
 	public static function imagecreatefromfile($file_name, &$_image_info = array())
 	{
-		$_image_info = getimagesize($file_name, &$_image_additional_info);
+		$_image_info = getimagesize($file_name, $_image_additional_info);
 		$_image_info['additional'] = $_image_additional_info;
 		switch($_image_info['mime'])
 		{

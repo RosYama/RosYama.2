@@ -331,7 +331,7 @@ class pdf1234{
 			$this->pdf->Ln();
 		}
 		$this->pdf->SetX(20);
-		$this->pdf->AddPage();
+		//$this->pdf->AddPage();
 		$this->pdf->Write(5,$y[0]);
 		$this->pdf->Ln();
 	}
