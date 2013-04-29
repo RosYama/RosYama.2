@@ -51,6 +51,7 @@ class Holes extends CActiveRecord
 	public $polygonIds;
 	public $keys=Array();
 	public $polygons=Array();
+	public $withAnswers;
 	/**
 	 * @return string the associated database table name
 	 */
@@ -96,7 +97,7 @@ class Holes extends CActiveRecord
 			array('upploadedPictures', 'required', 'on' => 'insert, add', 'message' => 'Необходимо загрузить фотографии'),			
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('ID, USER_ID, LATITUDE, LONGITUDE, ADDRESS, STATE, DATE_CREATED, DATE_SENT, DATE_STATUS, COMMENT1, COMMENT2, TYPE_ID, ADR_SUBJECTRF, ADR_CITY, COMMENT_GIBDD_REPLY, GIBDD_REPLY_RECEIVED, PREMODERATED, DATE_SENT_PROSECUTOR', 'safe', 'on'=>'search'),
+			array('ID, USER_ID, LATITUDE, LONGITUDE, ADDRESS, STATE, DATE_CREATED, DATE_SENT, DATE_STATUS, COMMENT1, COMMENT2, TYPE_ID, ADR_SUBJECTRF, ADR_CITY, COMMENT_GIBDD_REPLY, GIBDD_REPLY_RECEIVED, PREMODERATED, DATE_SENT_PROSECUTOR, withAnswers', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -111,6 +112,7 @@ class Holes extends CActiveRecord
 			'subject'=>array(self::BELONGS_TO, 'RfSubjects', 'ADR_SUBJECTRF'),
 			'requests'=>array(self::HAS_MANY, 'HoleRequests', 'hole_id'),
 			'requests_with_answers'=>array(self::HAS_MANY, 'HoleRequests', 'hole_id', 'with'=>'answers', 'condition'=>'answers.id > 0', 'order'=>'requests_with_answers.date_sent, answers.date'),
+			'requests_with_answers_files'=>array(self::HAS_MANY, 'HoleRequests', 'hole_id', 'with'=>Array('answers'=>Array('with'=>'files')), 'condition'=>'answers.id > 0 AND files.id > 0', 'order'=>'requests_with_answers_files.date_sent, answers.date'),
 			'pictures'=>array(self::HAS_MANY, 'HolePictures', 'hole_id', 'order'=>'pictures.type, pictures.ordering AND pictures.premoderated=1'),
 			'pictures_fresh'=>array(self::HAS_MANY, 'HolePictures', 'hole_id', 'condition'=>'pictures_fresh.type="fresh" AND pictures_fresh.premoderated=1','order'=>'pictures_fresh.ordering'),
 			'pictures_fixed'=>array(self::HAS_MANY, 'HolePictures', 'hole_id', 'condition'=>'pictures_fixed.type="fixed" AND pictures_fixed.premoderated=1','order'=>'pictures_fixed.ordering'),
@@ -725,6 +727,13 @@ class Holes extends CActiveRecord
 			$tmpcriteria->select='ID';
 			$this->keys=CHtml::listData($this->findAll($tmpcriteria),'ID','ID');	
 		}
+		
+		if ($this->withAnswers){
+			$criteria->with[]='requests_with_answers_files';
+			$criteria->together=true;
+			$criteria->group='t.id';
+		}
+		
 		$criteria->compare('t.deleted',0);
 		$criteria->compare('t.STATE',$this->STATE,true);	
 		$criteria->compare('t.TYPE_ID',$this->TYPE_ID,false);
@@ -906,6 +915,12 @@ class Holes extends CActiveRecord
 			
 		if (!$user->userModel->relProfile->show_archive_holes) $criteria->compare('t.archive',0,false);
 		
+		if ($this->withAnswers){
+			$criteria->with[]='requests_with_answers_files';
+			$criteria->together=true;
+			$criteria->group='t.id';
+		}
+		
 		$criteria->compare('t.deleted',0);
 		$criteria->compare('t.STATE',$this->STATE,true);	
 		$criteria->compare('t.TYPE_ID',$this->TYPE_ID,false);
@@ -936,13 +951,19 @@ class Holes extends CActiveRecord
 		$criteria=new CDbCriteria;
 		//$criteria->with=Array('pictures_fresh','pictures_fixed');
 		$criteria->with=Array('type','pictures_fresh', 'comments_cnt');
+		if ($this->withAnswers){
+			$criteria->with[]='requests_with_answers_files';
+			$criteria->together=true;
+			$criteria->group='t.id';
+		}
 		
 		if ($fixeds){
 			$with=$criteria->with;
-			$with[1]='pictures_fixed_not_moderated';
+			$with[]='pictures_fixed_not_moderated';
 			$criteria->with=$with;
 			$criteria->addCondition('t.STATE!="fixed"');
 			$criteria->together=true;
+			$criteria->group='t.id';
 		}
 		else $criteria->compare('archive',$this->archive ? $this->archive : 0);
 		

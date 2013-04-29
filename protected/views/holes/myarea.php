@@ -41,17 +41,16 @@ $this->pageTitle=Yii::app()->name . ' :: Мой участок';
 <div class="lCol">
 
 <?php $this->widget('application.widgets.userAreaMap.userAreaMapWidget',Array('data'=>Array('area'=>$area, 'user'=>$user->userModel),'model'=>$model)); ?>
-
-<?php if ($user->userModel->areaNeighbors) : ?>
 <div id="area_neighbors">
+<?php if ($user->userModel->areaNeighbors) : ?>
 <h3>Соседи:</h3>
 <ul>
 <?php foreach ($user->userModel->areaNeighbors as $neighbor) : ?>
 	<li><?php echo CHtml::link(CHtml::encode($neighbor->getParam('showFullname') ? $neighbor->Fullname : $neighbor->username), array('/profile/view', 'id'=>$neighbor->id),array('class'=>""));?></li>
 <?php endforeach; ?>
-</ul>	
-</div>
+</ul>
 <?php endif; ?>
+</div>
 <br/>
 <div id="holes_select_list">
 	<?php 
@@ -80,11 +79,13 @@ $this->pageTitle=Yii::app()->name . ' :: Мой участок';
 			<?php echo $form->dropDownList($model, 'STATE', $model->Allstates, array('prompt'=>'Статус дефекта')); ?>
 			<?php echo $form->dropDownList($model, 'showUserHoles', Array(1=>'Мои ямы', 2=>'Чужие, на которые я отправил заявление'),Array('prompt'=>'Все ямы')); ?>
 			<?php echo CHtml::submitButton('Найти'); ?><br/>
-			<div style="text-align:right;">
+			<div class="clear"></div><br />
+			<?php if ($model->keys) echo $form->dropDownList($model, 'gibdd_id', CHtml::listData(GibddHeads::model()->with(Array('holes'=>Array('select'=>'ID, gibdd_id')))->findAll(Array('condition'=>'holes.ID IN ('.implode(', ',$model->keys).')','order'=>'t.name')), 'id', 'gibdd_name' ), array('prompt'=>'Все ГИБДД')); ?>
+			<?php echo $form->checkBox($model,"withAnswers",Array('class'=>'filter_checkbox')); ?>	
+			<?php echo $form->labelEx($model,'withAnswers',Array('label'=>'с загруженными ответами ГИБДД')); ?>		
+						<div style="text-align:right;">
 			<?php echo CHtml::checkBox('selectAll', false, Array('id'=>'selectAll','class'=>'state_check')); ?><?php echo CHtml::label('Выбрать все', 'selectAll'); ?>
 			</div>
-			<?php if ($model->keys) echo $form->dropDownList($model, 'gibdd_id', CHtml::listData(GibddHeads::model()->with(Array('holes'=>Array('select'=>'ID, gibdd_id')))->findAll(Array('condition'=>'holes.ID IN ('.implode(', ',$model->keys).')','order'=>'t.name')), 'id', 'gibdd_name' ), array('prompt'=>'Все ГИБДД')); ?>
-			
 	<?php $this->endWidget(); ?>		
 			</p>
 				
