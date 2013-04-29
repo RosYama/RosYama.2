@@ -195,7 +195,7 @@ class pdf1234{
 		$ar['body1'] = '';
 		$ar['holes']=Array();
 		foreach ($models as $model){
-		$ar['holes'][] = $model->type->name.', '.$model->ADDRESS.($model->COMMENT1 ? ', '.trim($model->COMMENT1) : '').($model->description_size ? ', '.trim($model->description_size) : '').($model->description_locality ? ', '.trim($model->description_locality) : '').', http://rosyama.ru'.CController::createUrl("/holes/view",Array('id'=>$model->ID))."";    
+		$ar['holes'][] = $model->type->name.', '.$model->ADDRESS.($model->COMMENT1 ? ', '.trim($model->COMMENT1) : '').($model->description_locality ? ', '.trim($model->description_locality) : '').($model->description_size ? ', '.trim($model->description_size) : '').', http://rosyama.ru'.CController::createUrl("/holes/view",Array('id'=>$model->ID))."";    
 		}
 		$ar['footerUP0'] = 'В соответствии с п.19 ч.1 ст.12 ФЗ «О полиции» на полицию возлагаются обязанность по осуществлению государственного контроля (надзора) за соблюдением правил, стандартов, технических норм и иных требований нормативных документов в области обеспечения безопасности дорожного движения. Максимальный срок, предусмотренный ГОСТ Р 50597-93 для исправления повреждений дорожного покрытия составляет 10 суток. В связи с изложенным, на основании п.11 Положения «О ГИБДД МВД РФ», ст. 12 ФЗ «О полиции», п.3 ч.1.ст. 28.1, ч.1 ст29.13 КоАП Российской Федерации прошу:';
 		$ar['count'][1] = 'Возбудить дело об административном правонарушении по статье 12.34 КоАП РФ «Несоблюдение требований по обеспечению безопасности дорожного движения при ремонте и содержании дорог, железнодорожных переездов или других дорожных сооружений» в отношении дорожной службы, ответственной за содержание и ремонт указанного дорожного участка.';
