@@ -57,7 +57,7 @@ class GibddHeads extends CActiveRecord
 		return array(
 			array('name, subject_id, post, post_dative, fio, fio_dative, gibdd_name, address, level', 'required'),
 			array('subject_id, is_regional, moderated, level', 'numerical', 'integerOnly'=>true),
-			array('post, post_dative, fio, fio_dative, gibdd_name, tel_degurn, tel_dover, url', 'length', 'max'=>255),
+			array('post, post_dative, fio, fio_dative, gibdd_name, tel_degurn, tel_dover, url, tel_chancery', 'length', 'max'=>255),
 			array('contacts, str_subject', 'length'),
 			array('lat, lng', 'numerical'),
 			array('url, url_priemnaya', 'url','allowEmpty'=>true),
@@ -202,6 +202,7 @@ class GibddHeads extends CActiveRecord
 			'address' => 'Адрес',
 			'tel_degurn' => 'Тел. дежурной части',
 			'tel_dover' => 'Тел. доверия',
+			'tel_chancery' => 'Тел. канцелярии',
 			'url' => 'Сайт',
 			'lat' => 'Широта',
 			'lng' => 'Долгота',

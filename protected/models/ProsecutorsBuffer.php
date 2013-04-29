@@ -39,7 +39,7 @@ class ProsecutorsBuffer extends CActiveRecord
 		return array(
 			array('name, subject_id, preview_text, gibdd_name', 'required'),
 			array('subject_id', 'numerical', 'integerOnly'=>true),
-			array('name, gibdd_name', 'length', 'max'=>255),
+			array('name, gibdd_name, tel_chancery', 'length', 'max'=>255),
 			array('url_priemnaya', 'url','allowEmpty'=>true),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
@@ -70,6 +70,7 @@ class ProsecutorsBuffer extends CActiveRecord
 			'preview_text' => 'Описание',
 			'gibdd_name' => 'Название',
 			'url_priemnaya'=>'Интернет-приемная',
+			'tel_chancery' => 'Тел. канцелярии',
 		);
 	}
 
