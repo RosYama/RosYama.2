@@ -604,7 +604,7 @@ class Holes extends CActiveRecord
 	public function BeforeSave(){
 				parent::beforeSave();
 				$this->DATE_STATUS = time();
-				
+				$this->archive = 0;
 				$Subs = array(
 						'Город' => '',
 						'город' => '',
