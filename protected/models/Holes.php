@@ -729,9 +729,12 @@ class Holes extends CActiveRecord
 		}
 		
 		if ($this->withAnswers){
-			$criteria->with[]='requests_with_answers_files';
-			$criteria->together=true;
-			$criteria->group='t.id';
+			$criteria->with=Array('type', 'comments_cnt'); //не запрашиваем картинки т.к. дико тормозит
+			$criteria->distinct=true; 
+			$criteria->select='t.*';
+			$criteria->addCondition('t.STATE!="fresh"');
+			$criteria->join='INNER JOIN {{hole_requests}} j on (t.id=j.hole_id)';
+		   	$criteria->join.=' INNER JOIN {{hole_answers}} d on (j.id=d.request_id)';
 		}
 		
 		$criteria->compare('t.deleted',0);
@@ -916,9 +919,12 @@ class Holes extends CActiveRecord
 		if (!$user->userModel->relProfile->show_archive_holes) $criteria->compare('t.archive',0,false);
 		
 		if ($this->withAnswers){
-			$criteria->with[]='requests_with_answers_files';
-			$criteria->together=true;
-			$criteria->group='t.id';
+			$criteria->with=Array('type', 'comments_cnt'); //не запрашиваем картинки т.к. дико тормозит
+			$criteria->distinct=true; 
+			$criteria->select='t.*';
+			$criteria->addCondition('t.STATE!="fresh"');
+			$criteria->join='INNER JOIN {{hole_requests}} j on (t.id=j.hole_id)';
+		   	$criteria->join.=' INNER JOIN {{hole_answers}} d on (j.id=d.request_id)';
 		}
 		
 		$criteria->compare('t.deleted',0);
@@ -952,15 +958,16 @@ class Holes extends CActiveRecord
 		//$criteria->with=Array('pictures_fresh','pictures_fixed');
 		$criteria->with=Array('type','pictures_fresh', 'comments_cnt');
 		if ($this->withAnswers){
-			$criteria->with[]='requests_with_answers_files';
-			$criteria->together=true;
-			$criteria->group='t.id';
+			$criteria->with=Array('type', 'comments_cnt'); //не запрашиваем картинки т.к. дико тормозит
+			$criteria->distinct=true; 
+			$criteria->select='t.*';
+			$criteria->addCondition('t.STATE!="fresh"');
+			$criteria->join='INNER JOIN {{hole_requests}} j on (t.id=j.hole_id)';
+		   	$criteria->join.=' INNER JOIN {{hole_answers}} d on (j.id=d.request_id)';
 		}
 		
 		if ($fixeds){
-			$with=$criteria->with;
-			$with[]='pictures_fixed_not_moderated';
-			$criteria->with=$with;
+			$criteria->with=Array('type', 'comments_cnt','pictures_fixed_not_moderated');
 			$criteria->addCondition('t.STATE!="fixed"');
 			$criteria->together=true;
 			$criteria->group='t.id';

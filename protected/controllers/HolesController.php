@@ -1173,10 +1173,13 @@ class HolesController extends Controller
 		
 		$criteria->compare('t.deleted',0);
 		
-		if (isset($_GET['Holes']['withAnswers'])){
-			$criteria->with[]='requests_with_answers_files';
-			$criteria->together=true;
-			$criteria->group='t.id';
+		if (isset($_GET['Holes']['withAnswers']) && $_GET['Holes']['withAnswers']){
+			$criteria->with=Array('type', 'comments_cnt'); //не запрашиваем картинки т.к. дико тормозит
+			$criteria->distinct=true; 
+			$criteria->select='t.*';
+			$criteria->addCondition('t.STATE!="fresh"');
+			$criteria->join='INNER JOIN {{hole_requests}} j on (t.id=j.hole_id)';
+		   	$criteria->join.=' INNER JOIN {{hole_answers}} d on (j.id=d.request_id)';
 		}
 		
 		$userid=Yii::app()->user->id;
