@@ -277,6 +277,7 @@ EOD
 	'summaryText'=>false,
 	'emptyText'=>!$model->archive ? 'Ничего не найдено. Может быть попробовать '.CHtml::link('поискать в архиве',$model->archiveSearchLink).'?' : 'Ничего не найдено.',
 	'viewData'=>Array('user'=>Yii::app()->user),
+	'afterAjaxUpdate'=>'js:function(id, data) {$(window).scrollTop($('.holes_list').offset().top)}',
 	
 )); ?>
 <?php if (Yii::app()->user->isModer && $model->NOT_PREMODERATED && $dataProvider->totalItemCount > 0) : ?>
