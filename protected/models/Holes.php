@@ -743,7 +743,7 @@ class Holes extends CActiveRecord
 		$criteria->compare('t.deleted',0);
 		if($this->types && array_sum($this->types) > 0) $criteria->addInCondition('t.TYPE_ID', $this->types);
 		$vals=array_count_values($this->states);
-		if ($this->states && $vals[0] < count($this->states)) $criteria->compare('t.STATE',$this->states,true);
+		if ($this->states && (!isset($vals[0]) || $vals[0] < count($this->states))) $criteria->compare('t.STATE',$this->states,true);
 		$criteria->compare('t.gibdd_id',$this->gibdd_id,false);
 		$criteria->compare('type.alias',$this->type_alias,true);	
 		
@@ -935,7 +935,7 @@ class Holes extends CActiveRecord
 		$criteria->compare('t.TYPE_ID',$this->TYPE_ID,false);
 		if($this->types && array_sum($this->types) > 0) $criteria->addInCondition('t.TYPE_ID', $this->types);
 		$vals=array_count_values($this->states);
-		if ($this->states && $vals[0] < count($this->states)) $criteria->compare('t.STATE',$this->states,true);
+		if ($this->states && (!isset($vals[0]) || $vals[0] < count($this->states))) $criteria->compare('t.STATE',$this->states,true);
 		$criteria->compare('type.alias',$this->type_alias,true);
 		$criteria->compare('t.gibdd_id',$this->gibdd_id,false);
 		//
