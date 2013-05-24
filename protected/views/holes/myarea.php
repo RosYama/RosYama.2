@@ -75,14 +75,36 @@ $this->pageTitle=Yii::app()->name . ' :: Мой участок';
 	//'method'=>'get',
 	'id'=>'holes_selectors',
 )); ?>			
-			<?php echo $form->dropDownList($model, 'TYPE_ID', CHtml::listData( HoleTypes::model()->findAll(Array('condition'=>'published=1', 'order'=>'ordering')), 'id','name'), array('prompt'=>'Тип дефекта')); ?>
-			<?php echo $form->dropDownList($model, 'STATE', $model->Allstates, array('prompt'=>'Статус дефекта')); ?>
-			<?php echo $form->dropDownList($model, 'showUserHoles', Array(1=>'Мои ямы', 2=>'Чужие, на которые я отправил заявление'),Array('prompt'=>'Все ямы')); ?>
-			<?php echo CHtml::submitButton('Найти'); ?><br/>
-			<div class="clear"></div><br />
+
+<div class="filterCol filterStatus">
+<p class="title">Показать дефекты со статусом</p>
+<?php foreach ($model->allstatesMany as $alias=>$name) : ?>
+	<label><span class="<?php echo $alias; ?>"><?php echo $form->checkBox($model,"states[$alias]",Array('value'=>$alias)); ?></span><ins><?php echo $name; ?></ins></label>
+<?php endforeach; ?>	
+</div>
+<div class="filterCol filterType">
+<p class="title">Показать тип дефектов</p>
+<?php foreach (HoleTypes::model()->findAll(Array('condition'=>'published=1', 'order'=>'ordering')) as $i=>$type) : ?>
+<label class="col2"><span><?php echo $form->checkBox($model,"types[$i]",Array('value'=>$type->id)); ?></span><ins class="<?php echo $type->alias; ?>"><?php echo $type->name; ?></ins></label>
+<?php endforeach; ?>
+<div class="clear"></div>
+<br />
+<div class="map_bottom_check">
+	<div class="chekboxes withAnswers">
+	<?php echo $form->checkBox($model,"withAnswers",Array('class'=>'filter_checkbox')); ?>	
+	<?php echo $form->labelEx($model,'withAnswers',Array('label'=>'с загруженными ответами ГИБДД')); ?>		
+	</div>
+
+</div>
+
+</div>
+
+<div class="clear"></div>		
+			<?php echo $form->dropDownList($model, 'showUserHoles', Array(1=>'Мои ямы', 2=>'Чужие, на которые я отправил заявление'),Array('prompt'=>'Все ямы')); ?>		
 			<?php if ($model->keys) echo $form->dropDownList($model, 'gibdd_id', CHtml::listData(GibddHeads::model()->with(Array('holes'=>Array('select'=>'ID, gibdd_id')))->findAll(Array('condition'=>'holes.ID IN ('.implode(', ',$model->keys).')','order'=>'t.name')), 'id', 'gibdd_name' ), array('prompt'=>'Все ГИБДД')); ?>
-			<?php echo $form->checkBox($model,"withAnswers",Array('class'=>'filter_checkbox')); ?>	
-			<?php echo $form->labelEx($model,'withAnswers',Array('label'=>'с загруженными ответами ГИБДД')); ?>		
+			<?php echo CHtml::submitButton('Найти'); ?>
+						<br/>
+			<div class="clear"></div><br />
 						<div style="text-align:right;">
 			<?php echo CHtml::checkBox('selectAll', false, Array('id'=>'selectAll','class'=>'state_check')); ?><?php echo CHtml::label('Выбрать все', 'selectAll'); ?>
 			</div>
