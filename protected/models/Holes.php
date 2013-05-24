@@ -52,6 +52,9 @@ class Holes extends CActiveRecord
 	public $keys=Array();
 	public $polygons=Array();
 	public $withAnswers;
+	
+	public $types=Array();
+	public $states=Array();
 	/**
 	 * @return string the associated database table name
 	 */
@@ -97,7 +100,7 @@ class Holes extends CActiveRecord
 			array('upploadedPictures', 'required', 'on' => 'insert, add', 'message' => 'Необходимо загрузить фотографии'),			
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('ID, USER_ID, LATITUDE, LONGITUDE, ADDRESS, STATE, DATE_CREATED, DATE_SENT, DATE_STATUS, COMMENT1, COMMENT2, TYPE_ID, ADR_SUBJECTRF, ADR_CITY, COMMENT_GIBDD_REPLY, GIBDD_REPLY_RECEIVED, PREMODERATED, DATE_SENT_PROSECUTOR, withAnswers', 'safe', 'on'=>'search'),
+			array('ID, USER_ID, LATITUDE, LONGITUDE, ADDRESS, STATE, DATE_CREATED, DATE_SENT, DATE_STATUS, COMMENT1, COMMENT2, TYPE_ID, ADR_SUBJECTRF, ADR_CITY, COMMENT_GIBDD_REPLY, GIBDD_REPLY_RECEIVED, PREMODERATED, DATE_SENT_PROSECUTOR, withAnswers, types, states', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -715,7 +718,7 @@ class Holes extends CActiveRecord
 		$criteria->compare('t.ID',$this->ID,false);
 		if (!$this->showUserHoles || $this->showUserHoles==1) $criteria->compare('t.USER_ID',$userid,false);
 		elseif ($this->showUserHoles==2) {
-			$criteria->with=Array('type','pictures_fresh','requests');
+			$criteria->with=Array('type','requests');
 			$criteria->addCondition('t.USER_ID!='.$userid);
 			$criteria->compare('requests.user_id',$userid,true);
 			$criteria->together=true;
@@ -729,7 +732,7 @@ class Holes extends CActiveRecord
 		}
 		
 		if ($this->withAnswers){
-			$criteria->with=Array('type', 'comments_cnt'); //не запрашиваем картинки т.к. дико тормозит
+			$criteria->with=Array('type', 'comments_cnt','requests'); //не запрашиваем картинки т.к. дико тормозит
 			$criteria->distinct=true; 
 			$criteria->select='t.*';
 			$criteria->addCondition('t.STATE!="fresh"');
@@ -738,8 +741,9 @@ class Holes extends CActiveRecord
 		}
 		
 		$criteria->compare('t.deleted',0);
-		$criteria->compare('t.STATE',$this->STATE,true);	
-		$criteria->compare('t.TYPE_ID',$this->TYPE_ID,false);
+		if($this->types && array_sum($this->types) > 0) $criteria->addInCondition('t.TYPE_ID', $this->types);
+		$vals=array_count_values($this->states);
+		if ($this->states && (!isset($vals[0]) || $vals[0] < count($this->states))) $criteria->compare('t.STATE',$this->states,true);
 		$criteria->compare('t.gibdd_id',$this->gibdd_id,false);
 		$criteria->compare('type.alias',$this->type_alias,true);	
 		
@@ -895,7 +899,7 @@ class Holes extends CActiveRecord
 			.' AND LATITUDE >= '.$shape->corners['bottom']
 			.' AND LATITUDE <= '.$shape->corners['top'];					
 			$criteria->addCondition($cond,'OR');			
-			}
+			}			
 		
 		
 		$notPolygonHolesIds=$this->findPkeysNotInAreaByUser($user->userModel);
@@ -909,7 +913,7 @@ class Holes extends CActiveRecord
 		
 		if ($this->showUserHoles==1) $criteria->compare('t.USER_ID',$userid,false);
 		elseif ($this->showUserHoles==2) {
-			$criteria->with=Array('type','pictures_fresh','requests');
+			$criteria->with=Array('type','requests');
 			$criteria->addCondition('t.USER_ID!='.$userid);
 			$criteria->compare('requests.user_id',$userid,true);
 			$criteria->together=true;
@@ -919,7 +923,7 @@ class Holes extends CActiveRecord
 		if (!$user->userModel->relProfile->show_archive_holes) $criteria->compare('t.archive',0,false);
 		
 		if ($this->withAnswers){
-			$criteria->with=Array('type', 'comments_cnt'); //не запрашиваем картинки т.к. дико тормозит
+			$criteria->with=Array('type', 'comments_cnt','requests'); //не запрашиваем картинки т.к. дико тормозит
 			$criteria->distinct=true; 
 			$criteria->select='t.*';
 			$criteria->addCondition('t.STATE!="fresh"');
@@ -927,9 +931,11 @@ class Holes extends CActiveRecord
 		   	$criteria->join.=' INNER JOIN {{hole_answers}} d on (j.id=d.request_id)';
 		}
 		
-		$criteria->compare('t.deleted',0);
-		$criteria->compare('t.STATE',$this->STATE,true);	
+		$criteria->compare('t.deleted',0);			
 		$criteria->compare('t.TYPE_ID',$this->TYPE_ID,false);
+		if($this->types && array_sum($this->types) > 0) $criteria->addInCondition('t.TYPE_ID', $this->types);
+		$vals=array_count_values($this->states);
+		if ($this->states && (!isset($vals[0]) || $vals[0] < count($this->states))) $criteria->compare('t.STATE',$this->states,true);
 		$criteria->compare('type.alias',$this->type_alias,true);
 		$criteria->compare('t.gibdd_id',$this->gibdd_id,false);
 		//

@@ -136,3 +136,7 @@
 			jQuery("#holes_selectors select, #holes_selectors input:not(.state_check)").live("change",function() {
 				$.fn.yiiListView.update("holes_list",{ data:$(this).parents("form").serialize()});								    	
 			});
+			
+			jQuery("#holes_selectors input:checkbox:not(.state_check)").live("click",function() {
+				$.fn.yiiListView.update("holes_list",{ data:$(this).parents("form").serialize()});								    	
+			});
