@@ -718,7 +718,7 @@ class Holes extends CActiveRecord
 		$criteria->compare('t.ID',$this->ID,false);
 		if (!$this->showUserHoles || $this->showUserHoles==1) $criteria->compare('t.USER_ID',$userid,false);
 		elseif ($this->showUserHoles==2) {
-			$criteria->with=Array('type','pictures_fresh','requests');
+			$criteria->with=Array('type','requests');
 			$criteria->addCondition('t.USER_ID!='.$userid);
 			$criteria->compare('requests.user_id',$userid,true);
 			$criteria->together=true;
@@ -732,7 +732,7 @@ class Holes extends CActiveRecord
 		}
 		
 		if ($this->withAnswers){
-			$criteria->with=Array('type', 'comments_cnt'); //не запрашиваем картинки т.к. дико тормозит
+			$criteria->with=Array('type', 'comments_cnt','requests'); //не запрашиваем картинки т.к. дико тормозит
 			$criteria->distinct=true; 
 			$criteria->select='t.*';
 			$criteria->addCondition('t.STATE!="fresh"');
@@ -913,7 +913,7 @@ class Holes extends CActiveRecord
 		
 		if ($this->showUserHoles==1) $criteria->compare('t.USER_ID',$userid,false);
 		elseif ($this->showUserHoles==2) {
-			$criteria->with=Array('type','pictures_fresh','requests');
+			$criteria->with=Array('type','requests');
 			$criteria->addCondition('t.USER_ID!='.$userid);
 			$criteria->compare('requests.user_id',$userid,true);
 			$criteria->together=true;
@@ -923,7 +923,7 @@ class Holes extends CActiveRecord
 		if (!$user->userModel->relProfile->show_archive_holes) $criteria->compare('t.archive',0,false);
 		
 		if ($this->withAnswers){
-			$criteria->with=Array('type', 'comments_cnt'); //не запрашиваем картинки т.к. дико тормозит
+			$criteria->with=Array('type', 'comments_cnt','requests'); //не запрашиваем картинки т.к. дико тормозит
 			$criteria->distinct=true; 
 			$criteria->select='t.*';
 			$criteria->addCondition('t.STATE!="fresh"');
