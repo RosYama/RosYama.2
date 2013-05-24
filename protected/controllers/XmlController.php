@@ -395,6 +395,7 @@ class XmlController extends Controller
 		$comment=Yii::app()->request->getParam('comment');
 		$type=Yii::app()->request->getParam('type');
 		$deletefiles=Yii::app()->request->getParam('deletefiles');
+		if ((int)$deletefiles && !is_array($deletefiles)) $deletefiles=Array((int)$deletefiles);
 		$gibdd_id=Yii::app()->request->getParam('gibdd_id');
 		if ($type){
 			$typemodel=HoleTypes::model()->find('alias="'.$type.'"');
