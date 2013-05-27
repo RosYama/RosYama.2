@@ -123,7 +123,7 @@
 			<?php $this->widget('application.widgets.collection.collectionWidget'); ?>			
 			<?php $this->endCache(); } ?>
 
-			<p class="friends">Чиним ямы в <i class="flag-UA"></i> <a href="http://ukryama.com/">Украине</a>, <i class="flag-BY"></i> <a href="http://belyama.by/">Беларуси</a> и <i class="flag-KZ"></i> <a href="http://kazyama.kz/">Казахстане</a></p>
+			<p class="friends">Чиним ямы на <i class="flag-UA"></i> <a href="http://ukryama.com/">Украине</a>, в <i class="flag-BY"></i> <a href="http://belyama.by/">Беларуси</a> и <i class="flag-KZ"></i> <a href="http://kazyama.kz/">Казахстане</a></p>
 		</div>
 		<div class="right_footer">
 			<p class="autochmo"><a target="_blank" href="http://autochmo.ru/" title="Доска позора водителей &aring;вточмо">&aring;utochmo</a><br>Доска позора водителей</p>
