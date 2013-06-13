@@ -22,7 +22,7 @@
 	<div class="rCol"> 
 	<div class="f">	
 	<?php if (!$model->hole_area) : ?>
-	<h2>На карте, отметте прямоугольником границы своего участка</h2>
+	<h2>Обозначьте на карте многоугольником границы своего участка</h2>
 	<?php endif; ?>
 		<div class="bx-yandex-view-layout">
 			<div class="bx-yandex-view-map">
