@@ -714,7 +714,7 @@ class Holes extends CActiveRecord
 		$userid=$user->id;
 		$criteria=new CDbCriteria;
 		//$criteria->with=Array('pictures_fresh','pictures_fixed');
-		$criteria->with=Array('type','pictures_fresh', 'comments_cnt');
+		$criteria->with=Array('type','pictures_fresh'=>Array('group'=>'pictures_fresh.hole_id'), 'comments_cnt');
 		$criteria->compare('t.ID',$this->ID,false);
 		if (!$this->showUserHoles || $this->showUserHoles==1) $criteria->compare('t.USER_ID',$userid,false);
 		elseif ($this->showUserHoles==2) {
@@ -889,7 +889,7 @@ class Holes extends CActiveRecord
 		$userid=$user->id;		
 		
 		$criteria=new CDbCriteria;
-		$criteria->with=Array('type','pictures_fresh', 'comments_cnt');		
+		$criteria->with=Array('type','pictures_fresh'=>Array('group'=>'pictures_fresh.hole_id'), 'comments_cnt');		
 		
 		$area=$user->userModel->hole_area;
 		
