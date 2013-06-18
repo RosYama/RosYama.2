@@ -1,5 +1,5 @@
 <li<?php if(($index+1)%3==0):?> class="noMargin"<?php endif; ?>>
-			<?php echo CHtml::link(CHtml::image($data->STATE == 'fixed' && $data->pictures_fixed ? $data->pictures_fixed[0]->small : ($data->pictures_fresh_one ? $data->pictures_fresh_one->small:'')), array('view', 'id'=>$data->ID), array('class'=>'photo')); ?>
+			<?php echo CHtml::link(CHtml::image($data->STATE == 'fixed' && $data->pictures_fixed ? $data->pictures_fixed[0]->small : ($data->pictures_fresh_one ? $data->pictures_fresh_one[0]->small:'')), array('view', 'id'=>$data->ID), array('class'=>'photo')); ?>
 			<?php if (isset($showcheckbox) && $showcheckbox) : ?>
 				<?php echo CHtml::checkBox('hole_id[]', $data->isSelected ? true : false, Array('value'=>$data->ID, 'class'=>'hole_check')); ?>
 			<?php endif; ?>
