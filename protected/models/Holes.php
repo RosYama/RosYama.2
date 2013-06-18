@@ -118,7 +118,6 @@ class Holes extends CActiveRecord
 			'requests_with_answers_files'=>array(self::HAS_MANY, 'HoleRequests', 'hole_id', 'with'=>Array('answers'=>Array('with'=>'files')), 'condition'=>'answers.id > 0 AND files.id > 0', 'order'=>'requests_with_answers_files.date_sent, answers.date'),
 			'pictures'=>array(self::HAS_MANY, 'HolePictures', 'hole_id', 'order'=>'pictures.type, pictures.ordering AND pictures.premoderated=1'),
 			'pictures_fresh'=>array(self::HAS_MANY, 'HolePictures', 'hole_id', 'condition'=>'pictures_fresh.type="fresh" AND pictures_fresh.premoderated=1','order'=>'pictures_fresh.ordering'),
-			'pictures_fresh_one'=>array(self::HAS_MANY, 'HolePictures', 'hole_id', 'condition'=>'pictures_fresh_one.type="fresh" AND pictures_fresh_one.premoderated=1','order'=>'pictures_fresh_one.ordering', 'group'=>'pictures_fresh_one.hole_id', 'limit'=>1),
 			'pictures_fixed'=>array(self::HAS_MANY, 'HolePictures', 'hole_id', 'condition'=>'pictures_fixed.type="fixed" AND pictures_fixed.premoderated=1','order'=>'pictures_fixed.ordering'),
 			'user_pictures_fixed'=>array(self::HAS_MANY, 'HolePictures', 'hole_id', 'condition'=>'user_pictures_fixed.type="fixed" AND user_pictures_fixed.user_id='.Yii::app()->user->id,'order'=>'user_pictures_fixed.ordering'),
 			'pictures_fixed_not_moderated'=>array(self::HAS_MANY, 'HolePictures', 'hole_id', 'condition'=>'pictures_fixed_not_moderated.type="fixed" AND pictures_fixed_not_moderated.premoderated=0','order'=>'pictures_fixed_not_moderated.ordering'),
@@ -715,7 +714,7 @@ class Holes extends CActiveRecord
 		$userid=$user->id;
 		$criteria=new CDbCriteria;
 		//$criteria->with=Array('pictures_fresh','pictures_fixed');
-		$criteria->with=Array('type','pictures_fresh_one', 'comments_cnt');
+		$criteria->with=Array('type','pictures_fresh', 'comments_cnt');
 		$criteria->compare('t.ID',$this->ID,false);
 		if (!$this->showUserHoles || $this->showUserHoles==1) $criteria->compare('t.USER_ID',$userid,false);
 		elseif ($this->showUserHoles==2) {
@@ -890,7 +889,7 @@ class Holes extends CActiveRecord
 		$userid=$user->id;		
 		
 		$criteria=new CDbCriteria;
-		$criteria->with=Array('type','pictures_fresh_one', 'comments_cnt');		
+		$criteria->with=Array('type','pictures_fresh', 'comments_cnt');		
 		
 		$area=$user->userModel->hole_area;
 		
@@ -963,7 +962,7 @@ class Holes extends CActiveRecord
 
 		$criteria=new CDbCriteria;
 		//$criteria->with=Array('pictures_fresh','pictures_fixed');
-		$criteria->with=Array('pictures_fresh_one', 'type', 'comments_cnt');
+		$criteria->with=Array('type','pictures_fresh'=>Array('group'=>'pictures_fresh.hole_id'), 'comments_cnt');
 		if ($this->withAnswers){
 			$criteria->with=Array('type', 'comments_cnt'); //не запрашиваем картинки т.к. дико тормозит
 			$criteria->distinct=true; 
