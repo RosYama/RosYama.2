@@ -10,6 +10,7 @@ $this->pageTitle=Yii::app()->name . ' :: Печатная агитация дл�
 	<td><a href="/files/rosyama-text.jpg"><img src="/files/rosyama-text-small.jpg"></a></td>
 	<td><a href="/files/rosyama-pict.jpeg"><img src="/files/rosyama-pict-small.jpeg"></a></td>
 	<td><a href="/files/rosyama-4pict.jpeg"><img src="/files/rosyama-4pict-small.jpeg"></a></td>
+	<td><a href="/files/345m.jpg"><img src="/files/345s.jpg"></a></td>
 </tr>
 </table>
 </p>
