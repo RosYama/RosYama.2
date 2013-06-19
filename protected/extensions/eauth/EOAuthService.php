@@ -97,32 +97,36 @@ abstract class EOAuthService extends EAuthServiceBase implements IAuthService {
 	protected function initRequest($url, $options = array()) {
 		$ch = parent::initRequest($url, $options);
 		curl_setopt($ch, CURLOPT_HTTPHEADER, array('Expect:'));
-		if (isset($params['data'])) {
-			curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-Type: text/xml","SOAPAction: \"/soap/action/query\"", "Content-length: ".strlen($data))); 
-		}
 		return $ch;
 	}
-	
+
 	/**
 	 * Returns the protected resource.
+	 *
 	 * @param string $url url to request.
 	 * @param array $options HTTP request options. Keys: query, data, referer.
 	 * @param boolean $parseJson Whether to parse response in json format.
-	 * @return string the response. 
+	 * @return string the response.
 	 * @see makeRequest
 	 */
 	public function makeSignedRequest($url, $options = array(), $parseJson = true) {
-		if (!$this->getIsAuthenticated())
-			throw new CHttpException(401, Yii::t('eauth', 'Unable to complete the request because the user was not authenticated.', array(), 'en'));
-						
+		if (!$this->getIsAuthenticated()) {
+			throw new CHttpException(401, Yii::t('eauth', 'Unable to complete the request because the user was not authenticated.'));
+		}
+
 		$consumer = $this->getConsumer();
 		$signatureMethod = new OAuthSignatureMethod_HMAC_SHA1();
 		$token = $this->getAccessToken();
 
-		$request = OAuthRequest::from_consumer_and_token($consumer, $token, isset($options['data']) ? 'POST' : 'GET', $url);
+		$query = null;
+		if (isset($options['query'])) {
+			$query = $options['query'];
+			unset($options['query']);
+		}
+
+		$request = OAuthRequest::from_consumer_and_token($consumer, $token, isset($options['data']) ? 'POST' : 'GET', $url, $query);
 		$request->sign_request($signatureMethod, $consumer, $token);
-		$url = $request->to_url();
-		
-		return $this->makeRequest($url, $options, $parseJson);
+
+		return $this->makeRequest($request->to_url(), $options, $parseJson);
 	}
 }
