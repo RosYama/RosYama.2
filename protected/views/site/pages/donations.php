@@ -18,10 +18,9 @@ $this->layout='//layouts/header_default_without_add';
 
 <p><b>Банковская карта</b> <br> 
 
+<!--
 <table>
 <tr>
-
-<!-- <td style="width: 100%;"> -->
 <td>
 <form action="https://auth.robokassa.ru/Merchant/Index.aspx" method="POST" target="_blank">
 <input name="MrchLogin" type="hidden" value="fbk" />
@@ -34,16 +33,29 @@ $this->layout='//layouts/header_default_without_add';
 </form>
 <img src="/images/robokassa/robokassa.gif" style="margin-top: 10px;" />
 </td>
-
-<!--
-<td>
-<img height="100px" src="/images/robokassa/qr.png" />
-</td>
+</tr>
+</table>
 -->
 
+<table>
+<tr>
+<td>
+<form action="https://auth.robokassa.ru/Merchant/Index.aspx" method="POST" target="_blank">
+<input name="MrchLogin" type="hidden" value="fbk" />
+<input name="Desc" type="hidden" value="Пожертвование на работу проекта РосЯма" />
+<input name="SignatureValue" type="hidden" value="f2f432d446e845b3098768440b796835" />
+<input name="shp_Project" type="hidden" value="RosYama" />
+<input name="IncCurrLabel" type="hidden" value="BANKOCEAN2R" />
+<input class="b-input-text__input" maxlength="10" name="FreeOutSum" style="text-align: right;" type="text" value="1000" />
+<span class="b-widget-donate__currency">руб. </span>
+<input name="submit-button" onClick="_gaq.push(['_trackEvent', 'Payment', 'Jump to payment page - rosyama', 'card payments',, true]);" type="submit" value="Пожертвовать" />
+</form>
+<img src="/images/robokassa/robokassa.gif" style="margin-top: 10px;" />
+</td>
 </tr>
 </table>
 </p>
+
 
 <p><b>QIWI</b> - 9161775694</p>
 
