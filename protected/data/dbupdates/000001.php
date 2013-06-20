@@ -1,0 +1,5 @@
+<?php
+
+// dummy update script
+
+?>

@@ -132,4 +132,102 @@ class SiteController extends Controller
 		Yii::app()->user->logout();
 		$this->redirect(Yii::app()->homeUrl);
 	}
+
+	/**
+	 * Страница обновления версии структуры БД
+	 */
+	public function actionDbupdate()
+	{
+		if(!Yii::app()->user->isAdmin)
+		{
+			$this->redirect('/');
+			die();
+		}
+		define('UPDATES_DIRECTORY', $_SERVER['DOCUMENT_ROOT'].'/protected/data/dbupdates'); // <- notice the absence of trailing slash
+		// get local installed and available versions
+		$_version = Yii::app()->getGlobalState('db_version', array(0 => 0));
+		$_versionAvailable = array(0 => 0);
+		$dir = opendir(UPDATES_DIRECTORY);
+		if($dir)
+		{
+			while($file = readdir($dir))
+			{
+				$file   = substr($file, 0, strpos($file, '.'));
+				$letter = ltrim($file, '1234567890');
+				if(!$letter)
+				{
+					$letter = 0;
+				}
+				$file = (int)preg_replace('/\D/', '', $file);
+				$_versionAvailable[$letter] = max($_versionAvailable[$letter], $file);
+			}
+			closedir($dir);
+		}
+		if(isset($_GET["FORCE"]))
+		{
+			$letter = explode('_', $_GET['FORCE']);
+			if(!isset($letter[1]))
+			{
+				$letter[1] = 0;
+			}
+			$_version[$letter[1]] = (int)$letter[0];
+			Yii::app()->setGlobalState('db_version', $_version);
+		}
+		$output = '';
+		if($_POST)
+		{
+			// the updating
+			$_update_files = array();
+			$dir = opendir(UPDATES_DIRECTORY);
+			while($file = readdir($dir))
+			{
+				$fileid = substr($file, 0, strpos($file, '.'));
+				$letter = ltrim($fileid, '1234567890');
+				if(!$letter)
+				{
+					$letter = 0;
+				}
+				$fileid = (int)preg_replace('/\D/', '', $file);
+				if($fileid > $_version[$letter])
+				{
+					$_update_files[$file.'|'.$fileid.'|'.$letter] = $file;
+				}
+			}
+			closedir($dir);
+			ksort($_update_files);
+			$bOk = true;
+			foreach($_update_files as $id_jajaja => $f_jajaja)
+			{
+				$result = require(UPDATES_DIRECTORY.'/'.$f_jajaja);
+				if($result === false)
+				{
+					$bOk = false;
+					$output .= 'Проклятье! Что-то пошло не так. Не удалось провести обновление файла '.$f_jajaja.'<br />';
+					break;
+				}
+				$id_jajaja = explode('|', $id_jajaja);
+				if(!$id_jajaja[2])
+				{
+					$id_jajaja[2] = 0;
+				}
+				$_version[$id_jajaja[2]] = (int)$id_jajaja[1];
+				Yii::app()->setGlobalState('db_version', $_version);
+				$output .= 'Скрипт обновлений '.$f_jajaja.' выполнен<br />';
+			}
+			if($bOk)
+			{
+				$output .= 'Все обновления выполнены<br><br>';
+			}
+		}
+		$this->render
+		(
+			'dbupdate',
+			array
+			(
+				'_version' => $_version,
+				'_versionAvailable' => $_versionAvailable,
+				'output' => $output
+			)
+		);
+	}
 }
