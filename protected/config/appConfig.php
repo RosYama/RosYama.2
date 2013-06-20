@@ -11,7 +11,10 @@ $bd=array(
 			'enableProfiling' => true,
             'enableParamLogging' => true,
 		);		
-	
+if(file_exists(dirname(__FILE__).'/database.php'))
+{
+	include(dirname(__FILE__).'/database.php');
+}
 		
 $socials=array( // You can change the providers and their classes.
 				/*'google' => array(
