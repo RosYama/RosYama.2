@@ -4,7 +4,7 @@ $db=array(
 	'connectionString' => 'mysql:host=localhost;dbname=rosyama',
 	'emulatePrepare' => false,
 	'username' => 'root',
-	'password' => 'qwe1024',
+	'password' => '123',
 	'charset' => 'utf8',
 	'tablePrefix'=>'yii_',
 	'schemaCachingDuration'=>3600,
