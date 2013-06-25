@@ -1,7 +1,7 @@
 <div class="services">
   <ul class="auth-services clear">
   <?php
-	foreach ($services as $name => $service) {	
+	foreach ($services as $name => $service) {
 		$isUsrServ=false;
 		foreach ($userServices as $userService){
 			if ($name==$userService->name) $isUsrServ=true;

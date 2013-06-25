@@ -24,7 +24,7 @@
 .auth-icon.MyMailRu		 { background-position: 0 -238px; }
 .auth-icon.odnoklassniki { background-position: 0 -272px; }
 .auth-icon.livejournal { background-position: 0 -306px; }
-
+.auth-icon.forum { background-position: 0 -340px; }
 
 .auth-link:hover .auth-icon i,
 .auth-link:focus .auth-icon i {

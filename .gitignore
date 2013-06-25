@@ -12,5 +12,5 @@ protected/runtime/application.log
 
 .DS_Store
 
-.idea/*
-protected/config/database.php
+/.idea/*
+/protected/config/database.php

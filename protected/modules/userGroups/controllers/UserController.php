@@ -193,7 +193,7 @@ class UserController extends Controller
 			$authIdentity = Yii::app()->eauth->getIdentity($service);
 			$authIdentity->redirectUrl = Yii::app()->user->returnUrl;
 			$authIdentity->cancelUrl = $this->createAbsoluteUrl('/profile/update');		
-			
+
 			if ($authIdentity->authenticate()) {
 				$identity = new ServiceUserIdentity($authIdentity);
 

@@ -74,6 +74,11 @@ $socials=array( // You can change the providers and their classes.
 					'client_secret' => '...',
 					'title' => 'Однокл.',
 				),
+				'forum' => array(
+					'id'    => 'forum',
+					'class' => 'ForumService',
+					'title' => 'Форум'
+				),
 			);	
 
 $params=array(

@@ -85,9 +85,8 @@ class ProfileController extends Controller
 				//$this->redirect(Yii::app()->baseUrl . '/userGroups?_isAjax=1&u='.$passModel->username);
 			} else {
 				//Yii::app()->user->setFlash('user', Yii::t('userGroupsModule.general','An Error Occurred. Please try later.'));
-				}
+			}
 		}
-		
 
 		if(isset($_POST['UserGroupsUser']) && isset($_POST['formID']))
 		{
@@ -115,13 +114,8 @@ class ProfileController extends Controller
 				} else
 					Yii::app()->user->setFlash('user', 'Произошла ошибка. Попробуйте позже.');
 			}
-		}	
-		
-		$socials=UsergroupsSocialServices::model()->with('account')->findAll();		
-		
-		
-		
-		
+		}
+		$socials=UsergroupsSocialServices::model()->with('account')->findAll();
 		$this->render('update',array('miscModel'=>$miscModel,'passModel'=>$passModel, 'profiles' => $profile_models, 'socials'=>$socials), false, true);
 	}
 	
