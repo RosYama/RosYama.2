@@ -13,13 +13,13 @@ else
 // remove the following lines when in production mode
 if (isset($_GET['testing']) && $_GET['testing']==1){
         defined('YII_DEBUG') or define('YII_DEBUG',true);
+	// specify how many levels of call stack should be shown in each log message
+	defined('YII_TRACE_LEVEL') or define('YII_TRACE_LEVEL',3);
 }
 else {
-	defined('YII_DEBUG') or define('YII_DEBUG',true);
+	defined('YII_DEBUG') or define('YII_DEBUG',false);
 }
 
-// specify how many levels of call stack should be shown in each log message
-defined('YII_TRACE_LEVEL') or define('YII_TRACE_LEVEL',3);
 
 define('SITE_TEMPLATE_PATH', '/');
 require_once($yii);
