@@ -241,7 +241,6 @@ class ProfileController extends Controller
 			$contactModel->attributes=$_POST['ContactForm'];
 			if($contactModel->validate())
 			{
-				$headers="From: ".Yii::app()->params['adminEmail']."\r\nReply-To: ".Yii::app()->user->email;
 				$headers = "MIME-Version: 1.0\r\nFrom: ".Yii::app()->params['adminEmail']."\r\nReply-To: ".Yii::app()->user->email."\r\nContent-Type: text/html; charset=utf-8";
 				Yii::app()->request->baseUrl=Yii::app()->request->hostInfo;
 				$mailbody=$this->renderPartial('application.views.ugmail.user2user', Array(
@@ -255,8 +254,31 @@ class ProfileController extends Controller
 			}
 		}
 		$this->render('view',array('model'=>$model,'contactModel'=>$contactModel));
-	}		 
-	 
+	}
+
+	/**
+	 * Узнать id пользователя и получить модифицированный секретный код, если есть
+	 * привязанный форумный аккаунт
+	 */
+	public function actionCheckauth()
+	{
+		$res      = UsergroupsUserSocialAccounts::model()->find("external_auth_id='forum' and ug_id = '".(int)(Yii::app()->user->id)."'");
+		$redirect = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : false;
+		if(!$redirect)
+		{
+			return;
+		}
+		$redirect = explode('?', $redirect);
+		if($res && $res->external_auth_id && isset($_GET['secretkey']))
+		{
+			$redirect[1] = (isset($redirect[1]) ? $redirect[1].'&' : '').'rosyamaauth='.(int)(Yii::app()->user->id).'&secretkey='.md5($_GET['secretkey'].$res->xml_id);
+		}
+		else
+		{
+			$redirect[1] = (isset($redirect[1]) ? $redirect[1].'&' : '').'rosyamaauth=0';
+		}
+		echo '<script type="text/javascript">document.location="'.implode('?', $redirect).'"</script>';
+	}
 	
 	public function loadModel($id, $scenario = false)
 	{
