@@ -1,21 +1,18 @@
 <?php
-// uncomment the following to define a path alias
-// Yii::setPathOfAlias('local','path/to/local-folder');
 
-// This is the main Web application configuration. Any writable
-// CWebApplication properties can be configured here.
-include ('appConfig.php');
+setlocale(LC_TIME, 'ru_RU.UTF-8');
 
-return array(
+// Социальная авторизация
+$socialsConfigPath=dirname(__FILE__).DIRECTORY_SEPARATOR.'/socials.php';
+$paramsConfigPath=dirname(__FILE__).DIRECTORY_SEPARATOR.'/params.php';
+
+$mainConfig = array(
 	'basePath'=>dirname(__FILE__).DIRECTORY_SEPARATOR.'..',
 	'name'=>'Rosyama',
 	'language'=>'ru',
 	'defaultController'=>'holes',
-	// preloading 'log' component
-	//'layout'=>'startpage',
-	'preload'=>array('log'),	
+	'preload'=>array('log'),
 	
-
 	// autoloading model and component classes
 	'import'=>array(
 		'application.models.*',
@@ -33,132 +30,116 @@ return array(
 		'ext.eoauth.lib.*',
 		'ext.lightopenid.*',
 		'ext.eauth.services.*',
-			),
+	),
 	'modules'=>array(
-		
-			'gii'=>array(
-				'class'=>'system.gii.GiiModule',
-				'password'=>'root',
-				'ipFilters' => array('77.37.132.232', '195.91.137.124', '127.0.0.1'),
-				'generatorPaths' => array(
+		/*
+		'gii'=>array(
+			'class'=>'system.gii.GiiModule',
+			'password'=>'root',
+			'ipFilters'=>array('77.37.132.232', '195.91.137.124', '127.0.0.1'),
+			'generatorPaths'=>array(
 				'ext.giix-core',
-				),
-			),		
-			'userGroups'=>array(
-				'accessCode'=>'12345',
-				'salt'=>'111',				
-				'profile'=>Array('Profile')
 			),
-			'comments'=>array(
-				//you may override default config for all connecting models
-				'defaultModelConfig' => array(
-					//only registered users can post comments
-					'registeredOnly' => true,
-					'useCaptcha' => false,
-					//allow comment tree
-					'allowSubcommenting' => true,
-					//display comments after moderation
-					'premoderate' => false,
-					//action for postig comment
-					'postCommentAction' => 'comments/comment/postComment',
-					//super user condition(display comment list in admin view and automoderate comments)
-					'isSuperuser'=>'Yii::app()->user->isModer',
-					//order direction for comments
-					'orderComments'=>'ASC',					
-				),
-				//the models for commenting
-				'commentableModels'=>array(
-					//model with individual settings
-					'Holes'=>array(
-						'registeredOnly'=>true,
-						'useCaptcha'=>false,
-						'allowSubcommenting'=>true,
-						//config for create link to view model page(page with comments)
-						'pageUrl'=>array(
-							'route'=>'holes/view',
-							'data'=>array('id'=>'ID'),
+		),
+		*/		
+		'userGroups'=>array(
+			'accessCode'=>'12345',
+			'salt'=>'111',				
+			'profile'=>Array('Profile')
+		),
+		'comments'=>array(
+			'defaultModelConfig'=>array(
+				'registeredOnly'=>true,
+				'useCaptcha'=>false,
+				'allowSubcommenting'=>true,
+				'premoderate'=>false,
+				'postCommentAction'=>'comments/comment/postComment',
+				'isSuperuser'=>'Yii::app()->user->isModer',
+				'orderComments'=>'ASC',					
+			),
+			'commentableModels'=>array(
+				'Holes'=>array(
+					'registeredOnly'=>true,
+					'useCaptcha'=>false,
+					'allowSubcommenting'=>true,
+					'pageUrl'=>array(
+						'route'=>'holes/view',
+						'data'=>array(
+							'id'=>'ID'
 						),
 					),
-					//model with default settings
-					'ImpressionSet',
 				),
-				//config for user models, which is used in application
-				'userConfig'=>array(
-					'class'=>'UserGroupsUser',
-					'nameProperty'=>'fullname',
-					//'emailProperty'=>'email',
-				),
-			),			
-    ),
-	// application components
-	'components'=>array(
-		'user'=>array(
-      	'allowAutoLogin'=>true,
-		'class'=>'userGroups.components.WebUserGroups',
-
+				'ImpressionSet',
+			),
+			'userConfig'=>array(
+				'class'=>'UserGroupsUser',
+				'nameProperty'=>'fullname',
+				//'emailProperty'=>'email',
+			),
 		),
-		// uncomment the following to enable URLs in path-format
-
-        'urlManager'=>array(
-			//'baseUrl'=>'/',
+	),
+	'components'=>array(
+		// Настройки для базы на продакшене
+		'db'=>array(
+			'class'=>'CDbConnection',
+			'connectionString'=>'mysql:host=localhost;dbname=rosyama',
+			'emulatePrepare'=>false,
+			'username'=>'root',
+			'password'=>'123',
+			'charset'=>'utf8',
+			'tablePrefix'=>'yii_',
+			'schemaCachingDuration'=>3600,
+			'enableProfiling' => YII_DEBUG,
+			'enableParamLogging' => YII_DEBUG,
+		),
+		'user'=>array(
+			'allowAutoLogin'=>true,
+			'class'=>'userGroups.components.WebUserGroups',
+		),
+		'urlManager'=>array(
 			'urlFormat'=>'path',
 			'showScriptName'=>false,
 			'urlSuffix'=>'/',
 			'rules'=>array(
-				  '/'=>'holes/index',
-				  '<id:\d+>'=>'holes/view',
-				  'map/<userid:\d+>/'=>'holes/map',				  
-				  'map'=>'holes/map',
-				  'page/<view:\w+>/' => 'site/page',
-				  'userGroups'=>'userGroups',
-				  'gii'=>'gii',
-				  'profile'=>'profile',
-				  'sprav/<subject_id:\d+>/add/'=>'sprav/add',
-				  'api/<id:\d+>'=>'api/index',
-				  'api/my/<id:\d+>/update'=>'api/update',
-				  'api/my/<id:\d+>/<type:[a-zA-Z0-9\_]+>'=>'api/setstate',
-				  'holes/cronDaily/<type:[a-zA-Z0-9\_-]+>'=>'holes/cronDaily',
-				  '<controller:\w+>'=>'<controller>/index',
-				  '<controller:\w+>/<id:\d+>'=>'<controller>/view',
-				  '<controller:\w+>/<action:\w+>/<id:\d+>'=>'<controller>/<action>',
-				  '<controller:\w+>/<action:\w+>'=>'<controller>/<action>',
-
+				'/'=>'holes/index',
+				'<id:\d+>'=>'holes/view',
+				'map/<userid:\d+>/'=>'holes/map',				  
+				'map'=>'holes/map',
+				'page/<view:\w+>/'=>'site/page',
+				'userGroups'=>'userGroups',
+				'gii'=>'gii',
+				'profile'=>'profile',
+				'sprav/<subject_id:\d+>/add/'=>'sprav/add',
+				'api/<id:\d+>'=>'api/index',
+				'api/my/<id:\d+>/update'=>'api/update',
+				'api/my/<id:\d+>/<type:[a-zA-Z0-9\_]+>'=>'api/setstate',
+				'holes/cronDaily/<type:[a-zA-Z0-9\_-]+>'=>'holes/cronDaily',
+				'<controller:\w+>'=>'<controller>/index',
+				'<controller:\w+>/<id:\d+>'=>'<controller>/view',
+				'<controller:\w+>/<action:\w+>/<id:\d+>'=>'<controller>/<action>',
+				'<controller:\w+>/<action:\w+>'=>'<controller>/<action>',
 			),
-
 		),
-
-
 		'image'=>array(
           'class'=>'application.extensions.image.CImageComponent',
-            // GD or ImageMagick
             'driver'=>'GD',
-            // ImageMagick setup path
             'params'=>array('directory'=>'/opt/local/bin'),
         ),
-
 		'loid' => array(
-			'class' => 'application.extensions.lightopenid.loid',
+			'class'=>'application.extensions.lightopenid.loid',
 		),
-		
-		 'eauth' => array(
-			'class' => 'ext.eauth.EAuth',
-			'popup' => true, // Use the popup window instead of redirecting.
-			'services' => $socials,
+		'eauth' => array(
+			'class'=>'ext.eauth.EAuth',
+			'popup'=>true,
+			'services'=>file_exists($socialsConfigPath) ? require_once $socialsConfigPath : array(),
 		),
-
-		'db'=>$db,
-		
 		'cache'=>array(
             'class'=>'system.caching.CApcCache',          
         ),
-
 		'errorHandler'=>array(
-			// use 'site/error' action to display errors
             'errorAction'=>'site/error',
-        ),			
-
-
-		 'widgetFactory'=>array(
+        ),
+		'widgetFactory'=>array(
 			'enableSkin'=>true,
             'widgets'=>array(
                 /*'CGridView'=>array(
@@ -175,12 +156,10 @@ return array(
                 ),
                 'CLinkPager'=>array(
                     'maxButtonCount'=>10,
-
                     //'cssFile'=>false,
                 ),
             ),
         ),
-
 		'log'=>array(
 			'class'=>'CLogRouter',
 			'routes'=>array(
@@ -189,15 +168,44 @@ return array(
                     'levels'=>'error, warning',
                 ),
                 array(
-                    'class' => 'application.extensions.pqp.PQPLogRoute',
-                    'categories' => 'application.*, exception.*',
+                    'class'=>'application.extensions.pqp.PQPLogRoute',
+                    'categories'=>'application.*, exception.*',
                 ),
             ),
-			'enabled'=>YII_DEBUG,  // enable caching in non-debug mode  
+			'enabled'=>YII_DEBUG,
 		),
 	),
-
-	// application-level parameters that can be accessed
-	// using Yii::app()->params['paramName']
-	'params'=>$params,
+	'params'=>file_exists($paramsConfigPath) ? require_once $paramsConfigPath : array(),
 );
+
+/**
+ * Чтобы указать свои параметры, создайте файл dev.main.php
+ * Пример файла:
+ 
+return CMap::mergeArray(
+	$mainConfig,
+	array(
+		'components'=>array(
+			'db'=>array(
+				'class'=>'CDbConnection',
+				'connectionString'=>'mysql:host=localhost;dbname=rosyama',
+				'emulatePrepare'=>false,
+				'username'=>'root',
+				'password'=>'123',
+				'charset'=>'utf8',
+				'tablePrefix'=>'yii_',
+				'schemaCachingDuration'=>3600,
+				'enableProfiling'=>YII_DEBUG,
+				'enableParamLogging'=>YII_DEBUG,
+			),
+		),
+	),
+);
+*/
+
+$devPath = dirname(__FILE__).DIRECTORY_SEPARATOR.'/dev.main.php';
+if (file_exists($devPath))
+{
+	$mainConfig = require_once $devPath;
+}
+return $mainConfig;

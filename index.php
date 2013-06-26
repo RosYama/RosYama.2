@@ -1,7 +1,5 @@
 <?php
 
-setlocale(LC_TIME, array("ru_RU","rus_RUS"));
-
 // change the following paths if necessary
 $yii=dirname(__FILE__).'/../yii-last/framework/yii.php';
 

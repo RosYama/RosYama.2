@@ -8,6 +8,9 @@ bugs
 /bugs/*
 /protected/runtime/*
 protected/runtime/*
+protected/config/dev.xml.php
+protected/config/dev.main.php
+protected/config/dev.console.php
 
 protected/runtime/application.log
 
