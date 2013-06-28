@@ -1,16 +1,17 @@
 <?php 
-$bd=array(
-			'class'=>'CDbConnection',
-			'connectionString' => 'mysql:host=localhost;dbname=rosyama',
-			'emulatePrepare' => false,
-			'username' => 'root',
-			'password' => 'qwe1024',
-			'charset' => 'utf8',
-			'tablePrefix'=>'yii_',
-			'schemaCachingDuration'=>3600,
-			'enableProfiling' => true,
-            'enableParamLogging' => true,
-		);		
+
+$db=array(
+	'class'=>'CDbConnection',
+	'connectionString' => 'mysql:host=localhost;dbname=rosyama',
+	'emulatePrepare' => false,
+	'username' => 'root',
+	'password' => '123',
+	'charset' => 'utf8',
+	'tablePrefix'=>'yii_',
+	'schemaCachingDuration'=>3600,
+	'enableProfiling' => YII_DEBUG,
+    'enableParamLogging' => YII_DEBUG,
+);
 if(file_exists(dirname(__FILE__).'/database.php'))
 {
 	include(dirname(__FILE__).'/database.php');

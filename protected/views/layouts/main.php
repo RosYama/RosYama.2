@@ -44,9 +44,9 @@
 	</div>
 <div class="navigation">
 		<div class="container">
-			 <?php $this->widget('application.widgets.topmenu.topmenuWidget');?>			 
-			
-			<!-- 
+			 <?php $this->widget('application.widgets.topmenu.topmenuWidget');?>
+
+			<!--
 			<div class="search">
 				<form action="/map">
 			<input type="image" name="s" src="/images/search_btn.gif" class="btn" /><input type="text" class="textInput inactive" name="q"  value="Поиск по адресу" />
@@ -55,10 +55,10 @@
 			var startSearchWidth=$('.search').width();
 			var startSearchInputWidth=$('.search .textInput').width();
 			var time=200;
-			
+
 							var searchWidth=230;
 				var	searchInputWidth=searchWidth-30;
-				
+
 										searchInputWidth-=47;
 				searchWidth-=47;
 							if ($.browser.msie && $.browser.version == 9) {
@@ -74,7 +74,7 @@
 					$('.search .textInput').animate({width:searchInputWidth},time);
 				})
 				$('.search .textInput').blur(function(){
-					
+
 					if ($(this).val()=='')
 					{
 						$(this).val('Поиск по адресу').addClass('inactive');
@@ -94,18 +94,18 @@
 					</div>
 				<?php else: ?>
 					<?php echo CHtml::link('Войти',Array('/holes/personal'),Array('title'=>'Войти', 'class'=>'profileBtn')); ?>
-				<? endif; ?>
+				<?php endif; ?>
 					<style type="text/css">
 						.auth .name
 						{
 							width: 150px !important;
 						}
-						
+
 					</style>
-					
+
 			</div>
 		</div>
-	</div>	
+	</div>
 		<?php echo $content; ?>
 
 	<div class="footer">
@@ -119,9 +119,10 @@
 			<br/>Powered by <a href="http://www.yiiframework.com/" target="_blank">Yii Framework</a>
 		</div>
 		<div class="center_footer">
-			<?php if($this->beginCache('countHoles', array('duration'=>3600))) { ?>
-			<?php $this->widget('application.widgets.collection.collectionWidget'); ?>			
-			<?php $this->endCache(); } ?>
+			<?php if($this->beginCache('countHoles', array('duration'=>3600))): ?>
+			<?php $this->widget('application.widgets.collection.collectionWidget'); ?>
+			<?php $this->endCache(); ?>
+            <?php endif; ?>
 
 			<p class="friends">Чиним ямы на <i class="flag-UA"></i> <a href="http://ukryama.com/">Украине</a>, в <i class="flag-BY"></i> <a href="http://belyama.by/">Беларуси</a> и <i class="flag-KZ"></i> <a href="http://kazyama.kz/">Казахстане</a></p>
 		</div>
@@ -132,7 +133,7 @@
 
 		</div>
 	</div>
-	
+
 	<script type="text/javascript">
                 var reformalOptions = {
                         project_id: 43983,
@@ -150,43 +151,42 @@
                         document.getElementsByTagName('head')[0].appendChild(script);
                 })();
         </script>
-               	
-	
+
+
 	<script type="text/javascript">
 	  var _gaq = _gaq || [];
 	  _gaq.push(['_setAccount', 'UA-38325056-1']);
 	  _gaq.push(['_trackPageview']);
-	
+
 	  (function() {
 		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
 		ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
 		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
 	  })();
-	
+
 	</script>
-	<? if (!$this->user->isGuest && $flash=$this->user->getFlash('user')):?>
+	<?php if (!$this->user->isGuest && $this->user->hasFlash('user')):?>
 		<div id="addDiv">
 			<div id="fon">
 			</div>
 			<div id="popupdiv">
-			<?php echo ($flash); ?>			
+			<?php echo $this->user->getFlash('user'); ?>
 				 <span class="filterBtn close">
 					<i class="text">Продолжить</i>
 				 </span>
 			</div>
 		</div>
-		
+
 		<script type="text/javascript">
-		$(document).ready(function(){				
+		$(document).ready(function(){
 			$('.close').click(function(){
 				$('#popupdiv').fadeOut(400);
 				$('#fon').fadeOut(600);
 				$('#addDiv').fadeOut(800);
 			})
 		})
-	
 		</script>
-	<?endif?>
-	
+	<?php endif; ?>
+
 	</body>
 	</html>

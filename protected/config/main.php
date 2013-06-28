@@ -146,7 +146,7 @@ return array(
 			'services' => $socials,
 		),
 
-		'db'=>$bd,
+		'db'=>$db,
 		
 		'cache'=>array(
             'class'=>'system.caching.CApcCache',          
@@ -193,7 +193,7 @@ return array(
                     'categories' => 'application.*, exception.*',
                 ),
             ),
-			'enabled'=>isset($_GET['testing'])?true:false,  // enable caching in non-debug mode  
+			'enabled'=>YII_DEBUG,  // enable caching in non-debug mode  
 		),
 	),
 
