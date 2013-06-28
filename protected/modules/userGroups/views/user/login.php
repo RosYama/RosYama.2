@@ -28,7 +28,7 @@
 		'enableAjaxValidation'=>false,
 		'focus'=>array($model, 'username'),
 	)); ?>
-	
+	<input type="hidden" name="referer" value="<?php echo htmlspecialchars($_SERVER['HTTP_REFERER']) ?>" />
 	<table class="bx-auth-table">
 			<tr>
 				<td class="bx-auth-label"><?php echo $form->labelEx($model,'username'); ?>:</td>

@@ -130,6 +130,10 @@ class SiteController extends Controller
 	public function actionLogout()
 	{
 		Yii::app()->user->logout();
+		if(isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], 'forum.rosyama'))
+		{
+			Yii::app()->homeUrl = $_SERVER['HTTP_REFERER'];
+		}
 		$this->redirect(Yii::app()->homeUrl);
 	}
 

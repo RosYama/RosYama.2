@@ -655,6 +655,11 @@ class UserController extends Controller
 		// collect user input data
 		if(isset($_POST['UserGroupsUser']))
 		{
+			if(isset($_POST['referer']) && strpos($_POST['referer'], 'forum.rosyama'))
+			{
+				Yii::app()->user->returnUrl = $_POST['referer'];
+			}
+
 			$model->attributes=$_POST['UserGroupsUser'];
 			// validate user input and redirect to the previous page if valid
 			if($model->validate() && $model->login()) {				

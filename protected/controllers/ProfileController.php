@@ -19,15 +19,13 @@ class ProfileController extends Controller
 	public function accessRules()
 	{
 		return array(
-			array('allow',  // just guest can perform 'activate' and 'login' actions
-				#'ajax'=>false,
+			array('allow',
 				'users'=>array('@'),
 			),
-			array('allow',  // just guest can perform 'activate' and 'login' actions
-				'actions'=>array('MyareaJsonView'),
+			array('allow',
+				'actions'=>array('MyareaJsonView','activate', 'login', 'checkAuth'),
 				'users'=>array('*'),
 			),
-			
 			array('deny',  // deny all users
 				'users'=>array('*'),
 			),
