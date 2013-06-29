@@ -655,7 +655,7 @@ class UserController extends Controller
 		// collect user input data
 		if(isset($_POST['UserGroupsUser']))
 		{
-			if(isset($_POST['referer']) && strpos($_POST['referer'], 'forum.rosyama'))
+			if(isset($_POST['referer']) && (strpos($_POST['referer'], 'forum.rosyama') || strpos($_POST['referer'], 'forum.dev.rosyama')))
 			{
 				Yii::app()->user->returnUrl = $_POST['referer'];
 			}
