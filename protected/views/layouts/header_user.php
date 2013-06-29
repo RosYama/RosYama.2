@@ -46,7 +46,6 @@
 						array('label'=>'Типы ям', 'url'=>array('/holeTypes/index'), 'linkOptions'=>array('class'=>'profileBtn'), 'visible'=>$this->user->isAdmin),
 						array('label'=>'Результаты запроса в ГИБДД (анкета)', 'url'=>array('/holeAnswerResults/index'), 'linkOptions'=>array('class'=>'profileBtn'), 'visible'=>$this->user->isAdmin),
 						array('label'=>'Правила авто-архивации ям', 'url'=>array('/holeArchiveFilters/admin'), 'linkOptions'=>array('class'=>'profileBtn'), 'visible'=>$this->user->isAdmin),
-						array('label'=>'Обновление БД', 'url'=>array('/site/dbupdate/'), 'linkOptions'=>array('class'=>'profileBtn'), 'visible'=>$this->user->isAdmin)
 					),
 				'htmlOptions'=>array('class'=>'operations'),
 			));			
