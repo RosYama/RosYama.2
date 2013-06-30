@@ -17,6 +17,11 @@
 						<h2><?= Yii::t('holes_view', 'HOLE_REQUEST_FORM') ?></h2>
 						<table>
 							<tr>
+								<th colspan="2"><?php echo $form->checkBox($model,'sendToGibddru',array('style'=>'width:20px', 'onChange'=>'if ($(this).attr("checked")) { $(this).parents("form").find(".fileButtons").hide(); $(this).parents("form").find(".sendButtons").show();} else {$(this).parents("form").find(".fileButtons").show(); $(this).parents("form").find(".sendButtons").hide();}')); ?>
+								<?php echo $form->labelEx($model,'sendToGibddru'); ?><span class="comment"><?= Yii::t('holes_view', 'HOLE_REQUEST_FORM_SEND_TO_GIBDDRU_COMMENT') ?></span></th>
+								
+							</tr>
+							<tr>
 								<th><?php echo $form->labelEx($model,'to'); ?><span class="comment"><?= Yii::t('holes_view', 'HOLE_REQUEST_FORM_TO_COMMENT') ?></span></th>
 								<td><?php echo $form->textArea($model,'to',array('rows'=>3, 'cols'=>40)); ?></td>
 							</tr>
@@ -51,10 +56,18 @@
 							<tr>
 								<th></th>
 								<td>
+									<div class="fileButtons" style="<?php if ($model->sendToGibddru) echo 'display:none;'?>">
 									<?php echo CHtml::submitButton(Yii::t('holes_view', 'HOLE_REQUEST_FORM_SUBMIT'), Array('class'=>'submit', 'name'=>'HoleRequestForm[pdf]')); ?>
 									<?php echo CHtml::submitButton(Yii::t('holes_view', 'HOLE_REQUEST_FORM_SUBMIT2'), Array('class'=>'submit', 'name'=>'HoleRequestForm[html]')); ?>
+									</div>
+									<div class="sendButtons" style="<?php if (!$model->sendToGibddru) echo 'display:none;'?>">
+									<?php echo CHtml::submitButton(Yii::t('holes_view', 'HOLE_REQUEST_FORM_SUBMIT3'), Array('class'=>'submit', 'name'=>'HoleRequestForm[pdf]')); ?>
+									</div>
 								</td>
 							</tr>
 						</table>
+					<div class="fileButtons" style="<?php if ($model->sendToGibddru) echo 'display:none;'?>">
+						<?= Yii::t('holes_view', 'ST1234_INSTRUCTION') ?>
+					</div>
+	
 					<?php $this->endWidget(); ?>
-					<?= Yii::t('holes_view', 'ST1234_INSTRUCTION') ?>

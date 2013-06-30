@@ -493,9 +493,8 @@ class UserGroupsUser extends CActiveRecord
 		if (!$this->params || !is_array($this->params)) return true;
 		foreach ($this->params as $param) if ($str==$param) return true;
 		return false;
-	}		
-	
-	
+	}
+
 
 	/**
 	 * Retrieves a list of models based on the current search/filter conditions.

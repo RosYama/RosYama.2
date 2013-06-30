@@ -31,7 +31,7 @@ class HolesController extends Controller
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('add','update', 'personal','personalDelete','request','requestForm','sent','notsent','gibddreply', 'fix', 'defix', 'prosecutorsent', 'prosecutornotsent','delanswerfile','myarea', 'territorialGibdd', 'delpicture','selectHoles','sentMany','review', 'selected', 'addFixedFiles', 'approveFixedPicture', 'upload', 'requestDorogiMos'),
+				'actions'=>array('add','update', 'personal','personalDelete','request','requestForm','sent','notsent','gibddreply', 'fix', 'defix', 'prosecutorsent', 'prosecutornotsent','delanswerfile','myarea', 'territorialGibdd', 'delpicture','selectHoles','sentMany','review', 'selected', 'addFixedFiles', 'approveFixedPicture', 'upload', 'requestDorogiMos', 'sendToGibddru'),
 				'users'=>array('@'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -387,15 +387,7 @@ class HolesController extends Controller
 	
 	public function actionUpload($rotate=false)
 	{	
-		$session=new CHttpSession;
-		$session->open();
-			
-		$rootfolder=$_SERVER['DOCUMENT_ROOT'].'/upload/tmp';
-	 	if (!is_dir($rootfolder)) mkdir($rootfolder);
-	 		
-		$folder=$rootfolder.'/'.$session->SessionID.'/';// folder for uploaded files
-			
-		if (!is_dir($folder)) mkdir($folder);
+		$folder=Yii::app()->user->uploadDir.'/';
 			
 		if (!$rotate){
 			Yii::import("ext.EAjaxUpload.qqFileUploader");
@@ -754,18 +746,17 @@ class HolesController extends Controller
 						}
 				}
 				else
-				{
-					header_remove('Content-Type');	
+				{					
 					foreach($model->pictures_fresh as $picture)
 					{
 						$_images[] = $_SERVER['DOCUMENT_ROOT'].$picture->original;
 					}
-					header('Content-Type: application/pdf; charset=utf-8', true);
+												
 					$PDF = new pdf1234();
 					if (!$request->holes){
 						$PDF->models=Array($model);
 						$PDF->requestForm=$request;
-						$PDF->getpdf
+						$pdfresult=$PDF->getpdf
 						(
 							$request->form_type ? $request->form_type : $model->type,
 							$_data,
@@ -775,18 +766,59 @@ class HolesController extends Controller
 					else {
 						$PDF->models=Holes::model()->findAllByPk($request->holes);
 						$PDF->requestForm=$request;
-							$PDF->getpdf
+						$pdfresult=$PDF->getpdf
 							(
 								'gibdd',
 								$_data,
 								Array(),
 								$request->printAllPictures
 							);
+					}
+					
+					if ($request->sendToGibddru) {	
+							$gibdd=isset($PDF->models[0]) && $PDF->models[0]->subject ? $PDF->models[0]->subject->region_num : 0;
+							$request->holes=Array($model);
+							$this->layout='//layouts/header_blank';
+							$this->render('request_gibddru',array(
+								'model'=>$request->RequestGibddru($pdfresult, $gibdd)
+							));
 						}
+					
 				}
 			}		
-	}		
-
+	}	
+	
+	public function actionSendToGibddru()
+	{
+		$model=new GibddRuForm;
+		$error='';
+		if (isset($_POST['GibddRuForm'])){
+			$model->attributes=$_POST['GibddRuForm'];
+			if ($model->validate()){
+				$fields=$model->attributes;
+				$fields['form_file_27']='@' . $_SERVER['DOCUMENT_ROOT'].$model->form_file_27;
+				
+				$ch = curl_init('http://www.gibdd.ru/letter/');
+				curl_setopt($ch, CURLOPT_HEADER, true);
+				curl_setopt($ch, CURLOPT_POST, true);
+				curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+				curl_setopt($ch, CURLOPT_POSTFIELDS, $fields); 
+				
+				if (($answer = curl_exec($ch)) === false) {
+							throw new Exception(curl_error($ch));
+						} 
+				preg_match('/<div class="errormsgs info-message">(.*?)<\/div>/ism', $answer, $maches);
+				if(isset($maches[1]) && $maches[1]) $error=$maches[1];				
+			}
+		}
+		$this->layout='//layouts/header_blank';
+		$this->render('request_gibddru',array(
+								'model'=>$model,
+								'error'=>$error,
+							));		
+	}
+	
+	
 	/**
 	 * Lists all models.
 	 */

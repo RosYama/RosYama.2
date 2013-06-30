@@ -66,7 +66,7 @@ class pdf1234{
 		
 		pdf1234::getsignature();
 		
-		$this->pdf->Output('Statement '.date('Y-m-d H:i:s').'.pdf', 'D');
+		return $this->pdf->Output('Statement '.date('Y-m-d H:i:s').'.pdf', !$this->requestForm->sendToGibddru ? 'D' : 'S');
 	}
 	
 	/**
@@ -292,6 +292,8 @@ class pdf1234{
 			else $arResult=$this->getTypeTemplate();
 		}
 		else $arResult=$this->text_manyholes($this->models);
+		
+		$this->requestForm->requestBodyArr=$arResult;
 
 		$x = $this->header();
 		$y = $this->footer();
