@@ -43,6 +43,7 @@ class HoleRequestForm extends CFormModel
 		curl_setopt($ch, CURLOPT_HEADER, false);
 		curl_setopt($ch, CURLOPT_POST, true);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_COOKIEJAR, Yii::app()->user->uploadDir.'/'."gibddru_cookie.txt");
 		curl_setopt($ch, CURLOPT_POSTFIELDS, array(
 			//'photo' => '@' . $_SERVER['DOCUMENT_ROOT'].$model->PictureFolder.'original/'.$model->picture
 		)); 
@@ -55,6 +56,8 @@ class HoleRequestForm extends CFormModel
 		
 		preg_match('/<input type="hidden" name="captcha_sid" value="(.*?)".*<input type="text" name="captcha_word" size="30" maxlength="50" value="" class="inputtext" \/>/ism', $leter, $maches); 
 		$captcha=str_replace('/bitrix/tools/', 'http://www.gibdd.ru/bitrix/tools/', $maches[1]);				
+		preg_match('/<input type="hidden" name="sessid" id="sessid" value="(.*?)"/ism', $leter, $maches); 		
+		$sessid=str_replace('/bitrix/tools/', 'http://www.gibdd.ru/bitrix/tools/', $maches[1]);		
 		
 		$folder=Yii::app()->user->uploadDir.'/';
 		$filename='zayavlenie_'.date('d-m-Y').'.pdf';
@@ -74,7 +77,9 @@ class HoleRequestForm extends CFormModel
 			'form_text_31'=>$hole->subject->region_num,
 			'form_text_15'=>$hole->subject->name_full,
 			'form_dropdown_SUBJECT'=>25,//заявление
-			
+			'sessid'=>$sessid,
+			'reg'=>77,
+			'holes'=>implode(',',CHtml::listData($this->holes, 'ID', 'ID')),
 		);
 		$model->form_file_27=str_replace($_SERVER['DOCUMENT_ROOT'], '', $folder).$filename;
 		if ($this->requestBodyArr){

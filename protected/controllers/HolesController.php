@@ -780,7 +780,8 @@ class HolesController extends Controller
 							$request->holes=Array($model);
 							$this->layout='//layouts/header_blank';
 							$this->render('request_gibddru',array(
-								'model'=>$request->RequestGibddru($pdfresult, $gibdd)
+								'model'=>$request->RequestGibddru($pdfresult, $gibdd),
+								'error'=>null,
 							));
 						}
 					
@@ -792,23 +793,61 @@ class HolesController extends Controller
 	{
 		$model=new GibddRuForm;
 		$error='';
-		if (isset($_POST['GibddRuForm'])){
+		if (isset($_POST['GibddRuForm'])){			
 			$model->attributes=$_POST['GibddRuForm'];
+			$holesmodels=Holes::model()->findAllByPk(explode(',',$model->holes));
 			if ($model->validate()){
 				$fields=$model->attributes;
 				$fields['form_file_27']='@' . $_SERVER['DOCUMENT_ROOT'].$model->form_file_27;
-				
+				//unset($fields['form_file_27']);
+				unset($fields['holes']);
 				$ch = curl_init('http://www.gibdd.ru/letter/');
 				curl_setopt($ch, CURLOPT_HEADER, true);
 				curl_setopt($ch, CURLOPT_POST, true);
+				curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 				curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-				curl_setopt($ch, CURLOPT_POSTFIELDS, $fields); 
+				curl_setopt($ch, CURLOPT_POSTFIELDS, $fields); 		
+				curl_setopt($ch, CURLOPT_MAXREDIRS, 100 );
+				curl_setopt($ch, CURLOPT_COOKIEFILE, Yii::app()->user->uploadDir.'/'."gibddru_cookie.txt");
 				
 				if (($answer = curl_exec($ch)) === false) {
 							throw new Exception(curl_error($ch));
 						} 
+				$response = curl_getinfo( $ch );
+				curl_close ($ch);
 				preg_match('/<div class="errormsgs info-message">(.*?)<\/div>/ism', $answer, $maches);
 				if(isset($maches[1]) && $maches[1]) $error=$maches[1];				
+	
+				if(strpos($response['url'], 'formresult=addok')){					
+					
+					$count=0;
+					$links=Array();
+					foreach ($holesmodels as $model){
+						if ($model->makeRequest('gibdd')) {
+							$count++;
+							$links[]=CHtml::link($model->ADDRESS,Array('view','id'=>$model->ID));
+							}
+					}		
+					if(count($holesmodels) > 1){
+						Yii::app()->user->setFlash('user', 'Успешное изменение статуса ям: <br/>'.implode('<br/>',$links).'<br/><br/><br/>');
+						$this->redirect(array('personal'));
+						}
+					elseif (count($holesmodels) == 1){
+						Yii::app()->user->setFlash('user', 'Заявление успешно отправлено');
+						$this->redirect(array('/holes/view', 'id'=>$holesmodels[0]->ID));
+						}
+					else Yii::app()->user->setFlash('user', 'Произошла ошибка! Ничего не отправлено');	
+					
+					$this->redirect(array('personal'));
+				}
+				else {
+					Yii::app()->user->setFlash('user', 'Произошла ошибка!');	
+					if(count($holesmodels) > 1)
+						$this->redirect(array('personal'));
+					elseif (count($holesmodels) == 1)
+						$this->redirect(array('/holes/view', 'id'=>$holesmodels[0]->ID));
+					else $this->redirect(array('personal'));
+				}
 			}
 		}
 		$this->layout='//layouts/header_blank';

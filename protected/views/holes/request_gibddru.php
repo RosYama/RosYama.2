@@ -22,6 +22,16 @@ $this->title='Отправка запроса в приемную ГИБДД';
 			</div>
 			
 			<?php endif; ?>
+			
+			<?php echo $form->hiddenField($model,'form_text_31'); ?>
+			<?php echo $form->hiddenField($model,'sessid'); ?>
+			<?php echo $form->hiddenField($model,'reg'); ?>			
+			<?php echo $form->hiddenField($model,'tmp'); ?>
+			<?php echo $form->hiddenField($model,'sbj'); ?>			
+			<?php echo $form->hiddenField($model,'pst'); ?>		
+			<?php echo $form->hiddenField($model,'form_hidden_40'); ?>		
+			<?php echo $form->hiddenField($model,'holes'); ?>	
+			
 			<div class="profileTable">
 				<div class="row">
 					<?php echo $form->labelEx($model,'form_text_11'); ?>
@@ -75,9 +85,8 @@ $this->title='Отправка запроса в приемную ГИБДД';
 					<?php echo $form->labelEx($model,'form_text_19'); ?>
 					<?php echo $form->textField($model,'form_text_19',array('maxlength'=>50,'class'=>"textInput")); ?>
 					<?php echo $form->error($model,'form_text_19'); ?>
-				</div>				
-
-					<?php echo $form->hiddenField($model,'form_text_31'); ?>
+				</div>
+					
 					<?php echo $form->hiddenField($model,'form_dropdown_SUBJECT'); ?>
 				
 				

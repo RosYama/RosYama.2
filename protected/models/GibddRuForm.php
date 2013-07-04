@@ -119,26 +119,30 @@ class GibddRuForm extends CFormModel
 	public $form_textarea_26;
 	public $form_file_27;
 	public $form_hidden_40;
-	public $form_checkbox_AGREE=1;
 	public $captcha_word;
 	public $web_form_submit="Направить обращение";
-	public $iread=1;
+	public $iread='on';
 	public $captcha_sid;
-
+	public $sessid;
+	public $reg;
+	public $tmp;
+	public $sbj;	
+	public $pst;
+	public $holes;
 	/**
 	 * Declares the validation rules.
 	 */
 	public function rules()
 	{
 		return array(
-			array('form_text_11, form_text_12, form_checkbox_AGREE, form_dropdown_SUBJECT, form_textarea_26, captcha_word, captcha_sid, WEB_FORM_ID', 'required'),
+			array('form_text_11, form_text_12, form_dropdown_SUBJECT, form_textarea_26, captcha_word, captcha_sid, WEB_FORM_ID, iread, sessid, reg, holes', 'required'),
 			array('form_text_11, form_text_12, form_text_13, form_text_15, form_text_16', 'length', 'max'=>50),
 			array('form_text_17', 'length', 'max'=>67),
 			array('form_text_19, captcha_word', 'length', 'max'=>30),
 			array('form_text_14', 'length', 'max'=>6),
 			array('form_textarea_26', 'length'),
 			array('form_file_27', 'length'),
-			array('form_text_14, form_dropdown_SUBJECT, iread, form_text_31', 'numerical', 'integerOnly'=>true),
+			array('form_text_14, form_dropdown_SUBJECT, form_text_31', 'numerical', 'integerOnly'=>true),
 			array('form_email_18', 'email'),
 		);
 	}	
