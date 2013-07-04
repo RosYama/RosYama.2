@@ -96,7 +96,7 @@ class SiteController extends Controller
 	
 	public function actionOpenID()
 	{
-				$loid = Yii::app()->loid->load();
+		$loid = Yii::app()->loid->load();
 		if (!empty($_GET['openid_mode'])) {
 			if ($_GET['openid_mode'] == 'cancel') {
 				$err = Yii::t('core', 'Authorization cancelled');

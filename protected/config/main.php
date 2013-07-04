@@ -140,7 +140,7 @@ return array(
 			'class' => 'application.extensions.lightopenid.loid',
 		),
 		
-		 'eauth' => array(
+		'eauth' => array(
 			'class' => 'ext.eauth.EAuth',
 			'popup' => true, // Use the popup window instead of redirecting.
 			'services' => $socials,
