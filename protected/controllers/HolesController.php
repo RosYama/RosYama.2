@@ -353,7 +353,7 @@ class HolesController extends Controller
 			
 			$model->ADR_CITY=trim($model->ADR_CITY);
 			
-			if (Yii::app()->user->level > 50) $model->PREMODERATED=1;
+			if (Yii::app()->user->level > 50 || !$model->upploadedPictures) $model->PREMODERATED=1;
 			else $model->PREMODERATED=0;
 			
 			if ($model->gibdd_id){
@@ -794,6 +794,9 @@ class HolesController extends Controller
 	{
 		
 		$this->layout='//layouts/header_default';
+		
+		$cs=Yii::app()->getClientScript();
+        $cs->registerScriptFile('http://api-maps.yandex.ru/1.1/index.xml?key='.$this->mapkey);
 		
 		//Если нет таблиц в базе редиректим на контроллер миграции
 		if(Holes::model()->getDbConnection()->getSchema()->getTable(Holes::model()->tableName())===null)

@@ -126,7 +126,8 @@
 	cursor: pointer;
 }
 
-div#ymapcontainer { border: 1px solid #cacaca; height: 213px; margin-bottom: 2em; width: 213px; }
+div.ymapcontainer { border: 1px solid #cacaca; height: 213px; margin-bottom: 2em; width: 213px; }
+div.ymapcontainer_in_list { border: 1px solid #cacaca; height: 213px; margin-bottom: 2em; width: 225px; }
 div#ymapcontainer_big { display: none; position: absolute; border: 10px solid white; border-top: 0; z-index: 5; background-color: white; }
 div#ymapcontainer_big span.close { color: #333; font-size: 1.5em; font-weight: bold; cursor: pointer; padding: 0 5px; }
 div#ymapcontainer_big span.close:hover {color:#edb209}

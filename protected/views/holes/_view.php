@@ -1,5 +1,25 @@
 <li<?php if(($index+1)%3==0):?> class="noMargin"<?php endif; ?>>
-			<?php echo CHtml::link(CHtml::image($data->STATE == 'fixed' && $data->pictures_fixed ? $data->pictures_fixed[0]->small : ($data->pictures_fresh ? $data->pictures_fresh[0]->small:'')), array('view', 'id'=>$data->ID), array('class'=>'photo')); ?>
+			<?php 
+				if ($data->pictures) :
+				echo CHtml::link(CHtml::image($data->STATE == 'fixed' && $data->pictures_fixed ? $data->pictures_fixed[0]->small : ($data->pictures_fresh ? $data->pictures_fresh[0]->small:'')), array('view', 'id'=>$data->ID), array('class'=>'photo')); 
+				else :
+			?>
+			<?php if($data->LATITUDE && $data->LONGITUDE) echo CHtml::link('<div id="ymapcontainer'.$data->ID.'" class="ymapcontainer_in_list"></div>', array('view', 'id'=>$data->ID), array('class'=>'photo')); ?>
+			<script type="text/javascript">
+				var map_centery = <?= $data->LATITUDE; ?>;
+				var map_centerx = <?= $data->LONGITUDE ?>;
+				var map<?php echo $data->ID; ?> = new YMaps.Map(YMaps.jQuery("#ymapcontainer<?php echo $data->ID; ?>")[0]);				
+				map<?php echo $data->ID; ?>.setCenter(new YMaps.GeoPoint(map_centerx, map_centery), 14);
+				map<?php echo $data->ID; ?>.addControl(new YMaps.SmallZoom());
+				var s = new YMaps.Style();
+				s.iconStyle = new YMaps.IconStyle();
+				s.iconStyle.href = "/images/st1234/<?= $data->type->alias;?>_<?= $data->STATE ?>.png";
+				s.iconStyle.size = new YMaps.Point(54, 61);
+				s.iconStyle.offset = new YMaps.Point(-30, -61);
+				var placemark = new YMaps.Placemark(new YMaps.GeoPoint(map_centerx, map_centery), { hideIcon: false, hasBalloon: false, style: s } );
+				map<?php echo $data->ID; ?>.addOverlay(placemark);
+			</script>
+			<?php endif;?>
 			<?php if (isset($showcheckbox) && $showcheckbox) : ?>
 				<?php echo CHtml::checkBox('hole_id[]', $data->isSelected ? true : false, Array('value'=>$data->ID, 'class'=>'hole_check')); ?>
 			<?php endif; ?>
