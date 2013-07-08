@@ -71,7 +71,7 @@ class ForumService
 		{
 			$secretkey = md5(time().mt_rand(0, 10000));
 			$session['forum_secretkey'] = $secretkey;
-			echo '<script type="text/javascript">document.location="http://forum.'.$_SERVER['HTTP_HOST'].'/rosyama.php?secretkey='.$secretkey.'";</script>';
+			echo '<script type="text/javascript">document.location="http://forum.'.$_SERVER['HTTP_HOST'].'/rosyama.php?secretkey='.$secretkey.'&username='.htmlspecialchars(Yii::app()->user->name).'";</script>';
 		}
 		elseif(isset($_GET['uid']))
 		{
