@@ -25,9 +25,10 @@ class m130629_103731_bug_223 extends CDbMigration
 		$cam = new CAssetManager();
 		$path = dirname(__FILE__).'/../../assets/';
 		$cam->setBasePath($path);
-		$cam->publish('extensions/eauth/assets/css/auth.css', false, -1, true);
+		$cam->publish('extensions/eauth/assets/', false, -1, true);
+		/*$cam->publish('extensions/eauth/assets/css/auth.css', false, -1, true);
 		$cam->publish('extensions/eauth/assets/images/auth.png', false, -1, true);
-		$cam->publish('extensions/eauth/assets/images/auth_gray.png', false, -1, true);
+		$cam->publish('extensions/eauth/assets/images/auth_gray.png', false, -1, true);*/
 		/*
 		$cache = new CApcCache();
 		$cache->keyPrefix=Yii::app()->getId(); // возвращает не такой, как надо
