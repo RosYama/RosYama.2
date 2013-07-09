@@ -31,7 +31,12 @@ class HolesController extends Controller
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('add','update', 'personal','personalDelete','request','requestForm','sent','notsent','gibddreply', 'fix', 'defix', 'prosecutorsent', 'prosecutornotsent','delanswerfile','myarea', 'territorialGibdd', 'delpicture','selectHoles','sentMany','review', 'selected', 'addFixedFiles', 'approveFixedPicture', 'upload', 'requestDorogiMos', 'sendToGibddru'),
+				'actions'=>array(
+								'add','update', 'personal','personalDelete','request','requestForm','sent','notsent',
+								'gibddreply', 'fix', 'defix', 'prosecutorsent', 'prosecutornotsent','delanswerfile','myarea', 'territorialGibdd', 
+								'delpicture','selectHoles','sentMany','review', 'selected', 'addFixedFiles', 'approveFixedPicture', 'upload', 'requestDorogiMos', 
+								'sendToGibddru', 'getRequestFile',
+								),
 				'users'=>array('@'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -230,9 +235,10 @@ class HolesController extends Controller
 	{
 		$cs=Yii::app()->getClientScript();
         $cs->registerCssFile('/css/hole_view.css'); 
+        $cs->registerCssFile('/css/form.css'); 
         $cs->registerScriptFile('http://api-maps.yandex.ru/1.1/index.xml?key='.$this->mapkey);
-        $jsFile = CHtml::asset($this->viewPath.DIRECTORY_SEPARATOR.'js'.DIRECTORY_SEPARATOR.'view_script.js');
-        $cs->registerScriptFile($jsFile);
+        $cs->registerScriptFile(CHtml::asset($this->viewPath.DIRECTORY_SEPARATOR.'js'.DIRECTORY_SEPARATOR.'holes_selector.js'));
+        $cs->registerScriptFile(CHtml::asset($this->viewPath.DIRECTORY_SEPARATOR.'js'.DIRECTORY_SEPARATOR.'view_script.js'));
         $model=$this->loadModel($id);
         $abuseModel=new AbuseForm;
         $dorogiMosModel=new DorogiMosForm;
@@ -673,119 +679,77 @@ class HolesController extends Controller
 		if ($id){
 			$gibdd=GibddHeads::model()->findByPk((int)$id);
 			$holemodel=Holes::model()->findAllByPk(explode(',',$holes));
-			if ($type=='gibdd') 
-				$this->renderPartial('_form_gibdd_manyholes',Array('holes'=>$holemodel, 'gibdd'=>$gibdd));
+			$gibddModel=new GibddRuForm;
+			
+			$usermodel=Yii::app()->user->userModel;
+			$model=new HoleRequestForm;
+			$model->sendToGibddru=1;
+			$model->to=$gibdd ? $gibdd->post_dative.' '.$gibdd->fio_dative : '';			
+			$model->signature=$usermodel->relProfile->request_signature ? $usermodel->relProfile->request_signature : $usermodel->last_name.' '.substr($usermodel->name, 0, 2).($usermodel->name ? '.' : '').' '.substr($usermodel->second_name, 0, 2).($usermodel->second_name ? '.' : '');
+			$model->postaddress=$usermodel->relProfile->request_address ? $usermodel->relProfile->request_address : '';
+
+			
+			if ($type=='gibdd') {
+				if (count ($holemodel) > 1)
+					$this->renderPartial('_form_gibdd_manyholes',Array('holes'=>$holemodel, 'gibdd'=>$gibdd));
+				elseif (count ($holemodel) == 1){
+					$hole=$holemodel[0];
+					$model->address=CHtml::encode($hole->ADDRESS);
+					$gibddModel=$model->getResult($holemodel[0]);	
+					if ($gibddModel){
+						$model->from=Y::sklonyator($gibddModel->form_text_11, 2).' '.Y::sklonyator($gibddModel->form_text_12, 2).' '.Y::sklonyator($gibddModel->form_text_13, 2);
+						$model->signature=$gibddModel->form_text_11.' '.substr($gibddModel->form_text_12, 0, 2).($gibddModel->form_text_12 ? '.' : '').' '.substr($gibddModel->form_text_13, 0, 2).($gibddModel->form_text_13 ? '.' : '');
+						$model->postaddress=($gibddModel->form_text_14 ? $gibddModel->form_text_14.', ' : '').($gibddModel->form_text_15 ? $gibddModel->form_text_15.', ' : '').($gibddModel->form_text_16 ? $gibddModel->form_text_16.', ' : '').$gibddModel->form_text_17;
+					}
+					$this->renderPartial('_form_gibdd',Array('model'=>$model, 'hole'=>$hole, 'gibdd'=>$gibdd, 'gibddModel'=>$gibddModel, 'error'=>''));
+					}
+			}
 		}
-		//else echo "Выбирите отдел ГИБДД";
 	}	
 
-	//генерация запросов в ГИБДД
+	//генерация бумажных заявлений в ГИБДД
+	public function actionGetRequestFile($id=null)
+	{
+		if ($id) $model=$this->loadModel($id);				
+			else $model=new Holes;
+			$request=new HoleRequestForm;
+			$gibddModel=new GibddRuForm;
+			$request->sendToGibddru=1;
+			if(isset($_POST['HoleRequestForm']))
+			{
+				$request->attributes=$_POST['HoleRequestForm'];
+				if (isset($_POST['GibddRuForm'])){
+					$gibddModel->attributes=$_POST['GibddRuForm'];
+					$request->from=Y::sklonyator($gibddModel->form_text_11, 2).' '.Y::sklonyator($gibddModel->form_text_12, 2).' '.Y::sklonyator($gibddModel->form_text_13, 2);
+					$request->signature=$gibddModel->form_text_11.' '.substr($gibddModel->form_text_12, 0, 2).($gibddModel->form_text_12 ? '.' : '').' '.substr($gibddModel->form_text_13, 0, 2).($gibddModel->form_text_13 ? '.' : '');
+					$request->postaddress=($gibddModel->form_text_14 ? $gibddModel->form_text_14.', ' : '').($gibddModel->form_text_15 ? $gibddModel->form_text_15.', ' : '').($gibddModel->form_text_16 ? $gibddModel->form_text_16.', ' : '').$gibddModel->form_text_17;
+				}
+				$gibddModel=$request->getResult($model);
+				echo $gibddModel->form_file_27;
+			}		
+	}
+	
+	//отправка заявлений
 	public function actionRequest($id=null)
 	{			
 			if ($id) $model=$this->loadModel($id);				
 			else $model=new Holes;
 			$request=new HoleRequestForm;
+			$gibddModel=new GibddRuForm;
 			if(isset($_POST['HoleRequestForm']))
 			{
 				$request->attributes=$_POST['HoleRequestForm'];
-				$_images = array();
-				$date3 = $request->application_data   ? strtotime($request->application_data) : time();
-				if ($request->form_type == 'prosecutor')
-					$date3 = strtotime($request->application_data);
-					
-				$date2 = ($request->form_type == 'prosecutor' || $request->form_type == 'prosecutor2') && $model->request_gibdd ? $model->request_gibdd->date_sent  : time();
-				$_data = array
-				(
-					'chief'       => $request->to,
-					'fio'         => $request->from,
-					'address'     => $request->postaddress,
-					'date1.day'   => date('d', $model->DATE_CREATED ? $model->DATE_CREATED : time()),
-					'date1.month' => date('m', $model->DATE_CREATED ? $model->DATE_CREATED : time()),
-					'date1.year'  => date('Y', $model->DATE_CREATED ? $model->DATE_CREATED : time()),
-					'street'      => $request->address,
-					'date2.day'   => date('d', $date2),
-					'date2.month' => date('m', $date2),
-					'date2.year'  => date('Y', $date2),
-					'signature'   => $request->signature,
-					'reason'      => $request->comment,
-					'date3.day'   => date('d', $date3),
-					'date3.month' => date('m', $date3),
-					'date3.year'  => date('Y', $date3),
-					'gibdd'       => $request->gibdd,
-					'gibdd_reply' => $request->gibdd_reply
-				);
-			
-				if($request->html)
-				{
-					foreach($model->pictures_fresh as $picture)
-					{
-						$_images[] = $picture->original;
-					}
-					header('Content-Type: text/html; charset=utf8', true);
-					$HT = new html1234();
-					if (!$request->holes){
-						$HT->models=Array($model);
-						$HT->requestForm=$request;
-						$HT->gethtml
-						(							
-							$request->form_type ? $request->form_type : $model->type,
-							$_data,
-							$_images
-						);
-					}	
-					else {
-						$HT->models=Holes::model()->findAllByPk($request->holes);
-						$HT->requestForm=$request;
-							$HT->gethtml
-							(
-								'gibdd',
-								$_data,
-								Array(),
-								$request->printAllPictures
-							);
-						}
-				}
-				else
-				{					
-					foreach($model->pictures_fresh as $picture)
-					{
-						$_images[] = $_SERVER['DOCUMENT_ROOT'].$picture->original;
-					}
-												
-					$PDF = new pdf1234();
-					if (!$request->holes){
-						$PDF->models=Array($model);
-						$PDF->requestForm=$request;
-						$pdfresult=$PDF->getpdf
-						(
-							$request->form_type ? $request->form_type : $model->type,
-							$_data,
-							$_images
-						);
-					}
-					else {
-						$PDF->models=Holes::model()->findAllByPk($request->holes);
-						$PDF->requestForm=$request;
-						$pdfresult=$PDF->getpdf
-							(
-								'gibdd',
-								$_data,
-								Array(),
-								$request->printAllPictures
-							);
-					}
-					
-					if ($request->sendToGibddru) {	
-							$gibdd=isset($PDF->models[0]) && $PDF->models[0]->subject ? $PDF->models[0]->subject->region_num : 0;
-							$request->holes=Array($model);
-							$this->layout='//layouts/header_blank';
-							$this->render('request_gibddru',array(
-								'model'=>$request->RequestGibddru($pdfresult, $gibdd),
-								'error'=>null,
-							));
-						}
+				if (!$request->form_type && isset($_POST['GibddRuForm'])){
+					$gibddModel->attributes=$_POST['GibddRuForm'];
+					$request->from=Y::sklonyator($gibddModel->form_text_11, 2).' '.Y::sklonyator($gibddModel->form_text_12, 2).' '.Y::sklonyator($gibddModel->form_text_13, 2);
+					$request->signature=$gibddModel->form_text_11.' '.substr($gibddModel->form_text_12, 0, 2).($gibddModel->form_text_12 ? '.' : '').' '.substr($gibddModel->form_text_13, 0, 2).($gibddModel->form_text_13 ? '.' : '');
+					$request->postaddress=($gibddModel->form_text_14 ? $gibddModel->form_text_14.', ' : '').($gibddModel->form_text_15 ? $gibddModel->form_text_15.', ' : '').($gibddModel->form_text_16 ? $gibddModel->form_text_16.', ' : '').$gibddModel->form_text_17;
+					$request->sendToGibddru=1;
+					$gibddModel->form_file_27=$request->getResult($model, true);
 					
 				}
+				$request->getResult($model);
+				
 			}		
 	}	
 	

@@ -36,6 +36,116 @@ class HoleRequestForm extends CFormModel
 		);
 	}
 	
+	public function getResult($model, $onlyFile=false){	
+	
+				$_images = array();
+				$date3 = $this->application_data   ? strtotime($this->application_data) : time();
+				if ($this->form_type == 'prosecutor')
+					$date3 = strtotime($this->application_data);
+					
+				$date2 = ($this->form_type == 'prosecutor' || $this->form_type == 'prosecutor2') && $model->request_gibdd ? $model->request_gibdd->date_sent  : time();
+				$_data = array
+				(
+					'chief'       => $this->to,
+					'fio'         => $this->from,
+					'address'     => $this->postaddress,
+					'date1.day'   => date('d', $model->DATE_CREATED ? $model->DATE_CREATED : time()),
+					'date1.month' => date('m', $model->DATE_CREATED ? $model->DATE_CREATED : time()),
+					'date1.year'  => date('Y', $model->DATE_CREATED ? $model->DATE_CREATED : time()),
+					'street'      => $this->address,
+					'date2.day'   => date('d', $date2),
+					'date2.month' => date('m', $date2),
+					'date2.year'  => date('Y', $date2),
+					'signature'   => $this->signature,
+					'reason'      => $this->comment,
+					'date3.day'   => date('d', $date3),
+					'date3.month' => date('m', $date3),
+					'date3.year'  => date('Y', $date3),
+					'gibdd'       => $this->gibdd,
+					'gibdd_reply' => $this->gibdd_reply
+				);
+			
+				if($this->html)
+				{
+					foreach($model->pictures_fresh as $picture)
+					{
+						$_images[] = $picture->original;
+					}
+					header('Content-Type: text/html; charset=utf8', true);
+					$HT = new html1234();
+					if (!$this->holes){
+						$HT->models=Array($model);
+						$HT->requestForm=$this;
+						$HT->gethtml
+						(							
+							$this->form_type ? $this->form_type : $model->type,
+							$_data,
+							$_images
+						);
+					}	
+					else {
+						$HT->models=Holes::model()->findAllByPk($this->holes);
+						$HT->requestForm=$this;
+							$HT->gethtml
+							(
+								'gibdd',
+								$_data,
+								Array(),
+								$this->printAllPictures
+							);
+						}
+				}
+				else
+				{					
+					foreach($model->pictures_fresh as $picture)
+					{
+						$_images[] = $_SERVER['DOCUMENT_ROOT'].$picture->original;
+					}
+												
+					$PDF = new pdf1234();
+					if (!$this->holes){
+						$PDF->models=Array($model);
+						$PDF->requestForm=$this;
+						$pdfresult=$PDF->getpdf
+						(
+							$this->form_type ? $this->form_type : $model->type,
+							$_data,
+							$_images
+						);
+					}
+					else {
+						$PDF->models=Holes::model()->findAllByPk($this->holes);
+						$PDF->requestForm=$this;
+						$pdfresult=$PDF->getpdf
+							(
+								'gibdd',
+								$_data,
+								Array(),
+								$this->printAllPictures
+							);
+					}
+					
+					if ($this->sendToGibddru && !$onlyFile) {	
+							$gibdd=isset($PDF->models[0]) && $PDF->models[0]->subject ? $PDF->models[0]->subject->region_num : 0;
+							$this->holes=Array($model);							
+							return $this->RequestGibddru($pdfresult, $gibdd);
+						}
+					elseif($this->sendToGibddru && $onlyFile)
+						return $this->savePdfFile($pdfresult);
+					
+				}
+			
+		
+	}
+	
+	public function savePdfFile($pdfBinary)
+	{	
+		$folder=Yii::app()->user->uploadDir.'/';
+		$filename='zayavlenie_'.date('d-m-Y').'.pdf';
+		file_put_contents($folder.$filename, $pdfBinary);
+		return str_replace($_SERVER['DOCUMENT_ROOT'], '', $folder).$filename;
+	}
+	
 	public function RequestGibddru($pdfBinary, $gibdd)
 	{	
 					
@@ -59,16 +169,14 @@ class HoleRequestForm extends CFormModel
 		preg_match('/<input type="hidden" name="sessid" id="sessid" value="(.*?)"/ism', $leter, $maches); 		
 		$sessid=str_replace('/bitrix/tools/', 'http://www.gibdd.ru/bitrix/tools/', $maches[1]);		
 		
-		$folder=Yii::app()->user->uploadDir.'/';
-		$filename='zayavlenie_'.date('d-m-Y').'.pdf';
-		file_put_contents($folder.$filename, $pdfBinary);
+		
 		$user=Yii::app()->user->userModel;
 		$hole=isset($this->holes[0]) ? $this->holes[0] : new Holes;
 		$model=new GibddRuForm;
 		$model->captcha_sid=$captcha;
 		$model->attributes=Array(
 			'form_text_31'=>$gibdd,
-			'form_file_27'=>str_replace($_SERVER['DOCUMENT_ROOT'], '', $folder).$filename,
+			'form_file_27'=>$this->savePdfFile($pdfBinary),
 			'form_text_17'=>$this->postaddress,
 			'form_email_18'=>$user->email,
 			'form_text_11'=>$user->last_name,
@@ -81,7 +189,6 @@ class HoleRequestForm extends CFormModel
 			'reg'=>77,
 			'holes'=>implode(',',CHtml::listData($this->holes, 'ID', 'ID')),
 		);
-		$model->form_file_27=str_replace($_SERVER['DOCUMENT_ROOT'], '', $folder).$filename;
 		if ($this->requestBodyArr){
 			//form_textarea_26
 			$str='';

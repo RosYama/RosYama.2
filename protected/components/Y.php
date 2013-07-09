@@ -84,6 +84,20 @@ class Y
 			// can also handle simple copy commands
 			copy($source, $dest);
 		}
+	}
+	
+	// склонятор
+	public static function sklonyator($str, $padeg=3)
+	{
+		$nanoyandex_reply = file_get_contents('http://export.yandex.ru/inflect.xml?name='.urlencode($str));
+		$pos = strpos($nanoyandex_reply, '<inflection case="'.$padeg.'">');
+		if($pos === false)
+		{
+			return $str;
+		}
+		$nanoyandex_reply = substr($nanoyandex_reply, $pos);
+		$nanoyandex_reply = substr($nanoyandex_reply, 21, strpos($nanoyandex_reply, '</inflection>') - 21); // 21 = strlen('<inflection case="3">')
+		return trim($nanoyandex_reply, "\n\t ");
 	}	
 	
 }

@@ -52,7 +52,7 @@ $MESS['HOLE_REQUEST_FORM_SEND_TO_GIBDDRU_COMMENT']            = 'Отметьт�
 
 $MESS['HOLE_CART_ADMIN_TEXT_1']  = 'Пока заявление не выслано,';
 $MESS['HOLE_CART_ADMIN_TEXT_3']  = 'можно';
-$MESS['HOLE_CART_ADMIN_TEXT_4']  = 'Напечатать заявление';
+$MESS['HOLE_CART_ADMIN_TEXT_4']  = 'Отправить заявление';
 $MESS['HOLE_CART_ADMIN_TEXT_2']  = 'редактировать';
 $MESS['HOLE_CART_ADMIN_TEXT_5']  = '';
 $MESS['HOLE_CART_ADMIN_TEXT_6']  = 'Отметить факт отправки заявления в ГИБДД';
