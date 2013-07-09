@@ -1,9 +1,9 @@
-					Не исключена вероятность того, что на <a href="http://www.gosuslugi.ru/ru/chorg/index.php?ssid_4=4120&stab_4=4&rid=228&tid=2" target="_blank">сайте госуслуг</a> окажется немного полезной информации.
+					<!--Не исключена вероятность того, что на <a href="http://www.gosuslugi.ru/ru/chorg/index.php?ssid_4=4120&stab_4=4&rid=228&tid=2" target="_blank">сайте госуслуг</a> окажется немного полезной информации.-->
 					<div class="wide form gibdd_form">
 					<?php $form=$this->beginWidget('CActiveForm', array(
 						'id'=>'request-form',
 						'enableAjaxValidation'=>false,
-						'action'=>Yii::app()->createUrl("holes/request", array("id"=>$hole->ID)),
+						'action'=>Yii::app()->createUrl("holes/sendToGibddru"),
 						'htmlOptions'=>Array ('onsubmit'=>"document.getElementById('pdf_form').style.display='none';"),
 					)); 
 					$usermodel=Yii::app()->user->userModel;
@@ -123,11 +123,6 @@
 			
 				<div class="row buttons">
 					<?php echo CHtml::submitButton($gibddModel->web_form_submit, Array('name'=>'web_form_submit')); ?>
-				</div>
-				
-					<div class="fileButtons" style="<?php if ($model->sendToGibddru) echo 'display:none;'?>">
-						<?= Yii::t('holes_view', 'ST1234_INSTRUCTION') ?>
-					</div>
-	
+				</div>	
 					<?php $this->endWidget(); ?>
 				</div>

@@ -720,16 +720,15 @@ class HolesController extends Controller
 				$request->attributes=$_POST['HoleRequestForm'];
 				if (isset($_POST['GibddRuForm'])){
 					$gibddModel->attributes=$_POST['GibddRuForm'];
-					$request->from=Y::sklonyator($gibddModel->form_text_11, 2).' '.Y::sklonyator($gibddModel->form_text_12, 2).' '.Y::sklonyator($gibddModel->form_text_13, 2);
-					$request->signature=$gibddModel->form_text_11.' '.substr($gibddModel->form_text_12, 0, 2).($gibddModel->form_text_12 ? '.' : '').' '.substr($gibddModel->form_text_13, 0, 2).($gibddModel->form_text_13 ? '.' : '');
-					$request->postaddress=($gibddModel->form_text_14 ? $gibddModel->form_text_14.', ' : '').($gibddModel->form_text_15 ? $gibddModel->form_text_15.', ' : '').($gibddModel->form_text_16 ? $gibddModel->form_text_16.', ' : '').$gibddModel->form_text_17;
+					$request->setAttribsFromGibddForm($gibddModel);
+					$request->sendToGibddru=1;
 				}
 				$gibddModel=$request->getResult($model);
 				echo $gibddModel->form_file_27;
 			}		
 	}
 	
-	//отправка заявлений
+	//старая генерация заявлений
 	public function actionRequest($id=null)
 	{			
 			if ($id) $model=$this->loadModel($id);				
@@ -738,29 +737,29 @@ class HolesController extends Controller
 			$gibddModel=new GibddRuForm;
 			if(isset($_POST['HoleRequestForm']))
 			{
-				$request->attributes=$_POST['HoleRequestForm'];
-				if (!$request->form_type && isset($_POST['GibddRuForm'])){
-					$gibddModel->attributes=$_POST['GibddRuForm'];
-					$request->from=Y::sklonyator($gibddModel->form_text_11, 2).' '.Y::sklonyator($gibddModel->form_text_12, 2).' '.Y::sklonyator($gibddModel->form_text_13, 2);
-					$request->signature=$gibddModel->form_text_11.' '.substr($gibddModel->form_text_12, 0, 2).($gibddModel->form_text_12 ? '.' : '').' '.substr($gibddModel->form_text_13, 0, 2).($gibddModel->form_text_13 ? '.' : '');
-					$request->postaddress=($gibddModel->form_text_14 ? $gibddModel->form_text_14.', ' : '').($gibddModel->form_text_15 ? $gibddModel->form_text_15.', ' : '').($gibddModel->form_text_16 ? $gibddModel->form_text_16.', ' : '').$gibddModel->form_text_17;
-					$request->sendToGibddru=1;
-					$gibddModel->form_file_27=$request->getResult($model, true);
-					
-				}
+				$request->attributes=$_POST['HoleRequestForm'];				
 				$request->getResult($model);
 				
 			}		
 	}	
 	
-	public function actionSendToGibddru()
+	public function actionSendToGibddru($ajax=false)
 	{
 		$model=new GibddRuForm;
 		$error='';
+		$request=new HoleRequestForm;
+		if(isset($_POST['HoleRequestForm']))
+		{
+			$request->attributes=$_POST['HoleRequestForm'];
+		}
+		$request->sendToGibddru=1;
+				
 		if (isset($_POST['GibddRuForm'])){			
 			$model->attributes=$_POST['GibddRuForm'];
+			$request->setAttribsFromGibddForm($model);
 			$holesmodels=Holes::model()->findAllByPk(explode(',',$model->holes));
 			if ($model->validate()){
+				$model->form_file_27=$request->getResult($holesmodels[0], true);
 				$fields=$model->attributes;
 				$fields['form_file_27']='@' . $_SERVER['DOCUMENT_ROOT'].$model->form_file_27;
 				//unset($fields['form_file_27']);
@@ -794,31 +793,37 @@ class HolesController extends Controller
 					}		
 					if(count($holesmodels) > 1){
 						Yii::app()->user->setFlash('user', 'Успешное изменение статуса ям: <br/>'.implode('<br/>',$links).'<br/><br/><br/>');
-						$this->redirect(array('personal'));
+						if (!$ajax) $this->redirect(array('personal'));
 						}
 					elseif (count($holesmodels) == 1){
 						Yii::app()->user->setFlash('user', 'Заявление успешно отправлено');
-						$this->redirect(array('/holes/view', 'id'=>$holesmodels[0]->ID));
+						if (!$ajax) $this->redirect(array('/holes/view', 'id'=>$holesmodels[0]->ID));
 						}
 					else Yii::app()->user->setFlash('user', 'Произошла ошибка! Ничего не отправлено');	
 					
-					$this->redirect(array('personal'));
+					if (!$ajax) $this->redirect(array('personal'));
 				}
-				else {
+				elseif (!$error) {
 					Yii::app()->user->setFlash('user', 'Произошла ошибка!');	
-					if(count($holesmodels) > 1)
-						$this->redirect(array('personal'));
-					elseif (count($holesmodels) == 1)
-						$this->redirect(array('/holes/view', 'id'=>$holesmodels[0]->ID));
-					else $this->redirect(array('personal'));
+					if (!$ajax) {
+						if(count($holesmodels) > 1)
+							$this->redirect(array('personal'));
+						elseif (count($holesmodels) == 1)
+							$this->redirect(array('/holes/view', 'id'=>$holesmodels[0]->ID));
+						else $this->redirect(array('personal'));
+					}
 				}
 			}
 		}
-		$this->layout='//layouts/header_blank';
-		$this->render('request_gibddru',array(
-								'model'=>$model,
-								'error'=>$error,
-							));		
+		if (!$ajax){
+			$this->layout='//layouts/header_blank';
+			$this->render('_form_gibdd',Array('model'=>$request, 'hole'=>$holesmodels[0],'gibddModel'=>$model, 'error'=>$error));				
+		}
+		else {
+			if (!Yii::app()->user->hasFlash('user')) $this->renderPartial('_form_gibdd',Array('model'=>$request, 'hole'=>$holesmodels[0],'gibddModel'=>$model, 'error'=>$error));	
+			else echo "done";
+			Yii::app()->end();
+			}
 	}
 	
 	

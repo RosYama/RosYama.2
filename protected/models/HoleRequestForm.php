@@ -146,6 +146,12 @@ class HoleRequestForm extends CFormModel
 		return str_replace($_SERVER['DOCUMENT_ROOT'], '', $folder).$filename;
 	}
 	
+	public function setAttribsFromGibddForm($gibddModel){
+		$this->from=Y::sklonyator($gibddModel->form_text_11, 2).' '.Y::sklonyator($gibddModel->form_text_12, 2).' '.Y::sklonyator($gibddModel->form_text_13, 2);
+		$this->signature=$gibddModel->form_text_11.' '.substr($gibddModel->form_text_12, 0, 2).($gibddModel->form_text_12 ? '.' : '').' '.substr($gibddModel->form_text_13, 0, 2).($gibddModel->form_text_13 ? '.' : '');
+		$this->postaddress=($gibddModel->form_text_14 ? $gibddModel->form_text_14.', ' : '').($gibddModel->form_text_15 ? $gibddModel->form_text_15.', ' : '').($gibddModel->form_text_16 ? $gibddModel->form_text_16.', ' : '').$gibddModel->form_text_17;
+	}
+	
 	public function RequestGibddru($pdfBinary, $gibdd)
 	{	
 					

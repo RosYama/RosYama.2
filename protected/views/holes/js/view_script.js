@@ -73,6 +73,24 @@ jQuery(".delpicture").live("click",function(){
 		return confirm('Вы уверены, что хотите удалить изображение?');
 	});
 	
+jQuery("a.show_form_inhole").live("click",function() {
+				if (!$("#pdf_form").hasClass('loaded')){
+					jQuery.ajax({"type":"POST","beforeSend":function(){
+						$("#pdf_form").hide();		
+					 },
+					 "complete":function(){
+						$("#pdf_form").show();
+						},"url":$(this).attr("href"),"cache":false,
+					"success":function(html){
+						jQuery("#gibdd_form").html(html);
+						$("#pdf_form").addClass('loaded');
+						}
+					});				
+				}
+				else $("#pdf_form").toggle();
+				return false;
+			});		
+	
 jQuery("#request-form .fileButtons a.downloadPdf").live("click",function() {
 				jQuery.ajax({"type":"POST","beforeSend":function(){
 									 },
@@ -87,3 +105,20 @@ jQuery("#request-form .fileButtons a.downloadPdf").live("click",function() {
 				});			
 				return false;
 			});		
+			
+jQuery("#request-form").live("submit",function() {
+				var form=$(this);
+				jQuery.ajax({"type":"POST","beforeSend":function(){
+							},
+				 "complete":function(){				 
+					},"url":form.attr('action')+'?ajax=1',
+					"cache":false,
+					"data":form.serialize(),
+				"success":function(html){
+						if (html!='done') form.html(html);
+						else location.reload();
+					}
+				});			
+				$("#pdf_form").show();
+				return false;
+			});				
