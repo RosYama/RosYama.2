@@ -114,7 +114,14 @@ class ProfileController extends Controller
 			}
 		}
 		$socials=UsergroupsSocialServices::model()->with('account')->findAll();
-		$this->render('update',array('miscModel'=>$miscModel,'passModel'=>$passModel, 'profiles' => $profile_models, 'socials'=>$socials), false, true);
+		if(isset($_SERVER['HTTP_REFERER']) && (strpos($_SERVER['HTTP_REFERER'], 'forum.rosyama') !== false || strpos($_SERVER['HTTP_REFERER'], 'forum.dev.rosyama') !== false))
+		{
+			echo '<script type="text/javascript">document.location="'.$_SERVER['HTTP_REFERER'].'"</script>';
+		}
+		else
+		{
+			$this->render('update',array('miscModel'=>$miscModel,'passModel'=>$passModel, 'profiles' => $profile_models, 'socials'=>$socials), false, true);
+		}
 	}
 	
 	public function actionMyarea()
