@@ -65,6 +65,7 @@ class ForumService
 				return false;
 			}
 			$this->id = $session['forum_uid'];
+			$session['forum_noredirect'] = true;
 			return true;
 		}
 		elseif(!isset($_GET['uid']))

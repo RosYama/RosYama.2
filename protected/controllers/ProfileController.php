@@ -114,12 +114,14 @@ class ProfileController extends Controller
 			}
 		}
 		$socials=UsergroupsSocialServices::model()->with('account')->findAll();
-		if(isset($_SERVER['HTTP_REFERER']) && (strpos($_SERVER['HTTP_REFERER'], 'forum.rosyama') !== false || strpos($_SERVER['HTTP_REFERER'], 'forum.dev.rosyama') !== false))
+		$session =& Yii::app()->session;
+		if(!$session['forum_noredirect'] && isset($_SERVER['HTTP_REFERER']) && (strpos($_SERVER['HTTP_REFERER'], 'forum.rosyama') !== false || strpos($_SERVER['HTTP_REFERER'], 'forum.dev.rosyama') !== false))
 		{
 			echo '<script type="text/javascript">document.location="'.$_SERVER['HTTP_REFERER'].'"</script>';
 		}
 		else
 		{
+			$session['forum_noredirect'] = 0;
 			$this->render('update',array('miscModel'=>$miscModel,'passModel'=>$passModel, 'profiles' => $profile_models, 'socials'=>$socials), false, true);
 		}
 	}

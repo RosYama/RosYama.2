@@ -453,17 +453,25 @@ class UserController extends Controller
 			else
 				$model->attributes = $_GET['UserGroupsUser'];
 
-
 			if($model->validate()) {
 				if (isset($_GET['UserGroupsUser']) || $_POST['id'] === 'user-groups-activate-form') {
-					if (!isset($_GET['UserGroupsUser']['active']) && !isset($_POST['UserGroupsUser']['active'])){
+					if (!isset($_GET['UserGroupsUser']['active']) && !isset($_POST['UserGroupsUser']['active']))
+					{
 						$model->login('recovery');
 						$this->redirect(Yii::app()->baseUrl . '/userGroups/user/recovery');
-						}
-					else {						
+					}
+					else
+					{
 						$model->login('activate');
-						$this->redirect(Yii::app()->baseUrl . '/holes/personal');
-					}	
+						// перенаправление на форум для создания пользователя на форуме
+						$session   =& Yii::app()->session;
+						$secretkey = md5(time().mt_rand(0, 10000));
+						$session['forum_secretkey'] = $secretkey;
+						$redirect = 'http://forum.'.$_SERVER['SERVER_NAME'].'/ucp.php?mode=register&secretkey='.$secretkey.'&username='.$model->username;
+						echo '<script type="text/javascript">document.location="'.$redirect.'";</script>';
+						die();
+						//$this->redirect(Yii::app()->baseUrl . '/holes/personal');
+					}
 				} else {
 					$userModel = UserGroupsUser::model()->findByAttributes(array('email'=>$model->email));
 					$mail = new UGMail($userModel, UGMail::ACTIVATION);
