@@ -39,7 +39,7 @@ class HolePictures extends CActiveRecord
 	}
 	public function getSmall()
 	{
-		return '/upload/st1234/'.$this->hole->bigFolder.'/small/'.$this->hole_id.'/'.$this->filename;
+		return !Yii::app()->params['EnablePhotoRiot'] ? '/upload/st1234/'.$this->hole->bigFolder.'/small/'.$this->hole_id.'/'.$this->filename : '/images/small-black-hole.jpg';
 	}
 	
 	public function getBinary($size='original')

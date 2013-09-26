@@ -4,7 +4,7 @@ $db=array(
 	'connectionString' => 'mysql:host=localhost;dbname=rosyama',
 	'emulatePrepare' => false,
 	'username' => 'root',
-	'password' => '123',
+	'password' => 'qwe1024',
 	'charset' => 'utf8',
 	'tablePrefix'=>'yii_',
 	'schemaCachingDuration'=>3600,
@@ -77,6 +77,7 @@ $params=array(
 		// this is used in contact page
 		'adminEmail'=>'arbprint@mail.ru',
 		'YMapKey'=>'AEmk904BAAAAUCGkRAMAvTSoZfbI0tw8-95WnNcZkDQqXzAAAAAAAAAAAAB49EpXB9Mlar25hE3r2xY70FiRmQ==',
+		'EnablePhotoRiot'=>true,
 		'dorogiMos'=>array(
 				'login'=>'',
 				'password' => '',
