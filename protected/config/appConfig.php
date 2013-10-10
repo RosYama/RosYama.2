@@ -77,7 +77,7 @@ $params=array(
 		// this is used in contact page
 		'adminEmail'=>'arbprint@mail.ru',
 		'YMapKey'=>'AEmk904BAAAAUCGkRAMAvTSoZfbI0tw8-95WnNcZkDQqXzAAAAAAAAAAAAB49EpXB9Mlar25hE3r2xY70FiRmQ==',
-		'EnablePhotoRiot'=>true,
+		'EnablePhotoRiot'=>false,
 		'dorogiMos'=>array(
 				'login'=>'',
 				'password' => '',
