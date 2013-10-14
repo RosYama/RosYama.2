@@ -297,8 +297,11 @@ class Holes extends CActiveRecord
 		if (is_dir($folder)) $files=CFileHelper::findFiles($folder,Array('level'=>0));		
 		else $files=Array();
 		
-		if (!$files)
-			return CUploadedFile::getInstancesByName('');
+		if (!$files){
+			$files=CUploadedFile::getInstances($this, 'upploadedPictures');
+			if (!$files) $files=CUploadedFile::getInstancesByName('');
+			return $files;
+			}
 		else 
 			return $files;	
 	}
