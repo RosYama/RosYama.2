@@ -2,7 +2,7 @@
 				'id'=>'dorogimosDialog',
 				// additional javascript options for the dialog plugin
 				'options'=>array(
-					'title'=>'Сообщить через портал dorogi.mos.ru',
+					'title'=>'Сообщить через gorod.mos.ru',
 					'autoOpen'=>$model->errors ? true : false,
 					'width'=>'auto',
 					'height'=>'auto',

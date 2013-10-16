@@ -125,7 +125,7 @@ class HoleTypes extends CActiveRecord
 			'pdf_footer' => 'Низ ПДФ документа',
 			'published' => 'Опубликованно',
 			'ordering' => 'Порядок',
-			'dorogimos_id'=>'Категория дефекта на сайте dorogi.mos.ru'
+			'dorogimos_id'=>'Категория дефекта на сайте gorod.mos.ru'
 		);
 	}
 
