@@ -98,7 +98,7 @@ class pdf1234{
 			}
 			default:
 			{
-				$x[0] = preg_match('/^Начальнику/i',$this->params['chief'])==1 ? '' : 'Начальнику ';
+				$x[0] = '';
 				break;
 			}
 		}
