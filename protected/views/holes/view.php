@@ -229,6 +229,7 @@ $this->widget('application.extensions.fancybox.EFancyBox', array(
 							</div>
 							<div class="rc" style="width:145px;padding: 24px 0 24px 15px;">
 								<p>Если вас не устраивает ответ ГИБДД, то можно</p>
+								<p><a href="#" onclick="var c=document.getElementById('pdf_form');if(c){c.style.display=c.style.display=='block'?'none':'block';}return false;" class="declarationBtn"><?= Yii::t('holes_view', 'HOLE_CART_ADMIN_TEXT_4') ?></a></p>
 								<p><a href="#" onclick="var c=document.getElementById('prosecutor_form2');if(c){c.style.display=c.style.display=='block'?'none':'block';}return false;">подать Заявление в Прокуратуру</a></p>
 								<div class="pdf_form" id="prosecutor_form2"<?= isset($_GET['show_prosecutor_form2']) ? ' style="display: block;"' : '' ?>>								
 								<?php $this->renderPartial('_form_prosecutor',Array('hole'=>$hole)); ?>	
