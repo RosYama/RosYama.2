@@ -689,18 +689,25 @@ class HolesController extends Controller
 			$model->postaddress=$usermodel->relProfile->request_address ? $usermodel->relProfile->request_address : '';
 
 			
-			if ($type=='gibdd') {
-				if (count ($holemodel) > 1)
-					$this->renderPartial('_form_gibdd_manyholes',Array('holes'=>$holemodel, 'gibdd'=>$gibdd));
-				elseif (count ($holemodel) == 1){
-					$hole=$holemodel[0];
-					$model->address=CHtml::encode($hole->ADDRESS);
-					$gibddModel=$model->getResult($holemodel[0]);	
-					if ($gibddModel){
-						$model->from=Y::sklonyator($gibddModel->form_text_11, 2).' '.Y::sklonyator($gibddModel->form_text_12, 2).' '.Y::sklonyator($gibddModel->form_text_13, 2);
-						$model->signature=$gibddModel->form_text_11.' '.substr($gibddModel->form_text_12, 0, 2).($gibddModel->form_text_12 ? '.' : '').' '.substr($gibddModel->form_text_13, 0, 2).($gibddModel->form_text_13 ? '.' : '');
-						$model->postaddress=($gibddModel->form_text_14 ? $gibddModel->form_text_14.', ' : '').($gibddModel->form_text_15 ? $gibddModel->form_text_15.', ' : '').($gibddModel->form_text_16 ? $gibddModel->form_text_16.', ' : '').$gibddModel->form_text_17;
+			if ($type=='gibdd') {	
+				if (count ($holemodel) > 1){
+					$model->holes=CHtml::listData($holemodel, 'ID', 'ID');
+				}
+				
+				$gibddModel=$model->getResult($holemodel[0]);	
+				if ($gibddModel){
+					$model->from=Y::sklonyator($gibddModel->form_text_11, 2).' '.Y::sklonyator($gibddModel->form_text_12, 2).' '.Y::sklonyator($gibddModel->form_text_13, 2);
+					$model->signature=$gibddModel->form_text_11.' '.substr($gibddModel->form_text_12, 0, 2).($gibddModel->form_text_12 ? '.' : '').' '.substr($gibddModel->form_text_13, 0, 2).($gibddModel->form_text_13 ? '.' : '');
+					$model->postaddress=($gibddModel->form_text_14 ? $gibddModel->form_text_14.', ' : '').($gibddModel->form_text_15 ? $gibddModel->form_text_15.', ' : '').($gibddModel->form_text_16 ? $gibddModel->form_text_16.', ' : '').$gibddModel->form_text_17;
+				}
+			
+				if (count ($holemodel) > 1){
+					$model->address=CHtml::encode(implode('; ', CHtml::listData($holemodel, 'ID', 'ADDRESS')));
+					$this->renderPartial('_form_gibdd_manyholes',Array('model'=>$model, 'holes'=>$holemodel, 'gibdd'=>$gibdd, 'gibddModel'=>$gibddModel, 'error'=>''));
 					}
+				elseif (count ($holemodel) == 1){
+					$hole=$holemodel[0];		
+					$model->address=CHtml::encode($hole->ADDRESS);
 					$this->renderPartial('_form_gibdd',Array('model'=>$model, 'hole'=>$hole, 'gibdd'=>$gibdd, 'gibddModel'=>$gibddModel, 'error'=>''));
 					}
 			}
@@ -757,8 +764,9 @@ class HolesController extends Controller
 		if (isset($_POST['GibddRuForm'])){			
 			$model->attributes=$_POST['GibddRuForm'];
 			$request->setAttribsFromGibddForm($model);
-			$holesmodels=Holes::model()->findAllByPk(explode(',',$model->holes));
+			$holesmodels=Holes::model()->findAllByPk($model->holes);
 			if ($model->validate()){
+				
 				$model->form_file_27=$request->getResult($holesmodels[0], true);
 				$fields=$model->attributes;
 				$fields['form_file_27']='@' . $_SERVER['DOCUMENT_ROOT'].$model->form_file_27;
@@ -780,17 +788,18 @@ class HolesController extends Controller
 				curl_close ($ch);
 				preg_match('/<div class="errormsgs info-message">(.*?)<\/div>/ism', $answer, $maches);
 				if(isset($maches[1]) && $maches[1]) $error=$maches[1];				
-	
+				
+				
 				if(strpos($response['url'], 'formresult=addok')){					
 					
 					$count=0;
 					$links=Array();
-					foreach ($holesmodels as $model){
-						if ($model->makeRequest('gibdd')) {
+					foreach ($holesmodels as $hole){
+						if ($hole->makeRequest('gibdd', false)) {
 							$count++;
-							$links[]=CHtml::link($model->ADDRESS,Array('view','id'=>$model->ID));
+							$links[]=CHtml::link($hole->ADDRESS,Array('view','id'=>$hole->ID));
 							}
-					}		
+					}	
 					if(count($holesmodels) > 1){
 						Yii::app()->user->setFlash('user', 'Успешное изменение статуса ям: <br/>'.implode('<br/>',$links).'<br/><br/><br/>');
 						if (!$ajax) $this->redirect(array('personal'));

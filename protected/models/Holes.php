@@ -465,9 +465,9 @@ class Holes extends CActiveRecord
 
 	}	
 	
-	public function makeRequest($type){
+	public function makeRequest($type, $uniqueRequest=true){
 		$attr='request_'.$type;
-		if (!$this->$attr){
+		if (($uniqueRequest && !$this->$attr) || !$uniqueRequest){
 			$request=new HoleRequests;
 			$request->attributes=Array(
 							'hole_id'=>$this->ID,

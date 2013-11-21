@@ -90,35 +90,3 @@ jQuery("a.show_form_inhole").live("click",function() {
 				else $("#pdf_form").toggle();
 				return false;
 			});		
-	
-jQuery("#request-form .fileButtons a.downloadPdf").live("click",function() {
-				jQuery.ajax({"type":"POST","beforeSend":function(){
-									 },
-				 "complete":function(){				 
-					},"url":'/holes/GetRequestFile/'+$(this).attr('hole_id'),
-					"cache":false,
-					"data":$(this).parents("form").serialize(),
-				"success":function(html){
-					window.open(html, "printwindow", "width=800,height=600,location=no,toolbars=no,status=no,menubar=no, scrollbars=1");
-					return false;
-					}
-				});			
-				return false;
-			});		
-			
-jQuery("#request-form").live("submit",function() {
-				var form=$(this);
-				jQuery.ajax({"type":"POST","beforeSend":function(){
-							},
-				 "complete":function(){				 
-					},"url":form.attr('action')+'?ajax=1',
-					"cache":false,
-					"data":form.serialize(),
-				"success":function(html){
-						if (html!='done') form.html(html);
-						else location.reload();
-					}
-				});			
-				$("#pdf_form").show();
-				return false;
-			});				
