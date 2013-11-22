@@ -123,6 +123,7 @@ $this->pageTitle=Yii::app()->name . ' :: Мои ямы';
 	'viewData'=>Array('showcheckbox'=>true, 'user'=>$user),
 	'afterAjaxUpdate'=> 'function(id){
 		checkInList();
+		noimageMap();
 		}',
 	
 )); ?>

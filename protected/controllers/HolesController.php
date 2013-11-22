@@ -797,6 +797,7 @@ class HolesController extends Controller
 		
 		$cs=Yii::app()->getClientScript();
         $cs->registerScriptFile('http://api-maps.yandex.ru/1.1/index.xml?key='.$this->mapkey);
+        $cs->registerScriptFile(CHtml::asset($this->viewPath.DIRECTORY_SEPARATOR.'js'.DIRECTORY_SEPARATOR.'holes_selector.js'));
 		
 		//Если нет таблиц в базе редиректим на контроллер миграции
 		if(Holes::model()->getDbConnection()->getSchema()->getTable(Holes::model()->tableName())===null)
@@ -963,6 +964,7 @@ class HolesController extends Controller
 		$cs=Yii::app()->getClientScript();
         $cs->registerCssFile('/css/holes_list.css');        
         $cs->registerCssFile('/css/hole_view.css');
+        $cs->registerScriptFile('http://api-maps.yandex.ru/1.1/index.xml?key='.$this->mapkey);
         $cs->registerScriptFile(CHtml::asset($this->viewPath.DIRECTORY_SEPARATOR.'js'.DIRECTORY_SEPARATOR.'holes_selector.js'));
 		$cs->registerScriptFile('http://www.vertstudios.com/vertlib.min.js');        
         $cs->registerScriptFile(CHtml::asset($this->viewPath.DIRECTORY_SEPARATOR.'js'.DIRECTORY_SEPARATOR.'StickyScroller'.DIRECTORY_SEPARATOR.'StickyScroller.min.js'));

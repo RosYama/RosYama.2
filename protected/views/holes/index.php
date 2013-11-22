@@ -219,6 +219,10 @@ EOD
 			<p>
 			<?php echo $form->dropDownList($model, 'STATE', $model->Allstates, array('prompt'=>'Статус дефекта')); ?>
 			</p>
+			<p>
+			<?php echo $form->dropDownList($model, 'pictures', Array(1=>'Только с фотографиями', 2=>'Без фотографий'), array('prompt'=>'Все ямы')); ?>
+			</p>		
+
 				<p>
 				<?php echo $form->checkBox($model,"withAnswers",Array('class'=>'filter_checkbox')); ?>	
 				<?php echo $form->labelEx($model,'withAnswers',Array('label'=>'с загруженными ответами ГИБДД')); ?>							
@@ -277,7 +281,7 @@ EOD
 	'summaryText'=>false,
 	'emptyText'=>!$model->archive ? 'Ничего не найдено. Может быть попробовать '.CHtml::link('поискать в архиве',$model->archiveSearchLink).'?' : 'Ничего не найдено.',
 	'viewData'=>Array('user'=>Yii::app()->user),
-	'afterAjaxUpdate'=>'js:function(id, data) {$(window).scrollTop($(\'.holes_list\').offset().top)}',
+	'afterAjaxUpdate'=>'js:function(id, data) {$(window).scrollTop($(\'.holes_list\').offset().top); noimageMap();}',
 	
 )); ?>
 <?php if (Yii::app()->user->isModer && $model->NOT_PREMODERATED && $dataProvider->totalItemCount > 0) : ?>
