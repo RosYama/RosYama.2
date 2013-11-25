@@ -11,3 +11,5 @@ protected/runtime/*
 protected/runtime/application.log
 
 .DS_Store
+
+protected/config/appConfig.php

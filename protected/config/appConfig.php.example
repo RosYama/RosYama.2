@@ -1,16 +1,16 @@
 <?php 
-$db=array(
-	'class'=>'CDbConnection',
-	'connectionString' => 'mysql:host=localhost;dbname=rosyama',
-	'emulatePrepare' => false,
-	'username' => 'root', 
-	'password' => 'qwe1024',
-	'charset' => 'utf8',
-	'tablePrefix'=>'yii_',
-	'schemaCachingDuration'=>3600,  
-	'enableProfiling' => YII_DEBUG,
-        'enableParamLogging' => YII_DEBUG,
-);		
+$bd=array(
+			'class'=>'CDbConnection',
+			'connectionString' => 'mysql:host=localhost;dbname=rosyama',
+			'emulatePrepare' => false,
+			'username' => 'root',
+			'password' => 'qwe1024',
+			'charset' => 'utf8',
+			'tablePrefix'=>'yii_',
+			'schemaCachingDuration'=>3600,
+			'enableProfiling' => YII_DEBUG,
+            'enableParamLogging' => YII_DEBUG,
+		);		
 	
 		
 $socials=array( // You can change the providers and their classes.
@@ -23,27 +23,27 @@ $socials=array( // You can change the providers and their classes.
 				'twitter' => array(
 					// регистрация приложения: https://dev.twitter.com/apps/new
 					'class' => 'TwitterOAuthService',
-					'key' => 'l3EbqAebpIlPR1SAI5KANQ',
-					'secret' => 'BPdGnGf0DvD5dLCkQKuyYKbzQ0ZnmvE2bXi795fUKk',
+					'key' => '',
+					'secret' => '',
 				),
 				'google_oauth' => array(
 					// регистрация приложения: https://code.google.com/apis/console/
 					'class' => 'GoogleOAuthService',
-					'client_id' => '433170583991.apps.googleusercontent.com',
-					'client_secret' => 'FAZmvzjXjciqkENr4-a8c61q',
+					'client_id' => '',
+					'client_secret' => '',
 					'title' => 'Google',
 				),
 				'facebook' => array(
 					// регистрация приложения: https://developers.facebook.com/apps/
 					'class' => 'FacebookOAuthService',
-					'client_id' => '321432484568993',
-					'client_secret' => 'd8290ffe86ea761fa1125bbd86eea708',
+					'client_id' => '',
+					'client_secret' => '',
 				),
 				'vkontakte' => array(
 					// регистрация приложения: http://vkontakte.ru/editapp?act=create&site=1
 					'class' => 'VKontakteOAuthService',
-					'client_id' => '2794711',
-					'client_secret' => 'YghxsVhTwKk5wmKb9WRj',
+					'client_id' => '',
+					'client_secret' => '',
 				),
 				'mailru' => array(
 					'class' => 'MailruOpenIDService', 
@@ -75,7 +75,7 @@ $socials=array( // You can change the providers and their classes.
 
 $params=array(
 		// this is used in contact page
-		'adminEmail'=>'arbprint@mail.ru',
+		'adminEmail'=>'mail@example.com',
 		'YMapKey'=>'AEmk904BAAAAUCGkRAMAvTSoZfbI0tw8-95WnNcZkDQqXzAAAAAAAAAAAAB49EpXB9Mlar25hE3r2xY70FiRmQ==',
 		'dorogiMos'=>array(
 				'login'=>'',
