@@ -454,6 +454,7 @@ ul.usermenu li.active .profileBtn{background: #f88100;}
 }
 .map_bottom_check .chekboxes{float: left;}
 .map_bottom_check .chekboxes.withAnswers{}
+.map_bottom_check .chekboxes.withImages{padding-left:40px;}
 .map_bottom_check .chekboxes.archive{margin-left: 15px;}
 
 #holes_selectors #Holes_gibdd_id{max-width: 400px;}

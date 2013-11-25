@@ -94,6 +94,11 @@ $this->pageTitle=Yii::app()->name . ' :: Мой участок';
 	<?php echo $form->checkBox($model,"withAnswers",Array('class'=>'filter_checkbox')); ?>	
 	<?php echo $form->labelEx($model,'withAnswers',Array('label'=>'с загруженными ответами ГИБДД')); ?>		
 	</div>
+	
+	<div class="chekboxes withImages">
+	<?php echo $form->checkBox($model,"pictures",Array('class'=>'filter_checkbox', 'value'=>1)); ?>	
+	<?php echo $form->labelEx($model,'pictures',Array('label'=>'только ямы с фотографиями')); ?>		
+	</div>
 
 </div>
 
