@@ -95,8 +95,8 @@ class Holes extends CActiveRecord
 			array('ADR_CITY', 'length', 'max'=>50),
 			array('STR_SUBJECTRF, username, description_locality, description_size', 'length'),
 			array('COMMENT1, COMMENT2, COMMENT_GIBDD_REPLY, deletepict, upploadedPictures, request_gibdd, showUserHoles', 'safe'),	
-			array('upploadedPictures', 'file', 'types'=>'jpg, jpeg, png, gif','maxFiles'=>10, 'allowEmpty'=>true, 'on' => 'update, import, fix'),
-			array('upploadedPictures', 'file', 'types'=>'jpg, jpeg, png, gif','maxFiles'=>10, 'allowEmpty'=>false, 'on' => 'insert'),
+			array('upploadedPictures', 'file', 'types'=>'jpg, jpeg, png, gif','maxFiles'=>10, 'allowEmpty'=>true, 'on' => 'update, import, fix, insert'),
+			//array('upploadedPictures', 'file', 'types'=>'jpg, jpeg, png, gif','maxFiles'=>10, 'allowEmpty'=>false, 'on' => 'insert'),
 			array('upploadedPictures', 'unsafe', 'on' => 'add'),
 			//array('upploadedPictures', 'required', 'on' => 'insert, add', 'message' => 'Необходимо загрузить фотографии'),			
 			// The following rule is used by search().
