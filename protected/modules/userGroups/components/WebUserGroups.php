@@ -13,6 +13,7 @@ class WebUserGroups extends CWebUser
 	 * @var array containing the url of the login page
 	 */
 	public $loginUrl = array('/userGroups/');
+	public $uploadTmpDir='/upload/tmp';
 
 	/**
 	 * updates the identity of the user
@@ -257,6 +258,21 @@ class WebUserGroups extends CWebUser
 		if (!$this->_usermodel) $this->_usermodel=UserGroupsUser::model()->findByPk((int)Yii::app()->user->id);
 		return $this->_usermodel;
 	}	
+	
+		
+	public function getUploadDir()
+	{
+		$session=new CHttpSession;
+		$session->open();
+			
+		$rootfolder=$_SERVER['DOCUMENT_ROOT'].$this->uploadTmpDir;
+	 	if (!is_dir($rootfolder)) mkdir($rootfolder);
+	 		
+		$folder=$rootfolder.'/'.$session->SessionID;// folder for uploaded files
+			
+		if (!is_dir($folder)) mkdir($folder);
+		return $folder;
+	}
 
 	/**
 	 * profile extension's attribute getter

@@ -172,7 +172,7 @@ $this->widget('application.extensions.fancybox.EFancyBox', array(
 						<? endif; ?>
 						<div class="progress">
 							<div class="lc">
-								<a href="#" onclick="var c=document.getElementById('pdf_form');if(c){c.style.display=c.style.display=='block'?'none':'block';}return false;" class="printDeclaration"><?= Yii::t('holes_view', 'HOLE_CART_ADMIN_TEXT_4') ?></a>
+								<?php echo CHtml::link(Yii::t('holes_view', 'HOLE_CART_ADMIN_TEXT_4'), Array('requestForm','id'=>$hole->gibdd->id,'type'=>'gibdd','holes'=>$hole->ID), Array('class'=>'printDeclaration show_form_inhole')); ?>
 							</div>
 							<div class="cc">
 								<p><?php echo CHtml::link(Yii::t('holes_view', 'HOLE_CART_ADMIN_TEXT_6'), array('sent', 'id'=>$hole->ID),array('class'=>"declarationBtn")); ?></p>
@@ -199,13 +199,13 @@ $this->widget('application.extensions.fancybox.EFancyBox', array(
 							</div>
 						<?php endif; ?>	
 							<div class="rc" style="width:145px;padding: 24px 0 24px 15px;">
-								<p><a class="declarationBtn" href="#" onclick="var c=document.getElementById('pdf_form');if(c){c.style.display=c.style.display=='block'?'none':'block';}return false;"><?= Yii::t('holes_view', 'HOLE_CART_ADMIN_TEXT_15') ?></a></p>
+								<p><?php echo CHtml::link(Yii::t('holes_view', 'HOLE_CART_ADMIN_TEXT_15'), Array('requestForm','id'=>$hole->gibdd->id,'type'=>'gibdd','holes'=>$hole->ID), Array('class'=>'declarationBtn show_form_inhole')); ?></p>
 								<p><?php echo CHtml::link(Yii::t('holes_view', 'HOLE_CART_ADMIN_TEXT_12'), array('notsent', 'id'=>$hole->ID),array('class'=>"declarationBtn")); ?></p>
 								<p><?php echo CHtml::link(Yii::t('holes_view', 'HOLE_CART_ADMIN_GIBDD_REPLY_RECEIVED'), array('gibddreply', 'id'=>$hole->ID),array('class'=>"declarationBtn")); ?></p>
 							</div>
 						<? else : ?>	
 							<div class="cc">
-								<p><a href="#" onclick="var c=document.getElementById('pdf_form');if(c){c.style.display=c.style.display=='block'?'none':'block';}return false;" class="declarationBtn"><?= Yii::t('holes_view', 'HOLE_CART_ADMIN_TEXT_4') ?></a></p>
+								<p><?php echo CHtml::link(Yii::t('holes_view', 'HOLE_CART_ADMIN_TEXT_4'), Array('requestForm','id'=>$hole->gibdd->id,'type'=>'gibdd','holes'=>$hole->ID), Array('class'=>'declarationBtn show_form_inhole')); ?></p>
 								<p><?php echo CHtml::link(Yii::t('holes_view', 'HOLE_CART_ADMIN_TEXT_6'), array('sent', 'id'=>$hole->ID),array('class'=>"declarationBtn")); ?></p>
 							</div>
 							<div class="rc">
@@ -243,7 +243,7 @@ $this->widget('application.extensions.fancybox.EFancyBox', array(
 							<?php endif; ?>	
 							</div>
 							<div class="cc">
-								<p><a href="#" onclick="var c=document.getElementById('pdf_form');if(c){c.style.display=c.style.display=='block'?'none':'block';}return false;" class="declarationBtn"><?= Yii::t('holes_view', 'HOLE_CART_ADMIN_TEXT_4') ?></a></p>
+								<p><?php echo CHtml::link(Yii::t('holes_view', 'HOLE_CART_ADMIN_TEXT_4'), Array('requestForm','id'=>$hole->gibdd->id,'type'=>'gibdd','holes'=>$hole->ID), Array('class'=>'declarationBtn show_form_inhole')); ?></p>
 								<?php if (!$hole->request_gibdd) : ?>
 								<p><?php echo CHtml::link(Yii::t('holes_view', 'HOLE_CART_ADMIN_TEXT_6'), array('sent', 'id'=>$hole->ID),array('class'=>"declarationBtn")); ?></p>
 								<?php elseif(!$hole->request_gibdd->answers) : ?>									
@@ -281,7 +281,7 @@ $this->widget('application.extensions.fancybox.EFancyBox', array(
 						</div>
 						<? else : ?>						
 							<div class="cc">
-								<p><a href="#" onclick="var c=document.getElementById('pdf_form');if(c){c.style.display=c.style.display=='block'?'none':'block';}return false;" class="declarationBtn"><?= Yii::t('holes_view', 'HOLE_CART_ADMIN_TEXT_4') ?></a></p>
+								<p><?php echo CHtml::link(Yii::t('holes_view', 'HOLE_CART_ADMIN_TEXT_4'), Array('requestForm','id'=>$hole->gibdd->id,'type'=>'gibdd','holes'=>$hole->ID), Array('class'=>'declarationBtn show_form_inhole')); ?></p>
 								<?php if (!$hole->request_gibdd) : ?>
 								<p><?php echo CHtml::link(Yii::t('holes_view', 'HOLE_CART_ADMIN_TEXT_6'), array('sent', 'id'=>$hole->ID),array('class'=>"declarationBtn")); ?></p>
 								<?php else : ?>
@@ -328,7 +328,7 @@ $this->widget('application.extensions.fancybox.EFancyBox', array(
 									<?php echo CHtml::link(Yii::t('holes_view', 'HOLE_CART_ADMIN_TEXT_8'), array('fix', 'id'=>$hole->ID),array('class'=>"declarationBtn")); ?>	
 								<?php else: ?>	
 								<p>Или отправьте еще одно заявление в ГИБДД:</p>
-								<p><a href="#" onclick="var c=document.getElementById('pdf_form');if(c){c.style.display=c.style.display=='block'?'none':'block';}return false;" class="declarationBtn"><?= Yii::t('holes_view', 'HOLE_CART_ADMIN_TEXT_4') ?></a></p>
+								<p><?php echo CHtml::link(Yii::t('holes_view', 'HOLE_CART_ADMIN_TEXT_4'), Array('requestForm','id'=>$hole->gibdd->id,'type'=>'gibdd','holes'=>$hole->ID), Array('class'=>'declarationBtn show_form_inhole')); ?></p>
 								<p><?php echo CHtml::link(Yii::t('holes_view', 'HOLE_CART_ADMIN_TEXT_6'), array('sent', 'id'=>$hole->ID),array('class'=>"declarationBtn")); ?></p>
 								<?php endif; ?>	
 							</div>
@@ -365,26 +365,9 @@ $this->widget('application.extensions.fancybox.EFancyBox', array(
 					}
 				}
 				?>				
-				<div class="pdf_form" id="pdf_form"<?= isset($_GET['show_pdf_form']) ? ' style="display: block;"' : '' ?>>
+				<div class="pdf_form" id="pdf_form" style="display: none; left:auto;">
 				<a href="#" onclick="var c=document.getElementById('pdf_form');if(c){c.style.display=c.style.display=='block'?'none':'block';}return false;" class="close">&times;</a>
-				<?php /* echo CHtml::dropDownList('gibdd_id','',CHtml::listData($hole->territorialGibdd, 'id', 'gibdd_name' ),
-									array(
-									'prompt'=>'Выберете отдел ГИБДД',
-									'ajax' => array(
-									'type'=>'POST', //request type
-									'url'=>$this->createUrl('requestForm', Array('type'=>'gibdd','hole'=>$hole->ID)), //url to call.
-									'update'=>'#gibdd_form', //selector to update
-									'data'=>'js:"id="+$(this).val()',
-									'beforeSend'=>'js:function(){
-														$("#gibdd_form").empty().addClass("loading");
-													 }',
-									'complete'=>'js:function(){
-														$("#gibdd_form").removeClass("loading");
-													 }',				 
-									))); */ ?>
 				<div id="gibdd_form"></div>
-				<?php $this->renderPartial('_form_gibdd',Array('hole'=>$hole, 'gibdd'=>$hole->gibdd)); 
-				?>
 				</div>
 			<?php else : ?>	
 				<div class="progress">

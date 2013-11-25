@@ -46,16 +46,8 @@ class SpravController extends Controller
 	
 	// склонятор
 	public function sklonyator($str)
-	{
-		$nanoyandex_reply = file_get_contents('http://export.yandex.ru/inflect.xml?name='.urlencode($str));
-		$pos = strpos($nanoyandex_reply, '<inflection case="3">');
-		if($pos === false)
-		{
-			return $str;
-		}
-		$nanoyandex_reply = substr($nanoyandex_reply, $pos);
-		$nanoyandex_reply = substr($nanoyandex_reply, 21, strpos($nanoyandex_reply, '</inflection>') - 21); // 21 = strlen('<inflection case="3">')
-		return trim($nanoyandex_reply, "\n\t ");
+	{		
+		return Y::sklonyator($str);
 	}	
 	
 	function file_get_html() {

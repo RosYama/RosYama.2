@@ -72,3 +72,21 @@ function gibddre_img_del(hole_id, img_id)
 jQuery(".delpicture").live("click",function(){
 		return confirm('Вы уверены, что хотите удалить изображение?');
 	});
+	
+jQuery("a.show_form_inhole").live("click",function() {
+				if (!$("#pdf_form").hasClass('loaded')){
+					jQuery.ajax({"type":"POST","beforeSend":function(){
+						$("#pdf_form").hide();		
+					 },
+					 "complete":function(){
+						$("#pdf_form").show();
+						},"url":$(this).attr("href"),"cache":false,
+					"success":function(html){
+						jQuery("#gibdd_form").html(html);
+						$("#pdf_form").addClass('loaded');
+						}
+					});				
+				}
+				else $("#pdf_form").toggle();
+				return false;
+			});		

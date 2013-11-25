@@ -152,6 +152,10 @@ div.wide.form .row
 {
 	clear: left;
 }
+div.wide.form.gibdd_form input, div.wide.form.gibdd_form textarea {width: 500px;}
+div.wide.form.gibdd_form .submit {width: 150px;}
+div.wide.form.gibdd_form .fileButtons {padding-left: 160px;}
+div.wide.form.gibdd_form .fileButtons .printDeclaration {color:#1370aa;}
 
 div.wide.form .buttons, div.wide.form .hint, div.wide.form .errorMessage
 {
