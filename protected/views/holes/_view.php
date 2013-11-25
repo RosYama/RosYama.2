@@ -1,5 +1,12 @@
 <li<?php if(($index+1)%3==0):?> class="noMargin"<?php endif; ?>>
-			<?php echo CHtml::link(CHtml::image($data->STATE == 'fixed' && $data->pictures_fixed ? $data->pictures_fixed[0]->small : ($data->pictures_fresh ? $data->pictures_fresh[0]->small:'')), array('view', 'id'=>$data->ID), array('class'=>'photo')); ?>
+			<?php 
+				if ($data->pictures) :
+				echo CHtml::link(CHtml::image($data->STATE == 'fixed' && $data->pictures_fixed ? $data->pictures_fixed[0]->small : ($data->pictures_fresh ? $data->pictures_fresh[0]->small:'')), array('view', 'id'=>$data->ID), array('class'=>'photo')); 
+				else :
+			?>
+			<?php if($data->LATITUDE && $data->LONGITUDE) echo CHtml::link('<div id="ymapcontainer'.$data->ID.'" class="ymapcontainer_in_list" lat="'.$data->LATITUDE.'" lng="'.$data->LONGITUDE.'" id="'.$data->ID.'" icon="/images/st1234/'.$data->type->alias.'_'.$data->STATE.'.png"></div>', array('view', 'id'=>$data->ID), array('class'=>'photo')); ?>
+			
+			<?php endif;?>
 			<?php if (isset($showcheckbox) && $showcheckbox) : ?>
 				<?php echo CHtml::checkBox('hole_id[]', $data->isSelected ? true : false, Array('value'=>$data->ID, 'class'=>'hole_check')); ?>
 			<?php endif; ?>

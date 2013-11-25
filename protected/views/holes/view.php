@@ -497,6 +497,9 @@ new Ya.share({
 					Array('class'=>'holes_pict','rel'=>'hole_fixed', 'title'=>CHtml::encode($hole->ADDRESS).' - исправлено')); ?>
 					<? endforeach; ?>
 			</div>
+		<?php elseif (!$hole->pictures): ?>
+			<?php echo CHtml::image($hole->noimage); ?>
+			<p>Нет фото</p>
 		<?php endif; ?>
 		<div class="before">
 			<? if($hole->pictures_fixed): ?>
@@ -506,7 +509,7 @@ new Ya.share({
 				<?php echo CHtml::link(CHtml::image($picture->medium), $picture->original, 
 					Array('class'=>'holes_pict','rel'=>'hole', 'title'=>CHtml::encode($hole->ADDRESS))); ?>
 			<? endforeach; ?>
-		</div>
+		</div>	
 	</div>
 </div>	
 <div class="clear"></div>

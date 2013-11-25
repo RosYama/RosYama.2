@@ -359,7 +359,7 @@ class HolesController extends Controller
 			
 			$model->ADR_CITY=trim($model->ADR_CITY);
 			
-			if (Yii::app()->user->level > 50) $model->PREMODERATED=1;
+			if (Yii::app()->user->level > 50 || !$model->upploadedPictures) $model->PREMODERATED=1;
 			else $model->PREMODERATED=0;
 			
 			if ($model->gibdd_id){
@@ -844,6 +844,10 @@ class HolesController extends Controller
 		
 		$this->layout='//layouts/header_default';
 		
+		$cs=Yii::app()->getClientScript();
+        $cs->registerScriptFile('http://api-maps.yandex.ru/1.1/index.xml?key='.$this->mapkey);
+        $cs->registerScriptFile(CHtml::asset($this->viewPath.DIRECTORY_SEPARATOR.'js'.DIRECTORY_SEPARATOR.'holes_selector.js'));
+		
 		//Если нет таблиц в базе редиректим на контроллер миграции
 		if(Holes::model()->getDbConnection()->getSchema()->getTable(Holes::model()->tableName())===null)
 			$this->redirect(array('migration/index'));
@@ -1009,6 +1013,7 @@ class HolesController extends Controller
 		$cs=Yii::app()->getClientScript();
         $cs->registerCssFile('/css/holes_list.css');        
         $cs->registerCssFile('/css/hole_view.css');
+        $cs->registerScriptFile('http://api-maps.yandex.ru/1.1/index.xml?key='.$this->mapkey);
         $cs->registerScriptFile(CHtml::asset($this->viewPath.DIRECTORY_SEPARATOR.'js'.DIRECTORY_SEPARATOR.'holes_selector.js'));
 		$cs->registerScriptFile('http://www.vertstudios.com/vertlib.min.js');        
         $cs->registerScriptFile(CHtml::asset($this->viewPath.DIRECTORY_SEPARATOR.'js'.DIRECTORY_SEPARATOR.'StickyScroller'.DIRECTORY_SEPARATOR.'StickyScroller.min.js'));

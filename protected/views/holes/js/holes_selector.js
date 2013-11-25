@@ -142,7 +142,7 @@
 			});
 			
 			
-jQuery("#request-form .fileButtons a.downloadPdf").live("click",function() {
+                        jQuery("#request-form .fileButtons a.downloadPdf").live("click",function() {
 				jQuery.ajax({"type":"POST","beforeSend":function(){
 									 },
 				 "complete":function(){				 
@@ -157,7 +157,7 @@ jQuery("#request-form .fileButtons a.downloadPdf").live("click",function() {
 				return false;
 			});		
 			
-jQuery("#request-form").live("submit",function() {
+                        jQuery("#request-form").live("submit",function() {
 				var form=$(this);
 				jQuery.ajax({"type":"POST","beforeSend":function(){
 							},
@@ -173,3 +173,26 @@ jQuery("#request-form").live("submit",function() {
 				$("#pdf_form").show();
 				return false;
 			});					
+
+			function noimageMap(){
+				var maps = new Array;
+				$(".holes_list").find(".ymapcontainer_in_list").each(function() {  				
+						var map_centery = $(this).attr('lat');
+						var map_centerx = $(this).attr('lng');
+						maps[$(this).attr('id')] = new YMaps.Map(YMaps.jQuery(this));				
+						maps[$(this).attr('id')].setCenter(new YMaps.GeoPoint(map_centerx, map_centery), 14);
+						maps[$(this).attr('id')].addControl(new YMaps.SmallZoom());
+						var s = new YMaps.Style();
+						s.iconStyle = new YMaps.IconStyle();
+						s.iconStyle.href = $(this).attr('icon');
+						s.iconStyle.size = new YMaps.Point(54, 61);
+						s.iconStyle.offset = new YMaps.Point(-30, -61);
+						var placemark = new YMaps.Placemark(new YMaps.GeoPoint(map_centerx, map_centery), { hideIcon: false, hasBalloon: false, style: s } );
+						maps[$(this).attr('id')].addOverlay(placemark);
+					});
+				
+			}	
+			
+			$(document).ready(function() {
+				noimageMap();
+			});

@@ -55,6 +55,7 @@ class Holes extends CActiveRecord
 	
 	public $types=Array();
 	public $states=Array();
+	public $noimage='/images/st1234/no-photo.png';
 	/**
 	 * @return string the associated database table name
 	 */
@@ -94,13 +95,13 @@ class Holes extends CActiveRecord
 			array('ADR_CITY', 'length', 'max'=>50),
 			array('STR_SUBJECTRF, username, description_locality, description_size', 'length'),
 			array('COMMENT1, COMMENT2, COMMENT_GIBDD_REPLY, deletepict, upploadedPictures, request_gibdd, showUserHoles', 'safe'),	
-			array('upploadedPictures', 'file', 'types'=>'jpg, jpeg, png, gif','maxFiles'=>10, 'allowEmpty'=>true, 'on' => 'update, import, fix'),
-			array('upploadedPictures', 'file', 'types'=>'jpg, jpeg, png, gif','maxFiles'=>10, 'allowEmpty'=>false, 'on' => 'insert'),
+			array('upploadedPictures', 'file', 'types'=>'jpg, jpeg, png, gif','maxFiles'=>10, 'allowEmpty'=>true, 'on' => 'update, import, fix, insert'),
+			//array('upploadedPictures', 'file', 'types'=>'jpg, jpeg, png, gif','maxFiles'=>10, 'allowEmpty'=>false, 'on' => 'insert'),
 			array('upploadedPictures', 'unsafe', 'on' => 'add'),
-			array('upploadedPictures', 'required', 'on' => 'insert, add', 'message' => 'Необходимо загрузить фотографии'),			
+			//array('upploadedPictures', 'required', 'on' => 'insert, add', 'message' => 'Необходимо загрузить фотографии'),			
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('ID, USER_ID, LATITUDE, LONGITUDE, ADDRESS, STATE, DATE_CREATED, DATE_SENT, DATE_STATUS, COMMENT1, COMMENT2, TYPE_ID, ADR_SUBJECTRF, ADR_CITY, COMMENT_GIBDD_REPLY, GIBDD_REPLY_RECEIVED, PREMODERATED, DATE_SENT_PROSECUTOR, withAnswers, types, states', 'safe', 'on'=>'search'),
+			array('ID, USER_ID, LATITUDE, LONGITUDE, ADDRESS, STATE, DATE_CREATED, DATE_SENT, DATE_STATUS, COMMENT1, COMMENT2, TYPE_ID, ADR_SUBJECTRF, ADR_CITY, COMMENT_GIBDD_REPLY, GIBDD_REPLY_RECEIVED, PREMODERATED, DATE_SENT_PROSECUTOR, withAnswers, types, states, pictures', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -755,6 +756,14 @@ class Holes extends CActiveRecord
 		if ($this->selecledList)
 			$criteria->join='INNER JOIN {{user_selected_lists_holes_xref}} ON {{user_selected_lists_holes_xref}}.hole_id=t.id AND {{user_selected_lists_holes_xref}}.list_id='.$this->selecledList;
 		
+		if ($this->pictures){
+			$criteria->join.=' LEFT JOIN {{hole_pictures}} pict on (t.id=pict.hole_id)';
+			if ($this->pictures==1) $criteria->addCondition('pict.id > 0');
+			else $criteria->addCondition('pict.id IS NULL'); 
+			$criteria->group='t.id';
+				
+		}
+		
 	
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
@@ -943,6 +952,15 @@ class Holes extends CActiveRecord
 		$criteria->compare('t.gibdd_id',$this->gibdd_id,false);
 		//
 		//$criteria->addCondition('t.USER_ID='.$userid);
+		
+		if ($this->pictures){
+			$criteria->join.=' LEFT JOIN {{hole_pictures}} pict on (t.id=pict.hole_id)';
+			if ($this->pictures==1) $criteria->addCondition('pict.id > 0');
+			else $criteria->addCondition('pict.id IS NULL'); 
+			$criteria->group='t.id';
+				
+		}
+		
 	
 		$provider=new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
@@ -1034,6 +1052,14 @@ class Holes extends CActiveRecord
 		if (!Yii::app()->user->isModer) $criteria->compare('t.PREMODERATED',$this->PREMODERATED,true);
 		$criteria->compare('DATE_SENT_PROSECUTOR',$this->DATE_SENT_PROSECUTOR,true);
 		//$criteria->together=true;
+		
+		if ($this->pictures){
+			$criteria->join.=' LEFT JOIN {{hole_pictures}} pict on (t.id=pict.hole_id)';
+			if ($this->pictures==1) $criteria->addCondition('pict.id > 0');
+			else $criteria->addCondition('pict.id IS NULL'); 
+			$criteria->group='t.id';
+				
+		}
 	
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

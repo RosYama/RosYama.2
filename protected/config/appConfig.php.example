@@ -1,4 +1,5 @@
 <?php 
+
 $db=array(
 	'class'=>'CDbConnection',
 	'connectionString' => 'mysql:host=localhost;dbname=rosyama',
