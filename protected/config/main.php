@@ -146,7 +146,7 @@ return array(
 			'services' => $socials,
 		),
 
-		'db'=>$bd,
+		'db'=>$db,
 		
 		'cache'=>array(
             'class'=>'system.caching.CApcCache',          

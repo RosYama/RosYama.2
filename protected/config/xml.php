@@ -121,7 +121,7 @@ return array(
         ),
 		
 
-		'db'=>$bd,
+		'db'=>$db,
 
 		 'widgetFactory'=>array(
 			'enableSkin'=>true,
