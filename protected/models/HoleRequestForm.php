@@ -188,7 +188,7 @@ class HoleRequestForm extends CFormModel
 			'form_text_11'=>$user->last_name,
 			'form_text_12'=>$user->name,
 			'form_text_13'=>$user->second_name,
-			'form_text_31'=>$hole->subject ? $hole->subject->region_num : 77,
+			'form_text_31'=>$hole->subject ? $hole->subject->regionNumNullLead : 77,
 			'form_text_15'=>$hole->subject ? $hole->subject->name_full : 'Москва',
 			'form_dropdown_SUBJECT'=>25,//заявление
 			'sessid'=>$sessid,

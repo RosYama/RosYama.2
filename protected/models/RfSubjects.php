@@ -258,6 +258,10 @@ class RfSubjects extends CActiveRecord
 	
 	}
 	
+	public function getRegionNumNullLead(){
+		return $this->region_num < 10 ? '0'.$this->region_num : $this->region_num;
+	}
+	
 	public function search()
 	{
 		// Warning: Please modify the following code to remove attributes that
