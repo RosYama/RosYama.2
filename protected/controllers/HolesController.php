@@ -35,7 +35,7 @@ class HolesController extends Controller
 								'add','update', 'personal','personalDelete','request','requestForm','sent','notsent',
 								'gibddreply', 'fix', 'defix', 'prosecutorsent', 'prosecutornotsent','delanswerfile','myarea', 'territorialGibdd', 
 								'delpicture','selectHoles','sentMany','review', 'selected', 'addFixedFiles', 'approveFixedPicture', 'upload', 'requestDorogiMos', 
-								'sendToGibddru', 'getRequestFile',
+								'sendToGibddru', 'getRequestFile', 'getGibddCaptcha'
 								),
 				'users'=>array('@'),
 			),
@@ -713,6 +713,28 @@ class HolesController extends Controller
 			}
 		}
 	}	
+	
+	public function actionGetGibddCaptcha($sid){
+		//http://www.gibdd.ru/bitrix/tools/captcha.php?captcha_sid=0ddda14feacf1ba3902370280d0a2d6c
+		$ch = curl_init('http://www.gibdd.ru/bitrix/tools/captcha.php?captcha_sid='.$sid);
+		curl_setopt($ch, CURLOPT_HEADER, false);
+		curl_setopt($ch, CURLOPT_POST, false);
+		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_MAXREDIRS, 100 );
+		curl_setopt($ch, CURLOPT_COOKIEFILE, Yii::app()->user->uploadDir.'/'."gibddru_cookie.txt");
+		
+		if (($answer = curl_exec($ch)) === false) {
+					throw new Exception(curl_error($ch));
+				} 
+		$response = curl_getinfo( $ch );
+		curl_close ($ch);
+		
+		header("Content-Type: image/jpeg");
+		echo $answer;
+		Yii::app()->end();
+	
+	}
 
 	//генерация бумажных заявлений в ГИБДД
 	public function actionGetRequestFile($id=null)

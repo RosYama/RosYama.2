@@ -117,7 +117,7 @@
 				</div>
 				
 				<div class="row">					
-					<?php echo CHtml::image('http://www.gibdd.ru/bitrix/tools/captcha.php?captcha_sid='.$gibddModel->captcha_sid); ?>
+					<?php echo CHtml::image($this->createUrl('getGibddCaptcha', Array('sid'=>$gibddModel->captcha_sid))); ?>
 					<?php echo $form->hiddenField($gibddModel,'captcha_sid'); ?>
 					<?php echo $form->labelEx($gibddModel,'captcha_word'); ?>
 					<?php echo $form->textField($gibddModel,'captcha_word', Array('style'=>'width: 200px;')); ?>
