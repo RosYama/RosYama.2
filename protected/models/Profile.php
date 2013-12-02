@@ -46,7 +46,7 @@ class Profile extends CActiveRecord
 			array('request_phone', 'length', 'max'=>62),
 			array('site, avatar, request_from, request_address', 'length', 'max'=>255),
 			array('aboutme', 'length'),
-			array('show_archive_holes, send_achtung_notifications, use_multi_upload', 'numerical', 'integerOnly'=>true),
+			array('show_archive_holes, send_achtung_notifications, use_multi_upload, send_news2email', 'numerical', 'integerOnly'=>true),
 			array('site', 'url','allowEmpty'=>true),
 			array('image', 'file', 'types'=>'jpeg, jpg, gif, png', 'allowEmpty' => true),
 			// The following rule is used by search().
@@ -123,7 +123,8 @@ class Profile extends CActiveRecord
 			'request_phone'=>'Телефон для подстановки в заявления',
 			'send_achtung_notifications'=>'Присылать напоминания о просроченных запросах в ГИБДД',
 			'show_archive_holes'=>'Показывать архивные ямы в "Моих ямах" и на "Моем участке"',
-			'use_multi_upload'=>'Включить загрузку нескольких картинок одновременно'
+			'use_multi_upload'=>'Включить загрузку нескольких картинок одновременно',
+			'send_news2email'=>'Присылать мне по email новости РосЯмы',
 		);
 	}
 

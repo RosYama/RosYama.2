@@ -140,6 +140,10 @@
 			<?php echo $form->checkBox($miscModel->relProfile,'send_achtung_notifications',Array('class'=>'filter_checkbox')); ?>	
 			<?php echo $form->labelEx($miscModel->relProfile,'send_achtung_notifications',Array('class'=>'archive')); ?>
 			<?php echo $form->error($miscModel->relProfile,'send_achtung_notifications'); ?>  
+			<br/>
+			<?php echo $form->checkBox($miscModel->relProfile,'send_news2email',Array('class'=>'filter_checkbox')); ?>	
+			<?php echo $form->labelEx($miscModel->relProfile,'send_news2email',Array('class'=>'archive')); ?>
+			<?php echo $form->error($miscModel->relProfile,'send_news2email'); ?>  
 		</div>
 		</td>
 		</tr>
