@@ -185,6 +185,18 @@ $this->widget('application.extensions.fancybox.EFancyBox', array(
 								<span><ins>&mdash;</ins>с&nbsp;официального сайта <a href="http://www.gibdd.ru/letter" target="_blank">ГИБДД&nbsp;МВД&nbsp;России</a></span>
 							</div>
 						</div>
+						<?php 
+						if ($fromadd && !$hole->isMoscow)
+						Yii::app()->clientScript->registerScript('openForm',<<<EOD
+    						$('.printDeclaration.show_form_inhole').click();
+							if(jQuery.browser.safari){
+								jQuery("body").animate( { scrollTop: 310 }, 1100 );
+							  }else{
+								jQuery("html").animate( { scrollTop: 310 }, 1100 );
+							  }		
+EOD
+,CClientScript::POS_READY);
+						?>						
 						<?
 						break;
 					}

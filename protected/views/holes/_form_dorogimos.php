@@ -3,7 +3,7 @@
 				// additional javascript options for the dialog plugin
 				'options'=>array(
 					'title'=>'Сообщить через gorod.mos.ru',
-					'autoOpen'=>$model->errors ? true : false,
+					'autoOpen'=>$model->errors || (isset($_GET['fromadd']) && $_GET['fromadd']) ? true : false,
 					'width'=>'auto',
 					'height'=>'auto',
 					'resizable'=>false,
