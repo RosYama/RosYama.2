@@ -32,18 +32,27 @@
 				</script>
 
 <div class="wrap">
-	<div class="projects_links">
-		<ul>
-			<li class="no_bg">Проекты <a href="http://fbk.info">Фонда борьбы с коррупцией</a>:</li>
-			<li class="rospil"><a href="http://rospil.info">&nbsp;</a></li>
-			<li class="rosvybory"><a href="http://rosvybory.org">&nbsp;</a></li>
-			<li class="rosyama"><span>&nbsp;</span></li>
-			<li class="rosjkh"><a href="http://roszkh.ru">&nbsp;</a></li>
-			<li class="rosdmp"><a href="http://mashina.org">&nbsp;</a></li>
-		</ul>
-	</div>
+
 <div class="navigation">
 		<div class="container">
+			<div class="auth">
+			<?php if(!$this->user->isGuest) : ?>
+					<?php echo CHtml::link('<img src="/images/logout.png" alt="Выйти" />',Array('/site/logout'),Array('title'=>'Выйти')); ?>
+					<div class="name">
+						<p><?php echo CHtml::link($this->user->fullname,Array('/holes/personal')); ?></p><span class="grad"></span>
+					</div>
+				<?php else: ?>
+					<?php echo CHtml::link('Войти',Array('/holes/personal'),Array('title'=>'Войти', 'class'=>'profileBtn')); ?>
+				<?php endif; ?>
+					<style type="text/css">
+						.auth .name
+						{
+							width: 150px !important;
+						}
+
+					</style>
+
+			</div>
 			 <?php $this->widget('application.widgets.topmenu.topmenuWidget');?>
 
 			<!--
@@ -86,28 +95,12 @@
 	</script>
 	</form>
 			</div> -->
-			<div class="auth">
-			<?php if(!$this->user->isGuest) : ?>
-					<?php echo CHtml::link('<img src="/images/logout.png" alt="Выйти" />',Array('/site/logout'),Array('title'=>'Выйти')); ?>
-					<div class="name">
-						<p><?php echo CHtml::link($this->user->fullname,Array('/holes/personal')); ?></p><span class="grad"></span>
-					</div>
-				<?php else: ?>
-					<?php echo CHtml::link('Войти',Array('/holes/personal'),Array('title'=>'Войти', 'class'=>'profileBtn')); ?>
-				<?php endif; ?>
-					<style type="text/css">
-						.auth .name
-						{
-							width: 150px !important;
-						}
 
-					</style>
-
-			</div>
+			<div class="donation_button"><a href="http://donate.fbk.info/rosyama/">Поддержать РосЯму</a></div>
 		</div>
 	</div>
 		<?php echo $content; ?>
-
+		<?php $this->renderPartial('application.views.layouts._donateForm'); ?>
 	<div class="footer">
 
 		<div class="container">
@@ -134,6 +127,17 @@
 		</div>
 	</div>
 
+	<div class="projects_links"> 
+		<ul>
+			<li class="no_bg">Проекты <a href="http://fbk.info">Фонда борьбы с коррупцией</a>:</li>
+			<li class="rospil"><a href="http://rospil.info">&nbsp;</a></li>
+			<li class="rosvybory"><a href="http://rosvybory.org">&nbsp;</a></li>
+			<li class="rosyama"><span>&nbsp;</span></li>
+			<li class="rosjkh"><a href="http://roszkh.ru">&nbsp;</a></li>
+			<li class="rosdmp"><a href="http://mashina.org">&nbsp;</a></li>
+		</ul>
+	</div>
+	
 	<script type="text/javascript">
                 var reformalOptions = {
                         project_id: 43983,
@@ -141,7 +145,7 @@
                         force_new_window: false,
                         tab_alignment: "left",
                         tab_top: "316",
-                        tab_image_url: "http://reformal.ru/files/images/buttons/reformal_tab_orange.png"
+                        tab_image_url: "/images/reformal_tab_orange.png" 
                 };
                 (function() {
                         if ('https:' == document.location.protocol) return;

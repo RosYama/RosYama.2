@@ -248,15 +248,9 @@ EOD
 		<?php $this->endWidget(); ?>
 </div>
 
-<table style="background-color: rgb(241, 109, 126)"> 
-  <tbody> 
-    <tr><td style="padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px"> <b> 
-      <p>РосЯма существует на ваши пожертвования:</p>
-        <p><a href="/page/donations/">Подробнее</a></p>
-      </b>
-    </td></tr>
-  </tbody>
-</table>
+<div class="donation_link">
+<a href="http://donate.fbk.info/rosyama/">Поддержать росяму</a>
+</div>
 
 <?php $this->widget('application.widgets.news.newsWidget'); ?>
 <?php $this->widget('application.widgets.social.socialWidget'); ?>
