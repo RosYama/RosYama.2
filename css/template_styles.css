@@ -107,6 +107,7 @@ body {
 				padding: 4px 15px 5px 15px;
 				position: relative;
 				top: 8px;
+				font-size: 18px;
 float: right;
 			}
 .donation_button{padding: 11px 0 0 20px; float: left;}
@@ -1111,14 +1112,16 @@ border-radius: 3px; text-decoration: none; text-transform: uppercase; font-size:
   font-size: 14px;
   padding: 0 30px;
   margin-left: 10px;
-background: #ffa457;
-background: -moz-linear-gradient(top,  #ffa457 13%, #ff2511 100%);
-background: -webkit-gradient(linear, left top, left bottom, color-stop(13%,#ffa457), color-stop(100%,#ff2511));
-background: -webkit-linear-gradient(top,  #ffa457 13%,#ff2511 100%);
-background: -o-linear-gradient(top,  #ffa457 13%,#ff2511 100%);
-background: -ms-linear-gradient(top,  #ffa457 13%,#ff2511 100%);
-background: linear-gradient(to bottom,  #ffa457 13%,#ff2511 100%);
-filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffa457', endColorstr='#ff2511',GradientType=0 );
+background: #f2a663;
+background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJod…EiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
+background: -moz-linear-gradient(top,#f2a663 0,#ec6b3e 100%);
+background: -webkit-gradient(linear,left top,left bottom,color-stop(0,#f2a663),color-stop(100%,#ec6b3e));
+background: -webkit-linear-gradient(top,#f2a663 0,#ec6b3e 100%);
+background: -o-linear-gradient(top,#f2a663 0,#ec6b3e 100%);
+background: -ms-linear-gradient(top,#f2a663 0,#ec6b3e 100%);
+background: linear-gradient(to bottom,#f2a663 0,#ec6b3e 100%);
+filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f2a663',endColorstr='#ec6b3e',GradientType=0);
+border: 0;
 
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
@@ -1127,7 +1130,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffa457', end
   border-radius: 5px;
 }
 #block .donate input[type="submit"]:hover {
-  background: #FF2511;
+  background:  #ec6a3f;;
 }
 #block .donate input[type="submit"]:disabled {
   background: #949494;
