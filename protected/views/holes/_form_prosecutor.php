@@ -1,6 +1,6 @@
 <a href="#" onclick="var c=document.getElementById('prosecutor_form2');if(c){c.style.display=c.style.display=='block'?'none':'block';}return false;" class="close">&times;</a>
 									<?php $form=$this->beginWidget('CActiveForm', array(
-										'id'=>'request-form',
+										'id'=>'request-prosecutor-form',
 										'enableAjaxValidation'=>false,
 										'action'=>Yii::app()->createUrl("holes/request", array("id"=>$hole->ID)),
 										'htmlOptions'=>Array ('onsubmit'=>"document.getElementById('prosecutor_form2').style.display='none';"),
