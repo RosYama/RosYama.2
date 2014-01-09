@@ -272,6 +272,7 @@ border-radius: 3px; text-decoration: none;}
 	color: #fff;
 	padding: 0 5px;
 	text-decoration: none;
+	font-size: 11px;
 }
 
 ul.usermenu li{float:left; font-size: 0.44em; text-transform: uppercase;}
