@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: localhost
--- Время создания: Апр 26 2013 г., 00:01
+-- Время создания: Янв 10 2014 г., 10:22
 -- Версия сервера: 5.5.25
 -- Версия PHP: 5.3.14
 
@@ -1084,6 +1084,7 @@ CREATE TABLE IF NOT EXISTS `yii_usergroups_user_profile` (
   `request_phone` varchar(63) COLLATE utf8_unicode_ci NOT NULL,
   `show_archive_holes` tinyint(1) NOT NULL DEFAULT '1',
   `send_achtung_notifications` tinyint(1) NOT NULL DEFAULT '1',
+  `send_news2email` tinyint(1) NOT NULL DEFAULT '1',
   `use_multi_upload` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
