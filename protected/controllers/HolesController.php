@@ -696,9 +696,9 @@ class HolesController extends Controller
 				
 				$gibddModel=$model->getResult($holemodel[0]);	
 				if ($gibddModel){
-					$model->from=Y::sklonyator($gibddModel->form_text_11, 2).' '.Y::sklonyator($gibddModel->form_text_12, 2).' '.Y::sklonyator($gibddModel->form_text_13, 2);
-					$model->signature=$gibddModel->form_text_11.' '.substr($gibddModel->form_text_12, 0, 2).($gibddModel->form_text_12 ? '.' : '').' '.substr($gibddModel->form_text_13, 0, 2).($gibddModel->form_text_13 ? '.' : '');
-					$model->postaddress=($gibddModel->form_text_14 ? $gibddModel->form_text_14.', ' : '').($gibddModel->form_text_15 ? $gibddModel->form_text_15.', ' : '').($gibddModel->form_text_16 ? $gibddModel->form_text_16.', ' : '').$gibddModel->form_text_17;
+					$model->from=Y::sklonyator($gibddModel->f_fam, 2).' '.Y::sklonyator($gibddModel->f_name, 2).' '.Y::sklonyator($gibddModel->f_coname, 2);
+					$model->signature=$gibddModel->f_fam.' '.substr($gibddModel->f_name, 0, 2).($gibddModel->f_name ? '.' : '').' '.substr($gibddModel->f_coname, 0, 2).($gibddModel->f_coname ? '.' : '');
+					$model->postaddress=($gibddModel->f_ind ? $gibddModel->f_ind.', ' : '').($gibddModel->f_reg ? $gibddModel->f_reg.', ' : '').($gibddModel->f_npunkt ? $gibddModel->f_npunkt.', ' : '').$gibddModel->f_addr;
 				}
 			
 				if (count ($holemodel) > 1){
@@ -753,7 +753,7 @@ class HolesController extends Controller
 					$request->sendToGibddru=1;
 				}
 				$gibddModel=$request->getResult($model);
-				echo $gibddModel->form_file_27;
+				echo $gibddModel->attach;
 			}		
 	}
 	
@@ -789,30 +789,38 @@ class HolesController extends Controller
 			$holesmodels=Holes::model()->findAllByPk($model->holes);
 			if ($model->validate()){
 				
-				$model->form_file_27=$request->getResult($holesmodels[0], true);
-				$fields=$model->attributes;
-				$fields['form_file_27']='@' . $_SERVER['DOCUMENT_ROOT'].$model->form_file_27;
-				//unset($fields['form_file_27']);
+				$model->attach=$request->getResult($holesmodels[0], true);
+				$fields=$model->attributes;				
+				if ($model->attach) $fields['attach'][0]='@' . $_SERVER['DOCUMENT_ROOT'].$model->attach;
+				//unset($fields['attach']);
 				unset($fields['holes']);
-				$ch = curl_init('http://www.gibdd.ru/letter/');
-				curl_setopt($ch, CURLOPT_HEADER, true);
+				unset($fields['sessid']);
+				//print_r($fields); die();
+				$ch = curl_init('http://www.gibdd.ru/bitrix/templates/.default/components/gai/letter/send/ajax/post.php');
+				curl_setopt($ch, CURLOPT_HEADER, false);
 				curl_setopt($ch, CURLOPT_POST, true);
 				curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 				curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 				curl_setopt($ch, CURLOPT_POSTFIELDS, $fields); 		
 				curl_setopt($ch, CURLOPT_MAXREDIRS, 100 );
+				curl_setopt($ch, CURLOPT_REFERER, 'http://www.gibdd.ru/letter/?reg=77');
 				curl_setopt($ch, CURLOPT_COOKIEFILE, Yii::app()->user->uploadDir.'/'."gibddru_cookie.txt");
 				
 				if (($answer = curl_exec($ch)) === false) {
 							throw new Exception(curl_error($ch));
 						} 
 				$response = curl_getinfo( $ch );
-				curl_close ($ch);
-				preg_match('/<div class="errormsgs info-message">(.*?)<\/div>/ism', $answer, $maches);
-				if(isset($maches[1]) && $maches[1]) $error=$maches[1];				
+
+				$resArr=CJSON::decode($answer);
+				//print_r($resArr); die();
+				curl_close ($ch);				
 				
+				$success='';
+				if (isset($resArr['error']) && trim($resArr['error'])) $error=$resArr['error'];
+				if (isset($resArr['status'][0]['num']) && $resArr['status'][0]['num']==100) $model->addError('captcha_word', $resArr['status'][0]['text']);					
+				if (isset($resArr['status'][0]['num']) && $resArr['status'][0]['num']==200) $success=$resArr['status'][0]['text'];
 				
-				if(strpos($response['url'], 'formresult=addok')){					
+				if(!$model->errors && $success){					
 					
 					$count=0;
 					$links=Array();
@@ -823,18 +831,18 @@ class HolesController extends Controller
 							}
 					}	
 					if(count($holesmodels) > 1){
-						Yii::app()->user->setFlash('user', 'Успешное изменение статуса ям: <br/>'.implode('<br/>',$links).'<br/><br/><br/>');
+						Yii::app()->user->setFlash('user', $success.'<br />'.'Успешное изменение статуса ям: <br/>'.implode('<br/>',$links).'<br/><br/><br/>');
 						if (!$ajax) $this->redirect(array('personal'));
 						}
 					elseif (count($holesmodels) == 1){
-						Yii::app()->user->setFlash('user', 'Заявление успешно отправлено');
+						Yii::app()->user->setFlash('user', $success);
 						if (!$ajax) $this->redirect(array('/holes/view', 'id'=>$holesmodels[0]->ID));
 						}
 					else Yii::app()->user->setFlash('user', 'Произошла ошибка! Ничего не отправлено');	
 					
 					if (!$ajax) $this->redirect(array('personal'));
 				}
-				elseif (!$error) {
+				elseif (!$error && !$model->errors) {
 					Yii::app()->user->setFlash('user', 'Произошла ошибка!');	
 					if (!$ajax) {
 						if(count($holesmodels) > 1)

@@ -1,133 +1,53 @@
 <?php
 /*
-<table class="form-table data-table">
-	<thead>
-		<tr>
-			<th colspan="2">	<div style="word-wrap: break-word; display: inline-block;">
-	<h2>
-		<a href="#" class="popup_show" id="regselector" rel="select_ugibdd" onclick="return false;" >77</a>
-	</h2>
-	<div class="graytext">Вы можете выбрать другой орган для направления обращения</div>
-	</div>
-</th>
-		</tr>
-	</thead>
-	<tbody>
-	<input type="hidden"  class="inputtext"  name="form_text_31" value="" size="2" /><input type="hidden"  class="inputtext"  name="form_text_35" value="" size="10" />		<tr>
-			<td>
-								Фамилия<font color='red'><span class='form-required starrequired'>*</span></font>							</td>
-			<td><input type="text"  class="inputtext"  name="form_text_11" value="" size="50" /></td>
-		</tr>
-			<tr>
-			<td>
-								Имя<font color='red'><span class='form-required starrequired'>*</span></font>							</td>
-			<td><input type="text"  class="inputtext"  name="form_text_12" value="" size="50" /></td>
-		</tr>
-			<tr>
-			<td>
-								Отчество							</td>
-			<td><input type="text"  class="inputtext"  name="form_text_13" value="" size="50" /></td>
-		</tr>
-			<tr>
-			<td>
-								Почтовый индекс							</td>
-			<td><input type="text"  class="inputtext"  name="form_text_14" value="" size="6" /></td>
-		</tr>
-			<tr>
-			<td>
-								Регион							</td>
-			<td><input type="text"  class="inputtext"  name="form_text_15" value="" size="50" /></td>
-		</tr>
-			<tr>
-			<td>
-								Населенный пункт							</td>
-			<td><input type="text"  class="inputtext"  name="form_text_16" value="" size="50" /></td>
-		</tr>
-			<tr>
-			<td>
-								Адрес							</td>
-			<td><input type="text"  class="inputtext"  name="form_text_17" value="" size="67" /></td>
-		</tr>
-			<tr>
-			<td>
-								Электронная почта							</td>
-			<td><input type="text"  class="inputtext"  name="form_email_18" value="" size="30" /></td>
-		</tr>
-			<tr>
-			<td>
-								Контактные телефоны							</td>
-			<td><input type="text"  class="inputtext"  name="form_text_19" value="" size="30" /></td>
-		</tr>
-			<tr>
-			<td>
-								Порядок рассмотрения<font color='red'><span class='form-required starrequired'>*</span></font>							</td>
-			<td><input type="checkbox"  id="20" name="form_checkbox_AGREE[]" id="form_checkbox_AGREE[]" value="20"><label for="20">Я ознакомлен(а) с порядком рассмотрения обращений</label></td>
-		</tr>
-			<tr>
-			<td>
-								Цель обращения<font color='red'><span class='form-required starrequired'>*</span></font>							</td>
-			<td><select  class="inputselect"  name="form_dropdown_SUBJECT" id="form_dropdown_SUBJECT"><option value="37">Укажите цель обращения</option><option value="23">Предложение</option><option value="21">Жалоба</option><option value="25">Заявление</option><option value="39">Запрос</option><option value="22">Выражение благодарности сотрудникам ГИБДД</option><option value="24">Получение разъяснения нормативно-правовых актов</option><option value="36">Уведомление об уплате административного штрафа</option><option value="38">Прочее...</option></select></td>
-		</tr>
-			<tr>
-			<td>
-								Текст обращения<font color='red'><span class='form-required starrequired'>*</span></font>							</td>
-			<td><textarea name="form_textarea_26" cols="71" rows="15"  class="inputtextarea" ></textarea></td>
-		</tr>
-			<tr>
-			<td>
-								Приложение							</td>
-			<td> <input name="form_file_27"  class="inputfile"   size="0" type="file" /><span class="bx-input-file-desc"></span></td>
-		</tr>
-	<input type="hidden"  name="form_hidden_40" value="" />		<tr>
-			<th colspan="2"><b>Защита от автоматического заполнения</b></th>
-		</tr>
-		<tr>
-			<td>Введите символы с картинки<font color='red'><span class='form-required starrequired'>*</span></font></td>
-			<td>
-				<input type="hidden" name="captcha_sid" value="01c8098011940c6868d97ce2d1cc7b3c" /><img src="/bitrix/tools/captcha.php?captcha_sid=01c8098011940c6868d97ce2d1cc7b3c" width="180" height="40" /><br />
-				<input type="text" name="captcha_word" size="30" maxlength="50" value="" class="inputtext" />
-			</td>
-		</tr>
-	</tbody>
-	<tfoot>
-		<tr>
-			<th colspan="2">
-			<p>
-				<font color='red'><span class='form-required starrequired'>*</span></font> - так помечены поля, обязательные для заполнения			</p>
-				<input  type="submit" name="web_form_submit" value="Направить обращение" />
-								&nbsp;<input type="reset" value="Очистить форму" />
-			</th>
-		</tr>
-	</tfoot>
+[2] => <input id="f_token" type="hidden" name="f_token" />
+            [3] => <input id="f_gai_regkod" type="hidden" name="f_gai_regkod" class="txt" value="00"/>
+            [4] => <input id="f_gai" type="text" name="f_gai" class="txt" readonly="readonly" title="Кликните для изменения" value="Уточните регион, в который адресуете обращение" readonly="readonly" />
+            [5] => <input id="f_subj_kod" type="hidden" name="f_subj_kod" value="609" />
+            [6] => <input id="f_subj" type="text" name="f_subj" class="txt" readonly="readonly" title="Кликните для изменения" value="Прочее..." readonly="readonly" />
+            [7] => <input id="f_fam" type="text" name="f_fam" class="txt" maxlength="40" />
+            [8] => <input id="f_name" type="text" name="f_name" class="txt" maxlength="40" />
+            [9] => <input id="f_coname" type="text" name="f_coname" class="txt" maxlength="40" />
+            [10] => <input type="radio" id="f_answer_method" name="f_answer_method" value="616" />
+            [11] => <input type="radio" name="f_answer_method" value="615" />
+            [12] => <input id="f_ind" type="text" name="f_ind" class="txt" maxlength="8" />
+            [13] => <input id="f_reg" type="text" name="f_reg" class="txt" maxlength="50" />
+            [14] => <input id="f_npunkt" type="text" name="f_npunkt" class="txt" maxlength="50" />
+            [15] => <input id="f_addr" type="text" name="f_addr" class="txt" maxlength="100" />
+            [16] => <input id="f_email" type="text" name="f_email" class="txt" maxlength="100"/>
+            [17] => <input id="f_phone" type="text" name="f_phone" class="txt" maxlength="50" />
+            [18] => <input class="captcha_word" type="text" size="15" name="captcha_word" autocomplete="off" />
+            [19] => <input class="captcha_code" type="hidden" name="captcha_code">
+            [20] => <input type="file" class="attach" name="attach[]" onchange="$(this).next(\'span.fakefile\').text(this.value);" />
 */
 
 class GibddRuForm extends CFormModel
 {
-	public $WEB_FORM_ID=4;
-	public $form_text_31; //регион ГИБДД
-	public $form_text_35;
-	public $form_text_11;
-	public $form_text_12;
-	public $form_text_13;
-	public $form_text_14;
-	public $form_text_15;
-	public $form_text_16;
-	public $form_text_17;
-	public $form_email_18;
-	public $form_text_19;
-	public $form_dropdown_SUBJECT;
-	public $form_textarea_26;
-	public $form_file_27;
-	public $form_hidden_40;
+	public $f_token;
+	public $f_gai_regkod;
+	public $f_gai='Уточните регион, в который адресуете обращение';
+	public $f_subj_kod=609; //Заявление
+	public $f_subj='Прочее...';
+	public $f_fam;
+	public $f_name;
+	public $f_coname;
+	public $f_answer_method=615; //616-в письменной, 615 - в электронной
+	public $f_ind;
+	public $f_reg;
+	public $f_npunkt;
+	public $f_addr;
+	public $f_email;
+	public $f_phone;
+	public $f_msg;
 	public $captcha_word;
+	public $captcha_code;
+	public $attach;
 	public $web_form_submit="Направить обращение";
-	public $iread='on';
-	public $captcha_sid;
+	public $save='Y';
+	
+
 	public $sessid;
-	public $reg;
-	public $tmp;
-	public $sbj;	
-	public $pst;
+	
 	public $holes;
 	/**
 	 * Declares the validation rules.
@@ -135,15 +55,16 @@ class GibddRuForm extends CFormModel
 	public function rules()
 	{
 		return array(
-			array('form_text_11, form_text_12, form_dropdown_SUBJECT, form_textarea_26, captcha_word, captcha_sid, WEB_FORM_ID, iread, sessid, reg, holes', 'required'),
-			array('form_text_11, form_text_12, form_text_13, form_text_15, form_text_16', 'length', 'max'=>50),
-			array('form_text_17', 'length', 'max'=>67),
-			array('form_text_19, captcha_word', 'length', 'max'=>30),
-			array('form_text_14', 'length', 'max'=>6),
-			array('form_textarea_26', 'length'),
-			array('form_file_27', 'length'),
-			array('form_text_14, form_dropdown_SUBJECT, form_text_31', 'numerical', 'integerOnly'=>true),
-			array('form_email_18', 'email'),
+			array('f_gai_regkod, f_fam, f_name, f_answer_method, f_msg, holes, captcha_word', 'required'),
+			array('f_fam, f_name, f_coname', 'length', 'max'=>40),
+			array('f_reg, f_npunkt, f_phone', 'length', 'max'=>50),
+			array('f_addr, f_email', 'length', 'max'=>100),
+			array('captcha_word', 'length', 'max'=>30),
+			array('f_ind', 'length', 'max'=>6),
+			array('f_msg', 'length'),		
+			array('f_ind', 'numerical', 'integerOnly'=>true),
+			array('f_email', 'email'),
+			array('attach, captcha_code, sessid', 'safe'),
 		);
 	}	
 		
@@ -160,23 +81,22 @@ class GibddRuForm extends CFormModel
 	public function attributeLabels()
 	{
 		return Array(
-			'form_text_31'=>'',
-			'form_text_35'=>'',
-			'form_text_11'=>'Фамилия',
-			'form_text_12'=>'Имя',
-			'form_text_13'=>'Отчество',
-			'form_text_14'=>'Почтовый индекс',
-			'form_text_15'=>'Регион',
-			'form_text_16'=>'Населенный пункт',
-			'form_text_17'=>'Адрес',
-			'form_email_18'=>'Электронная почта',
-			'form_text_19'=>'Контактные телефоны',
-			'form_dropdown_SUBJECT'=>'Цель обращения',
-			'form_textarea_26'=>'Текст обращения',
-			'form_file_27'=>'Приложение',
-			'form_hidden_40'=>'',
-			'captcha_word'=>'Введите символы с картинки',
-			'web_form_submit'=>'Направить обращение',
+			"f_subj_kod"=>"Цель обращения",
+			"f_fam"=>"Фамилия",
+			"f_name"=>"Имя",
+			"f_coname"=>"Отчество",
+			"f_answer_method"=>"Получить ответ",
+			"f_ind"=>"Почтовый индекс",
+			"f_reg"=>"Регион",
+			"f_npunkt"=>"Населенный пункт",
+			"f_addr"=>"Адрес",
+			"f_email"=>"Электронная почта",
+			"f_phone"=>"Контактные телефоны",
+			"f_msg"=>"Текст обращения",
+			"captcha_word"=>"Введите символы с картинки",
+			"captcha_code"=>"",
+			"attach"=>"Приложение"
+			
 		
 		);
 	}

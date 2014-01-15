@@ -147,15 +147,17 @@ class HoleRequestForm extends CFormModel
 	}
 	
 	public function setAttribsFromGibddForm($gibddModel){
-		$this->from=Y::sklonyator($gibddModel->form_text_11, 2).' '.Y::sklonyator($gibddModel->form_text_12, 2).' '.Y::sklonyator($gibddModel->form_text_13, 2);
-		$this->signature=$gibddModel->form_text_11.' '.substr($gibddModel->form_text_12, 0, 2).($gibddModel->form_text_12 ? '.' : '').' '.substr($gibddModel->form_text_13, 0, 2).($gibddModel->form_text_13 ? '.' : '');
-		$this->postaddress=($gibddModel->form_text_14 ? $gibddModel->form_text_14.', ' : '').($gibddModel->form_text_15 ? $gibddModel->form_text_15.', ' : '').($gibddModel->form_text_16 ? $gibddModel->form_text_16.', ' : '').$gibddModel->form_text_17;
+		$this->from=Y::sklonyator($gibddModel->f_fam, 2).' '.Y::sklonyator($gibddModel->f_name, 2).' '.Y::sklonyator($gibddModel->f_coname, 2);
+		$this->signature=$gibddModel->f_fam.' '.substr($gibddModel->f_name, 0, 2).($gibddModel->f_name ? '.' : '').' '.substr($gibddModel->f_coname, 0, 2).($gibddModel->f_coname ? '.' : '');
+		$this->postaddress=($gibddModel->f_ind ? $gibddModel->f_ind.', ' : '').($gibddModel->f_reg ? $gibddModel->f_reg.', ' : '').($gibddModel->f_npunkt ? $gibddModel->f_npunkt.', ' : '').$gibddModel->f_addr;
 	}
 	
 	public function RequestGibddru($pdfBinary, $gibdd)
 	{	
-					
-		$ch = curl_init('http://www.gibdd.ru/letter/');
+		$hole=isset($this->holes[0]) ? $this->holes[0] : new Holes;		
+		
+		
+		$ch = curl_init('http://www.gibdd.ru/letter/?reg='.($hole->subject ? $hole->subject->regionNumNullLead : 77));
 		curl_setopt($ch, CURLOPT_HEADER, false);
 		curl_setopt($ch, CURLOPT_POST, true);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -170,29 +172,50 @@ class HoleRequestForm extends CFormModel
  
 		curl_close($ch);	
 		
-		preg_match('/<input type="hidden" name="captcha_sid" value="(.*?)".*<input type="text" name="captcha_word" size="30" maxlength="50" value="" class="inputtext" \/>/ism', $leter, $maches); 
-		$captcha=str_replace('/bitrix/tools/', 'http://www.gibdd.ru/bitrix/tools/', $maches[1]);				
-		preg_match('/<input type="hidden" name="sessid" id="sessid" value="(.*?)"/ism', $leter, $maches); 		
-		$sessid=str_replace('/bitrix/tools/', 'http://www.gibdd.ru/bitrix/tools/', $maches[1]);		
+		preg_match("/'bitrix_sessid':'(.*?)'/ism", $leter, $maches); 		
+		$sessid=$maches[1];
+		
+		//preg_match_all('/<input type="hidden" name="sessid" id="sessid" value="(.*?)"/ism', $leter, $maches); 		
+		
+		//http://www.gibdd.ru/bitrix/templates/.default/components/gai/letter/send/ajax/captchaReload.php
+		//$ch = curl_init('http://www.gibdd.ru/letter/?reg='.($hole->subject ? $hole->subject->regionNumNullLead : 77));
+		$ch = curl_init('http://www.gibdd.ru/bitrix/templates/.default/components/gai/letter/send/ajax/captchaReload.php');
+		curl_setopt($ch, CURLOPT_HEADER, false);
+		curl_setopt($ch, CURLOPT_POST, true);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_COOKIEFILE, Yii::app()->user->uploadDir.'/'."gibddru_cookie.txt");
+		curl_setopt($ch, CURLOPT_POSTFIELDS, array(
+			//'photo' => '@' . $_SERVER['DOCUMENT_ROOT'].$model->PictureFolder.'original/'.$model->picture
+		)); 
+ 
+		if (($leter = curl_exec($ch)) === false) {
+			throw new Exception(curl_error($ch));
+		} 
+ 
+		curl_close($ch);	
+		
+		$captchaArr=CJSON::decode($leter); 		
+		
+		
+		$captcha=$captchaArr['code'];	
+			
 		
 		
 		$user=Yii::app()->user->userModel;
 		$hole=isset($this->holes[0]) ? $this->holes[0] : new Holes;
 		$model=new GibddRuForm;
-		$model->captcha_sid=$captcha;
+		$model->captcha_code=$captcha;
 		$model->attributes=Array(
-			'form_text_31'=>$gibdd,
-			'form_file_27'=>$this->savePdfFile($pdfBinary),
-			'form_text_17'=>$this->postaddress,
-			'form_email_18'=>$user->email,
-			'form_text_11'=>$user->last_name,
-			'form_text_12'=>$user->name,
-			'form_text_13'=>$user->second_name,
-			'form_text_31'=>$hole->subject ? $hole->subject->regionNumNullLead : 77,
-			'form_text_15'=>$hole->subject ? $hole->subject->name_full : 'Москва',
-			'form_dropdown_SUBJECT'=>25,//заявление
+			'f_gai'=>$gibdd,
+			'attach'=>$this->savePdfFile($pdfBinary),
+			'f_addr'=>$this->postaddress,
+			'f_email'=>$user->email,
+			'f_fam'=>$user->last_name,
+			'f_name'=>$user->name,
+			'f_coname'=>$user->second_name,
+			'f_gai_regkod'=>$hole->subject ? $hole->subject->regionNumNullLead : 77,
+			'f_reg'=>$hole->subject ? $hole->subject->name_full : 'Москва',			
 			'sessid'=>$sessid,
-			'reg'=>77,
 			'holes'=>implode(',',CHtml::listData($this->holes, 'ID', 'ID')),
 		);
 		if ($this->requestBodyArr){
@@ -204,7 +227,7 @@ class HoleRequestForm extends CFormModel
 			if (isset($this->requestBodyArr['count']))
 				foreach($this->requestBodyArr['count'] as $count)
 					$str.="\n".$count;
-			$model->form_textarea_26=$str;
+			$model->f_msg=$str;
 		}
 		return $model;
 		
