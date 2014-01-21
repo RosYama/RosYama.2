@@ -44,13 +44,7 @@
 				<?php else: ?>
 					<?php echo CHtml::link('Войти',Array('/holes/personal'),Array('title'=>'Войти', 'class'=>'profileBtn')); ?>
 				<?php endif; ?>
-					<style type="text/css">
-						.auth .name
-						{
-							width: 150px !important;
-						}
 
-					</style>
 
 			</div>
 			 <?php $this->widget('application.widgets.topmenu.topmenuWidget');?>
