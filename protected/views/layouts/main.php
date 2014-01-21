@@ -104,6 +104,7 @@
 			<br />
 			<br/>Разработано в <a href="http://pixelsmedia.ru" target="_blank">Pixelsmedia</a>
 			<br/>Powered by <a href="http://www.yiiframework.com/" target="_blank">Yii Framework</a>
+			<br/><a href="/api/" target="_blank">API для разработчиков</a>
 		</div>
 		<div class="center_footer">
 			<?php if($this->beginCache('countHoles', array('duration'=>3600))): ?>
