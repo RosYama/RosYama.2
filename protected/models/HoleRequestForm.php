@@ -158,10 +158,12 @@ class HoleRequestForm extends CFormModel
 		
 		
 		$ch = curl_init('http://www.gibdd.ru/letter/?reg='.($hole->subject ? $hole->subject->regionNumNullLead : 77));
-		curl_setopt($ch, CURLOPT_HEADER, false);
+		curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_1) AppleWebKit/537.73.11 (KHTML, like Gecko) Version/7.0.1 Safari/537.73.11'); 
+		curl_setopt($ch, CURLOPT_HEADER, true);
 		curl_setopt($ch, CURLOPT_POST, true);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($ch, CURLOPT_COOKIEJAR, Yii::app()->user->uploadDir.'/'."gibddru_cookie.txt");
+		curl_setopt($ch, CURLOPT_COOKIEFILE, Yii::app()->user->uploadDir.'/'."gibddru_cookie.txt");
 		curl_setopt($ch, CURLOPT_POSTFIELDS, array(
 			//'photo' => '@' . $_SERVER['DOCUMENT_ROOT'].$model->PictureFolder.'original/'.$model->picture
 		)); 
@@ -169,9 +171,10 @@ class HoleRequestForm extends CFormModel
 		if (($leter = curl_exec($ch)) === false) {
 			throw new Exception(curl_error($ch));
 		} 
- 
+ 		$response = curl_getinfo( $ch );
 		curl_close($ch);	
 		
+		//echo $leter;
 		preg_match("/'bitrix_sessid':'(.*?)'/ism", $leter, $maches); 		
 		$sessid=$maches[1];
 		
@@ -180,13 +183,11 @@ class HoleRequestForm extends CFormModel
 		//http://www.gibdd.ru/bitrix/templates/.default/components/gai/letter/send/ajax/captchaReload.php
 		//$ch = curl_init('http://www.gibdd.ru/letter/?reg='.($hole->subject ? $hole->subject->regionNumNullLead : 77));
 		$ch = curl_init('http://www.gibdd.ru/bitrix/templates/.default/components/gai/letter/send/ajax/captchaReload.php');
+		curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_1) AppleWebKit/537.73.11 (KHTML, like Gecko) Version/7.0.1 Safari/537.73.11'); 
 		curl_setopt($ch, CURLOPT_HEADER, false);
-		curl_setopt($ch, CURLOPT_POST, true);
+		curl_setopt($ch, CURLOPT_POST, false);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($ch, CURLOPT_COOKIEFILE, Yii::app()->user->uploadDir.'/'."gibddru_cookie.txt");
-		curl_setopt($ch, CURLOPT_POSTFIELDS, array(
-			//'photo' => '@' . $_SERVER['DOCUMENT_ROOT'].$model->PictureFolder.'original/'.$model->picture
-		)); 
+		curl_setopt($ch, CURLOPT_COOKIEFILE, Yii::app()->user->uploadDir.'/'."gibddru_cookie.txt");		
  
 		if (($leter = curl_exec($ch)) === false) {
 			throw new Exception(curl_error($ch));

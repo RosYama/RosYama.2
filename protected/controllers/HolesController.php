@@ -772,6 +772,15 @@ class HolesController extends Controller
 			}		
 	}	
 	
+	public function multipart_build_query($fields, $boundary){
+	  $retval = '';
+	  foreach($fields as $key => $value){
+		$retval .= "--$boundary\nContent-Disposition: form-data; name=\"$key\"\n\n$value\n";
+	  }
+	  $retval .= "--$boundary--";
+	  return $retval;
+	}
+	
 	public function actionSendToGibddru($ajax=false)
 	{
 		$model=new GibddRuForm;
@@ -787,30 +796,54 @@ class HolesController extends Controller
 			$model->attributes=$_POST['GibddRuForm'];
 			$request->setAttribsFromGibddForm($model);
 			$holesmodels=Holes::model()->findAllByPk($model->holes);
-			if ($model->validate()){
+			if ($model->validate()){	
+			
+			
 				
 				$model->attach=$request->getResult($holesmodels[0], true);
 				$fields=$model->attributes;				
 				if ($model->attach) $fields['attach'][0]='@' . $_SERVER['DOCUMENT_ROOT'].$model->attach;
 				//unset($fields['attach']);
+				$sessid=$fields['sessid'];
 				unset($fields['holes']);
-				unset($fields['sessid']);
-				//print_r($fields); die();
-				$ch = curl_init('http://www.gibdd.ru/bitrix/templates/.default/components/gai/letter/send/ajax/post.php');
+				unset($fields['sessid'], $fields['web_form_submit'], $fields['f_gai_names']);
+				$fields['f_gai']=$model->f_gai_names[$model->f_gai_regkod];
+				
+				$boundary = '----WebKitFormBoundary';
+				$body = $this->multipart_build_query($fields, $boundary);
+				
+				$ch = curl_init();				
+				
+				curl_setopt($ch, CURLOPT_URL, 'http://www.gibdd.ru/bitrix/templates/.default/components/gai/letter/send/ajax/post.php');
+				curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_1) AppleWebKit/537.73.11 (KHTML, like Gecko) Version/7.0.1 Safari/537.73.11'); 
 				curl_setopt($ch, CURLOPT_HEADER, false);
 				curl_setopt($ch, CURLOPT_POST, true);
-				curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+				curl_setopt($ch, CURLOPT_FOLLOWLOCATION, false);
 				curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-				curl_setopt($ch, CURLOPT_POSTFIELDS, $fields); 		
-				curl_setopt($ch, CURLOPT_MAXREDIRS, 100 );
-				curl_setopt($ch, CURLOPT_REFERER, 'http://www.gibdd.ru/letter/?reg=77');
+				curl_setopt($ch, CURLOPT_POSTFIELDS, $body); 		
+				curl_setopt($ch, CURLOPT_MAXREDIRS, false );
+				curl_setopt($ch, CURLOPT_REFERER, 'http://www.gibdd.ru/letter/?reg='.$model->f_gai_regkod);				
+				curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+					'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+					//'Accept-Encoding: gzip, deflate',
+					'Accept-Language: ru',
+					'Origin: http://www.gibdd.ru',
+					'DNT: 1',
+					"Content-Type: multipart/form-data; boundary=$boundary",
+					'Connection: keep-alive',
+					//'Cookie: __sonar=16900764599504976729; __utma=242219267.822753720.1389820686.1389820686.1389820686.1; __utmz=242219267.1389820686.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none); PHPSESSID='.$sessid,
+					'Expect:',
+					//'Host: www.gibdd.ru'
+					));
+				
+				curl_setopt($ch, CURLOPT_AUTOREFERER, false);
 				curl_setopt($ch, CURLOPT_COOKIEFILE, Yii::app()->user->uploadDir.'/'."gibddru_cookie.txt");
 				
 				if (($answer = curl_exec($ch)) === false) {
 							throw new Exception(curl_error($ch));
 						} 
 				$response = curl_getinfo( $ch );
-
+				//echo $answer;
 				$resArr=CJSON::decode($answer);
 				//print_r($resArr); die();
 				curl_close ($ch);				
