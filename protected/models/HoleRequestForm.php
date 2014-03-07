@@ -176,13 +176,14 @@ class HoleRequestForm extends CFormModel
 		
 		//echo $leter;
 		preg_match("/'bitrix_sessid':'(.*?)'/ism", $leter, $maches); 		
-		$sessid=$maches[1];
+		$sessid=$maches[1];		
+		
 		
 		//preg_match_all('/<input type="hidden" name="sessid" id="sessid" value="(.*?)"/ism', $leter, $maches); 		
 		
 		//http://www.gibdd.ru/bitrix/templates/.default/components/gai/letter/send/ajax/captchaReload.php
 		//$ch = curl_init('http://www.gibdd.ru/letter/?reg='.($hole->subject ? $hole->subject->regionNumNullLead : 77));
-		$ch = curl_init('http://www.gibdd.ru/bitrix/templates/.default/components/gai/letter/send/ajax/captchaReload.php');
+		$ch = curl_init('http://www.gibdd.ru/bitrix/templates/.default/components/gai/letter/send-1-2/ajax/captchaReload.php');
 		curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_1) AppleWebKit/537.73.11 (KHTML, like Gecko) Version/7.0.1 Safari/537.73.11'); 
 		curl_setopt($ch, CURLOPT_HEADER, false);
 		curl_setopt($ch, CURLOPT_POST, false);
