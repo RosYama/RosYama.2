@@ -229,7 +229,7 @@ class HoleRequestForm extends CFormModel
 			if (isset($this->requestBodyArr['count']))
 				foreach($this->requestBodyArr['count'] as $count)
 					$str.="\n".$count;
-			$model->f_msg=$str;
+			$model->f_msg=preg_replace('/http:\/\/[A-z0-9\-\.\_\/]*/', '', $str);
 		}
 		return $model;
 		
