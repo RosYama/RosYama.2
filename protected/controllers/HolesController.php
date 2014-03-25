@@ -693,6 +693,8 @@ class HolesController extends Controller
 				if (count ($holemodel) > 1){
 					$model->holes=CHtml::listData($holemodel, 'ID', 'ID');
 				}
+				elseif (count ($holemodel) == 1)		
+					$model->address=CHtml::encode($holemodel[0]->ADDRESS);
 				
 				$gibddModel=$model->getResult($holemodel[0]);	
 				if ($gibddModel){
@@ -706,9 +708,7 @@ class HolesController extends Controller
 					$this->renderPartial('_form_gibdd_manyholes',Array('model'=>$model, 'holes'=>$holemodel, 'gibdd'=>$gibdd, 'gibddModel'=>$gibddModel, 'error'=>''));
 					}
 				elseif (count ($holemodel) == 1){
-					$hole=$holemodel[0];		
-					$model->address=CHtml::encode($hole->ADDRESS);
-					$this->renderPartial('_form_gibdd',Array('model'=>$model, 'hole'=>$hole, 'gibdd'=>$gibdd, 'gibddModel'=>$gibddModel, 'error'=>''));
+					$this->renderPartial('_form_gibdd',Array('model'=>$model, 'hole'=>$holemodel[0], 'gibdd'=>$gibdd, 'gibddModel'=>$gibddModel, 'error'=>''));
 					}
 			}
 		}
