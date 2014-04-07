@@ -4,7 +4,7 @@
 					<?php $form=$this->beginWidget('CActiveForm', array(
 						'id'=>'request-form',
 						'enableAjaxValidation'=>false,
-						'action'=>Yii::app()->createUrl("holes/sendToGibddru"),
+						'action'=>Yii::app()->createUrl("holes/sendToGibddru", Array('many'=>true)),
 						'htmlOptions'=>Array ('onsubmit'=>"document.getElementById('pdf_form').style.display='none';"),
 					)); 
 					$usermodel=Yii::app()->user->userModel;
@@ -18,13 +18,9 @@
 			
 			<?php endif; ?>
 			
-			<?php echo $form->hiddenField($gibddModel,'form_text_31'); ?>
 			<?php echo $form->hiddenField($gibddModel,'sessid'); ?>
-			<?php echo $form->hiddenField($gibddModel,'reg'); ?>			
-			<?php echo $form->hiddenField($gibddModel,'tmp'); ?>
-			<?php echo $form->hiddenField($gibddModel,'sbj'); ?>			
-			<?php echo $form->hiddenField($gibddModel,'pst'); ?>		
-			<?php echo $form->hiddenField($gibddModel,'form_hidden_40'); ?>		
+			<?php echo $form->hiddenField($gibddModel,'f_gai_regkod'); ?>
+			
 			<?php echo $form->hiddenField($gibddModel,'holes'); ?>	
 			<?php foreach ($holes as $hole) {
 				echo $form->hiddenField($model,'holes[]',Array('value'=>$hole->ID));
@@ -34,73 +30,70 @@
 					<?php echo $form->labelEx($model,'to'); ?>
 					<?php echo $form->textArea($model,'to',array('rows'=>3, 'cols'=>40,'class'=>"textInput")); ?>
 					<p class="hint"><?php echo Yii::t('holes_view', 'HOLE_REQUEST_FORM_TO_COMMENT'); ?></p>
-					<?php echo $form->error($gibddModel,'form_text_11'); ?>
+					<?php echo $form->error($model,'to'); ?>
 				</div>
 				<h2 style="text-align:center;">От</h2>		
 				<div class="row">
-					<?php echo $form->labelEx($gibddModel,'form_text_11'); ?>
-					<?php echo $form->textField($gibddModel,'form_text_11',array('maxlength'=>50,'class'=>"textInput")); ?>
-					<?php echo $form->error($gibddModel,'form_text_11'); ?>
+					<?php echo $form->labelEx($gibddModel,'f_fam'); ?>
+					<?php echo $form->textField($gibddModel,'f_fam',array('maxlength'=>40,'class'=>"textInput")); ?>
+					<?php echo $form->error($gibddModel,'f_fam'); ?>
 				</div>
 			
 				<div class="row">
-					<?php echo $form->labelEx($gibddModel,'form_text_12'); ?>
-					<?php echo $form->textField($gibddModel,'form_text_12',array('maxlength'=>50,'class'=>"textInput")); ?>
-					<?php echo $form->error($gibddModel,'form_text_12'); ?>
+					<?php echo $form->labelEx($gibddModel,'f_name'); ?>
+					<?php echo $form->textField($gibddModel,'f_name',array('maxlength'=>40,'class'=>"textInput")); ?>
+					<?php echo $form->error($gibddModel,'f_name'); ?>
 				</div>
 			
 				<div class="row">
-					<?php echo $form->labelEx($gibddModel,'form_text_13'); ?>
-					<?php echo $form->textField($gibddModel,'form_text_13',array('maxlength'=>50,'class'=>"textInput")); ?>
-					<?php echo $form->error($gibddModel,'form_text_13'); ?>
+					<?php echo $form->labelEx($gibddModel,'f_coname'); ?>
+					<?php echo $form->textField($gibddModel,'f_coname',array('maxlength'=>40,'class'=>"textInput")); ?>
+					<?php echo $form->error($gibddModel,'f_coname'); ?>
 				</div>
 				
 				<div class="row">
-					<?php echo $form->labelEx($gibddModel,'form_text_14'); ?>
-					<?php echo $form->textField($gibddModel,'form_text_14',array('maxlength'=>10,'class'=>"textInput", 'style'=>'width:50px;')); ?>
-					<?php echo $form->error($gibddModel,'form_text_14'); ?>
+					<?php echo $form->labelEx($gibddModel,'f_ind'); ?>
+					<?php echo $form->textField($gibddModel,'f_ind',array('maxlength'=>10,'class'=>"textInput", 'style'=>'width:50px;')); ?>
+					<?php echo $form->error($gibddModel,'f_ind'); ?>
 				</div>
 			
 				<div class="row">
-					<?php echo $form->labelEx($gibddModel,'form_text_15'); ?>
-					<?php echo $form->textField($gibddModel,'form_text_15',array('maxlength'=>50,'class'=>"textInput")); ?>
-					<?php echo $form->error($gibddModel,'form_text_15'); ?>
+					<?php echo $form->labelEx($gibddModel,'f_reg'); ?>
+					<?php echo $form->textField($gibddModel,'f_reg',array('maxlength'=>50,'class'=>"textInput")); ?>
+					<?php echo $form->error($gibddModel,'f_reg'); ?>
 				</div>
 			
 				<div class="row">
-					<?php echo $form->labelEx($gibddModel,'form_text_16'); ?>
-					<?php echo $form->textField($gibddModel,'form_text_16',array('maxlength'=>50,'class'=>"textInput")); ?>
-					<?php echo $form->error($gibddModel,'form_text_16'); ?>
+					<?php echo $form->labelEx($gibddModel,'f_npunkt'); ?>
+					<?php echo $form->textField($gibddModel,'f_npunkt',array('maxlength'=>50,'class'=>"textInput")); ?>
+					<?php echo $form->error($gibddModel,'f_npunkt'); ?>
 				</div>
 			
 				<div class="row">
-					<?php echo $form->labelEx($gibddModel,'form_text_17'); ?>
-					<?php echo $form->textField($gibddModel,'form_text_17',array('maxlength'=>50,'class'=>"textInput")); ?>
-					<?php echo $form->error($gibddModel,'form_text_17'); ?>
+					<?php echo $form->labelEx($gibddModel,'f_addr'); ?>
+					<?php echo $form->textField($gibddModel,'f_addr',array('maxlength'=>50,'class'=>"textInput")); ?>
+					<?php echo $form->error($gibddModel,'f_addr'); ?>
 				</div>
 				
 				<div class="row">
-					<?php echo $form->labelEx($gibddModel,'form_email_18'); ?>
-					<?php echo $form->textField($gibddModel,'form_email_18',array('maxlength'=>50,'class'=>"textInput")); ?>
-					<?php echo $form->error($gibddModel,'form_email_18'); ?>
+					<?php echo $form->labelEx($gibddModel,'f_email'); ?>
+					<?php echo $form->textField($gibddModel,'f_email',array('maxlength'=>50,'class'=>"textInput")); ?>
+					<?php echo $form->error($gibddModel,'f_email'); ?>
 				</div>
 			
 				<div class="row">
-					<?php echo $form->labelEx($gibddModel,'form_text_19'); ?>
-					<?php echo $form->textField($gibddModel,'form_text_19',array('maxlength'=>50,'class'=>"textInput")); ?>
-					<?php echo $form->error($gibddModel,'form_text_19'); ?>
-				</div>
-					
-					<?php echo $form->hiddenField($gibddModel,'form_dropdown_SUBJECT'); ?>				
-					<?php //echo $form->hiddenField($model,'form_type', Array('value'=>'gibdd')); ?>	
+					<?php echo $form->labelEx($gibddModel,'f_phone'); ?>
+					<?php echo $form->textField($gibddModel,'f_phone',array('maxlength'=>50,'class'=>"textInput")); ?>
+					<?php echo $form->error($gibddModel,'f_phone'); ?>
+				</div>			
 
 				
 				<h2 style="text-align:center;"><?= Yii::t('holes_view', 'HOLE_REQUEST_FORM') ?></h2>		
 			
 				<div class="row">
-					<?php echo $form->labelEx($gibddModel,'form_textarea_26'); ?>
-					<?php echo $form->textArea($gibddModel,'form_textarea_26',array('rows'=>10,'class'=>"textInput")); ?>
-					<?php echo $form->error($gibddModel,'form_textarea_26'); ?>
+					<?php echo $form->labelEx($gibddModel,'f_msg'); ?>
+					<?php echo $form->textArea($gibddModel,'f_msg',array('rows'=>10,'class'=>"textInput")); ?>
+					<?php echo $form->error($gibddModel,'f_msg'); ?>
 					<div class="fileButtons">							
 							<p><?php echo CHtml::link('Скачать заявление в виде ПДФ', '#', Array('class'=>'printDeclaration downloadPdf', 'hole_id'=>implode(',', CHtml::listData($holes, 'ID', 'ID')))); ?></p>
 							<!--
@@ -117,8 +110,9 @@
 				</div>
 				
 				<div class="row">					
-					<?php echo CHtml::image($this->createUrl('getGibddCaptcha', Array('sid'=>$gibddModel->captcha_sid))); ?>
-					<?php echo $form->hiddenField($gibddModel,'captcha_sid'); ?>
+					<?php echo CHtml::image($this->createUrl('getGibddCaptcha', Array('sid'=>$gibddModel->captcha_code))); ?>
+					<?php //echo CHtml::image('http://www.gibdd.ru/bitrix/tools/captcha.php?captcha_sid='.$gibddModel->captcha_sid); ?>					
+					<?php echo $form->hiddenField($gibddModel,'captcha_code'); ?>
 					<?php echo $form->labelEx($gibddModel,'captcha_word'); ?>
 					<?php echo $form->textField($gibddModel,'captcha_word', Array('style'=>'width: 200px;')); ?>
 					<?php echo $form->error($gibddModel,'captcha_word'); ?>

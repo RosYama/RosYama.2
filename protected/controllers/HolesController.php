@@ -781,7 +781,7 @@ class HolesController extends Controller
 	  return $retval;
 	}
 	
-	public function actionSendToGibddru($ajax=false)
+	public function actionSendToGibddru($ajax=false, $many=false)
 	{
 		$model=new GibddRuForm;
 		$error='';
@@ -797,6 +797,7 @@ class HolesController extends Controller
 			if ($model->f_gai_regkod==47) $model->f_gai_regkod=78;
 			$request->setAttribsFromGibddForm($model);
 			$holesmodels=Holes::model()->findAllByPk($model->holes);
+			$model->holes=implode(',', $model->holes);
 			if ($model->validate()){	
 			
 			

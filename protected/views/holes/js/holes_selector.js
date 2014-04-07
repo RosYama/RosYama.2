@@ -162,7 +162,7 @@
 				jQuery.ajax({"type":"POST","beforeSend":function(){
 							},
 				 "complete":function(){				 
-					},"url":form.attr('action')+'?ajax=1',
+					},"url":form.attr('action')+'&ajax=1',
 					"cache":false,
 					"data":form.serialize(),
 				"success":function(html){
