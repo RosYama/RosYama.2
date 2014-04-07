@@ -794,6 +794,7 @@ class HolesController extends Controller
 				
 		if (isset($_POST['GibddRuForm'])){			
 			$model->attributes=$_POST['GibddRuForm'];
+			if ($model->f_gai_regkod==47) $model->f_gai_regkod=78;
 			$request->setAttribsFromGibddForm($model);
 			$holesmodels=Holes::model()->findAllByPk($model->holes);
 			if ($model->validate()){	
