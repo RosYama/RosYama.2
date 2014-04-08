@@ -179,6 +179,7 @@ class GibddRuForm extends CFormModel
 			"f_email"=>"Электронная почта",
 			"f_phone"=>"Контактные телефоны",
 			"f_msg"=>"Текст обращения",
+			"f_gai_regkod"=>'Код региона',
 			"captcha_word"=>"Введите символы с картинки",
 			"captcha_code"=>"",
 			"attach"=>"Приложение"

@@ -853,6 +853,7 @@ class HolesController extends Controller
 				$success='';
 				if (isset($resArr['error']) && trim($resArr['error'])) $error=$resArr['error'];
 				if (isset($resArr['status'][0]['num']) && $resArr['status'][0]['num']==100) $model->addError('captcha_word', $resArr['status'][0]['text']);					
+				if (isset($resArr['status'][0]['num']) && $resArr['status'][0]['num']==600) $model->addError('f_gai_regkod', $resArr['status'][0]['text']);	
 				if (isset($resArr['status'][0]['num']) && $resArr['status'][0]['num']==200) $success=$resArr['status'][0]['text'];
 				
 				if(!$model->errors && $success){					
