@@ -3,7 +3,7 @@
 					<?php $form=$this->beginWidget('CActiveForm', array(
 						'id'=>'request-form',
 						'enableAjaxValidation'=>false,
-						'action'=>Yii::app()->createUrl("holes/sendToGibddru"),
+						'action'=>Yii::app()->createUrl("holes/sendToGibddru", Array('many'=>false)),
 						'htmlOptions'=>Array ('onsubmit'=>"document.getElementById('pdf_form').style.display='none';"),
 					)); 
 					$usermodel=Yii::app()->user->userModel;
