@@ -20,6 +20,7 @@
 			
 			<?php echo $form->hiddenField($gibddModel,'sessid'); ?>
 			<?php echo $form->hiddenField($gibddModel,'f_gai_regkod'); ?>
+			<?php echo $form->hiddenField($gibddModel,'f_token'); ?>
 			
 			<?php echo $form->hiddenField($gibddModel,'holes'); ?>	
 			<?php foreach ($holes as $hole) {

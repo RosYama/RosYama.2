@@ -141,7 +141,7 @@ class GibddRuForm extends CFormModel
 	public function rules()
 	{
 		return array(
-			array('f_gai_regkod, f_fam, f_name, f_answer_method, f_msg, holes, captcha_word', 'required'),
+			array('f_gai_regkod, f_fam, f_name, f_answer_method, f_msg, holes, captcha_word, f_token', 'required'),
 			array('f_fam, f_name, f_coname', 'length', 'max'=>40),
 			array('f_reg, f_npunkt, f_phone', 'length', 'max'=>50),
 			array('f_addr, f_email', 'length', 'max'=>100),

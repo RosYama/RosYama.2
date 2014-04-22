@@ -178,6 +178,11 @@ class HoleRequestForm extends CFormModel
 		preg_match("/'bitrix_sessid':'(.*?)'/ism", $leter, $maches); 		
 		$sessid=$maches[1];		
 		
+		preg_match('/<input id="f_token" type="hidden" name="f_token" value="(.*?)"/ism', $leter, $maches);
+		
+		$token='';
+		if ($maches && isset($maches[1]) && $maches[1]) $token=$maches[1];
+
 		
 		//preg_match_all('/<input type="hidden" name="sessid" id="sessid" value="(.*?)"/ism', $leter, $maches); 		
 		
@@ -208,6 +213,7 @@ class HoleRequestForm extends CFormModel
 		$model=new GibddRuForm;
 		$model->captcha_code=$captcha;
 		$model->attributes=Array(
+			'f_token'=>$token,
 			'f_gai'=>$gibdd,
 			'attach'=>$this->savePdfFile($pdfBinary),
 			'f_addr'=>$this->postaddress,
