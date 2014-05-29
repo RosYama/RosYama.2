@@ -816,14 +816,13 @@ class HolesController extends Controller
 				
 				$ch = curl_init();				
 				
-				curl_setopt($ch, CURLOPT_URL, 'http://www.gibdd.ru/bitrix/templates/.default/components/gai/letter/send-1-2/ajax/post.php');
+				curl_setopt($ch, CURLOPT_URL, 'https://www.gibdd.ru/bitrix/templates/.default/components/gai/letter/send-1-2/ajax/post.php');
 				curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_1) AppleWebKit/537.73.11 (KHTML, like Gecko) Version/7.0.1 Safari/537.73.11'); 
 				curl_setopt($ch, CURLOPT_HEADER, false);
 				curl_setopt($ch, CURLOPT_POST, true);
 				curl_setopt($ch, CURLOPT_FOLLOWLOCATION, false);
 				curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 				curl_setopt($ch, CURLOPT_POSTFIELDS, $body); 		
-				curl_setopt($ch, CURLOPT_MAXREDIRS, false );
 				curl_setopt($ch, CURLOPT_REFERER, 'http://www.gibdd.ru/letter/?reg='.$model->f_gai_regkod);				
 				curl_setopt($ch, CURLOPT_HTTPHEADER, array(
 					'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',

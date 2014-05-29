@@ -162,6 +162,8 @@ class HoleRequestForm extends CFormModel
 		curl_setopt($ch, CURLOPT_HEADER, true);
 		curl_setopt($ch, CURLOPT_POST, true);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_MAXREDIRS, 100 );
+		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 		curl_setopt($ch, CURLOPT_COOKIEJAR, Yii::app()->user->uploadDir.'/'."gibddru_cookie.txt");
 		curl_setopt($ch, CURLOPT_COOKIEFILE, Yii::app()->user->uploadDir.'/'."gibddru_cookie.txt");
 		curl_setopt($ch, CURLOPT_POSTFIELDS, array(
@@ -174,7 +176,7 @@ class HoleRequestForm extends CFormModel
  		$response = curl_getinfo( $ch );
 		curl_close($ch);	
 		
-		//echo $leter;
+		//echo $leter; die();
 		preg_match("/'bitrix_sessid':'(.*?)'/ism", $leter, $maches); 		
 		$sessid=$maches[1];		
 		
@@ -193,13 +195,16 @@ class HoleRequestForm extends CFormModel
 		curl_setopt($ch, CURLOPT_HEADER, false);
 		curl_setopt($ch, CURLOPT_POST, false);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_MAXREDIRS, 100 );
+		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 		curl_setopt($ch, CURLOPT_COOKIEFILE, Yii::app()->user->uploadDir.'/'."gibddru_cookie.txt");		
  
 		if (($leter = curl_exec($ch)) === false) {
 			throw new Exception(curl_error($ch));
 		} 
  
-		curl_close($ch);	
+		curl_close($ch);			
+		
 		
 		$captchaArr=CJSON::decode($leter); 		
 		
