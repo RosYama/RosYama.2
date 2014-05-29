@@ -722,6 +722,7 @@ class HolesController extends Controller
 		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($ch, CURLOPT_MAXREDIRS, 100 );
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 		curl_setopt($ch, CURLOPT_COOKIEFILE, Yii::app()->user->uploadDir.'/'."gibddru_cookie.txt");
 		
 		if (($answer = curl_exec($ch)) === false) {
@@ -823,6 +824,7 @@ class HolesController extends Controller
 				curl_setopt($ch, CURLOPT_FOLLOWLOCATION, false);
 				curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 				curl_setopt($ch, CURLOPT_POSTFIELDS, $body); 		
+				curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 				curl_setopt($ch, CURLOPT_REFERER, 'http://www.gibdd.ru/letter/?reg='.$model->f_gai_regkod);				
 				curl_setopt($ch, CURLOPT_HTTPHEADER, array(
 					'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
