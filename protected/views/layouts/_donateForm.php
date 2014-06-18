@@ -15,21 +15,21 @@ EOD
               <h2>Ваша поддержка важна</h2>
               <p>Вы добиваетесь ремонта дорог по всей стране. Вы заставляете ГИБДД ремонтировать ямы во дворах, на шоссе и сельских дорогах.<br> Благодаря вам существует РосЯма.</p>
               <div class="donate">
-                <!--<script type="text/javascript" src="https://auth.robokassa.ru/Merchant/PaymentForm/FormFLS.js"></script>-->
-                <form id="fmain" method="post" action="http://auth.robokassa.ru:80/Merchant/Index.aspx" target="_top">
+                <!--<script type="text/javascript" src="https://auth.robokassa.ru/Merchant/PaymentForm/FormFLS.js"></script>-->                
+                
+                <form id="fmain" method="post" action="https://money.yandex.ru/eshop.xml" target="_top">
                   <div class="formFL shadows lifted">
                     <div>
-                      <input type="text" name="FreeOutSum" value="500" maxlength="10">
+                      <input type="text" name="Sum" value="1000" maxlength="10">
                       <span class="cur">Руб.</span>
-                      <input name="MrchLogin" type="hidden" value="fbk">
-                      <input name="Desc" type="hidden" value="Пожертвование на проект РосЯма">
-                      <input name="SignatureValue" type="hidden" value="f2f432d446e845b3098768440b796835">
-                      <input name="IncCurrLabel" type="hidden" value="BANKOCEAN2R">
-                      <input name="shp_Project" type="hidden" value="RosYama">
-                      <input type="submit" value="Поддержать">
-                    </div>					  
-                      <img src="/images/money.png">
-
+                      <input type="hidden" class="wide" name="scid" value="6104">
+                      <input type="hidden" name="ShopID" value="14262">
+                      <input type="hidden" name="CustomerNumber" value="rosyama">
+                      <input type="hidden" name="paymentType" value="AC">
+                      <input type="hidden" name="orderDetails" value="RosYama">
+                      <input type="submit" value="Отправить">                     
+                    </div>
+                     <img src="http://donate.fbk.info/rosyama/layout/images/money.png">
                   </div>
                 </form>
               </div>
