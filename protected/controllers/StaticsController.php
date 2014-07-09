@@ -14,7 +14,7 @@ class StaticsController extends Controller
 	public function filters()
 	{
 		return array(
-			'accessControl', // perform access control for CRUD operations
+			'userGroupsAccessControl',
 		);
 	}
 
@@ -27,9 +27,13 @@ class StaticsController extends Controller
 	{
 		return array(
 			array('allow',
-				'actions'=>array('index'),
+				'actions'=>array('index', 'periods'),
 				'users'=>array('*'),
 			),		
+			array('allow', // allow admin user to perform 'admin' and 'delete' actions
+				'actions'=>array('notSentEmails'),
+				'groups'=>array('root',), 
+			),
 			array('deny',  // deny all users
 				'users'=>array('*'),
 			),
@@ -156,5 +160,43 @@ class StaticsController extends Controller
 			'arResult'=>$arResult,
 		));
 	}	
+	
+	public function actionPeriods()
+	{
+		$result=Array();
+		
+		$firstDate=Holes::model()->find(Array('order'=>'DATE_CREATED ASC', 'select'=>'DATE_CREATED'))->DATE_CREATED;
+		
+		$holes=Holes::model()->findAll(Array('select'=>'t.DATE_CREATED, t.DATE_SENT, t.DATE_STATUS, t.STATE'));
+		
+		
+		foreach ($holes as $hole){
+			if (!isset($result[date('Ym', $hole->DATE_CREATED)]['created'])) $result[date('Ym', $hole->DATE_CREATED)]['created']=0;
+			else $result[date('Ym', $hole->DATE_CREATED)]['created']++;
+			if ($hole->DATE_SENT){
+				if (!isset($result[date('Ym', $hole->DATE_SENT)]['sent'])) $result[date('Ym', $hole->DATE_SENT)]['sent']=0;
+				else $result[date('Ym', $hole->DATE_SENT)]['sent']++;
+			}
+			if ($hole->STATE=='fixed' && $hole->DATE_STATUS){
+				if (!isset($result[date('Ym', $hole->DATE_STATUS)]['fixed'])) $result[date('Ym', $hole->DATE_STATUS)]['fixed']=0;
+				else $result[date('Ym', $hole->DATE_STATUS)]['fixed']++;
+			}
+		
+		}
+		
+		
+		
+		$this->render('periods',array(
+			'result'=>$result,
+			'firstDate'=>$firstDate,
+		));
+	}
+	
+	public function actionNotSentEmails()
+	{
+		$users=UserGroupsUser::model()->with('holes')->findAll('holes.STATE="fresh"');
+		
+		foreach ($users as $user) echo $user->email.'<br />';
+	}
 
 }

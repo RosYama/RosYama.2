@@ -2,7 +2,6 @@
 $this->pageTitle=Yii::app()->name . ' - Статистика';
 $this->title='Статистика';
 ?>
-
 <div class="lCol">
 <?php $this->widget('application.widgets.social.socialWidget'); ?>
 </div>
@@ -56,5 +55,12 @@ $this->title='Статистика';
 	<?php echo $ar['moder']; ?> &nbsp; &mdash;  <?=$ar['counts']?><br>
 <?}?>
 </div>	
+<?php endif; ?>
+
+
+<h2><?php echo CHtml::link('Статистика по периодам', Array('periods')); ?></h2>
+
+<?php if (Yii::app()->user->level == 100) : ?>
+<h2><?php echo CHtml::link('Мейлы пользователей с неотправленными ямами', Array('NotSentEmails')); ?></h2>
 <?php endif; ?>
 </div>

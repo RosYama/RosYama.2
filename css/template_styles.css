@@ -274,7 +274,7 @@ border-radius: 3px; text-decoration: none;}
 	text-decoration: none;
 }
 
-ul.usermenu li{float:left; font-size: 0.44em; text-transform: uppercase;}
+ul.usermenu li{float:left; font-size: 0.84em; text-transform: uppercase;}
 .operations li {font-size: 0.44em; text-transform: uppercase; margin-bottom: 3px;}
 ul.usermenu li.active .profileBtn{background: #f88100;}
 
@@ -1216,3 +1216,4 @@ border: 0;
 #block .oferta td {
   padding: 5px 10px;
 }
+table.period_stats td {width:100px; border-bottom: 1px solid #3b3b3b;}
