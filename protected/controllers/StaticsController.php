@@ -164,24 +164,26 @@ class StaticsController extends Controller
 	public function actionPeriods()
 	{
 		$result=Array();
+		$firstDate=CDateTimeParser::parse('01.01.'.(date('Y')-1),'dd.MM.yyyy');		
 		
-		$firstDate=Holes::model()->find(Array('order'=>'DATE_CREATED ASC', 'select'=>'DATE_CREATED'))->DATE_CREATED;
+		$result = Yii::app()->cache->get('period_stat');					
 		
-		$holes=Holes::model()->findAll(Array('select'=>'t.DATE_CREATED, t.DATE_SENT, t.DATE_STATUS, t.STATE'));
-		
-		
-		foreach ($holes as $hole){
-			if (!isset($result[date('Ym', $hole->DATE_CREATED)]['created'])) $result[date('Ym', $hole->DATE_CREATED)]['created']=0;
-			else $result[date('Ym', $hole->DATE_CREATED)]['created']++;
-			if ($hole->DATE_SENT){
-				if (!isset($result[date('Ym', $hole->DATE_SENT)]['sent'])) $result[date('Ym', $hole->DATE_SENT)]['sent']=0;
-				else $result[date('Ym', $hole->DATE_SENT)]['sent']++;
+		if (!$result){
+			$holes=Holes::model()->findAll(Array('select'=>'t.DATE_CREATED, t.DATE_SENT, t.DATE_STATUS, t.STATE', 'condition'=>'t.DATE_CREATED >='.$firstDate));
+			foreach ($holes as $hole){
+				if (!isset($result[date('Ym', $hole->DATE_CREATED)]['created'])) $result[date('Ym', $hole->DATE_CREATED)]['created']=0;
+				else $result[date('Ym', $hole->DATE_CREATED)]['created']++;
+				if ($hole->DATE_SENT){
+					if (!isset($result[date('Ym', $hole->DATE_SENT)]['sent'])) $result[date('Ym', $hole->DATE_SENT)]['sent']=0;
+					else $result[date('Ym', $hole->DATE_SENT)]['sent']++;
+				}
+				if ($hole->STATE=='fixed' && $hole->DATE_STATUS){
+					if (!isset($result[date('Ym', $hole->DATE_STATUS)]['fixed'])) $result[date('Ym', $hole->DATE_STATUS)]['fixed']=0;
+					else $result[date('Ym', $hole->DATE_STATUS)]['fixed']++;
+				}
+			
 			}
-			if ($hole->STATE=='fixed' && $hole->DATE_STATUS){
-				if (!isset($result[date('Ym', $hole->DATE_STATUS)]['fixed'])) $result[date('Ym', $hole->DATE_STATUS)]['fixed']=0;
-				else $result[date('Ym', $hole->DATE_STATUS)]['fixed']++;
-			}
-		
+			Yii::app()->cache->set('period_stat',$result,3600*24);
 		}
 		
 		
