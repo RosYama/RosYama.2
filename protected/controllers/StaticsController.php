@@ -196,7 +196,10 @@ class StaticsController extends Controller
 	
 	public function actionNotSentEmails()
 	{
-		$users=UserGroupsUser::model()->with('holes')->findAll('holes.STATE="fresh"');
+		ini_set('memory_limit', '1024M');
+		set_time_limit(0);
+
+		$users=UserGroupsUser::model()->findAll(Array('select'=>'t.email', 'join'=>'INNER JOIN {{holes}} holes ON (t.id=holes.USER_ID)', 'condition'=>'holes.STATE="fresh"', 'group'=>'t.email'));
 		
 		foreach ($users as $user) echo $user->email.'<br />';
 	}

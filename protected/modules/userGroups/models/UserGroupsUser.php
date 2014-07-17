@@ -632,7 +632,7 @@ class UserGroupsUser extends CActiveRecord
 	 */
 	public function afterFind()
 	{
-		if (!$this->notUseAfrefind){	
+		if (!$this->notUseAfrefind && Yii::app()->controller->action->id != 'NotSentEmails'){	
 			if (!$this->relProfile){
 				$this->relProfile=new Profile;
 				$this->relProfile->ug_id=$this->id;
