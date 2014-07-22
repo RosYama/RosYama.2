@@ -14,6 +14,7 @@
 							text: "Отправить",
 							click: function(){
 								$("#dorogimos-request-form").submit();
+								return false;
 							}
 						},' : '').'
 						{
@@ -55,16 +56,19 @@
 				<?php echo $form->textField($model,'name',array('size'=>60)); ?>
 				<?php echo $form->error($model,'name'); ?>
 			</div>	
+			<!--
 			<div class="row">
 				<?php echo $form->labelEx($model,'fatherName'); ?>
 				<?php echo $form->textField($model,'fatherName',array('size'=>60)); ?>
 				<?php echo $form->error($model,'fatherName'); ?>
 			</div>	
+			-->
 			<div class="row">
 				<?php echo $form->labelEx($model,'email'); ?>
-				<?php echo $form->textField($model,'email',array('size'=>60)); ?>
+				<?php echo $form->textField($model,'email',array('size'=>60, 'disabled'=>$model->email ? true : null)); ?>
 				<?php echo $form->error($model,'email'); ?>
 			</div>
+			<!--
 			<div class="row">
 				<?php echo $form->labelEx($model,'phoneNumber'); ?>
 				<?php echo $form->textField($model,'phoneNumber',array('size'=>60)); ?>
@@ -90,6 +94,7 @@
 				<?php echo $form->error($model,'notifyViaSms'); ?>
 				</div>
 			</div>
+			-->
 			
 			<div class="row">
 				<?php echo $form->labelEx($model,'holeAddress'); ?>

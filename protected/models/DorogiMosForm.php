@@ -31,9 +31,16 @@ class DorogiMosForm extends CFormModel
 			array('details', 'length', 'max'=>690),
 			array('notifyViaEmail, notifyViaSms', 'numerical', 'integerOnly'=>true),
 			array('todayCount', 'numerical', 'integerOnly'=>true, 'max'=>$this->maxTodayCount, 'tooBig'=>'Вы пытаетесь отправлять слишком много заявлений. Максимальное число заявлений в день = {max} шт.'),
+			array('todayCount', 'checkDuplicates'),
 			array('email', 'email'),
 		);
 	}	
+	
+	public function checkDuplicates($attribute,$params)
+	{
+		$prevRequest=HoleRequests::model()->find(Array('condition'=>'type="dorogimos" AND user_id='.Yii::app()->user->id, 'order'=>'date_sent DESC'));		
+		if ($prevRequest && $prevRequest->date_sent>=time()-3) $this->addError($attribute, 'Вы пытаетесь отправлять заявления слишком часто.');	
+	}
 	
 		
 	public function getClient()
@@ -134,6 +141,7 @@ class DorogiMosForm extends CFormModel
 	public function beforeValidate(){
 		parent::beforeValidate();
 		$this->todayCount=$this->todaySended;
+		if (Yii::app()->user->email) $this->email=Yii::app()->user->email;
 		return true;		
 	}
 
