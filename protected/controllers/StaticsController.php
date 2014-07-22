@@ -183,6 +183,15 @@ class StaticsController extends Controller
 				}
 			
 			}
+			
+			$users=UserGroupsUser::model()->findAll(Array('select'=>'t.creation_date, t.id as notUseAfrefind'));
+			
+			foreach ($users as $user){
+				$time=CDateTimeParser::parse($user->creation_date,'yyyy-MM-dd HH:mm:ss');		
+				if (!isset($result[date('Ym', $time)]['users'])) $result[date('Ym', $time)]['users']=0;
+				else $result[date('Ym', $time)]['users']++;
+			}
+			
 			Yii::app()->cache->set('period_stat',$result,3600*24);
 		}
 		

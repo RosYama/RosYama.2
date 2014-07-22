@@ -12,7 +12,7 @@ $this->title=CHtml::link('Статистика', Array('index')).' > по пер
 <div class="stats">
 	<table class="period_stats">
 	<tr>
-		<th>Месяц</th><th>Ям добавлено</th><th>Заявлений отправлено</th><th>Ям исправлено</th>		
+		<th>Месяц</th><th>Ям добавлено</th><th>Заявлений отправлено</th><th>Ям исправлено</th><th>Пользователей зарегистрировано</th>			
 	</tr>
 
 	<?php for ($m=1; $m<=12; $m++) : ?>
@@ -23,6 +23,7 @@ $this->title=CHtml::link('Статистика', Array('index')).' > по пер
 			<td><?php echo isset($result[$ym]['created']) ? $result[$ym]['created'] : 0; ?></td>	
 			<td><?php echo isset($result[$ym]['sent']) ? $result[$ym]['sent'] : 0; ?></td>
 			<td><?php echo isset($result[$ym]['fixed']) ? $result[$ym]['fixed'] : 0; ?></td>
+			<td><?php echo isset($result[$ym]['users']) ? $result[$ym]['users'] : 0; ?></td>
 		</tr>
 		<?php endif; ?>
 	
