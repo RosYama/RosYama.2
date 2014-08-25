@@ -184,7 +184,7 @@ class StaticsController extends Controller
 			
 			}
 			
-			$users=UserGroupsUser::model()->findAll(Array('select'=>'t.creation_date, t.id as notUseAfrefind'));
+			$users=UserGroupsUser::model()->findAll(Array('select'=>'t.creation_date, t.id as notUseAfrefind', 'condition'=>'t.creation_date >= "'.(date('Y')-1).'-01-01"'));
 			
 			foreach ($users as $user){
 				$time=CDateTimeParser::parse($user->creation_date,'yyyy-MM-dd HH:mm:ss');		

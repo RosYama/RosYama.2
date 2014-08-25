@@ -7,6 +7,9 @@ bugs
 /bugs/*
 /protected/runtime/*
 protected/runtime/*
+myadphp
+/myadphp/*
+myadphp/*
 
 protected/runtime/application.log
 
