@@ -1,3 +1,6 @@
+<div style="padding-left:35px; text-align:center;">
+<iframe id="roi_banner_top_rosyama" width="100%" src="https://20.navalny.com/roi_bnr/?theme=black&site=rosyama" allowTransparency="true" frameborder="0" scrolling="no"></iframe>
+</div>
 <?
 $this->pageTitle=Yii::app()->name . ' :: Список дефектов';
 ?>
