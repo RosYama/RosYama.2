@@ -43,7 +43,7 @@ class GibddRuForm extends CFormModel
 	public $captcha_code;
 	public $attach;
 	public $web_form_submit="Направить обращение";
-	public $save='Y';
+	public $save='Y';	
 	
 	public $f_gai_names=Array(	
 		'01'=>"Управление ГИБДД МВД по Республике Адыгея",

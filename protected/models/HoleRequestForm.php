@@ -167,6 +167,7 @@ class HoleRequestForm extends CFormModel
 		curl_setopt($ch, CURLOPT_COOKIEJAR, Yii::app()->user->uploadDir.'/'."gibddru_cookie.txt");
 		curl_setopt($ch, CURLOPT_COOKIEFILE, Yii::app()->user->uploadDir.'/'."gibddru_cookie.txt");
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+		curl_setopt($ch, CURLOPT_PROXY, Yii::app()->params['gibdd_http_proxy']);
 		curl_setopt($ch, CURLOPT_POSTFIELDS, array(
 			//'photo' => '@' . $_SERVER['DOCUMENT_ROOT'].$model->PictureFolder.'original/'.$model->picture
 		)); 
@@ -199,6 +200,7 @@ class HoleRequestForm extends CFormModel
 		curl_setopt($ch, CURLOPT_MAXREDIRS, 100 );
 		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+		curl_setopt($ch, CURLOPT_PROXY, Yii::app()->params['gibdd_http_proxy']);
 		curl_setopt($ch, CURLOPT_COOKIEFILE, Yii::app()->user->uploadDir.'/'."gibddru_cookie.txt");		
  
 		if (($leter = curl_exec($ch)) === false) {
