@@ -818,8 +818,8 @@ class HolesController extends Controller
 				
 				$ch = curl_init();				
 				
-				curl_setopt($ch, CURLOPT_URL, 'https://www.gibdd.ru/bitrix/templates/.default/components/gai/letter/send-1-2/ajax/post.php');
-				curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_1) AppleWebKit/537.73.11 (KHTML, like Gecko) Version/7.0.1 Safari/537.73.11'); 
+				curl_setopt($ch, CURLOPT_URL, 'http://www.gibdd.ru/bitrix/templates/.default/components/gai/letter/send-1-2/ajax/post.php');
+				curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.73.11 (KHTML, like Gecko) Version/9.0.1 Safari/537.73.11'); 
 				curl_setopt($ch, CURLOPT_HEADER, false);
 				curl_setopt($ch, CURLOPT_POST, true);
 				curl_setopt($ch, CURLOPT_FOLLOWLOCATION, false);
@@ -848,9 +848,10 @@ class HolesController extends Controller
 							throw new Exception(curl_error($ch));
 						} 
 				$response = curl_getinfo( $ch );
-				//echo $answer;
+				//print_r($response); 
 				$resArr=CJSON::decode($answer);
-				//print_r($resArr); die();
+				//print_r($resArr); 
+				//die();
 				curl_close ($ch);				
 				
 				$success='';
