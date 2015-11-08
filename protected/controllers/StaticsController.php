@@ -203,12 +203,13 @@ class StaticsController extends Controller
 		));
 	}
 	
-	public function actionNotSentEmails()
+	public function actionNotSentEmails($dateStart=null)
 	{
 		ini_set('memory_limit', '1024M');
 		set_time_limit(0);
+		$time=$dateStart ? CDateTimeParser::parse($dateStart,'yyyy-MM-dd') : null;		
 
-		$users=UserGroupsUser::model()->findAll(Array('select'=>'t.email', 'join'=>'INNER JOIN {{holes}} holes ON (t.id=holes.USER_ID)', 'condition'=>'holes.STATE="fresh"', 'group'=>'t.email'));
+		$users=UserGroupsUser::model()->findAll(Array('select'=>'t.email', 'join'=>'INNER JOIN {{holes}} holes ON (t.id=holes.USER_ID)', 'condition'=>'holes.STATE="fresh"'.($time ? ' AND t.DATE_CREATED >= '.$time : ''), 'group'=>'t.email'));
 		
 		foreach ($users as $user) echo $user->email.'<br />';
 	}
