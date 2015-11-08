@@ -27,13 +27,13 @@
 		<?php echo $form->error($model,'name'); ?>
 	</div>
 	
-	<?php if (isset(Yii::app()->params['dorogiMos']) && isset(Yii::app()->params['dorogiMos']['server']) && Yii::app()->params['dorogiMos']['server']) : ?>
+	<?php /* if (isset(Yii::app()->params['dorogiMos']) && isset(Yii::app()->params['dorogiMos']['server']) && Yii::app()->params['dorogiMos']['server']) : ?>
 	<div class="row">
 		<?php echo $form->labelEx($model,'dorogimos_id'); $dmosobj=new DorogiMosForm; ?>
 		<?php echo $form->dropDownList($model, 'dorogimos_id', CHtml::listData( $dmosobj->categories, 'code', 'problemCategory'), Array('prompt'=>'Нет соответствия')); ?>
 		<?php echo $form->error($model,'dorogimos_id'); ?>
 	</div>
-	<?php endif; ?>
+	<?php endif; */ ?>
 
 	<div class="row">
 		<?php echo $form->labelEx($model,'pdf_body'); ?>
